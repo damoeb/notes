@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0"
+             xmlns="http://java.sun.com/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence
+                       http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+
+    <persistence-unit name="primary">
+        <jta-data-source>java:jboss/datasources/note_mysql</jta-data-source>
+
+        <class>org.notes.core.model.Note</class>
+        <class>org.notes.core.model.Tag</class>
+        <class>org.notes.core.model.User</class>
+        <class>org.notes.core.model.Account</class>
+        <class>org.notes.core.model.Folder</class>
+        <class>org.notes.core.model.FileReference</class>
+        <class>org.notes.core.model.Attachment</class>
+        <class>org.notes.core.model.Annotation</class>
+
+        <properties>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect"/>
+            <property name="hibernate.show_sql" value="false"/>
+            <property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.hbm2ddl.auto" value="false"/>
+            <property name="hibernate.connection.autoReconnect" value="true"/>
+            <!--<property name="min-pool" value=""></property>-->
+            <!-- Needed to recreate EntityManagerFactory -->
+            <property name="hibernate.transaction.jta.platform"
+                      value="org.hibernate.service.jta.platform.internal.JBossAppServerJtaPlatform"/>
+
+            <!--&lt;!&ndash; hibernate second level cache &ndash;&gt;-->
+            <!--<property name="hibernate.cache.use_second_level_cache" value="true" />-->
+            <!--<property name="hibernate.cache.use_query_cache" value="true" />-->
+            <!--<property name="hibernate.cache.region.factory_class" value="net.sf.ehcache.hibernate.EhCacheRegionFactory" />-->
+
+        </properties>
+    </persistence-unit>
+
+    <!--<persistence-unit name="report">-->
+    <!--<jta-data-source>java:jboss/datasources/migor_mysql</jta-data-source>-->
+
+    <!--<class>org.notes.core.report.Report</class>-->
+
+    <!--<properties>-->
+    <!--<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect"/>-->
+    <!--<property name="hibernate.show_sql" value="true"/>-->
+    <!--<property name="hibernate.format_sql" value="false"/>-->
+    <!--&lt;!&ndash;<property name="hibernate.hbm2ddl.auto" value="update"/>&ndash;&gt;-->
+
+    <!--&lt;!&ndash; Needed to recreate EntityManagerFactory &ndash;&gt;-->
+    <!--<property name="hibernate.transaction.jta.platform" value="org.hibernate.service.jta.platform.internal.JBossAppServerJtaPlatform" />-->
+    <!--</properties>-->
+    <!--</persistence-unit>-->
+</persistence>
