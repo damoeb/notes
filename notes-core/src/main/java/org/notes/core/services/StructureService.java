@@ -1,19 +1,15 @@
 package org.notes.core.services;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.notes.common.cache.MethodCache;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.core.interfaces.FolderManager;
 import org.notes.core.interfaces.UserManager;
 import org.notes.core.model.Folder;
-import org.notes.core.request.NotesRequestException;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import java.util.Collection;
+import java.util.List;
 
 @NotesInterceptors
 @Path("/structure")
@@ -25,114 +21,101 @@ public class StructureService {
     @Inject
     private UserManager userManager;
 
-    // jstree
-
-    @GET
-    @MethodCache
-    @Produces(MediaType.APPLICATION_JSON)
-    public String doGet(
-            @QueryParam("operation") @DefaultValue("create_node") String operationValue, @QueryParam("id") Long folderId
-    ) throws Exception {
-
-        Operation op = Operation.byString(operationValue);
-
-        if(op==null) {
-            throw new NotesRequestException(Response.Status.BAD_REQUEST, String.format("Invalid operation '%s'", operationValue));
-        }
-
-        if(folderId==null) {
-            throw new NotesRequestException(Response.Status.BAD_REQUEST, String.format("Invalid id '%s'", folderId));
-        }
-
-        Collection<Folder> children = folderManager.getChildren(folderId);
-
-        JSONArray result = new JSONArray();
-
-        for(Folder folder : children) {
-
-            JSONObject jFolder = new JSONObject();
-            JSONObject jAttr = new JSONObject();
-            jAttr.put("id", folder.getId());
-            jFolder.put("attr", jAttr);
-            jFolder.put("data", folder.getName());
-
-            jAttr.put("rel", "folder");
-            jFolder.put("state", "closed");
-
-            result.put(jFolder);
-        }
-
-//        id	381
-//        operation	get_children
-
-//        [
-//        {
-//            "attr":{
-//            "id":"372",
-//                    "rel":"folder"
-//        },
-//            "data":"New node",
-//                "state":"closed"
-//        },
-//        {
-//            "attr":{
-//            "id":"381",
-//                    "rel":"folder"
-//        },
-//            "data":"New node",
-//                "state":"closed"
-//        }
-//        ]
-        return result.toString();
-    }
 
 
     @POST
     @MethodCache
+    @Path("/database/add")
     @Produces(MediaType.APPLICATION_JSON)
-    public String doPost(
-            @FormParam("operation") String operationValue, @FormParam("id") Long folderId, @FormParam("title") String folderName
+    public Folder createDatabase(
+            @QueryParam("name") String name
     ) throws Exception {
+        return folderManager.createDatabase(name);
+    }
 
-        Operation op = Operation.byString(operationValue);
+    @GET
+    @MethodCache
+    @Path("/database/list")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Folder> getDatabases(
+    ) throws Exception {
+        return folderManager.getDatabases();
+    }
 
-        if(op==null) {
-            throw new NotesRequestException(Response.Status.BAD_REQUEST, String.format("Invalid operation '%s'", operationValue));
-        }
-        if(folderId==null) {
-            throw new NotesRequestException(Response.Status.BAD_REQUEST, String.format("Invalid id '%s'", folderId));
-        }
+    // -- Folder -------------------------------------------------------------------------------------------------------
 
-        JSONObject response = new JSONObject();
-        response.put("status", 1);
+    @POST
+    @MethodCache
+    @Path("/folder/rename/{folderId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Folder renameFolder(
+            @PathParam("folderId") Long folderId,
+            @QueryParam("name") String name
+    ) throws Exception {
+        return folderManager.renameFolder(folderId, name);
+    }
 
-        switch (op) {
-            case create_node:
-                Folder folder = folderManager.createFolder(folderId, userManager.getUserId(), folderName);
-                response.put("id", folder.getId());
-                break;
-            case remove_node:
-                folderManager.removeFolder(folderId);
-                break;
-            case rename_node:
-                folderManager.renameFolder(folderId, folderName);
-                break;
-            default:
-                throw new NotesRequestException(Response.Status.BAD_REQUEST, String.format("Invalid operation '%s'", operationValue));
-        }
+    @POST
+    @MethodCache
+    @Path("/folder/remove/{folderId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public void removeFolder(
+            @PathParam("folderId") Long folderId
+    ) throws Exception {
+        folderManager.removeFolder(folderId);
+    }
 
-//        -- create
-//        id	372
-//        operation	create_node
-//        position	6
-//        title	wef
-//        type	default/folder
-//
-//        -- remove
-//        id	375
-//        operation	remove_node
+    @POST
+    @MethodCache
+    @Path("/folder/add/{parentId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Folder createFolder(
+            @PathParam("parentId") Long parentId,
+            @QueryParam("name") String name
+    ) throws Exception {
+        return folderManager.createFolder(parentId, name);
+    }
 
-        return response.toString();
+    @POST
+    @MethodCache
+    @Path("/folder/move/{folderId}/{newParentId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Folder moveFolder(
+            @PathParam("folderId") Long folderId,
+            @PathParam("newParentId") Long newParentId
+    ) throws Exception {
+        return folderManager.moveFolder(folderId, newParentId);
+    }
+
+    @POST
+    @MethodCache
+    @Path("/note/move/{noteId}/{newParentId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Folder moveNote(
+            @PathParam("noteId") Long noteId,
+            @PathParam("newParentId") Long newParentId
+    ) throws Exception {
+        return folderManager.moveNote(noteId, newParentId);
+    }
+
+    @GET
+    @MethodCache
+    @Path("/folder/{folderId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Folder getFolder(
+            @PathParam("folderId") Long folderId
+    ) throws Exception {
+        return folderManager.getById(folderId);
+    }
+
+    @GET
+    @MethodCache
+    @Path("/folder/{folderId}/children")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Folder> children(
+            @PathParam("folderId") Long folderId
+    ) throws Exception {
+        return folderManager.getChildren(folderId);
     }
 
 }

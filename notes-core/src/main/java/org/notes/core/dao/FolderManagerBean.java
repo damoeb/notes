@@ -6,7 +6,6 @@ import org.notes.common.configuration.NotesInterceptors;
 import org.notes.core.interfaces.FolderManager;
 import org.notes.core.interfaces.UserManager;
 import org.notes.core.model.Folder;
-import org.notes.core.model.User;
 import org.notes.core.request.NotesRequestException;
 
 import javax.ejb.Stateless;
@@ -35,21 +34,32 @@ public class FolderManagerBean implements FolderManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public Folder createNotebook(Long userId, String name) {
+    public Folder createDatabase(String name) {
         try {
-            Folder folder = _createFolder(userId, name);
-            User user = userManager.getUser(userId);
-            //user.getNotebooks().add(folder);
-            em.merge(user);
-
-            return folder;
+            return _createFolder(name);
 
         } catch (NotesRequestException t) {
             throw t;
         } catch (Throwable t) {
-            throw new NotesRequestException("create notebook", t);
+            throw new NotesRequestException("create database", t);
         }
     }
+
+    @Override
+    public List<Folder> getDatabases() {
+        try {
+            Query query = em.createNamedQuery(Folder.QUERY_USERS_NOTEBOOKS);
+            query.setParameter("ID", 1);  // todo userId
+
+            return query.getResultList();
+
+        } catch (NotesRequestException t) {
+            throw t;
+        } catch (Throwable t) {
+            throw new NotesRequestException("get databases", t);
+        }
+    }
+
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
@@ -68,9 +78,6 @@ public class FolderManagerBean implements FolderManager {
                 throw new NotesRequestException(Response.Status.NOT_FOUND, String.format("No folder with id '%s' found", folderId));
             }
 
-            //Hibernate.initialize(note.getMetricResults());
-            //em.detach(user);
-
             return folderList.get(0);
 
         } catch (NotesRequestException t) {
@@ -82,7 +89,7 @@ public class FolderManagerBean implements FolderManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public Folder createFolder(Long parentId, Long userId, String name) {
+    public Folder createFolder(Long parentId, String name) {
         try {
 
             if (parentId == null || parentId <= 0) {
@@ -90,7 +97,7 @@ public class FolderManagerBean implements FolderManager {
             }
             Folder parent = getById(parentId);
 
-            Folder folder = _createFolder(userId, name);
+            Folder folder = _createFolder(name);
             folder.setParent(parent);
             em.merge(folder);
             em.flush();
@@ -107,17 +114,15 @@ public class FolderManagerBean implements FolderManager {
         }
     }
 
-    private Folder _createFolder(Long userId, String name) {
+    private Folder _createFolder(String name) {
 
         if (StringUtils.isBlank(name)) {
             throw new NotesRequestException(Response.Status.BAD_REQUEST, String.format("Invalid name '%s'", name));
         }
 
-        User user = userManager.getUser(userId);
-
         Folder folder = new Folder();
         folder.setName(name);
-        // todo folder.setOwner(user);
+        folder.setOwnerId(1l); // todo userId
 
         em.persist(folder);
         em.flush();
@@ -155,7 +160,17 @@ public class FolderManagerBean implements FolderManager {
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public Folder removeFolder(Long folderId) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        try {
+
+            //getById(folderId)
+            //move all descendant notes toString() its parent;
+            return null;
+
+        } catch (NotesRequestException t) {
+            throw t;
+        } catch (Throwable t) {
+            throw new NotesRequestException("get user by id", t);
+        }
     }
 
     @Override
@@ -179,24 +194,16 @@ public class FolderManagerBean implements FolderManager {
         }
     }
 
+    @Override
+    public Folder moveFolder(Long folderId, Long newParentId) {
+        // todo implement
+        return null;
+    }
 
-//    @Override
-//    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-//    public Note getById(long noteId) {
-//        try {
-//            Query query = em.createNamedQuery(Note.QUERY_BY_ID);
-//            query.setParameter("ID", noteId);
-//            Note note = (Note) query.getSingleResult();
-//            //Hibernate.initialize(note.getMetricResults());
-//            //em.detach(note);
-//
-//            return note;
-//
-//        } catch (NotesRequestException t) {
-//            throw t;
-//        } catch (Throwable t) {
-//            throw new NotesRequestException("get note by id", t);
-//        }
-//    }
+    @Override
+    public Folder moveNote(Long noteId, Long newParentId) {
+        // todo implement
+        return null;
+    }
 
 }
