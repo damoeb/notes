@@ -25,11 +25,13 @@
     <script src="js/vendor/modernizr-2.6.2.min.js"></script>
 
     <script src="js/vendor/jquery-1.8.2.min.js"></script>
-    <script src="js/vendor/jquery.raty.js"></script>
     <script src="js/vendor/jquery-ui-1.9.2.custom.js"></script>
     <script src="js/vendor/jquery.dataTables.js"></script>
     <script src="js/vendor/jquery.timeago.js"></script>
     <script src="js/vendor/jquery.paginate.js"></script>
+    <script src="js/vendor/jquery.raty.js"></script>
+    <script src="js/vendor/underscore-min.js"></script>
+    <script src="js/vendor/backbone.js"></script>
 
     <!-- notifications -->
     <!-- see http://needim.github.com/noty/-->
@@ -52,7 +54,7 @@
     <script type="text/javascript">
 
         $(document).ready( function() {
-
+            /*
  //           $('#n-editor').editor();
  //           $('#n-list').list({url: '/notes/rest/note/list'});
 
@@ -77,14 +79,70 @@
                 text: false
             });
 
+            */
 
-            // layout
-            layout();
+            var Database = Backbone.Model.extend({
+                defaults: {
+                    name: 'empty'
+                },
+                url: '/notes/rest/database'
+            });
+
+            var DatabaseList = Backbone.Collection.extend({
+                model: Database,
+                url: '/notes/rest/database/list',
+                initialize: function(models, options) {
+                    //this.fetch();
+                }
+            });
+
+
+            var DatabaseView = Backbone.View.extend({
+                el: $('#databases'), // el attaches to existing element
+
+                events: {
+                    'click button#add': 'addItem'
+                },
+
+                initialize: function () {
+                    _.bindAll(this, 'render', 'addItem');
+
+
+                    this.collection = new DatabaseList();
+                    this.collection.bind('add', this.appendItem);
+
+                    this.render();
+                },
+
+
+                render: function () {
+
+                    var list = $('<dl></dl>');
+                    list.append('<dt>Open Databases</dt>');
+                    $(this.el).append(list);
+                    $(this.el).append("<button id='add'>Add database</button>");
+                },
+
+
+                addItem: function () {
+                    var name = prompt('Name of database');
+
+                    var item = new Database();
+                    item.set({
+                        name: name
+                    });
+                    item.save();
+                    this.collection.add(item)
+                },
+
+                appendItem: function(item) {
+                    $('dl', this.el).append("<dd>" + item.get('name') +' (' + item.get('fileCount') + ')</dd>');
+                }
+            });
+
+            var listView = new DatabaseView();
+
         });
-
-        function layout() {
-
-        }
 
     </script>
 
@@ -119,12 +177,16 @@
 
             <!-- Navigation -->
 
+            <div id="databases"></div>
+
+            <!--
             <dl>
                 <dt>Open Databases</dt>
                 <dd>Work</dd>
                 <dd>Projects</dd>
                 <dd>Ideas</dd>
             </dl>
+            -->
             <dl style="margin-top:10px">
                 <dt>Favourites</dt>
                 <dd>Books</dd>

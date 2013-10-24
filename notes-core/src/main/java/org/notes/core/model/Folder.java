@@ -56,6 +56,9 @@ public class Folder implements Serializable {
     @Column(nullable = false)
     private String name;
 
+    @Basic
+    private boolean deleted;
+
 
     public Folder() {
         //
@@ -107,5 +110,13 @@ public class Folder implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }

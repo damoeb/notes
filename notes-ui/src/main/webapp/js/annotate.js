@@ -18,42 +18,22 @@ $.widget("notes.annotate", {
 
         PDFJS.disableWorker = true;
 
-        $this.pdf = PDFJS.getDocument('217.pdf');
+        $this.pdf = PDFJS.getDocument('/ui/217.pdf');
         $this.pdf.then(function(pdf) {
-            var $this = this;
-            console.log('renderPdf');
-            pdf.getPage(1).then($this._renderPage);
+            console.log('trigger renderPdf');
+            //pdf.getPage(1).then($this._renderPage);
+
+            pdf.getPage(1).then(function(page) {
+                $this._renderPage(page);
+                //console.log(page)
+            });
         });
 
-        /*
-        var _url = '/notes/rest/note/attachment/{ATTACHMENT_ID}';
-        var _urlReplacements = {'{ATTACHMENT_ID}':3};
-
-        $.ajax({
-            type:'GET',
-            url:notes.util.replaceInUrl(_url, _urlReplacements),
-            cache:false,
-            processData:false,
-            success:function (raw) {
-
-                var uint8Array = new Uint8Array(new ArrayBuffer(raw.length));
-                for (var i = 0; i < raw.length; i++) {
-                    uint8Array[i] = raw.charCodeAt(i);
-                }
-
-                //$this.pdf = PDFJS.getDocument(uint8Array);
-                $this.pdf = PDFJS.getDocument('217.pdf');
-                $this.pdf.then(function(pdf) {
-                    var $this = this;
-                    console.log('renderPdf');
-                    pdf.getPage(1).then($this._renderPage);
-                });
-            }
-        });
-        */
     },
 
     _renderPage : function (page) {
+        console.log('renderPdf');
+
         var $this = this;
         var viewport = page.getViewport(scale);
         var $canvas = jQuery("<canvas></canvas>");
