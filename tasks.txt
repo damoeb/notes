@@ -1,5 +1,2 @@
-- annotate PDFs
-- Websites to PDF and annotate? visualize PDFs with mozilla pdf.js + mark text
--
-- upload file, set description?
-- extract text of pdf, doc, image
+- different documents: PDF, RTF, Text only, Web archive
+- mandatory

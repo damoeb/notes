@@ -12,23 +12,23 @@ import java.io.Serializable;
 import java.util.*;
 
 @SuppressWarnings("serial")
-@Entity(name = "Note")
-@Table(name = "Note"
+@Entity(name = "Document")
+@Table(name = "Document"
         //uniqueConstraints = @UniqueConstraint(columnNames = {"version", "foreignId"})
 )
 @NamedQueries({
-        //@NamedQuery(name = Note.QUERY_BY_ID, query = "SELECT a FROM Note a where a.id=:ID"),
-        @NamedQuery(name = Note.QUERY_BY_ID, query = "SELECT a FROM Note a where a.id=:ID"),
-        @NamedQuery(name = Note.QUERY_REMOVE, query = "DELETE FROM Note a where a.id=:ID"),
-        @NamedQuery(name = Note.QUERY_ALL, query = "SELECT a FROM Note a")
+        //@NamedQuery(name = Document.QUERY_BY_ID, query = "SELECT a FROM Document a where a.id=:ID"),
+        @NamedQuery(name = Document.QUERY_BY_ID, query = "SELECT a FROM Document a where a.id=:ID"),
+        @NamedQuery(name = Document.QUERY_REMOVE, query = "DELETE FROM Document a where a.id=:ID"),
+        @NamedQuery(name = Document.QUERY_ALL, query = "SELECT a FROM Document a")
 })
 //@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-public class Note implements Serializable {
+public class Document implements Serializable {
 
-    public static final String QUERY_BY_ID = "Note.QUERY_BY_ID";
-    public static final String QUERY_ALL = "Note.QUERY_ALL";
-    public static final String QUERY_REMOVE = "Note.QUERY_REMOVE";
+    public static final String QUERY_BY_ID = "Document.QUERY_BY_ID";
+    public static final String QUERY_ALL = "Document.QUERY_ALL";
+    public static final String QUERY_REMOVE = "Document.QUERY_REMOVE";
     public static final String FK_NOTE_ID = "note_id";
 
     @Id
@@ -81,7 +81,7 @@ public class Note implements Serializable {
     private boolean hasAttachments;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = Note.FK_NOTE_ID)
+    @JoinColumn(name = Document.FK_NOTE_ID)
     // too join without table
     private List<Attachment> attachments = new LinkedList<Attachment>();
 
@@ -104,7 +104,7 @@ public class Note implements Serializable {
 //    )
 //    private Set<Tag> tags = new HashSet<Tag>();
 
-    public Note() {
+    public Document() {
         // default
     }
 
@@ -141,7 +141,7 @@ public class Note implements Serializable {
 //        text = builder.toString();
     }
 
-    private Kind _getKind(Note note) {
+    private Kind _getKind(Document note) {
 
 //        TEXT: default
         Kind kindOfDoc = Kind.TEXT;
@@ -172,7 +172,7 @@ public class Note implements Serializable {
         return value.getBytes().length;
     }
 
-    private String _getPreview(Note note) {
+    private String _getPreview(Document note) {
         String plain = Jsoup.parse(note.getText()).text().replaceAll("\t\n ", " ");
         int limit = 80;
         return plain.length() > limit ? plain.substring(0, limit) + "..." : plain;
@@ -223,7 +223,7 @@ public class Note implements Serializable {
 //        } catch (NotesException e) {
 //            throw e;
 //        } catch (Throwable t) {
-//            throw new NotesException("Note is invalid", t);
+//            throw new NotesException("Document is invalid", t);
 //        }
 //    }
 //

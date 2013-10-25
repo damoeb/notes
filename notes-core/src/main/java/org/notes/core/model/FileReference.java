@@ -1,14 +1,11 @@
 package org.notes.core.model;
 
 import org.apache.commons.lang.StringUtils;
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.hibernate.annotations.Index;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity(name = "File")
 @Table(name = "File",
@@ -30,7 +27,7 @@ public class FileReference implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(updatable = false, insertable = false, nullable = true, name = Note.FK_NOTE_ID)
+    @Column(updatable = false, insertable = false, nullable = true, name = Document.FK_NOTE_ID)
     private Long noteId;
 
     @Basic

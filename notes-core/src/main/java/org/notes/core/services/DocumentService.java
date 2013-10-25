@@ -12,9 +12,9 @@ import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
 import org.notes.core.dao.RepositoryFile;
 import org.notes.core.interfaces.FileManager;
-import org.notes.core.interfaces.NoteManager;
+import org.notes.core.interfaces.DocumentManager;
 import org.notes.core.model.Attachment;
-import org.notes.core.model.Note;
+import org.notes.core.model.Document;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -23,7 +23,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.util.HashMap;
@@ -32,11 +31,11 @@ import java.util.List;
 import java.util.Map;
 
 @NotesInterceptors
-@Path("/note")
-public class NoteService {
+@Path("/document")
+public class DocumentService {
 
     @Inject
-    private NoteManager noteManager;
+    private DocumentManager documentManager;
     @Inject
     private FileManager fileManager;
 
@@ -57,7 +56,7 @@ public class NoteService {
             @PathParam("id") long noteId
     ) {
         try {
-            return NotesResponse.ok(noteManager.getByIdWithRefs(noteId));
+            return NotesResponse.ok(documentManager.getByIdWithRefs(noteId));
         } catch (Throwable t) {
             return NotesResponse.error(t);
         }
@@ -67,9 +66,9 @@ public class NoteService {
     @MethodCache
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse addNote(
-            Note note
+            Document note
     ) throws Exception {
-        Note result = noteManager.addNote(note);
+        Document result = documentManager.addDocument(note);
         result.setAttachments(null);
         return NotesResponse.ok(result);
     }
@@ -81,7 +80,7 @@ public class NoteService {
     public NotesResponse removeNote(
             @PathParam("id") long noteId
     ) throws Exception {
-        noteManager.removeNote(noteId);
+        documentManager.removeNote(noteId);
         return NotesResponse.ok();
     }
 
@@ -90,10 +89,10 @@ public class NoteService {
     @Produces(MediaType.APPLICATION_JSON)
     @Path(value = "/{id}")
     public NotesResponse updateNote(
-            Note note,
+            Document note,
             @PathParam("id") long noteId
     ) throws Exception {
-        Note result = noteManager.updateNote(noteId, note);
+        Document result = documentManager.updateNote(noteId, note);
         result.setAttachments(null);
         return NotesResponse.ok(result);
     }
@@ -111,7 +110,7 @@ public class NoteService {
             @PathParam("attachmentId") long attachmentId,
             @PathParam("noteId") long noteId
     ) throws Exception {
-        noteManager.removeAttachmentFromNote(attachmentId, noteId);
+        documentManager.removeAttachmentFromNote(attachmentId, noteId);
         return NotesResponse.ok();
     }
 
@@ -123,7 +122,7 @@ public class NoteService {
             @PathParam("attachmentId") long attachmentId,
             @QueryParam("name") String newName
     ) throws Exception {
-        return NotesResponse.ok(noteManager.renameAttachment(attachmentId, newName));
+        return NotesResponse.ok(documentManager.renameAttachment(attachmentId, newName));
     }
 
     // -- UPLOAD --
@@ -149,18 +148,17 @@ public class NoteService {
             //todo upload.setSizeMax(10000000);
 
             List<FileItem> items = upload.parseRequest(request);
-            //List<FileMeta> files = new LinkedList<FileMeta>();
             List<Attachment> files = new LinkedList<Attachment>();
 
             Long noteId = _getNoteIdFieldVal(items);
-            Note note = noteManager.getByIdWithRefs(noteId);
+            Document note = documentManager.getByIdWithRefs(noteId);
 
             for(FileItem item:items){
 
                 if (!item.isFormField()) {
 
                     RepositoryFile repositoryFile = fileManager.storeInRepository(item);
-                    files.add(noteManager.addAttachmentToNote(item.getName(), repositoryFile, note));
+                    files.add(documentManager.addAttachmentToNote(item.getName(), repositoryFile, note));
                 }
             }
 
@@ -183,7 +181,7 @@ public class NoteService {
 
         try {
 
-            final Attachment data  = noteManager.getAttachmentWithFile(attachmentId);
+            final Attachment data  = documentManager.getAttachmentWithFile(attachmentId);
 
             if(data == null) {
                 // force media type
@@ -281,7 +279,7 @@ public class NoteService {
     ) throws Exception {
         Map<String, Object> response = new HashMap<String, Object>(5);
         response.put("firstResult", firstResult);
-        List<Note> list = noteManager.getList(firstResult, maxResults);
+        List<Document> list = documentManager.getList(firstResult, maxResults);
         response.put("maxResults", list.size());
         response.put("list", list);
         return NotesResponse.ok(response);

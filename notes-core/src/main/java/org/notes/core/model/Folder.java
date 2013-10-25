@@ -2,15 +2,13 @@ package org.notes.core.model;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.hibernate.annotations.Index;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.*;
 
 @Entity(name = "Folder")
 @Table(name = "Folder",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"parent_id", "name"})
+        uniqueConstraints = @UniqueConstraint(columnNames = {User.FK_OWNER_ID, "parent_id", "name"})
 )
 @NamedQueries({
         @NamedQuery(name = Folder.QUERY_BY_ID, query = "SELECT a FROM Folder a where a.id=:ID"),
@@ -21,7 +19,7 @@ import java.util.*;
 })
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 //@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class Folder implements Serializable {
+public class Folder extends Node {
 
     public static final String QUERY_BY_ID = "Folder.QUERY_BY_ID";
     public static final String QUERY_GET_CHILDREN = "Folder.QUERY_GET_CHILDREN";
@@ -34,13 +32,10 @@ public class Folder implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(updatable = false, insertable = false, name = User.FK_OWNER_ID)
-    private Long ownerId;
-
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, cascade = {})
     @JoinColumn(name = Folder.FK_FOLDER_ID)
-    private List<Note> notes = new LinkedList<Note>();
+    private List<Document> notes = new LinkedList<Document>();
 
     @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY, cascade = {})
@@ -51,14 +46,8 @@ public class Folder implements Serializable {
     @Column(updatable = false, insertable = false, nullable = true, name = "parent_id")
     private Long parentId;
 
-    @Basic
-    @Index(name = "nameIdx")
-    @Column(nullable = false)
-    private String name;
-
-    @Basic
-    private boolean deleted;
-
+    @Column(updatable = false, insertable = false, nullable = true, name = Database.FK_DATABASE_ID)
+    private Long databaseId;
 
     public Folder() {
         //
@@ -72,19 +61,11 @@ public class Folder implements Serializable {
         this.id = id;
     }
 
-    public Long getOwnerId() {
-        return ownerId;
-    }
-
-    public void setOwnerId(Long ownerId) {
-        this.ownerId = ownerId;
-    }
-
-    public List<Note> getNotes() {
+    public List<Document> getNotes() {
         return notes;
     }
 
-    public void setNotes(List<Note> notes) {
+    public void setNotes(List<Document> notes) {
         this.notes = notes;
     }
 
@@ -104,19 +85,11 @@ public class Folder implements Serializable {
         this.parentId = parentId;
     }
 
-    public String getName() {
-        return name;
+    public Long getDatabaseId() {
+        return databaseId;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public boolean isDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
+    public void setDatabaseId(Long databaseId) {
+        this.databaseId = databaseId;
     }
 }

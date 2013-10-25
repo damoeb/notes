@@ -8,7 +8,7 @@
     <persistence-unit name="primary">
         <jta-data-source>java:jboss/datasources/note_mysql</jta-data-source>
 
-        <class>org.notes.core.model.Note</class>
+        <class>org.notes.core.model.Document</class>
         <class>org.notes.core.model.Tag</class>
         <class>org.notes.core.model.User</class>
         <class>org.notes.core.model.Account</class>

@@ -82,7 +82,44 @@
             */
 
             var Database = Backbone.Model.extend({
+                defaults: {
+                    label: 'blank'
+                },
                 url: '/notes/rest/database'
+            });
+            var ItemView = Backbone.View.extend({
+
+                template: _.template('<b class="item"><button class="remove">X</button> <b><button class="edit">Edit</button> <%= label %></b>'),
+                editTemplate: _.template('<input class="name" value="<%= name %>" /><button class="save">Save</button>'),
+
+                events: {
+                    "click .remove": "deleteItem",
+                    "click .edit": "editItem",
+                    "click .save": "saveItem",
+                    "click .item": "openItem"
+                },
+                deleteItem: function () {
+                    this.model.destroy();
+                    this.remove();
+                },
+                editItem: function () {
+                    this.$el.html(this.editTemplate(this.model.toJSON()));
+                },
+                openItem: function () {
+                    console.log('not implemented');
+                },
+                saveItem: function () {
+                    var editTitle = $('input.name').val();
+                    this.model.save({
+                        label: editTitle
+                    });
+                    this.$el.html(this.template(this.model.toJSON()));
+                },
+                render: function () {
+                    var attributes = this.model.toJSON();
+                    this.$el.append(this.template(attributes));
+                    return this;
+                }
             });
 
             var DatabaseList = Backbone.Collection.extend({
@@ -93,47 +130,67 @@
                 }
             });
 
-
-            var DatabaseView = Backbone.View.extend({
-                el: $('#databases'), // el attaches to existing element
+            var DatabaseListView = Backbone.View.extend({
 
                 events: {
                     'click #add': 'addItem'
                 },
 
-                initialize: function () {
-                    _.bindAll(this, 'render', 'addItem');
+                initialize: function (options) {
+                    _.bindAll(this, 'render', 'addItem', 'renderItem');
+
+                    this.options = options;
+                    this.el = options.el;
 
                     this.collection = new DatabaseList();
-                    this.collection.bind('add', this.appendItem);
+                    this.collection.bind('add', this.renderItem);
 
                     this.render();
                 },
 
-
                 render: function () {
 
-                    var list = $('<dl></dl>');
-                    list.append('<dt>Open Databases</dt>');
-                    $(this.el).append(list);
-                    $(this.el).append("<button id='add'>Add database</button>");
+                    this.list = $('<dl></dl>');
+                    this.list.append($('<dt></dt>', {text: this.options.title}).append("<button id='add'>+</button>"));
+                    this.el.append(this.list);
                 },
-
 
                 addItem: function () {
-                    var name = prompt('Name of database');
-
-                    var item = new Database({name: name});
-                    item.save();
-                    this.collection.add(item);
+                    var label = prompt('New Name');
+                    this.collection.add(new Database({label: label}));
                 },
 
-                appendItem: function(item) {
-                    $('dl', this.el).append("<dd>" + item.get('name') +' (' + item.get('fileCount') + ')</dd>');
+                renderItem: function(item) {
+                    var itemView = new ItemView({
+                        model: item
+                    });
+                    this.list.append(itemView.render().el);
                 }
+
             });
 
-            var listView = new DatabaseView();
+            var databaseView = new DatabaseListView({
+                title: 'Open databases',
+                el: $('#databases')
+            });
+
+
+
+
+            var Node = Backbone.Model.extend({
+                defaults: {
+                    label: 'blank',
+                    documentCount: 0,
+                    level: 0
+                },
+                url: '/notes/rest/node'
+            });
+            var NodeView = ItemView.extend({
+                openItem: function() {
+                    console.log(this.model);
+                }
+            })
+
 
         });
 
@@ -172,35 +229,23 @@
 
             <div id="databases"></div>
 
-            <!--
-            <dl>
-                <dt>Open Databases</dt>
-                <dd>Work</dd>
-                <dd>Projects</dd>
-                <dd>Ideas</dd>
-            </dl>
-            -->
             <dl style="margin-top:10px">
                 <dt>Favourites</dt>
                 <dd>Books</dd>
                 <dd>Personal</dd>
             </dl>
+
         </div>
 
         <div class="container" style="margin-left:200px;">
             <div class="row">
-                <div class="col-lg-2" style="background-color: #e9e9e9; min-height: 400px;">
+                <div id="tree" class="col-lg-2" style="background-color: #e9e9e9; min-height: 400px;">
 
-                    <div class="folder">
-                        <span class="ui-icon ui-icon-triangle-1-e" style="display: inline-block"></span>
-                        <span class="ui-icon ui-icon-folder-collapsed" style="display: inline-block"></span>
-                        <span>Project Literature (10)</span>
-                    </div>
-                    <div class="folder">
-                        <span class="ui-icon ui-icon-triangle-1-e" style="display: inline-block"></span>
-                        <span class="ui-icon ui-icon-folder-collapsed" style="display: inline-block"></span>
-                        <span>Sources (3)</span>
-                    </div>
+                    <!--<div class="folder">-->
+                        <!--<span class="ui-icon ui-icon-triangle-1-e" style="display: inline-block"></span>-->
+                        <!--<span class="ui-icon ui-icon-folder-collapsed" style="display: inline-block"></span>-->
+                        <!--<span>Project Literature (10)</span>-->
+                    <!--</div>-->
 
                 </div>
                 <div class="col-lg-10">

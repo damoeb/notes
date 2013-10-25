@@ -31,7 +31,7 @@ public class Tag implements Serializable {
 //            joinColumns = {@JoinColumn(name = "tagId")},
 //            inverseJoinColumns = {@JoinColumn(name = "articleId")}
 //    )
-//    private Set<Note> articles = new HashSet<Note>();
+//    private Set<Document> articles = new HashSet<Document>();
 
     @Basic
     @Index(name = "valueIdx")

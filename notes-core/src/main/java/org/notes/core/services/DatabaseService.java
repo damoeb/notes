@@ -2,8 +2,9 @@ package org.notes.core.services;
 
 import org.notes.common.cache.MethodCache;
 import org.notes.common.configuration.NotesInterceptors;
-import org.notes.core.interfaces.FolderManager;
+import org.notes.core.interfaces.DatabaseManager;
 import org.notes.core.interfaces.UserManager;
+import org.notes.core.model.Database;
 import org.notes.core.model.Folder;
 
 import javax.inject.Inject;
@@ -15,7 +16,7 @@ import javax.ws.rs.core.MediaType;
 public class DatabaseService {
 
     @Inject
-    private FolderManager folderManager;
+    private DatabaseManager databaseManager;
 
     @Inject
     private UserManager userManager;
@@ -25,9 +26,9 @@ public class DatabaseService {
     @MethodCache
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse createDatabase(
-            Folder database
+            Database database
     ) throws Exception {
-        return NotesResponse.ok(folderManager.createDatabase(database));
+        return NotesResponse.ok(databaseManager.createDatabase(database));
     }
 
     @PUT
@@ -35,10 +36,10 @@ public class DatabaseService {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse updateDatabase(
-            Folder database,
+            Database database,
             @PathParam("id") long folderId
     ) throws Exception {
-        return NotesResponse.ok(folderManager.updateDatabase(folderId, database));
+        return NotesResponse.ok(databaseManager.updateDatabase(folderId, database));
     }
 
     @GET
@@ -48,7 +49,7 @@ public class DatabaseService {
     public NotesResponse getDatabase(
             @PathParam("id") long folderId
     ) throws Exception {
-        return NotesResponse.ok(folderManager.getDatabase(folderId));
+        return NotesResponse.ok(databaseManager.getDatabase(folderId));
     }
 
     @DELETE
@@ -58,7 +59,7 @@ public class DatabaseService {
     public NotesResponse deleteDatabase(
             @PathParam("id") long folderId
     ) throws Exception {
-        return NotesResponse.ok(folderManager.deleteDatabase(folderId));
+        return NotesResponse.ok(databaseManager.deleteDatabase(folderId));
     }
 
     @GET
@@ -67,7 +68,7 @@ public class DatabaseService {
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse getDatabases(
     ) throws Exception {
-        return NotesResponse.ok(folderManager.getDatabases());
+        return NotesResponse.ok(databaseManager.getDatabases());
     }
 
 }

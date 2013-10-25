@@ -7,12 +7,11 @@ import org.notes.common.configuration.Configuration;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
 import org.notes.core.interfaces.FileManager;
-import org.notes.core.interfaces.NoteManager;
+import org.notes.core.interfaces.DocumentManager;
 import org.notes.core.interfaces.TextManager;
 import org.notes.core.model.Attachment;
+import org.notes.core.model.Document;
 import org.notes.core.model.FileReference;
-import org.notes.core.model.Note;
-import org.notes.core.text.PdfTextExtractor;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
@@ -25,7 +24,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -35,9 +33,9 @@ import java.util.*;
 @Stateless
 @NotesInterceptors
 @TransactionAttribute(TransactionAttributeType.NEVER)
-public class NoteManagerBean implements NoteManager {
+public class DocumentManagerBean implements DocumentManager {
 
-    private static final Logger LOGGER = Logger.getLogger(NoteManagerBean.class);
+    private static final Logger LOGGER = Logger.getLogger(DocumentManagerBean.class);
 
     @PersistenceContext(unitName = "primary")
     private EntityManager em;
@@ -59,16 +57,16 @@ public class NoteManagerBean implements NoteManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public Note getById(long noteId) throws NotesException {
+    public Document getById(long documentId) throws NotesException {
         try {
-            Query query = em.createNamedQuery(Note.QUERY_BY_ID);
-            query.setParameter("ID", noteId);
-            Note note = (Note) query.getSingleResult();
+            Query query = em.createNamedQuery(Document.QUERY_BY_ID);
+            query.setParameter("ID", documentId);
+            Document note = (Document) query.getSingleResult();
 
             return note;
 
         } catch (NoResultException t) {
-            throw new NotesException("note '"+noteId+"' does not exist");
+            throw new NotesException("note '"+ documentId +"' does not exist");
         } catch (Throwable t) {
             throw new NotesException("get note by id", t);
         }
@@ -76,9 +74,9 @@ public class NoteManagerBean implements NoteManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public Note getByIdWithRefs(long noteId) throws NotesException {
+    public Document getByIdWithRefs(long documentId) throws NotesException {
         try {
-            Note note = getById(noteId);
+            Document note = getById(documentId);
             Hibernate.initialize(note.getAttachments());
 
             return note;
@@ -92,21 +90,21 @@ public class NoteManagerBean implements NoteManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public Note addNote(Note note) throws NotesException {
+    public Document addDocument(Document document) throws NotesException {
 
         try {
 
-            if (note == null) {
+            if (document == null) {
                 throw new IllegalArgumentException("note is null");
             }
 
             // todo validate
 
-            em.persist(note);
+            em.persist(document);
             em.flush();
-            em.refresh(note);
+            em.refresh(document);
 
-            return note;
+            return document;
 
         } catch (Throwable t) {
             throw new NotesException("add note", t);
@@ -115,25 +113,25 @@ public class NoteManagerBean implements NoteManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public Note updateNote(long noteId, Note newNote) throws NotesException {
+    public Document updateNote(long documentId, Document document) throws NotesException {
 
         try {
 
-            if (newNote == null) {
+            if (document == null) {
                 throw new IllegalArgumentException("note is null");
             }
 
-            Note oldNote = getById(noteId);
+            Document oldNote = getById(documentId);
 
-            oldNote.setTitle(newNote.getTitle());
-            oldNote.setText(newNote.getText());
+            oldNote.setTitle(document.getTitle());
+            oldNote.setText(document.getText());
 
-            boolean urlChanged = StringUtils.equals(oldNote.getUrl(), newNote.getUrl());
+            boolean urlChanged = StringUtils.equals(oldNote.getUrl(), document.getUrl());
             if(urlChanged) {
 
             }
 
-            oldNote.setUrl(newNote.getUrl());
+            oldNote.setUrl(document.getUrl());
             oldNote.onPersist();
 
             em.merge(oldNote);
@@ -151,10 +149,10 @@ public class NoteManagerBean implements NoteManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public void removeNote(long noteId) throws NotesException {
+    public void removeNote(long documentId) throws NotesException {
         try {
 
-            Note note = getById(noteId);
+            Document note = getById(documentId);
             /*
             Hibernate.initialize(note.getAttachments());
 
@@ -184,9 +182,9 @@ public class NoteManagerBean implements NoteManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public void removeAttachmentFromNote(long attachmentId, long noteId) throws NotesException {
+    public void removeAttachmentFromNote(long attachmentId, long documentId) throws NotesException {
         try {
-            Note note = getById(noteId);
+            Document note = getById(documentId);
             Hibernate.initialize(note.getAttachments());
 
             Attachment attachment = null;
@@ -224,7 +222,7 @@ public class NoteManagerBean implements NoteManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public Attachment addAttachmentToNote(String fileName, RepositoryFile repositoryFile, Note note) throws NotesException {
+    public Attachment addAttachmentToNote(String fileName, RepositoryFile repositoryFile, Document document) throws NotesException {
 
         try {
 
@@ -234,7 +232,7 @@ public class NoteManagerBean implements NoteManager {
             if (repositoryFile == null) {
                 throw new IllegalArgumentException("repositoryFile is null");
             }
-            if (note == null) {
+            if (document == null) {
                 throw new IllegalArgumentException("note is null");
             }
 
@@ -269,14 +267,14 @@ public class NoteManagerBean implements NoteManager {
             em.flush();
             em.refresh(attachment);
 
-            if(note.getAttachments().contains(attachment)) {
+            if(document.getAttachments().contains(attachment)) {
                 throw new IllegalArgumentException("attachment already part of note");
             }
 
-            note.getAttachments().add(attachment);
-            note.setHasAttachments(true);
-            note.onPersist();
-            em.merge(note);
+            document.getAttachments().add(attachment);
+            document.setHasAttachments(true);
+            document.onPersist();
+            em.merge(document);
 
             return attachment;
 
@@ -353,17 +351,17 @@ public class NoteManagerBean implements NoteManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public List<Note> getList(int firstResult, int maxResults) throws NotesException {
+    public List<Document> getList(int firstResult, int maxResults) throws NotesException {
         try {
             _verifyLimits(firstResult, maxResults);
 
-            Query query = em.createNamedQuery(Note.QUERY_ALL);
+            Query query = em.createNamedQuery(Document.QUERY_ALL);
             query.setFirstResult(firstResult);
             query.setMaxResults(maxResults);
 
             @SuppressWarnings("unchecked")
-            List<Note> list = query.getResultList();
-            for (Note note : list) {
+            List<Document> list = query.getResultList();
+            for (Document note : list) {
                 em.detach(note);
                 note.setAttachments(null);
             }

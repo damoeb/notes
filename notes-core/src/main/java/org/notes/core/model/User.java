@@ -37,7 +37,7 @@ public class User implements Serializable {
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = User.FK_OWNER_ID)
-    private List<Note> notes = new LinkedList<Note>();
+    private List<Document> notes = new LinkedList<Document>();
 
     @Column(name = Account.FK_ACCOUNT_ID, insertable = false, updatable = false)
     private Long accountId;
@@ -62,11 +62,11 @@ public class User implements Serializable {
         this.username = username;
     }
 
-    public List<Note> getNotes() {
+    public List<Document> getNotes() {
         return notes;
     }
 
-    public void setNotes(List<Note> notes) {
+    public void setNotes(List<Document> notes) {
         this.notes = notes;
     }
 

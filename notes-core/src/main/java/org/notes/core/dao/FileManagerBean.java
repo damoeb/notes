@@ -7,7 +7,6 @@ import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
 import org.notes.core.interfaces.FileManager;
 import org.notes.core.model.FileReference;
-import org.notes.core.model.Note;
 import org.notes.core.request.NotesRequestException;
 
 import javax.annotation.PostConstruct;
@@ -19,9 +18,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.io.*;
 import java.math.BigInteger;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
