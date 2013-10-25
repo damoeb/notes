@@ -31,7 +31,7 @@
     <script src="js/vendor/jquery.paginate.js"></script>
     <script src="js/vendor/jquery.raty.js"></script>
     <script src="js/vendor/underscore-min.js"></script>
-    <script src="js/vendor/backbone.js"></script>
+    <script src="js/vendor/backbone-min.js"></script>
 
     <!-- notifications -->
     <!-- see http://needim.github.com/noty/-->
@@ -82,9 +82,6 @@
             */
 
             var Database = Backbone.Model.extend({
-                defaults: {
-                    name: 'empty'
-                },
                 url: '/notes/rest/database'
             });
 
@@ -101,12 +98,11 @@
                 el: $('#databases'), // el attaches to existing element
 
                 events: {
-                    'click button#add': 'addItem'
+                    'click #add': 'addItem'
                 },
 
                 initialize: function () {
                     _.bindAll(this, 'render', 'addItem');
-
 
                     this.collection = new DatabaseList();
                     this.collection.bind('add', this.appendItem);
@@ -127,12 +123,9 @@
                 addItem: function () {
                     var name = prompt('Name of database');
 
-                    var item = new Database();
-                    item.set({
-                        name: name
-                    });
+                    var item = new Database({name: name});
                     item.save();
-                    this.collection.add(item)
+                    this.collection.add(item);
                 },
 
                 appendItem: function(item) {
