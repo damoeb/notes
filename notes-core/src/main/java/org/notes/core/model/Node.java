@@ -1,25 +1,27 @@
 package org.notes.core.model;
 
-import org.hibernate.annotations.Index;
-
 import javax.persistence.*;
 import java.io.Serializable;
 
 @MappedSuperclass
 public abstract class Node implements Serializable {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
     @Column(updatable = false, insertable = false, name = User.FK_OWNER_ID)
-    private Long ownerId;
+    protected Long ownerId;
 
     @Basic
-    private Long documentCount;
+    protected Long documentCount;
 
     @Basic
     @Column(nullable = false)
-    private String name;
+    protected String name;
 
     @Basic
-    private boolean deleted;
+    protected boolean deleted;
 
 
     public Node() {
@@ -56,5 +58,13 @@ public abstract class Node implements Serializable {
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }

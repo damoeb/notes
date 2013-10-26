@@ -4,7 +4,8 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
 
 @Entity(name = "Folder")
 @Table(name = "Folder",
@@ -28,10 +29,6 @@ public class Folder extends Node {
     public static final String QUERY_USERS_NOTEBOOKS = "Folder.QUERY_USERS_NOTEBOOKS";
     public static final String FK_FOLDER_ID = "folder_id";
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, cascade = {})
     @JoinColumn(name = Folder.FK_FOLDER_ID)
@@ -51,14 +48,6 @@ public class Folder extends Node {
 
     public Folder() {
         //
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public List<Document> getNotes() {
@@ -92,4 +81,5 @@ public class Folder extends Node {
     public void setDatabaseId(Long databaseId) {
         this.databaseId = databaseId;
     }
+
 }

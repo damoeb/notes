@@ -14,7 +14,7 @@ import java.util.List;
 @NamedQueries({
         @NamedQuery(name = Database.QUERY_BY_ID, query = "SELECT a FROM DDatabase a where a.id=:ID"),
         @NamedQuery(name = Database.QUERY_GET_CHILDREN, query = "SELECT a FROM DDatabase a where a.id=:ID"),
-        @NamedQuery(name = Database.QUERY_ALL, query = "SELECT a FROM DDatabase a")//" where a.owner_id=:USER_ID")
+        @NamedQuery(name = Database.QUERY_ALL, query = "SELECT a FROM DDatabase a where a.ownerId=:USER_ID")
 })
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 //@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -24,10 +24,6 @@ public class Database extends Node {
     public static final String QUERY_GET_CHILDREN = "Database.QUERY_GET_CHILDREN";
     public static final String QUERY_ALL = "Database.QUERY_ALL";
     public static final String FK_DATABASE_ID = "database_id";
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, cascade = {})
@@ -40,14 +36,6 @@ public class Database extends Node {
 
     public Database() {
         //
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public List<Folder> getFolders() {
@@ -65,5 +53,4 @@ public class Database extends Node {
     public void setActiveFolderId(Long activeFolderId) {
         this.activeFolderId = activeFolderId;
     }
-
 }
