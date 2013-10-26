@@ -1,11 +1,10 @@
 package org.notes.core.dao;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.notes.common.configuration.NotesInterceptors;
+import org.notes.common.exceptions.NotesException;
 import org.notes.core.interfaces.AccountManager;
 import org.notes.core.model.Account;
-import org.notes.core.request.NotesRequestException;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -13,7 +12,6 @@ import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.ws.rs.core.Response;
 import java.util.List;
 
 //@LocalBean
@@ -29,11 +27,11 @@ public class AccountManagerBean implements AccountManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public Account getAccount(Long accountId) {
+    public Account getAccount(Long accountId) throws NotesException {
         try {
 
             if (accountId == null || accountId <= 0) {
-                throw new NotesRequestException(Response.Status.BAD_REQUEST, String.format("Invalid account id '%s'", accountId));
+                throw new NotesException(String.format("Invalid account id '%s'", accountId));
             }
 
             Query query = em.createNamedQuery(Account.QUERY_BY_ID);
@@ -41,38 +39,26 @@ public class AccountManagerBean implements AccountManager {
 
             List<Account> accountList = query.getResultList();
             if (accountList.isEmpty()) {
-                throw new NotesRequestException(Response.Status.NOT_FOUND, String.format("No account with id '%s' found", accountId));
+                throw new NotesException(String.format("No account with id '%s' found", accountId));
             }
 
-            Account account = accountList.get(0);
+            return accountList.get(0);
 
-            //em.detach(account);
-
-            return account;
-
-        } catch (NotesRequestException t) {
+        } catch (NotesException t) {
             throw t;
         } catch (Throwable t) {
-            throw new NotesRequestException("get account by id", t);
+            throw new NotesException("get account by id", t);
         }
     }
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public Account createAccount(String name, long quota) {
+    public Account createAccount(Account account) throws NotesException {
         try {
 
-            if (StringUtils.isBlank(name)) {
-                throw new NotesRequestException(Response.Status.BAD_REQUEST, String.format("Invalid account name '%s'", name));
+            if (account == null) {
+                throw new NotesException("account is null");
             }
-
-            if (quota < 0) {
-                throw new NotesRequestException(Response.Status.BAD_REQUEST, String.format("Invalid quota '%s'", quota));
-            }
-
-            Account account = new Account();
-            account.setName(name);
-            account.setQuota(quota);
 
             em.persist(account);
             em.flush();
@@ -80,10 +66,10 @@ public class AccountManagerBean implements AccountManager {
 
             return account;
 
-        } catch (NotesRequestException t) {
+        } catch (NotesException t) {
             throw t;
         } catch (Throwable t) {
-            throw new NotesRequestException("get account by id", t);
+            throw new NotesException("create account", t);
         }
     }
 }

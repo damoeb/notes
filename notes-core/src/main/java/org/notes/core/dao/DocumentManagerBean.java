@@ -6,10 +6,7 @@ import org.hibernate.Hibernate;
 import org.notes.common.configuration.Configuration;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
-import org.notes.core.interfaces.DocumentManager;
-import org.notes.core.interfaces.FileManager;
-import org.notes.core.interfaces.FolderManager;
-import org.notes.core.interfaces.TextManager;
+import org.notes.core.interfaces.*;
 import org.notes.core.model.*;
 
 import javax.annotation.PostConstruct;
@@ -47,6 +44,9 @@ public class DocumentManagerBean implements DocumentManager {
 
     @Inject
     private FolderManager folderManager;
+
+    @Inject
+    private UserManager userManager;
 
     private int maxResults;
 
@@ -93,18 +93,37 @@ public class DocumentManagerBean implements DocumentManager {
             }
 
             Folder folder = folderManager.getFolder(document.getFolderId());
+            User user = userManager.getUser(1l); // todo userId
 
             em.persist(document);
             em.flush();
             em.refresh(document);
 
-            folder.getNotes().add(document);
+            folder.getDocuments().add(document);
             em.merge(folder);
+
+            user.getDocuments().add(document);
+            em.merge(user);
 
             return document;
 
         } catch (Throwable t) {
             throw new NotesException("add document", t);
+        }
+    }
+
+
+    @Override
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void deleteDocument(long documentId) throws NotesException {
+        try {
+
+            em.remove(getDocument(documentId));
+
+        } catch (NotesException t) {
+            throw t;
+        } catch (Throwable t) {
+            throw new NotesException("delete document", t);
         }
     }
 
@@ -161,39 +180,6 @@ public class DocumentManagerBean implements DocumentManager {
             throw new NotesException("update note", t);
         }
     }
-
-    @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void removeDocument(long documentId) throws NotesException {
-        try {
-
-            Document note = getDocument(documentId);
-            /*
-            Hibernate.initialize(note.getAttachments());
-
-            if(note.getAttachments()!=null) {
-                for(FileReference attachment : note.getAttachments()) {
-                    try {
-                        new File(attachment.getReference()).delete();
-                    } catch (Exception f) {
-                        LOGGER.fatal(String.format("File %s does not exist. (note %s)", attachment.getReference(), noteId));
-                    }
-
-                    em.remove(attachment);
-                }
-            }
-
-            note.getAttachments().clear();
-            */
-            em.remove(note);
-
-        } catch (NotesException t) {
-            throw t;
-        } catch (Throwable t) {
-            throw new NotesException("remove note", t);
-        }
-    }
-
 
     @Override
     @Deprecated

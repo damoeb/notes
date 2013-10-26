@@ -6,7 +6,7 @@ import org.notes.common.exceptions.NotesException;
 import org.notes.core.interfaces.DatabaseManager;
 import org.notes.core.interfaces.UserManager;
 import org.notes.core.model.Database;
-import org.notes.core.request.NotesRequestException;
+import org.notes.core.model.User;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -35,7 +35,7 @@ public class DatabaseManagerBean implements DatabaseManager {
     // -- Database -- --------------------------------------------------------------------------------------------------
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Database createDatabase(Database database) throws NotesException {
         try {
             return _create(database);
@@ -43,7 +43,7 @@ public class DatabaseManagerBean implements DatabaseManager {
         } catch (NotesException e) {
             throw e;
         } catch (Throwable t) {
-            throw new NotesRequestException("create database", t);
+            throw new NotesException("create database", t);
         }
     }
 
@@ -124,11 +124,12 @@ public class DatabaseManagerBean implements DatabaseManager {
             throw new NotesException("Database is null");
         }
 
-        database.setOwnerId(1l); // todo userId
-
+        User user = userManager.getUser(1l);
         em.persist(database);
         em.flush();
         em.refresh(database);
+        user.getDatabases().add(database);
+        em.merge(user);
 
         return database;
 

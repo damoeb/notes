@@ -20,8 +20,6 @@ public interface DocumentManager {
 
     Document getByIdWithRefs(long documentId) throws NotesException;
 
-    void removeDocument(long documentId) throws NotesException;
-
     void removeAttachmentFromNote(long attachmentId, long documentId) throws NotesException;
 
     Attachment addAttachmentToNote(String fileName, RepositoryFile repositoryFile, Document document) throws NotesException;
@@ -30,5 +28,8 @@ public interface DocumentManager {
 
     Attachment getAttachmentWithFile(long attachmentId) throws NotesException;
 
+
     TextDocument createTextDocument(TextDocument document) throws NotesException;
+
+    void deleteDocument(long documentId) throws NotesException;
 }

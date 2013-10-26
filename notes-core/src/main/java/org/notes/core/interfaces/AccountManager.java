@@ -1,5 +1,6 @@
 package org.notes.core.interfaces;
 
+import org.notes.common.exceptions.NotesException;
 import org.notes.core.model.Account;
 
 import javax.ejb.Local;
@@ -7,7 +8,7 @@ import javax.ejb.Local;
 @Local
 public interface AccountManager {
 
-    Account getAccount(Long accountId);
+    Account getAccount(Long accountId) throws NotesException;
 
-    Account createAccount(String name, long quota);
+    Account createAccount(Account account) throws NotesException;
 }

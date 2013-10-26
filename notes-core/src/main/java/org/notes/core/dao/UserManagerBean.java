@@ -1,13 +1,12 @@
 package org.notes.core.dao;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.notes.common.configuration.NotesInterceptors;
+import org.notes.common.exceptions.NotesException;
 import org.notes.core.interfaces.AccountManager;
 import org.notes.core.interfaces.UserManager;
 import org.notes.core.model.Account;
 import org.notes.core.model.User;
-import org.notes.core.request.NotesRequestException;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -16,7 +15,6 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.ws.rs.core.Response;
 import java.util.List;
 
 //@LocalBean
@@ -35,11 +33,11 @@ public class UserManagerBean implements UserManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public User getUser(Long userId) {
+    public User getUser(Long userId) throws NotesException {
         try {
 
             if (userId == null || userId <= 0) {
-                throw new NotesRequestException(Response.Status.BAD_REQUEST, String.format("Invalid user id '%s'", userId));
+                throw new NotesException(String.format("Invalid user id '%s'", userId));
             }
 
             Query query = em.createNamedQuery(User.QUERY_BY_ID);
@@ -47,52 +45,60 @@ public class UserManagerBean implements UserManager {
 
             List<User> userList = query.getResultList();
             if (userList.isEmpty()) {
-                throw new NotesRequestException(Response.Status.NOT_FOUND, String.format("No user with id '%s' found", userId));
+                throw new NotesException(String.format("No user with id '%s' found", userId));
             }
 
-            User user = userList.get(0);
-            //Hibernate.initialize(user.getRoot());
-            em.detach(user);
-            //user.setNotebooks(null);
-            //user.setRoot(null);
+            return userList.get(0);
 
-            return user;
-
-        } catch (NotesRequestException t) {
+        } catch (NotesException t) {
             throw t;
         } catch (Throwable t) {
-            throw new NotesRequestException("get user by id", t);
+            throw new NotesException(String.format("get user %s", userId), t);
         }
     }
 
     @Override
-    public long getUserId() {
-        return 1;
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public User deleteUser(Long userId) throws NotesException {
+        try {
+
+            User user = getUser(userId);
+            em.remove(user);
+
+            return user;
+
+        } catch (NotesException t) {
+            throw t;
+        } catch (Throwable t) {
+            throw new NotesException(String.format("get user %s", userId), t);
+        }
     }
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public User createUser(String name, Account account) {
+    public User createUser(User user, Account account) throws NotesException {
         try {
 
-            if (StringUtils.isBlank(name)) {
-                throw new NotesRequestException(Response.Status.BAD_REQUEST, String.format("Invalid user name '%s'", name));
+            if (user == null) {
+                throw new NotesException("user is null");
             }
-
-            User user = new User();
-            user.setUsername(name);
-            user.setAccount(account);
+            if (account == null) {
+                throw new NotesException("account is null");
+            }
 
             em.persist(user);
             em.flush();
             em.refresh(user);
 
+            account.getUsers().add(user);
+            em.merge(account);
+
             return user;
 
-        } catch (NotesRequestException t) {
+        } catch (NotesException t) {
             throw t;
         } catch (Throwable t) {
-            throw new NotesRequestException("get user by id", t);
+            throw new NotesException("create user", t);
         }
     }
 }

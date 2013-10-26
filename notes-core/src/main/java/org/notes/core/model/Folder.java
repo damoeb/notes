@@ -32,7 +32,7 @@ public class Folder extends Node {
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, cascade = {})
     @JoinColumn(name = Folder.FK_FOLDER_ID)
-    private List<Document> notes = new LinkedList<Document>();
+    private List<Document> documents = new LinkedList();
 
     @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY, cascade = {})
@@ -50,12 +50,12 @@ public class Folder extends Node {
         //
     }
 
-    public List<Document> getNotes() {
-        return notes;
+    public List<Document> getDocuments() {
+        return documents;
     }
 
-    public void setNotes(List<Document> notes) {
-        this.notes = notes;
+    public void setDocuments(List<Document> documents) {
+        this.documents = documents;
     }
 
     public Folder getParent() {

@@ -9,6 +9,7 @@ import org.notes.core.interfaces.FolderManager;
 import org.notes.core.interfaces.UserManager;
 import org.notes.core.model.Database;
 import org.notes.core.model.Folder;
+import org.notes.core.model.User;
 import org.notes.core.request.NotesRequestException;
 
 import javax.ejb.Stateless;
@@ -129,11 +130,13 @@ public class FolderManagerBean implements FolderManager {
             throw new NotesException("Folder is null");
         }
 
-        folder.setOwnerId(1l); // todo userId
-
+        User user = userManager.getUser(1l);
         em.persist(folder);
         em.flush();
         em.refresh(folder);
+        user.getFolders().add(folder);
+        em.merge(user);
+
 
         return folder;
 

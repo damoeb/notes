@@ -80,7 +80,7 @@ public class DocumentService {
     public NotesResponse removeDocument(
             @PathParam("id") long documentId
     ) throws Exception {
-        documentManager.removeDocument(documentId);
+        documentManager.deleteDocument(documentId);
         return NotesResponse.ok();
     }
 

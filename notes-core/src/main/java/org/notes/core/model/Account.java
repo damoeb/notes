@@ -1,9 +1,12 @@
 package org.notes.core.model;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.LinkedList;
+import java.util.List;
 
 @Entity(name = "Account")
 @Table(name = "Account")
@@ -28,8 +31,12 @@ public class Account implements Serializable {
     private String name;
 
     @Basic
-    @Column
     private long quota;
+
+    @JsonIgnore
+    @OneToMany(cascade = {}, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name = Account.FK_ACCOUNT_ID)
+    private List<User> users = new LinkedList();
 
     public Account() {
         //
@@ -59,4 +66,11 @@ public class Account implements Serializable {
         this.quota = quota;
     }
 
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
+    }
 }

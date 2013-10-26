@@ -3,6 +3,7 @@ package org.notes.core.request;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 
+@Deprecated
 public class NotesRequestException extends WebApplicationException {
 
     private Response.Status status;

@@ -40,11 +40,11 @@ public class Document implements Serializable {
     private String title;
 
     @Basic
-    @Column(length = 512, name = "N_DESCRIPTION")
+    @Column(length = 512)
     private String description;
 
     @Lob
-    @Column(name = "N_FULLTEXT")
+    @Column(name = "full_text")
     private String fulltext;
 
     @Basic
