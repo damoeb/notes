@@ -16,6 +16,7 @@
         <class>org.notes.core.model.Attachment</class>
         <class>org.notes.core.model.Annotation</class>
         <class>org.notes.core.model.Database</class>
+        <class>org.notes.core.model.Folder</class>
 
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect"/>

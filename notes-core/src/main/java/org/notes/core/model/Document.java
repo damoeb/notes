@@ -74,8 +74,8 @@ public class Document implements Serializable {
     @Column(insertable = false, updatable = false, name = User.FK_OWNER_ID)
     private Long ownerId;
 
-    //@Column(insertable = false, updatable = false, name = Folder.FK_FOLDER_ID)
-    //private Long folderId;
+    @Column(insertable = false, updatable = false, name = Folder.FK_FOLDER_ID)
+    private Long folderId;
 
     @Basic
     private boolean hasAttachments;
@@ -268,7 +268,7 @@ public class Document implements Serializable {
     public void setModified(Date modified) {
         this.modified = modified;
     }
-    /*
+
     public Long getFolderId() {
         return folderId;
     }
@@ -276,7 +276,6 @@ public class Document implements Serializable {
     public void setFolderId(Long folderId) {
         this.folderId = folderId;
     }
-    */
 
     public List<Attachment> getAttachments() {
         return attachments;

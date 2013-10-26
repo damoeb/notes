@@ -6,7 +6,6 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import javax.persistence.*;
 import java.util.*;
 
-/*
 @Entity(name = "Folder")
 @Table(name = "Folder",
         uniqueConstraints = @UniqueConstraint(columnNames = {User.FK_OWNER_ID, "parent_id", "name"})
@@ -19,9 +18,8 @@ import java.util.*;
         @NamedQuery(name = Folder.QUERY_USERS_NOTEBOOKS, query = "SELECT a FROM Folder a where a.ownerId=:ID and a.parentId IS NULL")
 })
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-*/
 //@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class Folder {
+public class Folder extends Node {
 
     public static final String QUERY_BY_ID = "Folder.QUERY_BY_ID";
     public static final String QUERY_GET_CHILDREN = "Folder.QUERY_GET_CHILDREN";
@@ -48,24 +46,8 @@ public class Folder {
     @Column(updatable = false, insertable = false, nullable = true, name = "parent_id")
     private Long parentId;
 
-    //@Column(updatable = false, insertable = false, nullable = true, name = Database.FK_DATABASE_ID)
-    //private Long databaseId;
-
-
-
-
-    @Column(updatable = false, insertable = false, name = User.FK_OWNER_ID)
-    private Long ownerId;
-
-    @Basic
-    private Long documentCount;
-
-    @Basic
-    @Column(nullable = false)
-    private String name;
-
-    @Basic
-    private boolean deleted;
+    @Column(updatable = false, insertable = false, nullable = true, name = Database.FK_DATABASE_ID)
+    private Long databaseId;
 
     public Folder() {
         //
@@ -103,35 +85,11 @@ public class Folder {
         this.parentId = parentId;
     }
 
-    public Long getOwnerId() {
-        return ownerId;
+    public Long getDatabaseId() {
+        return databaseId;
     }
 
-    public void setOwnerId(Long ownerId) {
-        this.ownerId = ownerId;
-    }
-
-    public Long getDocumentCount() {
-        return documentCount;
-    }
-
-    public void setDocumentCount(Long documentCount) {
-        this.documentCount = documentCount;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public boolean isDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
+    public void setDatabaseId(Long databaseId) {
+        this.databaseId = databaseId;
     }
 }

@@ -20,7 +20,7 @@ import java.util.List;
 })
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 //@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class Database {
+public class Database extends Node {
 
     public static final String QUERY_BY_ID = "Database.QUERY_BY_ID";
     public static final String QUERY_GET_CHILDREN = "Database.QUERY_GET_CHILDREN";
@@ -32,31 +32,13 @@ public class Database {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    /*
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, cascade = {})
     @JoinColumn(name = Database.FK_DATABASE_ID)
     private List<Folder> folders = new LinkedList<Folder>();
-    */
 
     @Basic
     private Long activeFolderId;
-
-
-
-    @Column(updatable = false, insertable = false, name = User.FK_OWNER_ID)
-    private Long ownerId;
-
-    @Basic
-    private Long documentCount;
-
-    @Basic
-    @Column(nullable = false)
-    private String name;
-
-    @Basic
-    private boolean deleted;
-
 
 
     public Database() {
@@ -70,7 +52,7 @@ public class Database {
     public void setId(long id) {
         this.id = id;
     }
-    /*
+
     public List<Folder> getFolders() {
         return folders;
     }
@@ -78,7 +60,7 @@ public class Database {
     public void setFolders(List<Folder> folders) {
         this.folders = folders;
     }
-    */
+
     public Long getActiveFolderId() {
         return activeFolderId;
     }
@@ -87,39 +69,4 @@ public class Database {
         this.activeFolderId = activeFolderId;
     }
 
-    public void setOwnerId(long ownerId) {
-        this.ownerId = ownerId;
-    }
-
-    public long getOwnerId() {
-        return ownerId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public boolean isDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
-    }
-
-    public void setOwnerId(Long ownerId) {
-        this.ownerId = ownerId;
-    }
-
-    public Long getDocumentCount() {
-        return documentCount;
-    }
-
-    public void setDocumentCount(Long documentCount) {
-        this.documentCount = documentCount;
-    }
 }
