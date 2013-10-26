@@ -1,21 +1,16 @@
 package org.notes.core.services;
 
-import java.io.Closeable;
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.RandomAccessFile;
-import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.zip.GZIPOutputStream;
-
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.zip.GZIPOutputStream;
 
 /**
  * A file servlet supporting resume of downloads and client-side caching and GZIP of text content.
@@ -42,6 +37,7 @@ public class FileServlet extends HttpServlet {
 
     /**
      * Initialize the servlet.
+     *
      * @see HttpServlet#init().
      */
     public void init() throws ServletException {
@@ -69,37 +65,37 @@ public class FileServlet extends HttpServlet {
 
     /**
      * Process HEAD request. This returns the same headers as GET request, but without content.
+     *
      * @see HttpServlet#doHead(HttpServletRequest, HttpServletResponse).
      */
     protected void doHead(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException
-    {
+            throws ServletException, IOException {
         // Process request without content.
         processRequest(request, response, false);
     }
 
     /**
      * Process GET request.
+     *
      * @see HttpServlet#doGet(HttpServletRequest, HttpServletResponse).
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException
-    {
+            throws ServletException, IOException {
         // Process request with content.
         processRequest(request, response, true);
     }
 
     /**
      * Process the actual request.
-     * @param request The request to be processed.
+     *
+     * @param request  The request to be processed.
      * @param response The response to be created.
-     * @param content Whether the request body should be written (GET) or not (HEAD).
+     * @param content  Whether the request body should be written (GET) or not (HEAD).
      * @throws IOException If something fails at I/O level.
      */
     private void processRequest
     (HttpServletRequest request, HttpServletResponse response, boolean content)
-            throws IOException
-    {
+            throws IOException {
         // Validate the requested file ------------------------------------------------------------
 
         // Get requested file by path info.
@@ -355,8 +351,9 @@ public class FileServlet extends HttpServlet {
 
     /**
      * Returns true if the given accept header accepts the given value.
+     *
      * @param acceptHeader The accept header.
-     * @param toAccept The value to be accepted.
+     * @param toAccept     The value to be accepted.
      * @return True if the given accept header accepts the given value.
      */
     private static boolean accepts(String acceptHeader, String toAccept) {
@@ -369,8 +366,9 @@ public class FileServlet extends HttpServlet {
 
     /**
      * Returns true if the given match header matches the given value.
+     *
      * @param matchHeader The match header.
-     * @param toMatch The value to be matched.
+     * @param toMatch     The value to be matched.
      * @return True if the given match header matches the given value.
      */
     private static boolean matches(String matchHeader, String toMatch) {
@@ -383,9 +381,10 @@ public class FileServlet extends HttpServlet {
     /**
      * Returns a substring of the given string value from the given begin index to the given end
      * index as a long. If the substring is empty, then -1 will be returned
-     * @param value The string value to return a substring as long for.
+     *
+     * @param value      The string value to return a substring as long for.
      * @param beginIndex The begin index of the substring to be returned as long.
-     * @param endIndex The end index of the substring to be returned as long.
+     * @param endIndex   The end index of the substring to be returned as long.
      * @return A substring of the given string value as long or -1 if substring is empty.
      */
     private static long sublong(String value, int beginIndex, int endIndex) {
@@ -395,15 +394,15 @@ public class FileServlet extends HttpServlet {
 
     /**
      * Copy the given byte range of the given input to the given output.
-     * @param input The input to copy the given range to the given output for.
+     *
+     * @param input  The input to copy the given range to the given output for.
      * @param output The output to copy the given range from the given input for.
-     * @param start Start of the byte range.
+     * @param start  Start of the byte range.
      * @param length Length of the byte range.
      * @throws IOException If something fails at I/O level.
      */
     private static void copy(RandomAccessFile input, OutputStream output, long start, long length)
-            throws IOException
-    {
+            throws IOException {
         byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
         int read;
 
@@ -430,6 +429,7 @@ public class FileServlet extends HttpServlet {
 
     /**
      * Close the given resource.
+     *
      * @param resource The resource to be closed.
      */
     private static void close(Closeable resource) {
@@ -456,8 +456,9 @@ public class FileServlet extends HttpServlet {
 
         /**
          * Construct a byte range.
+         *
          * @param start Start of the byte range.
-         * @param end End of the byte range.
+         * @param end   End of the byte range.
          * @param total Total length of the byte source.
          */
         public Range(long start, long end, long total) {

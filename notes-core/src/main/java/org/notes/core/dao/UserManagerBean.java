@@ -2,13 +2,10 @@ package org.notes.core.dao;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.hibernate.Hibernate;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.core.interfaces.AccountManager;
-import org.notes.core.interfaces.FolderManager;
 import org.notes.core.interfaces.UserManager;
 import org.notes.core.model.Account;
-import org.notes.core.model.Folder;
 import org.notes.core.model.User;
 import org.notes.core.request.NotesRequestException;
 
@@ -41,7 +38,7 @@ public class UserManagerBean implements UserManager {
     public User getUser(Long userId) {
         try {
 
-            if(userId==null||userId<=0) {
+            if (userId == null || userId <= 0) {
                 throw new NotesRequestException(Response.Status.BAD_REQUEST, String.format("Invalid user id '%s'", userId));
             }
 
@@ -49,7 +46,7 @@ public class UserManagerBean implements UserManager {
             query.setParameter("ID", userId);
 
             List<User> userList = query.getResultList();
-            if(userList.isEmpty()) {
+            if (userList.isEmpty()) {
                 throw new NotesRequestException(Response.Status.NOT_FOUND, String.format("No user with id '%s' found", userId));
             }
 
@@ -78,7 +75,7 @@ public class UserManagerBean implements UserManager {
     public User createUser(String name, Account account) {
         try {
 
-            if(StringUtils.isBlank(name)) {
+            if (StringUtils.isBlank(name)) {
                 throw new NotesRequestException(Response.Status.BAD_REQUEST, String.format("Invalid user name '%s'", name));
             }
 

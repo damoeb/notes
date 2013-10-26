@@ -35,7 +35,7 @@ public class PdfTextExtractor implements TextExtractor {
             PDFTextStripper stripper = new PDFTextStripper();
             pdDoc = new PDDocument(cosDoc);
 
-            for(int page=1; page <= pdDoc.getNumberOfPages(); page++) {
+            for (int page = 1; page <= pdDoc.getNumberOfPages(); page++) {
 
                 stripper.setStartPage(page);
                 stripper.setEndPage(page);
@@ -46,7 +46,7 @@ public class PdfTextExtractor implements TextExtractor {
             return pages;
 
         } catch (IOException e) {
-            throw new NotesException("pdf extractor",e);
+            throw new NotesException("pdf extractor", e);
         } finally {
             try {
                 if (cosDoc != null)

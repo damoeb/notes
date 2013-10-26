@@ -107,7 +107,7 @@ public class FolderManagerBean implements FolderManager {
 
     private Folder _create(Folder folder) throws NotesException {
 
-        if(folder == null) {
+        if (folder == null) {
             throw new NotesException("Folder is null");
         }
 
@@ -123,7 +123,7 @@ public class FolderManagerBean implements FolderManager {
 
     private Folder _update(long folderId, Folder newFolder) throws NotesException {
 
-        if(newFolder == null) {
+        if (newFolder == null) {
             throw new NotesException("Folder is null");
         }
 

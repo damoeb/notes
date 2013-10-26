@@ -12,7 +12,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 @Stateless
@@ -49,12 +48,12 @@ public class WebsiteManagerBean implements StreamManager {
             // contentType = StringUtils.trim(br.readLine());
             char[] buffer = new char[256];
             int len;
-            while((len = br.read(buffer))>0) {
+            while ((len = br.read(buffer)) > 0) {
                 System.out.println(new String(buffer, 0, len));
             }
 
 
-            if(process.exitValue()!=0) {
+            if (process.exitValue() != 0) {
                 LOGGER.error("command exists with " + process.exitValue());
                 return null;
             }
@@ -64,7 +63,7 @@ public class WebsiteManagerBean implements StreamManager {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            if(process!=null) {
+            if (process != null) {
                 process.getInputStream().close();
                 process.getErrorStream().close();
                 process.getOutputStream().close();

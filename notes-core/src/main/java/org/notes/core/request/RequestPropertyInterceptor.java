@@ -4,7 +4,6 @@ import org.apache.log4j.Logger;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
 import org.notes.common.exceptions.NotesStatus;
-import org.notes.core.services.NotesResponse;
 
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;

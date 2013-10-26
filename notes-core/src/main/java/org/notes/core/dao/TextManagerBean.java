@@ -10,7 +10,6 @@ import org.notes.core.text.PdfTextExtractor;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.*;
-import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Future;
@@ -26,20 +25,20 @@ public class TextManagerBean implements TextManager {
 
     @PostConstruct
     private void onInit() {
-        TextExtractor[] extractors = new TextExtractor[] {
-            new PdfTextExtractor()
+        TextExtractor[] extractors = new TextExtractor[]{
+                new PdfTextExtractor()
         };
 
-        for(TextExtractor extractor:extractors) {
+        for (TextExtractor extractor : extractors) {
 
-            if(extractor.getContentTypes()==null) {
+            if (extractor.getContentTypes() == null) {
                 LOGGER.error("content type is null");
                 continue;
             }
 
-            for(String type:extractor.getContentTypes()) {
-                if(typeToExtractor.containsKey(type)) {
-                    LOGGER.error("duplicate content type "+type);
+            for (String type : extractor.getContentTypes()) {
+                if (typeToExtractor.containsKey(type)) {
+                    LOGGER.error("duplicate content type " + type);
                     continue;
                 }
 
@@ -58,7 +57,7 @@ public class TextManagerBean implements TextManager {
         try {
 
             TextExtractor extractor = getExtractor(reference);
-            if(extractor != null) {
+            if (extractor != null) {
                 extractor.extract(reference);
             }
 

@@ -9,7 +9,6 @@ import org.notes.core.model.Folder;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import java.util.List;
 
 @NotesInterceptors
 @Path("/folder")

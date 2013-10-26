@@ -16,7 +16,8 @@ import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -38,7 +39,7 @@ public class FileManagerBean implements FileManager {
     @PostConstruct
     public void onInit() {
         File repository = getRepository();
-        if(!repository.exists()) {
+        if (!repository.exists()) {
             repository.mkdirs();
         }
     }
@@ -97,7 +98,7 @@ public class FileManagerBean implements FileManager {
             }
 
             if (size <= 0) {
-                throw new IllegalArgumentException("invalid size "+size);
+                throw new IllegalArgumentException("invalid size " + size);
             }
 
             Query query = em.createNamedQuery(FileReference.QUERY_BY_CHECKSUM);
@@ -105,7 +106,7 @@ public class FileManagerBean implements FileManager {
             query.setParameter("FILESIZE", size);
 
             List<FileReference> list = (List<FileReference>) query.getResultList();
-            if(list.isEmpty()) {
+            if (list.isEmpty()) {
                 return null;
             }
 
@@ -151,11 +152,11 @@ public class FileManagerBean implements FileManager {
 
         MessageDigest md = MessageDigest.getInstance("MD5");
         byte[] digest = md.digest((item.getName() + item.toString()).getBytes());
-        BigInteger bigInt = new BigInteger(1,digest);
+        BigInteger bigInt = new BigInteger(1, digest);
         String hashtext = bigInt.toString(16);
         // Now we need to zero pad it if you actually want the full 32 chars.
-        while(hashtext.length() < 32 ){
-            hashtext = "0"+hashtext;
+        while (hashtext.length() < 32) {
+            hashtext = "0" + hashtext;
         }
 
         // todo: ensure it does not exist

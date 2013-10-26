@@ -4,7 +4,6 @@ import org.notes.common.exceptions.NotesException;
 import org.notes.core.model.Folder;
 
 import javax.ejb.Local;
-import java.util.List;
 
 @Local
 public interface FolderManager {

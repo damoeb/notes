@@ -32,7 +32,7 @@ public class FileReference implements Serializable {
 
     @Basic
     @Index(name = "checksumIdx")
-    @Column(name="checksum", nullable = false)
+    @Column(name = "checksum", nullable = false)
     private String checksum;
 
     @Basic
@@ -48,7 +48,7 @@ public class FileReference implements Serializable {
     private String extractedText;
 
     @Basic
-    @Column(name="size", nullable = false)
+    @Column(name = "size", nullable = false)
     private long size;
 
     public FileReference() {

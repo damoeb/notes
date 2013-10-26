@@ -5,7 +5,6 @@ import org.apache.log4j.Logger;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.core.interfaces.AccountManager;
 import org.notes.core.model.Account;
-import org.notes.core.model.Folder;
 import org.notes.core.request.NotesRequestException;
 
 import javax.ejb.Stateless;
@@ -33,7 +32,7 @@ public class AccountManagerBean implements AccountManager {
     public Account getAccount(Long accountId) {
         try {
 
-            if(accountId==null||accountId<=0) {
+            if (accountId == null || accountId <= 0) {
                 throw new NotesRequestException(Response.Status.BAD_REQUEST, String.format("Invalid account id '%s'", accountId));
             }
 
@@ -41,7 +40,7 @@ public class AccountManagerBean implements AccountManager {
             query.setParameter("ID", accountId);
 
             List<Account> accountList = query.getResultList();
-            if(accountList.isEmpty()) {
+            if (accountList.isEmpty()) {
                 throw new NotesRequestException(Response.Status.NOT_FOUND, String.format("No account with id '%s' found", accountId));
             }
 
@@ -63,11 +62,11 @@ public class AccountManagerBean implements AccountManager {
     public Account createAccount(String name, long quota) {
         try {
 
-            if(StringUtils.isBlank(name)) {
+            if (StringUtils.isBlank(name)) {
                 throw new NotesRequestException(Response.Status.BAD_REQUEST, String.format("Invalid account name '%s'", name));
             }
 
-            if(quota < 0) {
+            if (quota < 0) {
                 throw new NotesRequestException(Response.Status.BAD_REQUEST, String.format("Invalid quota '%s'", quota));
             }
 
