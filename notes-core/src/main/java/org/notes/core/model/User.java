@@ -30,7 +30,7 @@ public class User implements Serializable {
     private long id;
 
     @Basic
-    @Index(name = "usernameIdx")
+    //@Index(name = "usernameIdx")
     @Column(nullable = false, unique = true)
     private String username;
 

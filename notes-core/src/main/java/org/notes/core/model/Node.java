@@ -1,13 +1,9 @@
 package org.notes.core.model;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.hibernate.annotations.Index;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.LinkedList;
-import java.util.List;
 
 @MappedSuperclass
 public abstract class Node implements Serializable {
@@ -19,7 +15,6 @@ public abstract class Node implements Serializable {
     private Long documentCount;
 
     @Basic
-    @Index(name = "nameIdx")
     @Column(nullable = false)
     private String name;
 

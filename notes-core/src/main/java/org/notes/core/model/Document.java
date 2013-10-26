@@ -74,8 +74,8 @@ public class Document implements Serializable {
     @Column(insertable = false, updatable = false, name = User.FK_OWNER_ID)
     private Long ownerId;
 
-    @Column(insertable = false, updatable = false, name = Folder.FK_FOLDER_ID)
-    private Long folderId;
+    //@Column(insertable = false, updatable = false, name = Folder.FK_FOLDER_ID)
+    //private Long folderId;
 
     @Basic
     private boolean hasAttachments;
@@ -84,25 +84,6 @@ public class Document implements Serializable {
     @JoinColumn(name = Document.FK_NOTE_ID)
     // too join without table
     private List<Attachment> attachments = new LinkedList<Attachment>();
-
-    /*
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "webarchive_id")
-    private FileReference webArchive;
-
-    @Column(name = "webarchive_id", updatable = false, insertable = false)
-    private Long webArchiveId;
-
-*/
-
-    // -- Tags -- ------------------------------------------------------------------------------------------------------
-
-//    @ManyToMany(fetch = FetchType.LAZY)
-//    @JoinTable(name = "article_tag_mapping",
-//            joinColumns = {@JoinColumn(name = "articleId")},
-//            inverseJoinColumns = {@JoinColumn(name = "tagId")}
-//    )
-//    private Set<Tag> tags = new HashSet<Tag>();
 
     public Document() {
         // default
@@ -287,7 +268,7 @@ public class Document implements Serializable {
     public void setModified(Date modified) {
         this.modified = modified;
     }
-
+    /*
     public Long getFolderId() {
         return folderId;
     }
@@ -295,6 +276,7 @@ public class Document implements Serializable {
     public void setFolderId(Long folderId) {
         this.folderId = folderId;
     }
+    */
 
     public List<Attachment> getAttachments() {
         return attachments;

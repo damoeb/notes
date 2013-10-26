@@ -79,7 +79,7 @@ public class DatabaseManagerBean implements DatabaseManager {
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public List<Database> getDatabases() throws NotesException {
         try {
-            Query query = em.createNamedQuery(Database.QUERY_USERS_NOTEBOOKS);
+            Query query = em.createNamedQuery(Database.QUERY_ALL);
             query.setParameter("ID", 1l);  // todo userId
 
             return query.getResultList();
