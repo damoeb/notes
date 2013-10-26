@@ -4,10 +4,8 @@ import org.apache.log4j.Logger;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
 import org.notes.core.interfaces.DatabaseManager;
-import org.notes.core.interfaces.FolderManager;
 import org.notes.core.interfaces.UserManager;
 import org.notes.core.model.Database;
-import org.notes.core.model.Folder;
 import org.notes.core.request.NotesRequestException;
 
 import javax.ejb.Stateless;
@@ -80,7 +78,7 @@ public class DatabaseManagerBean implements DatabaseManager {
     public List<Database> getDatabases() throws NotesException {
         try {
             Query query = em.createNamedQuery(Database.QUERY_ALL);
-            query.setParameter("ID", 1l);  // todo userId
+            query.setParameter("USER_ID", 1l);  // todo userId
 
             return query.getResultList();
 
@@ -122,7 +120,7 @@ public class DatabaseManagerBean implements DatabaseManager {
 
     private Database _create(Database database) throws NotesException {
 
-        if(database == null) {
+        if (database == null) {
             throw new NotesException("Database is null");
         }
 
@@ -138,7 +136,7 @@ public class DatabaseManagerBean implements DatabaseManager {
 
     private Database _update(long databaseId, Database newDatabase) throws NotesException {
 
-        if(newDatabase == null) {
+        if (newDatabase == null) {
             throw new NotesException("Database is null");
         }
 

@@ -11,8 +11,8 @@ import org.notes.common.configuration.Configuration;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
 import org.notes.core.dao.RepositoryFile;
-import org.notes.core.interfaces.FileManager;
 import org.notes.core.interfaces.DocumentManager;
+import org.notes.core.interfaces.FileManager;
 import org.notes.core.model.Attachment;
 import org.notes.core.model.Document;
 
@@ -53,10 +53,10 @@ public class DocumentService {
     @Produces(MediaType.APPLICATION_JSON)
     @Path(value = "/{id}")
     public NotesResponse getById(
-            @PathParam("id") long noteId
+            @PathParam("id") long documentId
     ) {
         try {
-            return NotesResponse.ok(documentManager.getByIdWithRefs(noteId));
+            return NotesResponse.ok(documentManager.getByIdWithRefs(documentId));
         } catch (Throwable t) {
             return NotesResponse.error(t);
         }
@@ -65,11 +65,10 @@ public class DocumentService {
     @POST
     @MethodCache
     @Produces(MediaType.APPLICATION_JSON)
-    public NotesResponse addNote(
+    public NotesResponse addDocument(
             Document note
     ) throws Exception {
         Document result = documentManager.addDocument(note);
-        result.setAttachments(null);
         return NotesResponse.ok(result);
     }
 
@@ -77,10 +76,10 @@ public class DocumentService {
     @MethodCache
     @Path(value = "/remove/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public NotesResponse removeNote(
-            @PathParam("id") long noteId
+    public NotesResponse removeDocument(
+            @PathParam("id") long documentId
     ) throws Exception {
-        documentManager.removeNote(noteId);
+        documentManager.removeDocument(documentId);
         return NotesResponse.ok();
     }
 
@@ -88,12 +87,11 @@ public class DocumentService {
     @MethodCache
     @Produces(MediaType.APPLICATION_JSON)
     @Path(value = "/{id}")
-    public NotesResponse updateNote(
-            Document note,
-            @PathParam("id") long noteId
+    public NotesResponse updateDocument(
+            Document document,
+            @PathParam("id") long documentId
     ) throws Exception {
-        Document result = documentManager.updateNote(noteId, note);
-        result.setAttachments(null);
+        Document result = documentManager.updateDocument(documentId, document);
         return NotesResponse.ok(result);
     }
 
@@ -104,13 +102,13 @@ public class DocumentService {
 
     @POST
     @MethodCache
-    @Path(value = "/attachment/remove/{attachmentId}/{noteId}")
+    @Path(value = "/attachment/remove/{attachmentId}/{documentId}")
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse removeAttachment(
             @PathParam("attachmentId") long attachmentId,
-            @PathParam("noteId") long noteId
+            @PathParam("documentId") long documentId
     ) throws Exception {
-        documentManager.removeAttachmentFromNote(attachmentId, noteId);
+        documentManager.removeAttachmentFromNote(attachmentId, documentId);
         return NotesResponse.ok();
     }
 
@@ -153,7 +151,7 @@ public class DocumentService {
             Long noteId = _getNoteIdFieldVal(items);
             Document note = documentManager.getByIdWithRefs(noteId);
 
-            for(FileItem item:items){
+            for (FileItem item : items) {
 
                 if (!item.isFormField()) {
 
@@ -181,9 +179,9 @@ public class DocumentService {
 
         try {
 
-            final Attachment data  = documentManager.getAttachmentWithFile(attachmentId);
+            final Attachment data = documentManager.getAttachmentWithFile(attachmentId);
 
-            if(data == null) {
+            if (data == null) {
                 // force media type
                 return Response.ok().type(MediaType.TEXT_PLAIN_TYPE).entity(String.format("File '%s' appears to be empty.", attachmentId)).build();
             }
@@ -203,7 +201,7 @@ public class DocumentService {
 
                         int len;
                         byte[] buffer = new byte[1024];
-                        while((len = stream.read(buffer))>0) {
+                        while ((len = stream.read(buffer)) > 0) {
                             outputStream.write(buffer, 0, len);
                         }
 
@@ -219,7 +217,7 @@ public class DocumentService {
             String fileName = URLEncoder.encode(data.getName(), "UTF-8");
             return Response
                     .ok()
-                    .header("content-disposition", "attachment; filename*= UTF8''"+ fileName)
+                    .header("content-disposition", "attachment; filename*= UTF8''" + fileName)
                     .type(data.getContentType())
                     .entity(entity)
                     .cacheControl(cc)
@@ -235,22 +233,22 @@ public class DocumentService {
     private Long _getNoteIdFieldVal(List<FileItem> items) throws NotesException {
         Long noteId = null;
         String fieldName = "noteId";
-        for(FileItem item:items){
+        for (FileItem item : items) {
 
             if (item.isFormField()) {
 
                 String someFieldName = item.getFieldName();
-                if(StringUtils.equalsIgnoreCase(someFieldName, fieldName)) {
+                if (StringUtils.equalsIgnoreCase(someFieldName, fieldName)) {
 
-                    if(NumberUtils.isNumber(item.getString())) {
+                    if (NumberUtils.isNumber(item.getString())) {
                         noteId = NumberUtils.createLong(item.getString());
                     }
                 }
             }
         }
 
-        if(noteId==null) {
-            throw new NotesException("Required Field '"+fieldName+"' missing");
+        if (noteId == null) {
+            throw new NotesException("Required Field '" + fieldName + "' missing");
         }
 
         return noteId;

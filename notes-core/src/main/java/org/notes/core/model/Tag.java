@@ -25,14 +25,6 @@ public class Tag implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-//    @JsonIgnore
-//    @ManyToMany(fetch = FetchType.LAZY)
-//    @JoinTable(name = "article_tag_mapping",
-//            joinColumns = {@JoinColumn(name = "tagId")},
-//            inverseJoinColumns = {@JoinColumn(name = "articleId")}
-//    )
-//    private Set<Document> articles = new HashSet<Document>();
-
     @Basic
     @Index(name = "valueIdx")
     @Column(nullable = false, unique = true)

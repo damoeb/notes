@@ -6,8 +6,8 @@ import org.hibernate.Hibernate;
 import org.notes.common.configuration.Configuration;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
-import org.notes.core.interfaces.FileManager;
 import org.notes.core.interfaces.DocumentManager;
+import org.notes.core.interfaces.FileManager;
 import org.notes.core.interfaces.TextManager;
 import org.notes.core.model.Attachment;
 import org.notes.core.model.Document;
@@ -27,7 +27,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.math.BigInteger;
 import java.security.MessageDigest;
-import java.util.*;
+import java.util.List;
 
 //@LocalBean
 @Stateless
@@ -66,18 +66,19 @@ public class DocumentManagerBean implements DocumentManager {
             return note;
 
         } catch (NoResultException t) {
-            throw new NotesException("note '"+ documentId +"' does not exist");
+            throw new NotesException("note '" + documentId + "' does not exist");
         } catch (Throwable t) {
             throw new NotesException("get note by id", t);
         }
     }
 
     @Override
+    @Deprecated
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public Document getByIdWithRefs(long documentId) throws NotesException {
         try {
             Document note = getById(documentId);
-            Hibernate.initialize(note.getAttachments());
+            //Hibernate.initialize(note.getAttachments());
 
             return note;
 
@@ -113,7 +114,7 @@ public class DocumentManagerBean implements DocumentManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public Document updateNote(long documentId, Document document) throws NotesException {
+    public Document updateDocument(long documentId, Document document) throws NotesException {
 
         try {
 
@@ -123,15 +124,15 @@ public class DocumentManagerBean implements DocumentManager {
 
             Document oldNote = getById(documentId);
 
-            oldNote.setTitle(document.getTitle());
-            oldNote.setText(document.getText());
-
-            boolean urlChanged = StringUtils.equals(oldNote.getUrl(), document.getUrl());
-            if(urlChanged) {
-
-            }
-
-            oldNote.setUrl(document.getUrl());
+//            oldNote.setTitle(document.getTitle());
+//            oldNote.setText(document.getText());
+//
+//            boolean urlChanged = StringUtils.equals(oldNote.getUrl(), document.getUrl());
+//            if(urlChanged) {
+//
+//            }
+//
+//            oldNote.setUrl(document.getUrl());
             oldNote.onPersist();
 
             em.merge(oldNote);
@@ -149,7 +150,7 @@ public class DocumentManagerBean implements DocumentManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public void removeNote(long documentId) throws NotesException {
+    public void removeDocument(long documentId) throws NotesException {
         try {
 
             Document note = getById(documentId);
@@ -181,25 +182,26 @@ public class DocumentManagerBean implements DocumentManager {
 
 
     @Override
+    @Deprecated
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void removeAttachmentFromNote(long attachmentId, long documentId) throws NotesException {
         try {
             Document note = getById(documentId);
-            Hibernate.initialize(note.getAttachments());
-
-            Attachment attachment = null;
-            if(note.getAttachments()!=null) {
-                for(Attachment a : note.getAttachments()) {
-                    if(a.getId()==attachmentId) {
-                        attachment = a;
-                        break;
-                    }
-                }
-            }
-
-            if(attachment==null) {
-                throw new NotesException(String.format("Attachment with id %s does not exist", attachment));
-            }
+//            Hibernate.initialize(note.getAttachments());
+//
+//            Attachment attachment = null;
+//            if(note.getAttachments()!=null) {
+//                for(Attachment a : note.getAttachments()) {
+//                    if(a.getId()==attachmentId) {
+//                        attachment = a;
+//                        break;
+//                    }
+//                }
+//            }
+//
+//            if(attachment==null) {
+//                throw new NotesException(String.format("Attachment with id %s does not exist", attachment));
+//            }
 
             /*
             try {
@@ -209,9 +211,9 @@ public class DocumentManagerBean implements DocumentManager {
             }
             */
 
-            note.getAttachments().remove(attachment);
-            em.merge(note);
-            em.remove(attachment);
+//            note.getAttachments().remove(attachment);
+//            em.merge(note);
+//            em.remove(attachment);
 
         } catch (NotesException t) {
             throw t;
@@ -221,6 +223,7 @@ public class DocumentManagerBean implements DocumentManager {
     }
 
     @Override
+    @Deprecated
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public Attachment addAttachmentToNote(String fileName, RepositoryFile repositoryFile, Document document) throws NotesException {
 
@@ -241,7 +244,7 @@ public class DocumentManagerBean implements DocumentManager {
 
             FileReference reference = fileManager.find(checksum, size);
             // create new ref
-            if(reference == null) {
+            if (reference == null) {
                 reference = new FileReference();
                 reference.setReference(repositoryFile.getPath());
                 reference.setSize(size);
@@ -267,12 +270,13 @@ public class DocumentManagerBean implements DocumentManager {
             em.flush();
             em.refresh(attachment);
 
-            if(document.getAttachments().contains(attachment)) {
-                throw new IllegalArgumentException("attachment already part of note");
-            }
+//            if(document.getAttachments().contains(attachment)) {
+//                throw new IllegalArgumentException("attachment already part of note");
+//            }
+//
+//            document.getAttachments().add(attachment);
+//            document.setHasAttachments(true);
 
-            document.getAttachments().add(attachment);
-            document.setHasAttachments(true);
             document.onPersist();
             em.merge(document);
 
@@ -288,7 +292,7 @@ public class DocumentManagerBean implements DocumentManager {
     public Attachment renameAttachment(long attachmentId, String newName) throws NotesException {
         try {
 
-            if(StringUtils.isBlank(newName)) {
+            if (StringUtils.isBlank(newName)) {
                 throw new IllegalArgumentException("name is empty");
             }
 
@@ -304,7 +308,7 @@ public class DocumentManagerBean implements DocumentManager {
             return attachment;
 
         } catch (Throwable t) {
-            throw new NotesException("rename Attachment; "+t.getMessage(), t);
+            throw new NotesException("rename Attachment; " + t.getMessage(), t);
         }
     }
 
@@ -322,7 +326,7 @@ public class DocumentManagerBean implements DocumentManager {
             return attachment;
 
         } catch (Throwable t) {
-            throw new NotesException("rename Attachment; "+t.getMessage(), t);
+            throw new NotesException("rename Attachment; " + t.getMessage(), t);
         }
     }
 
@@ -336,15 +340,14 @@ public class DocumentManagerBean implements DocumentManager {
 
             byte[] buffer = new byte[8192];
             int read = 0;
-            while( (read = is.read(buffer)) > 0) {
+            while ((read = is.read(buffer)) > 0) {
                 digest.update(buffer, 0, read);
             }
             byte[] md5sum = digest.digest();
             BigInteger bigInt = new BigInteger(1, md5sum);
             String output = bigInt.toString(16);
             return output;
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             throw new NotesException("Unable to process file for MD5", e);
         }
     }
@@ -363,7 +366,6 @@ public class DocumentManagerBean implements DocumentManager {
             List<Document> list = query.getResultList();
             for (Document note : list) {
                 em.detach(note);
-                note.setAttachments(null);
             }
             return list;
 

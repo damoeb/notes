@@ -4,7 +4,6 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -15,8 +14,7 @@ import java.util.List;
 @NamedQueries({
         @NamedQuery(name = Database.QUERY_BY_ID, query = "SELECT a FROM DDatabase a where a.id=:ID"),
         @NamedQuery(name = Database.QUERY_GET_CHILDREN, query = "SELECT a FROM DDatabase a where a.id=:ID"),
-        @NamedQuery(name = Database.QUERY_BY_VALUE, query = "SELECT a FROM DDatabase a where LOWER(a.name)=LOWER(:VAL)"),
-        @NamedQuery(name = Database.QUERY_ALL, query = "SELECT a FROM DDatabase a")
+        @NamedQuery(name = Database.QUERY_ALL, query = "SELECT a FROM DDatabase a")//" where a.owner_id=:USER_ID")
 })
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 //@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -24,7 +22,6 @@ public class Database extends Node {
 
     public static final String QUERY_BY_ID = "Database.QUERY_BY_ID";
     public static final String QUERY_GET_CHILDREN = "Database.QUERY_GET_CHILDREN";
-    public static final String QUERY_BY_VALUE = "Database.QUERY_BY_VALUE";
     public static final String QUERY_ALL = "Database.QUERY_ALL";
     public static final String FK_DATABASE_ID = "database_id";
 

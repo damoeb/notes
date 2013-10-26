@@ -17,11 +17,11 @@ public interface DocumentManager {
 
     Document getById(long documentId) throws NotesException;
 
-    Document updateNote(long documentId, Document document) throws NotesException;
+    Document updateDocument(long documentId, Document document) throws NotesException;
 
     Document getByIdWithRefs(long documentId) throws NotesException;
 
-    void removeNote(long documentId) throws NotesException;
+    void removeDocument(long documentId) throws NotesException;
 
     void removeAttachmentFromNote(long attachmentId, long documentId) throws NotesException;
 

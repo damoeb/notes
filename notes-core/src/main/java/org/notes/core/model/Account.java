@@ -4,8 +4,6 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.LinkedList;
-import java.util.List;
 
 @Entity(name = "Account")
 @Table(name = "Account")
@@ -32,10 +30,6 @@ public class Account implements Serializable {
     @Basic
     @Column
     private long quota;
-
-    //@OneToMany
-    //@JoinColumn(name = Account.FK_ACCOUNT_ID)
-    //private List<User> users = new LinkedList<User>();
 
     public Account() {
         //

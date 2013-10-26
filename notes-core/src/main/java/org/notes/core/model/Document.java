@@ -3,13 +3,12 @@ package org.notes.core.model;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.jsoup.Jsoup;
 import org.notes.common.service.CustomDateDeserializer;
 import org.notes.common.service.CustomDateSerializer;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.*;
+import java.util.Date;
 
 @SuppressWarnings("serial")
 @Entity(name = "Document")
@@ -17,7 +16,6 @@ import java.util.*;
         //uniqueConstraints = @UniqueConstraint(columnNames = {"version", "foreignId"})
 )
 @NamedQueries({
-        //@NamedQuery(name = Document.QUERY_BY_ID, query = "SELECT a FROM Document a where a.id=:ID"),
         @NamedQuery(name = Document.QUERY_BY_ID, query = "SELECT a FROM Document a where a.id=:ID"),
         @NamedQuery(name = Document.QUERY_REMOVE, query = "DELETE FROM Document a where a.id=:ID"),
         @NamedQuery(name = Document.QUERY_ALL, query = "SELECT a FROM Document a")
@@ -38,18 +36,15 @@ public class Document implements Serializable {
 
     @Basic
     @Column(nullable = false, length = 256)
-    // todo length
     private String title;
 
     @Basic
-    @Column(length = 1024)
-    private String url;
+    @Column(length = 512, name = "N_DESCRIPTION")
+    private String description;
 
     @Lob
-    private String text;
-
-    @Basic
-    private String preview;
+    @Column(name = "N_FULLTEXT")
+    private String fulltext;
 
     @Basic
     @Column(nullable = false)
@@ -77,14 +72,6 @@ public class Document implements Serializable {
     @Column(insertable = false, updatable = false, name = Folder.FK_FOLDER_ID)
     private Long folderId;
 
-    @Basic
-    private boolean hasAttachments;
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = Document.FK_NOTE_ID)
-    // too join without table
-    private List<Attachment> attachments = new LinkedList<Attachment>();
-
     public Document() {
         // default
     }
@@ -92,58 +79,14 @@ public class Document implements Serializable {
     @PrePersist
     @PreUpdate
     public void onPersist() {
-        setPreview(_getPreview(this));
         Date now = new Date();
         if (getCreated() == null) {
             setCreated(now);
         }
         setModified(now);
 
-        long totalSize = _getBytes(getTitle()) + _getBytes(getText()) + _getBytes(getUrl());
-        for (Attachment reference : getAttachments()) {
-            totalSize += reference.getSize();
-        }
+        long totalSize = _getBytes(getTitle()) + _getBytes(getDescription());
         setSize(totalSize);
-
-        setKind(_getKind(this));
-
-        //StringBuilder builder = new StringBuilder(2000);
-//        builder.append(StringUtils.defaultIfBlank(description, ""));
-//        if (content != null) {
-//            if (StringUtils.isBlank(content.getText())) {
-//                if (!StringUtils.isBlank(content.getHtml())) {
-//                    // todo render
-//                    builder.append(content.getHtml());
-//                }
-//            } else {
-//                builder.append(content.getText().trim());
-//            }
-//        }
-//        text = builder.toString();
-    }
-
-    private Kind _getKind(Document note) {
-
-//        TEXT: default
-        Kind kindOfDoc = Kind.TEXT;
-
-        boolean hasText = StringUtils.isNotBlank(Jsoup.parse(note.getText()).text());
-        boolean hasUrl = StringUtils.isNotBlank(note.getUrl());
-
-//        BOOKMARK: text=0, url=1
-        if(!hasText && hasUrl) {
-            kindOfDoc = Kind.BOOKMARK;
-        }
-
-//        PDF: attachments.size()==1 && attachments[0]==PDF
-//        DOC: attachments.size()==1 && attachments[0]==DOC
-
-//        ARCHIVE: attachments.size()>1
-        if(note.getAttachments().size()>1) {
-            kindOfDoc = Kind.ARCHIVE;
-        }
-
-        return kindOfDoc;
     }
 
     private long _getBytes(String value) {
@@ -153,16 +96,7 @@ public class Document implements Serializable {
         return value.getBytes().length;
     }
 
-    private String _getPreview(Document note) {
-        String plain = Jsoup.parse(note.getText()).text().replaceAll("\t\n ", " ");
-        int limit = 80;
-        return plain.length() > limit ? plain.substring(0, limit) + "..." : plain;
-    }
-
-    /**
-     * @throws org.notes.common.exceptions.NotesException
-     *          if an assignment is illegal
-     */
+//    todo validate fields
 //    @SuppressWarnings({"ConstantConditions"})
 //    public void validateFields() throws NotesException {
 //
@@ -220,6 +154,7 @@ public class Document implements Serializable {
 //                || (value instanceof String && StringUtils.isBlank((String) value)));
 //    }
 
+
     // -- GETTER/SETTER -- ---------------------------------------------------------------------------------------------
     public long getId() {
         return id;
@@ -235,22 +170,6 @@ public class Document implements Serializable {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
     }
 
     public Date getCreated() {
@@ -277,36 +196,12 @@ public class Document implements Serializable {
         this.folderId = folderId;
     }
 
-    public List<Attachment> getAttachments() {
-        return attachments;
-    }
-
-    public void setAttachments(List<Attachment> attachments) {
-        this.attachments = attachments;
-    }
-
     public Long getOwnerId() {
         return ownerId;
     }
 
     public void setOwnerId(Long ownerId) {
         this.ownerId = ownerId;
-    }
-
-    public boolean hasAttachments() {
-        return hasAttachments;
-    }
-
-    public void setHasAttachments(boolean hasAttachments) {
-        this.hasAttachments = hasAttachments;
-    }
-
-    public String getPreview() {
-        return preview;
-    }
-
-    public void setPreview(String preview) {
-        this.preview = preview;
     }
 
     public long getSize() {
@@ -325,5 +220,19 @@ public class Document implements Serializable {
         this.kind = kind;
     }
 
+    public String getDescription() {
+        return description;
+    }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getFulltext() {
+        return fulltext;
+    }
+
+    public void setFulltext(String fulltext) {
+        this.fulltext = fulltext;
+    }
 }
