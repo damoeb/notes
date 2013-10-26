@@ -68,8 +68,9 @@ public class DocumentService {
     public NotesResponse addDocument(
             Document note
     ) throws Exception {
-        Document result = documentManager.addDocument(note);
-        return NotesResponse.ok(result);
+        //Document result = documentManager.createDocument(note);
+        //return NotesResponse.ok(result);
+        return NotesResponse.ok();
     }
 
     @POST

@@ -34,7 +34,7 @@ public class UserManagerBean implements UserManager {
     private AccountManager accountManager;
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public User getUser(Long userId) {
         try {
 
@@ -71,7 +71,7 @@ public class UserManagerBean implements UserManager {
     }
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public User createUser(String name, Account account) {
         try {
 

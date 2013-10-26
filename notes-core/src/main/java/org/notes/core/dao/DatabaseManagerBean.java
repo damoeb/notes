@@ -48,7 +48,7 @@ public class DatabaseManagerBean implements DatabaseManager {
     }
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Database getDatabase(long databaseId) throws NotesException {
         try {
             return _get(databaseId);
@@ -61,7 +61,7 @@ public class DatabaseManagerBean implements DatabaseManager {
     }
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Database deleteDatabase(long databaseId) throws NotesException {
         try {
             return _delete(databaseId);
@@ -74,7 +74,7 @@ public class DatabaseManagerBean implements DatabaseManager {
     }
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public List<Database> getDatabases() throws NotesException {
         try {
             Query query = em.createNamedQuery(Database.QUERY_ALL);
@@ -88,7 +88,7 @@ public class DatabaseManagerBean implements DatabaseManager {
     }
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Database updateDatabase(long databaseId, Database newDatabase) throws NotesException {
         try {
             return _update(databaseId, newDatabase);

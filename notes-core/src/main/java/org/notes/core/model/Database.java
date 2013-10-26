@@ -28,7 +28,7 @@ public class Database extends Node {
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, cascade = {})
     @JoinColumn(name = Database.FK_DATABASE_ID)
-    private List<Folder> folders = new LinkedList<Folder>();
+    private List<Folder> folders = new LinkedList();
 
     @Basic
     private Long activeFolderId;

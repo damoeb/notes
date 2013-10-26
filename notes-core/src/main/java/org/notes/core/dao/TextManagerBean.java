@@ -17,6 +17,7 @@ import java.util.concurrent.Future;
 @Singleton
 @NotesInterceptors
 @TransactionAttribute(TransactionAttributeType.NEVER)
+@Deprecated // todo move to different package
 public class TextManagerBean implements TextManager {
 
     private static final Logger LOGGER = Logger.getLogger(TextManagerBean.class);

@@ -28,7 +28,7 @@ public class AccountManagerBean implements AccountManager {
     private EntityManager em;
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Account getAccount(Long accountId) {
         try {
 
@@ -58,7 +58,7 @@ public class AccountManagerBean implements AccountManager {
     }
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Account createAccount(String name, long quota) {
         try {
 

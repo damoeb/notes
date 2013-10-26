@@ -1,10 +1,13 @@
 package org.notes.core.dao;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Hibernate;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
+import org.notes.core.interfaces.DatabaseManager;
 import org.notes.core.interfaces.FolderManager;
 import org.notes.core.interfaces.UserManager;
+import org.notes.core.model.Database;
 import org.notes.core.model.Folder;
 import org.notes.core.request.NotesRequestException;
 
@@ -31,14 +34,29 @@ public class FolderManagerBean implements FolderManager {
     @Inject
     private UserManager userManager;
 
+    @Inject
+    private DatabaseManager databaseManager;
+
 
     // -- Folder -- ----------------------------------------------------------------------------------------------------
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Folder createFolder(Folder folder) throws NotesException {
         try {
-            return _create(folder);
+            if (folder.getDatabaseId() == null) {
+                throw new NotesException("databaseId is null");
+            }
+
+            Database database = databaseManager.getDatabase(folder.getDatabaseId());
+            Hibernate.initialize(database.getFolders());
+
+            folder = _create(folder);
+
+            database.getFolders().add(folder);
+            em.merge(database);
+
+            return folder;
 
         } catch (NotesException e) {
             throw e;
@@ -48,7 +66,7 @@ public class FolderManagerBean implements FolderManager {
     }
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Folder getFolder(long folderId) throws NotesException {
         try {
             return _get(folderId);
@@ -61,7 +79,7 @@ public class FolderManagerBean implements FolderManager {
     }
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Folder deleteFolder(long folderId) throws NotesException {
         try {
             return _delete(folderId);
@@ -74,7 +92,7 @@ public class FolderManagerBean implements FolderManager {
     }
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Folder updateFolder(long folderId, Folder newFolder) throws NotesException {
         try {
             return _update(folderId, newFolder);

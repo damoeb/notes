@@ -8,10 +8,9 @@ import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
 import org.notes.core.interfaces.DocumentManager;
 import org.notes.core.interfaces.FileManager;
+import org.notes.core.interfaces.FolderManager;
 import org.notes.core.interfaces.TextManager;
-import org.notes.core.model.Attachment;
-import org.notes.core.model.Document;
-import org.notes.core.model.FileReference;
+import org.notes.core.model.*;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
@@ -46,6 +45,9 @@ public class DocumentManagerBean implements DocumentManager {
     @Inject
     private FileManager fileManager;
 
+    @Inject
+    private FolderManager folderManager;
+
     private int maxResults;
 
     @PostConstruct
@@ -56,14 +58,12 @@ public class DocumentManagerBean implements DocumentManager {
     }
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public Document getById(long documentId) throws NotesException {
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public Document getDocument(long documentId) throws NotesException {
         try {
             Query query = em.createNamedQuery(Document.QUERY_BY_ID);
             query.setParameter("ID", documentId);
-            Document note = (Document) query.getSingleResult();
-
-            return note;
+            return (Document) query.getSingleResult();
 
         } catch (NoResultException t) {
             throw new NotesException("note '" + documentId + "' does not exist");
@@ -73,11 +73,48 @@ public class DocumentManagerBean implements DocumentManager {
     }
 
     @Override
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public TextDocument createTextDocument(TextDocument document) throws NotesException {
+
+        if (document == null) {
+            throw new IllegalArgumentException("document is null");
+        }
+
+        document.setKind(Kind.TEXT);
+        return (TextDocument) _createDocument(document);
+    }
+
+    private Document _createDocument(Document document) throws NotesException {
+
+        try {
+
+            if (document.getFolderId() == null) {
+                throw new NotesException("folderId is null");
+            }
+
+            Folder folder = folderManager.getFolder(document.getFolderId());
+
+            em.persist(document);
+            em.flush();
+            em.refresh(document);
+
+            folder.getNotes().add(document);
+            em.merge(folder);
+
+            return document;
+
+        } catch (Throwable t) {
+            throw new NotesException("add document", t);
+        }
+    }
+
+
+    @Override
     @Deprecated
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Document getByIdWithRefs(long documentId) throws NotesException {
         try {
-            Document note = getById(documentId);
+            Document note = getDocument(documentId);
             //Hibernate.initialize(note.getAttachments());
 
             return note;
@@ -90,30 +127,7 @@ public class DocumentManagerBean implements DocumentManager {
     }
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public Document addDocument(Document document) throws NotesException {
-
-        try {
-
-            if (document == null) {
-                throw new IllegalArgumentException("note is null");
-            }
-
-            // todo validate
-
-            em.persist(document);
-            em.flush();
-            em.refresh(document);
-
-            return document;
-
-        } catch (Throwable t) {
-            throw new NotesException("add note", t);
-        }
-    }
-
-    @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Document updateDocument(long documentId, Document document) throws NotesException {
 
         try {
@@ -122,7 +136,7 @@ public class DocumentManagerBean implements DocumentManager {
                 throw new IllegalArgumentException("note is null");
             }
 
-            Document oldNote = getById(documentId);
+            Document oldNote = getDocument(documentId);
 
 //            oldNote.setTitle(document.getTitle());
 //            oldNote.setText(document.getText());
@@ -149,11 +163,11 @@ public class DocumentManagerBean implements DocumentManager {
     }
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void removeDocument(long documentId) throws NotesException {
         try {
 
-            Document note = getById(documentId);
+            Document note = getDocument(documentId);
             /*
             Hibernate.initialize(note.getAttachments());
 
@@ -183,10 +197,10 @@ public class DocumentManagerBean implements DocumentManager {
 
     @Override
     @Deprecated
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void removeAttachmentFromNote(long attachmentId, long documentId) throws NotesException {
         try {
-            Document note = getById(documentId);
+            Document note = getDocument(documentId);
 //            Hibernate.initialize(note.getAttachments());
 //
 //            Attachment attachment = null;
@@ -224,7 +238,7 @@ public class DocumentManagerBean implements DocumentManager {
 
     @Override
     @Deprecated
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Attachment addAttachmentToNote(String fileName, RepositoryFile repositoryFile, Document document) throws NotesException {
 
         try {
@@ -288,7 +302,7 @@ public class DocumentManagerBean implements DocumentManager {
     }
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Attachment renameAttachment(long attachmentId, String newName) throws NotesException {
         try {
 
@@ -313,7 +327,7 @@ public class DocumentManagerBean implements DocumentManager {
     }
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Attachment getAttachmentWithFile(long attachmentId) throws NotesException {
         try {
 
@@ -353,7 +367,7 @@ public class DocumentManagerBean implements DocumentManager {
     }
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public List<Document> getList(int firstResult, int maxResults) throws NotesException {
         try {
             _verifyLimits(firstResult, maxResults);

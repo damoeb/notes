@@ -20,6 +20,7 @@ import java.util.Date;
         @NamedQuery(name = Document.QUERY_REMOVE, query = "DELETE FROM Document a where a.id=:ID"),
         @NamedQuery(name = Document.QUERY_ALL, query = "SELECT a FROM Document a")
 })
+@Inheritance(strategy = InheritanceType.JOINED)
 //@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class Document implements Serializable {
@@ -216,7 +217,7 @@ public class Document implements Serializable {
         return kind;
     }
 
-    private void setKind(Kind kind) {
+    public void setKind(Kind kind) {
         this.kind = kind;
     }
 
@@ -235,4 +236,5 @@ public class Document implements Serializable {
     public void setFulltext(String fulltext) {
         this.fulltext = fulltext;
     }
+
 }
