@@ -1,5 +1,7 @@
 package org.notes.core.model;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -20,6 +22,7 @@ public abstract class Node implements Serializable {
     @Column(nullable = false)
     protected String name;
 
+    @JsonIgnore
     @Basic
     protected boolean deleted;
 

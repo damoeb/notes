@@ -9,6 +9,7 @@ import org.notes.core.model.Database;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.util.List;
 
 @NotesInterceptors
 @Path("/database")
@@ -32,13 +33,13 @@ public class DatabaseService {
 
     @PUT
     @MethodCache
-    @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse updateDatabase(
-            Database database,
-            @PathParam("id") long folderId
+            Database database
     ) throws Exception {
-        return NotesResponse.ok(databaseManager.updateDatabase(folderId, database));
+        Database result = databaseManager.updateDatabase(database);
+        result.setFolders(null);
+        return NotesResponse.ok(result);
     }
 
     @GET
@@ -46,19 +47,18 @@ public class DatabaseService {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse getDatabase(
-            @PathParam("id") long folderId
+            @PathParam("id") long databaseId
     ) throws Exception {
-        return NotesResponse.ok(databaseManager.getDatabase(folderId));
+        return NotesResponse.ok(databaseManager.getDatabase(databaseId));
     }
 
     @DELETE
     @MethodCache
-    @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse deleteDatabase(
-            @PathParam("id") long folderId
+            Database database
     ) throws Exception {
-        return NotesResponse.ok(databaseManager.deleteDatabase(folderId));
+        return NotesResponse.ok(databaseManager.deleteDatabase(database));
     }
 
     @GET
@@ -67,7 +67,11 @@ public class DatabaseService {
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse getDatabases(
     ) throws Exception {
-        return NotesResponse.ok(databaseManager.getDatabases());
+        List<Database> databases = databaseManager.getDatabases();
+        for (Database database : databases) {
+            database.setFolders(null);
+        }
+        return NotesResponse.ok(databases);
     }
 
 }

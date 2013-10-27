@@ -1,6 +1,7 @@
 package org.notes.core.dao;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Hibernate;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
 import org.notes.core.interfaces.DatabaseManager;
@@ -32,8 +33,6 @@ public class DatabaseManagerBean implements DatabaseManager {
     private UserManager userManager;
 
 
-    // -- Database -- --------------------------------------------------------------------------------------------------
-
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Database createDatabase(Database database) throws NotesException {
@@ -51,7 +50,9 @@ public class DatabaseManagerBean implements DatabaseManager {
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Database getDatabase(long databaseId) throws NotesException {
         try {
-            return _get(databaseId);
+            Database database = _get(databaseId);
+            Hibernate.initialize(database.getFolders());
+            return database;
 
         } catch (NotesException e) {
             throw e;
@@ -62,14 +63,17 @@ public class DatabaseManagerBean implements DatabaseManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public Database deleteDatabase(long databaseId) throws NotesException {
+    public Database deleteDatabase(Database database) throws NotesException {
         try {
-            return _delete(databaseId);
+            if (database == null) {
+                throw new NotesException("database is null");
+            }
+            return _delete(database.getId());
 
         } catch (NotesException e) {
             throw e;
         } catch (Throwable t) {
-            throw new NotesException("delete database " + databaseId, t);
+            throw new NotesException("delete database " + database, t);
         }
     }
 
@@ -89,12 +93,15 @@ public class DatabaseManagerBean implements DatabaseManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public Database updateDatabase(long databaseId, Database newDatabase) throws NotesException {
+    public Database updateDatabase(Database database) throws NotesException {
         try {
-            return _update(databaseId, newDatabase);
+            if (database == null) {
+                throw new NotesException("database is null");
+            }
+            return _update(database.getId(), database);
 
         } catch (Throwable t) {
-            throw new NotesException("update database " + databaseId, t);
+            throw new NotesException("update database " + database.getId(), t);
         }
     }
 
@@ -123,6 +130,8 @@ public class DatabaseManagerBean implements DatabaseManager {
         if (database == null) {
             throw new NotesException("Database is null");
         }
+
+        database.setDocumentCount(0l);
 
         User user = userManager.getUser(1l);
         em.persist(database);

@@ -1,6 +1,5 @@
 package org.notes.core.model;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import javax.persistence.*;
@@ -25,7 +24,6 @@ public class Database extends Node {
     public static final String QUERY_ALL = "Database.QUERY_ALL";
     public static final String FK_DATABASE_ID = "database_id";
 
-    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, cascade = {})
     @JoinColumn(name = Database.FK_DATABASE_ID)
     private List<Folder> folders = new LinkedList();
