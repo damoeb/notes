@@ -16,7 +16,7 @@ public abstract class Node implements Serializable {
     protected Long ownerId;
 
     @Basic
-    protected Long documentCount;
+    protected Integer documentCount = 0;
 
     @Basic
     @Column(nullable = false)
@@ -39,11 +39,11 @@ public abstract class Node implements Serializable {
         this.ownerId = ownerId;
     }
 
-    public Long getDocumentCount() {
+    public Integer getDocumentCount() {
         return documentCount;
     }
 
-    public void setDocumentCount(Long documentCount) {
+    public void setDocumentCount(Integer documentCount) {
         this.documentCount = documentCount;
     }
 

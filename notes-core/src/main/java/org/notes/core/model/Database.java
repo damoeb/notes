@@ -3,8 +3,8 @@ package org.notes.core.model;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.LinkedList;
-import java.util.List;
 
 @Entity(name = "DDatabase")
 @Table(name = "DDatabase",
@@ -26,21 +26,20 @@ public class Database extends Node {
 
     @OneToMany(fetch = FetchType.LAZY, cascade = {})
     @JoinColumn(name = Database.FK_DATABASE_ID)
-    private List<Folder> folders = new LinkedList();
+    private Collection<Folder> folders = new LinkedList();
 
     @Basic
     private Long activeFolderId;
-
 
     public Database() {
         //
     }
 
-    public List<Folder> getFolders() {
+    public Collection<Folder> getFolders() {
         return folders;
     }
 
-    public void setFolders(List<Folder> folders) {
+    public void setFolders(Collection<Folder> folders) {
         this.folders = folders;
     }
 

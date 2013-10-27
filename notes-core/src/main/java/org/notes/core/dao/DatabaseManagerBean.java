@@ -131,7 +131,7 @@ public class DatabaseManagerBean implements DatabaseManager {
             throw new NotesException("Database is null");
         }
 
-        database.setDocumentCount(0l);
+        database.setDocumentCount(0);
 
         User user = userManager.getUser(1l);
         em.persist(database);

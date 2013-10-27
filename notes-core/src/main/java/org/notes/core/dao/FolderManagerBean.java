@@ -10,7 +10,6 @@ import org.notes.core.interfaces.UserManager;
 import org.notes.core.model.Database;
 import org.notes.core.model.Folder;
 import org.notes.core.model.User;
-import org.notes.core.request.NotesRequestException;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -39,8 +38,6 @@ public class FolderManagerBean implements FolderManager {
     private DatabaseManager databaseManager;
 
 
-    // -- Folder -- ----------------------------------------------------------------------------------------------------
-
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Folder createFolder(Folder folder) throws NotesException {
@@ -62,7 +59,7 @@ public class FolderManagerBean implements FolderManager {
         } catch (NotesException e) {
             throw e;
         } catch (Throwable t) {
-            throw new NotesRequestException("create database", t);
+            throw new NotesException("create database", t);
         }
     }
 
@@ -130,13 +127,23 @@ public class FolderManagerBean implements FolderManager {
             throw new NotesException("Folder is null");
         }
 
+        Folder parent = null;
+        if (folder.getParentId() == null) {
+            folder.setLevel(0);
+        } else {
+            parent = _get(folder.getParentId());
+            folder.setLevel(parent.getLevel() + 1);
+        }
+
         User user = userManager.getUser(1l);
+        folder.setParent(parent);
+
         em.persist(folder);
         em.flush();
         em.refresh(folder);
+
         user.getFolders().add(folder);
         em.merge(user);
-
 
         return folder;
 

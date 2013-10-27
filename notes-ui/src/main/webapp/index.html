@@ -49,163 +49,264 @@
 
 <script src="js/util.js"></script>
 <script src="js/editor.js"></script>
-<script src="js/list.js"></script>
 
 <script type="text/javascript">
 
-    $(document).ready(function () {
-        /*
-         //           $('#n-editor').editor();
-         //           $('#n-list').list({url: '/notes/rest/note/list'});
+$(document).ready(function () {
+    /*
+     //           $('#n-editor').editor();
+     //           $('#n-list').list({url: '/notes/rest/note/list'});
 
-         $( '#create-note' ).button({
-         icons: {
-         primary: 'ui-icon-plus'
-         },
-         label: 'New Note'
-         });
+     $( '#create-note' ).button({
+     icons: {
+     primary: 'ui-icon-plus'
+     },
+     label: 'New Note'
+     });
 
-         $( '#attach-file' ).button({
-         icons: {
-         primary: 'ui-icon-disk'
-         },
-         label: 'Attachment'
-         });
+     $( '#attach-file' ).button({
+     icons: {
+     primary: 'ui-icon-disk'
+     },
+     label: 'Attachment'
+     });
 
-         $( '#run-search' ).button({
-         icons: {
-         primary: 'ui-icon-search'
-         },
-         text: false
-         });
+     $( '#run-search' ).button({
+     icons: {
+     primary: 'ui-icon-search'
+     },
+     text: false
+     });
 
-         */
+     */
 
-        // -- overwrite behaviour
-        var customParse = function (data) {
-            if (_.isObject(data.result)) {
-                return data.result;
+    // -- Overwrites -----------------------------------------------------------------------------------------------
+    var customParse = function (data) {
+        if (_.isObject(data.result)) {
+            return data.result;
+        } else {
+            return data;
+        }
+    };
+    Backbone.Model.prototype.parse = customParse;
+    Backbone.Collection.prototype.parse = customParse;
+
+    // -- Side Navigation ------------------------------------------------------------------------------------------
+
+    var Database = Backbone.Model.extend({
+        defaults: {
+            name: 'blank'
+        },
+        url: '/notes/rest/database'
+    });
+    var ItemView = Backbone.View.extend({
+
+        template: _.template('<b class="item"><button class="remove">X</button> <b><button class="edit">Edit</button> <%= name %></b>'),
+        editTemplate: _.template('<input class="name" value="<%= name %>" /><button class="save">Save</button>'),
+
+        events: {
+            "click .remove": "deleteItem",
+            "click .edit": "editItem",
+            "click .save": "saveItem",
+            "click .item": "openItem"
+        },
+        deleteItem: function () {
+            this.model.destroy();
+            this.remove();
+        },
+        editItem: function () {
+            this.$el.html(this.editTemplate(this.model.toJSON()));
+        },
+        openItem: function () {
+            console.log('not implemented');
+        },
+        saveItem: function () {
+            var editTitle = $('input.name').val();
+            this.model.save({
+                name: editTitle
+            });
+            this.$el.html(this.template(this.model.toJSON()));
+        },
+        render: function () {
+            var attributes = this.model.toJSON();
+            this.$el.append(this.template(attributes));
+            return this;
+        }
+    });
+
+    var DatabaseList = Backbone.Collection.extend({
+        model: Database,
+        url: '/notes/rest/database/list',
+        initialize: function () {
+            this.fetch();
+        }
+    });
+
+    var DatabaseListView = Backbone.View.extend({
+
+        events: {
+            'click #add': 'addItem'
+        },
+
+        initialize: function (options) {
+            _.bindAll(this, 'render', 'addItem', 'renderItem');
+
+            this.options = options;
+            this.el = options.el;
+
+            this.collection = new DatabaseList();
+            this.collection.bind('add', this.renderItem);
+
+            this.render();
+        },
+
+        render: function () {
+
+            this.list = $('<dl></dl>');
+            this.list.append($('<dt></dt>', {text: this.options.title}).append("<button id='add'>+</button>"));
+            this.el.append(this.list);
+        },
+
+        addItem: function () {
+            var name = prompt('New Name');
+            var database = new Database({name: name});
+            this.collection.add(database);
+            database.save();
+        },
+
+        renderItem: function (item) {
+            var itemView = new ItemView({
+                model: item
+            });
+            this.list.append(itemView.render().el);
+        }
+
+    });
+
+    var databaseView = new DatabaseListView({
+        title: 'Open databases',
+        el: $('#databases')
+    });
+
+
+    // -- TREE -----------------------------------------------------------------------------------------------------
+
+    var Node = Backbone.Model.extend({
+        defaults: {
+            name: 'blank',
+            documentCount: 0,
+            parent: null,
+            level: 0
+        },
+        url: '/notes/rest/node'
+    });
+
+    var NodeView = ItemView.extend({
+        template: _.template('<div class="item"><div class="toggle">&gt;</div><div class="icon">icon</div><div class="name"><%= name %></div></div>'),
+        events: {
+            'hover .item': 'showEditPen',
+            'click .item': 'loadDocuments',
+            'click .toggle': 'showHideChildren'
+        },
+        loadDocuments: function () {
+            console.log('loadDocuments ' + this.model);
+            // todo load documents
+        },
+        showEditPen: function () {
+            // todo
+            console.log('show pen');
+        },
+        showHideChildren: function () {
+
+        },
+        renderChildren: function (children) {
+            if (children) {
+
+            }
+        },
+        render: function () {
+            var attributes = this.model.toJSON();
+
+            this.$el.append(this.template(attributes));
+
+            this.renderChildren(this.model.get('children'));
+
+            return this;
+        }
+
+    });
+
+    var Tree = Backbone.Collection.extend({
+        model: Database,
+        urlRoot: '/notes/rest/database/',
+        initialize: function (options) {
+            this.url = this.urlRoot + options.databaseId;
+            this.fetch();
+        },
+        parse: function (data) {
+            if (_.isObject(data.result) && _.isObject(data.result.folders)) {
+                // todo sort folders
+                return data.result.folders;
             } else {
                 return data;
             }
-        };
-        Backbone.Model.prototype.parse = customParse;
-        Backbone.Collection.prototype.parse = customParse;
-
-        // --
-
-        var Database = Backbone.Model.extend({
-            defaults: {
-                name: 'blank'
-            },
-            url: '/notes/rest/database'
-        });
-        var ItemView = Backbone.View.extend({
-
-            template: _.template('<b class="item"><button class="remove">X</button> <b><button class="edit">Edit</button> <%= name %></b>'),
-            editTemplate: _.template('<input class="name" value="<%= name %>" /><button class="save">Save</button>'),
-
-            events: {
-                "click .remove": "deleteItem",
-                "click .edit": "editItem",
-                "click .save": "saveItem",
-                "click .item": "openItem"
-            },
-            deleteItem: function () {
-                this.model.destroy();
-                this.remove();
-            },
-            editItem: function () {
-                this.$el.html(this.editTemplate(this.model.toJSON()));
-            },
-            openItem: function () {
-                console.log('not implemented');
-            },
-            saveItem: function () {
-                var editTitle = $('input.name').val();
-                this.model.save({
-                    name: editTitle
-                });
-                this.$el.html(this.template(this.model.toJSON()));
-            },
-            render: function () {
-                var attributes = this.model.toJSON();
-                this.$el.append(this.template(attributes));
-                return this;
-            }
-        });
-
-        var DatabaseList = Backbone.Collection.extend({
-            model: Database,
-            url: '/notes/rest/database/list',
-            initialize: function (models, options) {
-                this.fetch();
-            }
-        });
-
-        var DatabaseListView = Backbone.View.extend({
-
-            events: {
-                'click #add': 'addItem'
-            },
-
-            initialize: function (options) {
-                _.bindAll(this, 'render', 'addItem', 'renderItem');
-
-                this.options = options;
-                this.el = options.el;
-
-                this.collection = new DatabaseList();
-                this.collection.bind('add', this.renderItem);
-
-                this.render();
-            },
-
-            render: function () {
-
-                this.list = $('<dl></dl>');
-                this.list.append($('<dt></dt>', {text: this.options.title}).append("<button id='add'>+</button>"));
-                this.el.append(this.list);
-            },
-
-            addItem: function () {
-                var name = prompt('New Name');
-                var database = new Database({name: name});
-                this.collection.add(database);
-                database.save();
-            },
-
-            renderItem: function (item) {
-                var itemView = new ItemView({
-                    model: item
-                });
-                this.list.append(itemView.render().el);
-            }
-
-        });
-
-        var databaseView = new DatabaseListView({
-            title: 'Open databases',
-            el: $('#databases')
-        });
-
-
-        var Node = Backbone.Model.extend({
-            defaults: {
-                name: 'blank',
-                documentCount: 0,
-                level: 0
-            },
-            url: '/notes/rest/node'
-        });
-        var NodeView = ItemView.extend({
-            openItem: function () {
-                console.log(this.model);
-            }
-        });
-
-
+        }
     });
+
+    var TreeView = Backbone.View.extend({
+
+        el: $('#tree'),
+
+        events: {
+            'dblclick .node': 'loadNode'
+        },
+
+        initialize: function (options) {
+            _.bindAll(this, 'render', 'addNode', 'renderNode');
+
+            this.activeFolderId = null;
+
+            this.options = options;
+
+            this.collection = new Tree({
+                databaseId: options.databaseId
+            });
+            this.collection.bind('add', this.renderNode);
+
+            this.render();
+        },
+
+        render: function () {
+
+            //this.el.append(this.list);
+        },
+
+        addNode: function () {
+            var name = prompt('Node Name');
+            var node = new Node({
+                name: name,
+                parent: this.activeFolderId
+            });
+            this.collection.add(node);
+            node.save();
+        },
+
+        renderNode: function (node) {
+            var nodeView = new NodeView({
+                model: node
+            });
+            this.$el.append(nodeView.render().el);
+        },
+
+        loadNode: function (node) {
+            // todo load children and show documents
+        }
+    });
+
+    var treeView = new TreeView({databaseId: 1});
+
+
+});
 
 </script>
 

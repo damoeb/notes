@@ -29,10 +29,16 @@ public class Folder extends Node {
     public static final String QUERY_USERS_NOTEBOOKS = "Folder.QUERY_USERS_NOTEBOOKS";
     public static final String FK_FOLDER_ID = "folder_id";
 
+    @Basic
+    private Integer level = 0;
+
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, cascade = {})
     @JoinColumn(name = Folder.FK_FOLDER_ID)
     private List<Document> documents = new LinkedList();
+
+    @Transient
+    private List<Folder> children = null;
 
     @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY, cascade = {})
@@ -43,6 +49,7 @@ public class Folder extends Node {
     @Column(updatable = false, insertable = false, nullable = true, name = "parent_id")
     private Long parentId;
 
+    @JsonIgnore
     @Column(updatable = false, insertable = false, nullable = true, name = Database.FK_DATABASE_ID)
     private Long databaseId;
 
@@ -82,4 +89,19 @@ public class Folder extends Node {
         this.databaseId = databaseId;
     }
 
+    public Integer getLevel() {
+        return level;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
+    }
+
+    public List<Folder> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<Folder> children) {
+        this.children = children;
+    }
 }
