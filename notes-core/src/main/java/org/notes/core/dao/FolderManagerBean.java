@@ -132,6 +132,8 @@ public class FolderManagerBean implements FolderManager {
             folder.setLevel(0);
         } else {
             parent = _get(folder.getParentId());
+            parent.setLeaf(false);
+            em.merge(parent);
             folder.setLevel(parent.getLevel() + 1);
         }
 

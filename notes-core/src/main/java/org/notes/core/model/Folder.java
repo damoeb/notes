@@ -40,6 +40,12 @@ public class Folder extends Node {
     @Transient
     private List<Folder> children = null;
 
+    /**
+     * true, if has no children folders
+     */
+    @Basic
+    private boolean leaf = true;
+
     @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY, cascade = {})
     @JoinColumn(name = "parent_id")
@@ -103,5 +109,13 @@ public class Folder extends Node {
 
     public void setChildren(List<Folder> children) {
         this.children = children;
+    }
+
+    public boolean isLeaf() {
+        return leaf;
+    }
+
+    public void setLeaf(boolean leaf) {
+        this.leaf = leaf;
     }
 }

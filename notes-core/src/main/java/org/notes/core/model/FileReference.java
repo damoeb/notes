@@ -44,8 +44,9 @@ public class FileReference implements Serializable {
     @Column(nullable = false)
     private String contentType;
 
-    @Basic
-    private String extractedText;
+    @Lob
+    @Column(name = "full_text")
+    private String fullText;
 
     @Basic
     @Column(name = "size", nullable = false)
@@ -95,12 +96,12 @@ public class FileReference implements Serializable {
         this.size = size;
     }
 
-    public String getExtractedText() {
-        return extractedText;
+    public String getFullText() {
+        return fullText;
     }
 
-    public void setExtractedText(String extractedText) {
-        this.extractedText = extractedText;
+    public void setFullText(String fullText) {
+        this.fullText = fullText;
     }
 
     public String getChecksum() {
