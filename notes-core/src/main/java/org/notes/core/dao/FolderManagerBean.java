@@ -8,6 +8,7 @@ import org.notes.core.interfaces.DatabaseManager;
 import org.notes.core.interfaces.FolderManager;
 import org.notes.core.interfaces.UserManager;
 import org.notes.core.model.Database;
+import org.notes.core.model.Document;
 import org.notes.core.model.Folder;
 import org.notes.core.model.User;
 
@@ -43,7 +44,7 @@ public class FolderManagerBean implements FolderManager {
     public Folder createFolder(Folder folder) throws NotesException {
         try {
             if (folder.getDatabaseId() == null) {
-                throw new NotesException("databaseId is null");
+                throw new NotesException("folderId is null");
             }
 
             Database database = databaseManager.getDatabase(folder.getDatabaseId());
@@ -59,7 +60,7 @@ public class FolderManagerBean implements FolderManager {
         } catch (NotesException e) {
             throw e;
         } catch (Throwable t) {
-            throw new NotesException("create database", t);
+            throw new NotesException("create folder", t);
         }
     }
 
@@ -72,7 +73,26 @@ public class FolderManagerBean implements FolderManager {
         } catch (NotesException e) {
             throw e;
         } catch (Throwable t) {
-            throw new NotesException("get database " + folderId, t);
+            throw new NotesException("get folder " + folderId, t);
+        }
+    }
+
+    @Override
+    public List<Document> getDocuments(Long folderId) throws NotesException {
+        try {
+            if (folderId == null || folderId <= 0) {
+                throw new NotesException(String.format("Invalid folder id '%s'", folderId));
+            }
+
+            Query query = em.createNamedQuery(Folder.QUERY_DOCUMENTS);
+            query.setParameter("ID", folderId);
+
+            return (List<Document>) query.getResultList();
+
+        } catch (NotesException e) {
+            throw e;
+        } catch (Throwable t) {
+            throw new NotesException("get documents of " + folderId, t);
         }
     }
 
@@ -85,7 +105,7 @@ public class FolderManagerBean implements FolderManager {
         } catch (NotesException e) {
             throw e;
         } catch (Throwable t) {
-            throw new NotesException("delete database " + folderId, t);
+            throw new NotesException("delete folder " + folderId, t);
         }
     }
 
@@ -96,7 +116,7 @@ public class FolderManagerBean implements FolderManager {
             return _update(folderId, newFolder);
 
         } catch (Throwable t) {
-            throw new NotesException("update database " + folderId, t);
+            throw new NotesException("update folder " + folderId, t);
         }
     }
 
@@ -168,11 +188,11 @@ public class FolderManagerBean implements FolderManager {
     }
 
     private Folder _delete(long folderId) throws NotesException {
-        Folder database = _get(folderId);
-        database.setDeleted(true);
-        em.merge(database);
+        Folder folder = _get(folderId);
+        folder.setDeleted(true);
+        em.merge(folder);
 
-        return database;
+        return folder;
     }
 
 }

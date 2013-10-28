@@ -1,9 +1,11 @@
 package org.notes.core.interfaces;
 
 import org.notes.common.exceptions.NotesException;
+import org.notes.core.model.Document;
 import org.notes.core.model.Folder;
 
 import javax.ejb.Local;
+import java.util.List;
 
 @Local
 public interface FolderManager {
@@ -15,4 +17,6 @@ public interface FolderManager {
     Folder deleteFolder(long folderId) throws NotesException;
 
     Folder updateFolder(long folderId, Folder folder) throws NotesException;
+
+    List<Document> getDocuments(Long folderId) throws NotesException;
 }

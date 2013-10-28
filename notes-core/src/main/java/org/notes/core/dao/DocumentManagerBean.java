@@ -100,6 +100,7 @@ public class DocumentManagerBean implements DocumentManager {
             em.refresh(document);
 
             folder.getDocuments().add(document);
+            folder.setDocumentCount(folder.getDocumentCount() + 1);
             em.merge(folder);
 
             user.getDocuments().add(document);
@@ -118,7 +119,12 @@ public class DocumentManagerBean implements DocumentManager {
     public void deleteDocument(long documentId) throws NotesException {
         try {
 
-            em.remove(getDocument(documentId));
+            Document document = getDocument(documentId);
+            // todo fix folderId is null
+            //Folder folder = folderManager.getFolder(document.getFolderId());
+            //folder.setDocumentCount(folder.getDocumentCount() - 1);
+            //em.merge(folder);
+            em.remove(document);
 
         } catch (NotesException t) {
             throw t;

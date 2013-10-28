@@ -219,17 +219,25 @@ $(document).ready(function () {
         showHideChildren: function () {
 
         },
-        renderChildren: function (children) {
-            if (children) {
-
-            }
-        },
         render: function () {
             var attributes = this.model.toJSON();
 
             this.$el.append(this.template(attributes));
 
-            this.renderChildren(this.model.get('children'));
+            var isLeaf = this.model.get('leaf');
+            if (!isLeaf) {
+
+                var childNode = $('<div/>', {class: 'children'});
+                var children = this.model.get('children');
+                for (var index in  children) {
+                    var nodeView = new NodeView({
+                        model: new Node(children[index])
+                    });
+                    childNode.append(nodeView.render().el);
+                }
+                this.$el.append(childNode);
+
+            }
 
             return this;
         }

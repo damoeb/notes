@@ -13,7 +13,7 @@ import java.util.List;
 )
 @NamedQueries({
         @NamedQuery(name = Folder.QUERY_BY_ID, query = "SELECT a FROM Folder a where a.id=:ID"),
-        @NamedQuery(name = Folder.QUERY_GET_CHILDREN, query = "SELECT a FROM Folder a where a.parentId=:PARENT_ID"),
+        @NamedQuery(name = Folder.QUERY_DOCUMENTS, query = "SELECT new Document(a.title, a.kind, a.description, a.created, a.modified) FROM Document a where a.folderId=:ID"),
         @NamedQuery(name = Folder.QUERY_BY_VALUE, query = "SELECT a FROM Folder a where LOWER(a.name)=LOWER(:VAL)"),
         @NamedQuery(name = Folder.QUERY_ALL, query = "SELECT a FROM Folder a"),
         @NamedQuery(name = Folder.QUERY_USERS_NOTEBOOKS, query = "SELECT a FROM Folder a where a.ownerId=:ID and a.parentId IS NULL")
@@ -23,16 +23,15 @@ import java.util.List;
 public class Folder extends Node {
 
     public static final String QUERY_BY_ID = "Folder.QUERY_BY_ID";
-    public static final String QUERY_GET_CHILDREN = "Folder.QUERY_GET_CHILDREN";
     public static final String QUERY_BY_VALUE = "Folder.QUERY_BY_VALUE";
     public static final String QUERY_ALL = "Folder.QUERY_ALL";
     public static final String QUERY_USERS_NOTEBOOKS = "Folder.QUERY_USERS_NOTEBOOKS";
     public static final String FK_FOLDER_ID = "folder_id";
+    public static final String QUERY_DOCUMENTS = "Folder.QUERY_DOCUMENTS";
 
     @Basic
     private Integer level = 0;
 
-    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, cascade = {})
     @JoinColumn(name = Folder.FK_FOLDER_ID)
     private List<Document> documents = new LinkedList();

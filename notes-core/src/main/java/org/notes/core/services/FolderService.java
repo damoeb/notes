@@ -50,6 +50,16 @@ public class FolderService {
         return NotesResponse.ok(folderManager.getFolder(folderId));
     }
 
+    @GET
+    @MethodCache
+    @Path("/{id}/documents")
+    @Produces(MediaType.APPLICATION_JSON)
+    public NotesResponse getDocumentsInFolder(
+            @PathParam("id") long folderId
+    ) throws Exception {
+        return NotesResponse.ok(folderManager.getDocuments(folderId));
+    }
+
     @DELETE
     @MethodCache
     @Path("/{id}")

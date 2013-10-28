@@ -77,6 +77,14 @@ public class Document implements Serializable {
         // default
     }
 
+    public Document(String title, Kind kind, String description, Date created, Date modified) {
+        this.title = title;
+        this.kind = kind;
+        this.modified = modified;
+        this.created = created;
+        this.description = description;
+    }
+
     @PrePersist
     @PreUpdate
     public void onPersist() {
