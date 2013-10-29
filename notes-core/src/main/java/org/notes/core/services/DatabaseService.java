@@ -52,13 +52,15 @@ public class DatabaseService {
     ) throws Exception {
         Database database = databaseManager.getDatabase(databaseId);
         Map<Long, Folder> folders = new HashMap(100);
-        SortedSet tree = new TreeSet(new Comparator<Folder>() {
+        Comparator<Folder> sortedByName = new Comparator<Folder>() {
             @Override
             public int compare(Folder f1, Folder f2) {
                 return f2.getName().compareTo(f1.getName());
             }
-        });
+        };
+        SortedSet tree = new TreeSet(sortedByName);
         for (Folder f : database.getFolders()) {
+            f.setDocuments(null);
             folders.put(f.getId(), f);
             if (f.getLevel() == 0) {
                 tree.add(f);
@@ -68,7 +70,7 @@ public class DatabaseService {
             if (f.getLevel() != 0) {
                 Folder parent = folders.get(f.getParentId());
                 if (parent.getChildren() == null) {
-                    parent.setChildren(new LinkedList());
+                    parent.setChildren(new TreeSet(sortedByName));
                 }
                 parent.getChildren().add(f);
             }

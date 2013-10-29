@@ -6,6 +6,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import javax.persistence.*;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 @Entity(name = "Folder")
 @Table(name = "Folder",
@@ -37,7 +38,7 @@ public class Folder extends Node {
     private List<Document> documents = new LinkedList();
 
     @Transient
-    private List<Folder> children = null;
+    private Set<Folder> children = null;
 
     /**
      * true, if has no children folders
@@ -102,11 +103,11 @@ public class Folder extends Node {
         this.level = level;
     }
 
-    public List<Folder> getChildren() {
+    public Set<Folder> getChildren() {
         return children;
     }
 
-    public void setChildren(List<Folder> children) {
+    public void setChildren(Set<Folder> children) {
         this.children = children;
     }
 
