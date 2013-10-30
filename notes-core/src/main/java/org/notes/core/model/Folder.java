@@ -46,6 +46,12 @@ public class Folder extends Node {
     @Basic
     private boolean leaf = true;
 
+    /**
+     * true, if not leaf and child nodes are shown
+     */
+    @Basic
+    private boolean expanded = false;
+
     @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY, cascade = {})
     @JoinColumn(name = "parent_id")
@@ -117,5 +123,13 @@ public class Folder extends Node {
 
     public void setLeaf(boolean leaf) {
         this.leaf = leaf;
+    }
+
+    public boolean isExpanded() {
+        return expanded;
+    }
+
+    public void setExpanded(boolean expanded) {
+        this.expanded = expanded;
     }
 }

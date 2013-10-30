@@ -115,6 +115,7 @@ body {
     padding-right: 5px;
     text-align: right;
 }
+
 #n-editor #field-title,
 #n-editor #field-url,
 #n-editor #field-tags,
@@ -123,10 +124,12 @@ body {
     min-width: 200px;
     padding: 2px 3px;
 }
+
 .space {
     display: inline-block;
     width: 10px;
 }
+
 .bar {
     height: 5px;
     background: black;
@@ -135,20 +138,24 @@ body {
 .list-item-title {
     font-weight: bold;
 }
+
 .list-item-preview {
     color: #666666;
 }
+
 .attachment-menu {
-    position:absolute;
+    position: absolute;
     display: block;
     width: 150px;
 }
+
 table.dataTable tr.odd,
 table.dataTable tr.even {
-    background-color: rgba(243, 243, 243, 0.851)!important;
+    background-color: rgba(243, 243, 243, 0.851) !important;
     border-bottom: 1px solid rgba(221, 221, 221, 0.85);
     cursor: pointer;
 }
+
 /*
 table.dataTable {
     table-layout:fixed;
@@ -159,29 +166,35 @@ table.dataTable td {
 }
 */
 .column-1 {
-    width:10px;
+    width: 10px;
 }
+
 .column-3 {
 }
+
 .column-4 {
 }
+
 .column-5 {
 }
+
 .odd .column-6,
 .even .column-6 {
     color: #666666;
 }
 
-
 .hover {
-    background:-moz-linear-gradient(bottom,#84a0b6,#aec0d4); /* Firefox */
-    background:-webkit-gradient(linear,left top,left bottom,from(#84a0b6),to(#aec0d4)); /* Chrome, Safari */
-    filter: progid:DXImageTransform.Microsoft.gradient(start
-    Colorstr='#84a0b6',endColorstr='#aec0d4'); /* Internet Explorer */
-    border-top:1px solid #84a0b6;
-    border-bottom:1px solid #84a0b6;
+    background: -moz-linear-gradient(bottom, #84a0b6, #aec0d4); /* Firefox */
+    background: -webkit-gradient(linear, left top, left bottom, from(#84a0b6), to(#aec0d4)); /* Chrome, Safari */
+    filter: progid:DXImageTransform.Microsoft.gradient(start Colorstr = '#84a0b6', endColorstr = '#aec0d4'); /* Internet Explorer */
+    border-top: 1px solid #84a0b6;
+    border-bottom: 1px solid #84a0b6;
 }
 
+/* treeview */
+.children {
+    margin-left: 5px;
+}
 
 /* ==========================================================================
 Helper classes
@@ -294,7 +307,7 @@ Helper classes
     /* Style adjustments for viewports that meet the condition */
 }
 
-@media only screen and (-webkit-min-device-pixel-ratio: 1.5), only screen and (min-resolution: 144 dpi) {
+@media only screen and (-webkit-min-device-pixel-ratio: 1.5), only screen and (min-resolution: 144dpi) {
     /* Style adjustments for high resolution devices */
 }
 

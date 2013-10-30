@@ -9,314 +9,190 @@
 <html class="no-js" xmlns="http://www.w3.org/1999/html"> <!--<![endif]-->
 <head>
 
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-<title></title>
-<meta name="description" content="">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
-<link rel="stylesheet" href="css/bootstrap.css">
-<link rel="stylesheet" href="css/main.css">
-<link rel="stylesheet" href="css/vendor/jquery-ui-1.9.2.custom.css">
-<link rel="stylesheet" href="css/vendor/jquery.dataTables.css">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/vendor/jquery-ui-1.9.2.custom.css">
+    <link rel="stylesheet" href="css/vendor/jquery.dataTables.css">
 
-<script src="js/vendor/modernizr-2.6.2.min.js"></script>
+    <script src="js/vendor/modernizr-2.6.2.min.js"></script>
 
-<script src="js/vendor/jquery-1.8.2.min.js"></script>
-<script src="js/vendor/jquery-ui-1.9.2.custom.js"></script>
-<script src="js/vendor/jquery.dataTables.js"></script>
-<script src="js/vendor/jquery.timeago.js"></script>
-<script src="js/vendor/jquery.paginate.js"></script>
-<script src="js/vendor/jquery.raty.js"></script>
-<script src="js/vendor/underscore-min.js"></script>
-<script src="js/vendor/backbone-min.js"></script>
+    <script src="js/vendor/jquery-1.8.2.min.js"></script>
+    <script src="js/vendor/jquery-ui-1.9.2.custom.js"></script>
+    <script src="js/vendor/jquery.dataTables.js"></script>
+    <script src="js/vendor/jquery.timeago.js"></script>
+    <script src="js/vendor/jquery.paginate.js"></script>
+    <script src="js/vendor/jquery.raty.js"></script>
+    <script src="js/vendor/underscore-min.js"></script>
+    <script src="js/vendor/backbone-min.js"></script>
 
-<!-- notifications -->
-<!-- see http://needim.github.com/noty/-->
-<script src="js/vendor/jquery.noty.js"></script>
-<script src="js/vendor/noty/layouts/top.js"></script>
-<script src="js/vendor/noty/themes/default.js"></script>
+    <!-- notifications -->
+    <!-- see http://needim.github.com/noty/-->
+    <script src="js/vendor/jquery.noty.js"></script>
+    <script src="js/vendor/noty/layouts/top.js"></script>
+    <script src="js/vendor/noty/themes/default.js"></script>
 
-<script src="js/plugins.js"></script>
-<script src="js/ckeditor/ckeditor.js"></script>
-<script src="js/ckeditor/adapters/jquery.js"></script>
+    <script src="js/plugins.js"></script>
+    <script src="js/ckeditor/ckeditor.js"></script>
+    <script src="js/ckeditor/adapters/jquery.js"></script>
 
-<script type="text/javascript">
-    var notes = {};
-</script>
+    <script type="text/javascript">
+        var notes = {};
+    </script>
 
-<script src="js/util.js"></script>
-<script src="js/editor.js"></script>
+    <script src="js/util.js"></script>
+    <script src="js/editor.js"></script>
 
-<script type="text/javascript">
+    <script type="text/javascript">
 
-$(document).ready(function () {
-    /*
-     //           $('#n-editor').editor();
-     //           $('#n-list').list({url: '/notes/rest/note/list'});
+        $(document).ready(function () {
+            /*
+             //           $('#n-editor').editor();
+             //           $('#n-list').list({url: '/notes/rest/note/list'});
 
-     $( '#create-note' ).button({
-     icons: {
-     primary: 'ui-icon-plus'
-     },
-     label: 'New Note'
-     });
+             $( '#create-note' ).button({
+             icons: {
+             primary: 'ui-icon-plus'
+             },
+             label: 'New Note'
+             });
 
-     $( '#attach-file' ).button({
-     icons: {
-     primary: 'ui-icon-disk'
-     },
-     label: 'Attachment'
-     });
+             $( '#attach-file' ).button({
+             icons: {
+             primary: 'ui-icon-disk'
+             },
+             label: 'Attachment'
+             });
 
-     $( '#run-search' ).button({
-     icons: {
-     primary: 'ui-icon-search'
-     },
-     text: false
-     });
+             $( '#run-search' ).button({
+             icons: {
+             primary: 'ui-icon-search'
+             },
+             text: false
+             });
 
-     */
+             */
 
-    // -- Overwrites -----------------------------------------------------------------------------------------------
-    var customParse = function (data) {
-        if (_.isObject(data.result)) {
-            return data.result;
-        } else {
-            return data;
-        }
-    };
-    Backbone.Model.prototype.parse = customParse;
-    Backbone.Collection.prototype.parse = customParse;
-
-    // -- Side Navigation ------------------------------------------------------------------------------------------
-
-    var Database = Backbone.Model.extend({
-        defaults: {
-            name: 'blank'
-        },
-        url: '/notes/rest/database'
-    });
-    var ItemView = Backbone.View.extend({
-
-        template: _.template('<b class="item"><button class="remove">X</button> <b><button class="edit">Edit</button> <%= name %></b>'),
-        editTemplate: _.template('<input class="name" value="<%= name %>" /><button class="save">Save</button>'),
-
-        events: {
-            "click .remove": "deleteItem",
-            "click .edit": "editItem",
-            "click .save": "saveItem",
-            "click .item": "openItem"
-        },
-        deleteItem: function () {
-            this.model.destroy();
-            this.remove();
-        },
-        editItem: function () {
-            this.$el.html(this.editTemplate(this.model.toJSON()));
-        },
-        openItem: function () {
-            console.log('not implemented');
-        },
-        saveItem: function () {
-            var editTitle = $('input.name').val();
-            this.model.save({
-                name: editTitle
-            });
-            this.$el.html(this.template(this.model.toJSON()));
-        },
-        render: function () {
-            var attributes = this.model.toJSON();
-            this.$el.append(this.template(attributes));
-            return this;
-        }
-    });
-
-    var DatabaseList = Backbone.Collection.extend({
-        model: Database,
-        url: '/notes/rest/database/list',
-        initialize: function () {
-            this.fetch();
-        }
-    });
-
-    var DatabaseListView = Backbone.View.extend({
-
-        events: {
-            'click #add': 'addItem'
-        },
-
-        initialize: function (options) {
-            _.bindAll(this, 'render', 'addItem', 'renderItem');
-
-            this.options = options;
-            this.el = options.el;
-
-            this.collection = new DatabaseList();
-            this.collection.bind('add', this.renderItem);
-
-            this.render();
-        },
-
-        render: function () {
-
-            this.list = $('<dl></dl>');
-            this.list.append($('<dt></dt>', {text: this.options.title}).append("<button id='add'>+</button>"));
-            this.el.append(this.list);
-        },
-
-        addItem: function () {
-            var name = prompt('New Name');
-            var database = new Database({name: name});
-            this.collection.add(database);
-            database.save();
-        },
-
-        renderItem: function (item) {
-            var itemView = new ItemView({
-                model: item
-            });
-            this.list.append(itemView.render().el);
-        }
-
-    });
-
-    var databaseView = new DatabaseListView({
-        title: 'Open databases',
-        el: $('#databases')
-    });
-
-
-    // -- TREE -----------------------------------------------------------------------------------------------------
-
-    var Node = Backbone.Model.extend({
-        defaults: {
-            name: 'blank',
-            documentCount: 0,
-            parent: null,
-            level: 0
-        },
-        url: '/notes/rest/node'
-    });
-
-    var NodeView = ItemView.extend({
-        template: _.template('<div class="item"><div class="toggle">&gt;</div><div class="icon">icon</div><div class="name"><%= name %></div></div>'),
-        events: {
-            'hover .item': 'showEditPen',
-            'click .item': 'loadDocuments',
-            'click .toggle': 'showHideChildren'
-        },
-        loadDocuments: function () {
-            console.log('loadDocuments ' + this.model);
-            // todo load documents
-        },
-        showEditPen: function () {
-            // todo
-            console.log('show pen');
-        },
-        showHideChildren: function () {
-
-        },
-        render: function () {
-            var attributes = this.model.toJSON();
-
-            this.$el.append(this.template(attributes));
-
-            var isLeaf = this.model.get('leaf');
-            if (!isLeaf) {
-
-                var childNode = $('<div/>', {class: 'children'});
-                var children = this.model.get('children');
-                for (var index in  children) {
-                    var nodeView = new NodeView({
-                        model: new Node(children[index])
-                    });
-                    childNode.append(nodeView.render().el);
+            // -- Overwrites -----------------------------------------------------------------------------------------------
+            var customParse = function (data) {
+                if (_.isObject(data.result)) {
+                    return data.result;
+                } else {
+                    return data;
                 }
-                this.$el.append(childNode);
+            };
+            Backbone.Model.prototype.parse = customParse;
+            Backbone.Collection.prototype.parse = customParse;
 
-            }
+            // -- Side Navigation ------------------------------------------------------------------------------------------
 
-            return this;
-        }
-
-    });
-
-    var Tree = Backbone.Collection.extend({
-        model: Database,
-        urlRoot: '/notes/rest/database/',
-        initialize: function (options) {
-            this.url = this.urlRoot + options.databaseId;
-            this.fetch();
-        },
-        parse: function (data) {
-            if (_.isObject(data.result) && _.isObject(data.result.folders)) {
-                // todo sort folders
-                return data.result.folders;
-            } else {
-                return data;
-            }
-        }
-    });
-
-    var TreeView = Backbone.View.extend({
-
-        el: $('#tree'),
-
-        events: {
-            'dblclick .node': 'loadNode'
-        },
-
-        initialize: function (options) {
-            _.bindAll(this, 'render', 'addNode', 'renderNode');
-
-            this.activeFolderId = null;
-
-            this.options = options;
-
-            this.collection = new Tree({
-                databaseId: options.databaseId
+            var Database = Backbone.Model.extend({
+                defaults: {
+                    name: 'blank'
+                },
+                url: '/notes/rest/database'
             });
-            this.collection.bind('add', this.renderNode);
+            var ItemView = Backbone.View.extend({
 
-            this.render();
-        },
+                template: _.template('<b class="item"><button class="remove">X</button> <b><button class="edit">Edit</button> <%= name %></b>'),
+                editTemplate: _.template('<input class="name" value="<%= name %>" /><button class="save">Save</button>'),
 
-        render: function () {
-
-            //this.el.append(this.list);
-        },
-
-        addNode: function () {
-            var name = prompt('Node Name');
-            var node = new Node({
-                name: name,
-                parent: this.activeFolderId
+                events: {
+                    "click .remove": "deleteItem",
+                    "click .edit": "editItem",
+                    "click .save": "saveItem",
+                    "click .item": "openItem"
+                },
+                deleteItem: function () {
+                    this.model.destroy();
+                    this.remove();
+                },
+                editItem: function () {
+                    this.$el.html(this.editTemplate(this.model.toJSON()));
+                },
+                openItem: function () {
+                    console.log('not implemented');
+                },
+                saveItem: function () {
+                    var editTitle = $('input.name').val();
+                    this.model.save({
+                        name: editTitle
+                    });
+                    this.$el.html(this.template(this.model.toJSON()));
+                },
+                render: function () {
+                    var attributes = this.model.toJSON();
+                    this.$el.append(this.template(attributes));
+                    return this;
+                }
             });
-            this.collection.add(node);
-            node.save();
-        },
 
-        renderNode: function (node) {
-            var nodeView = new NodeView({
-                model: node
+            var DatabaseList = Backbone.Collection.extend({
+                model: Database,
+                url: '/notes/rest/database/list',
+                initialize: function () {
+                    this.fetch();
+                }
             });
-            this.$el.append(nodeView.render().el);
-        },
 
-        loadNode: function (node) {
-            // todo load children and show documents
-        }
-    });
+            var DatabaseListView = Backbone.View.extend({
 
-    var treeView = new TreeView({databaseId: 1});
+                events: {
+                    'click #add': 'addItem'
+                },
 
+                initialize: function (options) {
+                    _.bindAll(this, 'render', 'addItem', 'renderItem');
 
-});
+                    this.options = options;
+                    this.el = options.el;
 
-</script>
+                    this.collection = new DatabaseList();
+                    this.collection.bind('add', this.renderItem);
+
+                    this.render();
+                },
+
+                render: function () {
+
+                    this.list = $('<dl></dl>');
+                    this.list.append($('<dt></dt>', {text: this.options.title}).append("<button id='add'>+</button>"));
+                    this.el.append(this.list);
+                },
+
+                addItem: function () {
+                    var name = prompt('New Name');
+                    var database = new Database({name: name});
+                    this.collection.add(database);
+                    database.save();
+                },
+
+                renderItem: function (item) {
+                    var itemView = new ItemView({
+                        model: item
+                    });
+                    this.list.append(itemView.render().el);
+                }
+
+            });
+
+            var databaseView = new DatabaseListView({
+                title: 'Open databases',
+                el: $('#databases')
+            });
+
+            $('#tree-view').treeView({databaseId: 1});
+
+        });
+
+    </script>
 
 </head>
 <body>
@@ -362,7 +238,7 @@ $(document).ready(function () {
 
         <div class="container" style="margin-left:200px;">
             <div class="row">
-                <div id="tree" class="col-lg-2" style="background-color: #e9e9e9; min-height: 400px;">
+                <div id="tree-view" class="col-lg-2" style="background-color: #e9e9e9; min-height: 400px;">
 
                     <!--<div class="folder">-->
                     <!--<span class="ui-icon ui-icon-triangle-1-e" style="display: inline-block"></span>-->
@@ -374,8 +250,8 @@ $(document).ready(function () {
                 <div class="col-lg-10">
 
                     <div class="container">
-                        <div class="row">
-                            <table id="notes"></table>
+                        <div id="document-list-view" class="row">
+                            <!--<table id="notes"></table>-->
                         </div>
                         <div class="row">
                             <table id="editor"></table>
