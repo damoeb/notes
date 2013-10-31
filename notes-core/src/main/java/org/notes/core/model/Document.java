@@ -79,7 +79,8 @@ public class Document implements Serializable {
         // default
     }
 
-    public Document(String title, Kind kind, String description, Date created, Date modified) {
+    public Document(Long id, String title, Kind kind, String description, Date created, Date modified) {
+        this.id = id;
         this.title = title;
         this.kind = kind;
         this.modified = modified;

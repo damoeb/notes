@@ -1,22 +1,27 @@
 $.widget("notes.documentListView", {
     options: {
-    },
-    _init: function () {
-        this._reset();
-    },
-    _reset: function () {
-        if (this.oTable) {
-            this.oTable.fnDestroy();
-        }
-        this.element.empty();
+
     },
     _create: function () {
+        this.table = $('<table></table>')
+            .appendTo(this.element)
+            .dataTable({
+                'aaData': {},
+                'bFilter': false,
+                'bInfo': false,
+                'bStateSave': true,
+                'bPaginate': false,
+                'aoColumns': [
+                    { 'sTitle': 'Id'},
+                    { 'sTitle': 'Name' },
+                    { 'sTitle': 'Date' },
+                    { 'sTitle': 'Kind' },
+                    { 'sTitle': 'Size' }
+                ]
+            });
+    },
+    _init: function () {
         var $this = this;
-        $this._reset();
-
-        var table = $('<table></table>');
-
-        $this.element.append(table);
 
         notes.util.jsonCall('GET', '/notes/rest/folder/${folderId}/documents', {'${folderId}': $this.options.folderId}, null, function (documents) {
 
@@ -27,39 +32,30 @@ $.widget("notes.documentListView", {
                 data.push([
                     doc.id,
                     $this._createTitleText(doc.title, doc.description),
-                    notes.utils.formatDate(doc.modified),
+                    notes.util.formatDate(doc.modified),
                     doc.kind,
                     notes.util.formatBytesNum(doc.size)
                 ]);
             }
 
-            $this.oTable = table.dataTable({
-                'aaData': data,
-                'bFilter': false,
-                'bInfo': false,
-                'bStateSave': true,
-                'bPaginate': false,
-                'aoColumns': [
-                    { 'sTitle': 'Id', 'bVisible': false },
-                    { 'sTitle': 'Name' },
-                    { 'sTitle': 'Date' },
-                    { 'sTitle': 'Kind' },
-                    { 'sTitle': 'Size' }
-                ]
-            });
+            $this.table.find('td').unbind('click');
 
-            $this.oTable.find('td').click(function () {
-                var aPos = $this.oTable.fnGetPosition(this);
+            var dataTable = $this.table.dataTable();
+            dataTable.fnClearTable();
+            dataTable.fnAddData(data);
+
+            dataTable.find('td').click(function () {
+                var aPos = dataTable.fnGetPosition(this);
 
                 // Get the data array for this row
-                var aData = $this.oTable.fnGetData(aPos[0]);
+                var aData = dataTable.fnGetData(aPos[0]);
                 var documentId = aData[0];
                 var kind = aData[4];
 
                 console.log(documentId);
                 //$('#n-editor').editor('open', noteId);
 
-                $('#editor').editor(documentId, kind);
+                //$('#editor').editor(documentId, kind);
 
             });
 

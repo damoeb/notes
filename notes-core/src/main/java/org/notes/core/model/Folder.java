@@ -14,7 +14,7 @@ import java.util.Set;
 )
 @NamedQueries({
         @NamedQuery(name = Folder.QUERY_BY_ID, query = "SELECT a FROM Folder a where a.id=:ID"),
-        @NamedQuery(name = Folder.QUERY_DOCUMENTS, query = "SELECT new Document(a.title, a.kind, a.description, a.created, a.modified) FROM Document a where a.folderId=:ID"),
+        @NamedQuery(name = Folder.QUERY_DOCUMENTS, query = "SELECT new Document(a.id, a.title, a.kind, a.description, a.created, a.modified) FROM Document a where a.folderId=:ID"),
         @NamedQuery(name = Folder.QUERY_BY_VALUE, query = "SELECT a FROM Folder a where LOWER(a.name)=LOWER(:VAL)"),
         @NamedQuery(name = Folder.QUERY_ALL, query = "SELECT a FROM Folder a"),
         @NamedQuery(name = Folder.QUERY_USERS_NOTEBOOKS, query = "SELECT a FROM Folder a where a.ownerId=:ID and a.parentId IS NULL")

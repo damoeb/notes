@@ -2,43 +2,59 @@ $.widget("notes.treeItem", {
     options: {
         model: null
     },
-    _init: function () {
+    _create: function () {
         this._reset();
     },
     _reset: function () {
         this.element.empty();
         this.container = {};
     },
-    _create: function () {
+    _init: function () {
         var $this = this;
         $this._reset();
 
+        var target = $this.element.addClass('item');
+
+        // -- Render
+
         var model = $this.options.model;
 
-        var item = $('<div class="icon"></div><div class="name">' + model.name + '</div>');
+        var children = $('<div/>', {class: 'children'});
+        ;
 
-        $this.element.empty().addClass('item').append(item);
+        $this.container.children = children;
 
-        $this.container.children = $('<div/>', {class: 'children'});
+        $this._createToggleButton()
+            .appendTo(target);
+
+        var icon = $('<div/>', {class: 'icon'})
+            .appendTo(target);
+        var item = $('<div/>', {class: 'name', text: model.name})
+            .appendTo(target);
+        children
+            .appendTo(target);
 
         if (!model.leaf) {
-            item.prepend($this._createToggleButton());
+
+            $.each(model.children, function (index, folderData) {
+
+                $('<div/>')
+                    .appendTo(children)
+                    .treeItem({model: folderData});
+            });
         }
 
-        model.children.each(function (index, folderData) {
+        // -- Events
 
-            var item = $('<div/>').treeItem({
-                model: folderData
-            });
-            $this.container.children.append(item);
+        item.click(function () {
+            $this.loadDocuments()
         });
-        $this.element.html(item);
     },
 
     _createToggleButton: function () {
         var $this = this;
 
-        var toggle = $('<div class="toggle"></div>');
+        var toggle = $('<div/>', {class: 'toggle'});
 
         var fApplyExpanded = function () {
             if ($this.options.model.expanded) {
@@ -58,10 +74,10 @@ $.widget("notes.treeItem", {
         });
     },
     hideChildren: function () {
-        this.children.removeClass('hidden');
+        this.container.children.removeClass('hidden');
     },
     showChildren: function () {
-        this.children.addClass('hidden');
+        this.container.children.addClass('hidden');
     },
     loadDocuments: function () {
         var $this = this;
@@ -93,16 +109,15 @@ $.widget("notes.treeView", {
             url: '/notes/rest/folder'
         });
 
-//        $this.element.append(this.container.children);
-
         notes.util.jsonCall('GET', '/notes/rest/database/${dbId}', {'${dbId}': $this.options.databaseId}, null, function (database) {
 
             $.each(database.folders, function (index, folderData) {
 
-                var item = $('<div/>').treeItem({
-                    model: folderData
-                });
-                $this.element.append(item);
+                $('<div/>')
+                    .appendTo($this.element)
+                    .treeItem({
+                        model: folderData
+                    });
             });
 
         });

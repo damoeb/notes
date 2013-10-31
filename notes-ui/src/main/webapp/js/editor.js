@@ -4,6 +4,17 @@ $.widget("notes.editor", {
         syncInterval: 15000 // msec
     },
 
+    _create: function () {
+        var $this = this;
+
+        setInterval(function () {
+
+            // todo $this._syncDocument();
+
+        }, $this.options.syncInterval);
+
+    },
+
     _init: function () {
         var $this = this;
         var editor = $this.element;
@@ -12,25 +23,6 @@ $.widget("notes.editor", {
         var _impl = {}
         _impl['text'] = 'textEditor';
         _impl['rtf'] = 'rtfEditor';
-    },
-
-    _create: function () {
-        var $this = this;
-
-        setInterval(function () {
-
-            // todo $this._syncDocument();
-
-        }, $this.options.updateIntervalMsec);
-
-    },
-
-    _reset: function () {
-        var $this = this;
-    },
-
-    create: function () {
-        this._reset();
     },
 
     edit: function (documentId) {
