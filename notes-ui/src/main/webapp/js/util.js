@@ -8,14 +8,14 @@
 
                 //noinspection JSUnusedLocalSymbols
                 $.ajax({
-                    type:_type,
-                    url:$this.replaceInUrl(url, urlReplacements),
-                    dataType:"json",
-                    contentType:"application/json",
-                    data:jsonObject,
-                    cache:false,
-                    processData:false,
-                    success:function (data) {
+                    type: _type,
+                    url: $this.replaceInUrl(url, urlReplacements),
+                    dataType: "json",
+                    contentType: "application/json",
+                    data: jsonObject,
+                    cache: false,
+                    processData: false,
+                    success: function (data) {
                         switch (data.statusCode) {
                             case 0:
                                 if (typeof(onSuccess) === 'function') {
@@ -30,7 +30,7 @@
                                 break;
                         }
                     },
-                    error:function (data) {
+                    error: function (data) {
                         if (typeof(onError) === 'function') {
                             onError.call(this);
                         }
@@ -107,16 +107,16 @@
             }
         };
 
-        this.equal = function(x, y) {
+        this.equal = function (x, y) {
             for (var p in y) {
-                if(typeof(y[p]) !== typeof(x[p])) return false;
-                if((y[p]===null) !== (x[p]===null)) return false;
+                if (typeof(y[p]) !== typeof(x[p])) return false;
+                if ((y[p] === null) !== (x[p] === null)) return false;
                 switch (typeof(y[p])) {
                     case 'undefined':
                         if (typeof(x[p]) != 'undefined') return false;
                         break;
                     case 'object':
-                        if(y[p]!==null && x[p]!==null && (y[p].constructor.toString() !== x[p].constructor.toString() || !y[p].equals(x[p]))) return false;
+                        if (y[p] !== null && x[p] !== null && (y[p].constructor.toString() !== x[p].constructor.toString() || !y[p].equals(x[p]))) return false;
                         break;
                     case 'function':
                         if (p != 'equals' && y[p].toString() != x[p].toString()) return false;
@@ -128,22 +128,27 @@
             return true;
         };
 
-        this.formatBytesNum = function(bytes) {
-            if(bytes<0) {
-                return 0+'b';
+        this.formatDate = function (dateString) {
+            // todo implement
+            return dateString;
+        };
+
+        this.formatBytesNum = function (bytes) {
+            if (bytes < 0) {
+                return 0 + 'b';
             }
             var oneKb = 1024;
             var oneMb = oneKb * oneKb;
-            if(bytes< oneKb) {
-                return bytes+' bytes';
+            if (bytes < oneKb) {
+                return bytes + ' bytes';
             }
-            if(bytes< oneMb) {
-                return parseInt(bytes/oneKb)+' KB';
+            if (bytes < oneMb) {
+                return parseInt(bytes / oneKb) + ' KB';
             }
-            return parseInt(bytes/oneMb)+' MB';
+            return parseInt(bytes / oneMb) + ' MB';
         };
 
-        this.toTimestamp = function(str) {
+        this.toTimestamp = function (str) {
             var d = str.match(/\d+/g); // extract date parts
             return new Date(d[0], d[1] - 1, d[2], d[3], d[4], d[5]); // build Date object
         }

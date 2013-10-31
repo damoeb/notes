@@ -1,6 +1,7 @@
 package org.notes.core.model;
 
 import org.apache.commons.lang.StringUtils;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.notes.common.service.CustomDateDeserializer;
@@ -40,9 +41,10 @@ public class Document implements Serializable {
     private String title;
 
     @Basic
-    @Column(length = 512)
+    @Column(length = 256)
     private String description;
 
+    @JsonIgnore
     @Lob
     @Column(name = "full_text")
     private String fulltext;
