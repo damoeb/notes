@@ -1,12 +1,17 @@
 $.widget("notes.editor", {
 
     options: {
-        updateIntervalMsec: 15000
+        syncInterval: 15000 // msec
     },
 
     _init: function () {
         var $this = this;
         var editor = $this.element;
+
+        // todo make map of editor implementations by document-kind
+        var _impl = {}
+        _impl['text'] = 'textEditor';
+        _impl['rtf'] = 'rtfEditor';
     },
 
     _create: function () {
