@@ -4,9 +4,22 @@ $.widget("notes.editor", {
         syncInterval: 15000 // msec
     },
 
+    models: {
+        text: Backbone.Model.extend({
+            defaults: {
+                text: ''
+            },
+            url: '/notes/rest/document/text'
+        })
+    },
+
     _create: function () {
         var $this = this;
 
+
+        // -- structure
+
+        // -- events
         setInterval(function () {
 
             // todo $this._syncDocument();
@@ -17,12 +30,6 @@ $.widget("notes.editor", {
 
     _init: function () {
         var $this = this;
-        var editor = $this.element;
-
-        // todo make map of editor implementations by document-kind
-        var _impl = {}
-        _impl['text'] = 'textEditor';
-        _impl['rtf'] = 'rtfEditor';
     },
 
     edit: function (documentId) {

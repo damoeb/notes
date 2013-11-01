@@ -1,35 +1,23 @@
 package org.notes.core.dao;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.hibernate.Hibernate;
 import org.notes.common.configuration.Configuration;
-import org.notes.common.configuration.NotesInterceptors;
-import org.notes.common.exceptions.NotesException;
-import org.notes.core.interfaces.*;
-import org.notes.core.model.*;
+import org.notes.core.interfaces.FileManager;
+import org.notes.core.interfaces.FolderManager;
+import org.notes.core.interfaces.TextManager;
+import org.notes.core.interfaces.UserManager;
 
 import javax.annotation.PostConstruct;
-import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.util.List;
 
 //@LocalBean
-@Stateless
-@NotesInterceptors
-@TransactionAttribute(TransactionAttributeType.NEVER)
-public class DocumentManagerBean implements DocumentManager {
+//@Stateless
+//@NotesInterceptors
+//@TransactionAttribute(TransactionAttributeType.NEVER)
+@Deprecated
+public abstract class DocumentManagerBean {
 
     private static final Logger LOGGER = Logger.getLogger(DocumentManagerBean.class);
 
@@ -56,7 +44,7 @@ public class DocumentManagerBean implements DocumentManager {
         maxResults = Configuration.getIntValue("query.max.results", 1000);
 
     }
-
+    /*
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Document getDocument(long documentId) throws NotesException {
@@ -209,13 +197,11 @@ public class DocumentManagerBean implements DocumentManager {
 //                throw new NotesException(String.format("Attachment with id %s does not exist", attachment));
 //            }
 
-            /*
-            try {
-                new File(attachment.getReference()).delete();
-            } catch (Exception f) {
-                LOGGER.fatal(String.format("File %s does not exist. (note %s)", attachment.getReference(), noteId));
-            }
-            */
+//            try {
+//                new File(attachment.getReference()).delete();
+//            } catch (Exception f) {
+//                LOGGER.fatal(String.format("File %s does not exist. (note %s)", attachment.getReference(), noteId));
+//            }
 
 //            note.getAttachments().remove(attachment);
 //            em.merge(note);
@@ -392,4 +378,5 @@ public class DocumentManagerBean implements DocumentManager {
         }
     }
 
+*/
 }
