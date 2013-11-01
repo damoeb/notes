@@ -183,16 +183,36 @@ table.dataTable td {
     color: #666666;
 }
 
-.hover {
+.active {
     background: -moz-linear-gradient(bottom, #84a0b6, #aec0d4); /* Firefox */
     background: -webkit-gradient(linear, left top, left bottom, from(#84a0b6), to(#aec0d4)); /* Chrome, Safari */
-    filter: progid:DXImageTransform.Microsoft.gradient(start Colorstr='#84a0b6', endColorstr='#aec0d4'); /* Internet Explorer */
+    filter: progid:DXImageTransform.Microsoft.gradient(start Colorstr = '#84a0b6', endColorstr = '#aec0d4'); /* Internet Explorer */
     border-top: 1px solid #84a0b6;
     border-bottom: 1px solid #84a0b6;
 }
 
 /* treeview */
 .children {
+    margin-left: 5px;
+}
+
+.item {
+    clear: both;
+    cursor: pointer;
+}
+
+.item .toggle,
+.item .icon {
+    float: left;
+    margin-right: 10px;
+}
+
+.item .name {
+    float: left;
+}
+
+.item .edit {
+    float: right;
     margin-left: 5px;
 }
 

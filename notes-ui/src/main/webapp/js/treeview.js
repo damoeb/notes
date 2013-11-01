@@ -27,10 +27,12 @@ $.widget("notes.treeItem", {
         $this._createToggleButton()
             .appendTo(target);
 
-        var icon = $('<div/>', {class: 'icon'})
+        var icon = $('<div/>', {class: 'icon ui-icon ui-icon-folder-collapsed' })
             .appendTo(target);
         var item = $('<div/>', {class: 'name', text: model.name})
             .appendTo(target);
+        $this._createEditButton().appendTo(target);
+
         children
             .appendTo(target);
 
@@ -51,17 +53,48 @@ $.widget("notes.treeItem", {
         });
     },
 
+    _createEditButton: function () {
+
+        var button = $('<div/>', {class: 'edit ui-icon ui-icon-gear'});
+
+        var menuwrapper = $('<div/>', {class: 'tree-menu'})
+            .hide()
+            .appendTo(button);
+
+        var menu = $('<ul/>')
+            .append('<li><a href="#"><span class="ui-icon ui-icon-trash"></span>Delete</a></li>')
+            .appendTo(menuwrapper)
+            .menu();
+
+        button.click(function () {
+            menuwrapper.show().position({
+                my: "left top",
+                at: "left bottom",
+                of: button
+            });
+            $(document).one("click", function () {
+                menuwrapper.hide();
+            });
+
+            return false;
+        });
+
+        return button;
+    },
+
     _createToggleButton: function () {
         var $this = this;
 
-        var toggle = $('<div/>', {class: 'toggle'});
+        var toggle = $('<div/>', {class: 'toggle ui-icon'});
 
         var fApplyExpanded = function () {
             if ($this.options.model.expanded) {
-                toggle.text('+');
+                toggle.addClass('ui-icon-triangle-1-e');
+                toggle.removeClass('ui-icon-triangle-1-s');
                 $this.showChildren();
             } else {
-                toggle.text('-');
+                toggle.removeClass('ui-icon-triangle-1-e');
+                toggle.addClass('ui-icon-triangle-1-s');
                 $this.hideChildren();
             }
         };
