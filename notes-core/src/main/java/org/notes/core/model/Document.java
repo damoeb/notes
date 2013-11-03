@@ -40,10 +40,6 @@ public class Document implements Serializable {
     @Column(nullable = false, length = 256)
     private String title;
 
-    @Basic
-    @Column(length = 256)
-    private String description;
-
     @JsonIgnore
     @Lob
     @Column(name = "full_text")
@@ -79,13 +75,12 @@ public class Document implements Serializable {
         // default
     }
 
-    public Document(Long id, String title, Kind kind, String description, Date created, Date modified) {
+    public Document(Long id, String title, Kind kind, Date created, Date modified) {
         this.id = id;
         this.title = title;
         this.kind = kind;
         this.modified = modified;
         this.created = created;
-        this.description = description;
     }
 
     @PrePersist
@@ -97,7 +92,7 @@ public class Document implements Serializable {
         }
         setModified(now);
 
-        long totalSize = _getBytes(getTitle()) + _getBytes(getDescription());
+        long totalSize = _getBytes(getTitle());
         setSize(totalSize);
     }
 
@@ -230,14 +225,6 @@ public class Document implements Serializable {
 
     public void setKind(Kind kind) {
         this.kind = kind;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public String getFulltext() {

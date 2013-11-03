@@ -32,7 +32,7 @@ public class StartUp {
     private FolderManager folderManager;
 
     @Inject
-    private DocumentManager documentManager;
+    private TextDocumentManager documentManager;
 
     @Inject
     private UserManager userManager;
@@ -88,20 +88,18 @@ public class StartUp {
                     TextDocument td1 = new TextDocument();
                     td1.setTitle("Text Document");
                     td1.setText("blabla");
-                    td1.setDescription("First document");
                     td1.setFolderId(f2.getId());
 
-                    td1 = documentManager.createTextDocument(td1);
+                    td1 = documentManager.createDocument(td1);
 
                     TextDocument td2 = new TextDocument();
                     td2.setTitle("Text Document2");
                     td2.setText("blabla");
-                    td2.setDescription("Second document");
                     td2.setFolderId(f2.getId());
 
-                    td2 = documentManager.createTextDocument(td2);
+                    td2 = documentManager.createDocument(td2);
 
-                    documentManager.deleteDocument(td1.getId());
+                    //documentManager.deleteDocument(td1.getId());
 
                     //documentManager.getDocument(td2.getId());
 

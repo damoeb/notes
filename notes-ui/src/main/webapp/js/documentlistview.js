@@ -23,7 +23,14 @@ $.widget("notes.documentListView", {
     _init: function () {
         var $this = this;
 
-        notes.util.jsonCall('GET', '/notes/rest/folder/${folderId}/documents', {'${folderId}': $this.options.folderId}, null, function (documents) {
+        if ($this.options.folderId && $this.options.folderId > 0) {
+            $this._fetch($this.options.folderId);
+        }
+    },
+    _fetch: function (folderId) {
+        var $this = this;
+
+        notes.util.jsonCall('GET', '/notes/rest/folder/${folderId}/documents', {'${folderId}': folderId}, null, function (documents) {
 
             var data = [];
             for (var id in documents) {
@@ -50,12 +57,9 @@ $.widget("notes.documentListView", {
                 // Get the data array for this row
                 var aData = dataTable.fnGetData(aPos[0]);
                 var documentId = aData[0];
-                var kind = aData[4];
+                var kind = aData[3];
 
-                console.log(documentId);
-                //$('#n-editor').editor('open', noteId);
-
-                //$('#editor').editor(documentId, kind);
+                $('#editor').editor('edit', documentId, kind);
 
             });
 

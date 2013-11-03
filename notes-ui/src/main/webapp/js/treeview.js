@@ -20,7 +20,6 @@ $.widget("notes.treeItem", {
         var model = $this.options.model;
 
         var children = $('<div/>', {class: 'children'});
-        ;
 
         $this.container.children = children;
 
@@ -29,7 +28,7 @@ $.widget("notes.treeItem", {
 
         var icon = $('<div/>', {class: 'icon ui-icon ui-icon-folder-collapsed' })
             .appendTo(target);
-        var item = $('<div/>', {class: 'name', text: model.name})
+        var label = $('<div/>', {class: 'name', text: model.name + '(' + model.documentCount + ')'})
             .appendTo(target);
         $this._createEditButton().appendTo(target);
 
@@ -48,7 +47,7 @@ $.widget("notes.treeItem", {
 
         // -- Events
 
-        item.click(function () {
+        label.click(function () {
             $this.loadDocuments()
         });
     },

@@ -49,6 +49,7 @@
 
     <script src="js/util.js"></script>
     <script src="js/editor.js"></script>
+    <script src="js/editor-rtf.js"></script>
     <script src="js/documentlistview.js"></script>
     <script src="js/treeview.js"></script>
 
@@ -192,6 +193,10 @@
 
             $('#tree-view').treeView({databaseId: 1});
 
+            $('#document-list-view').documentListView();
+            $('#editor').editor();
+
+
         });
 
     </script>
@@ -241,13 +246,7 @@
         <div class="container" style="margin-left:200px;">
             <div class="row">
                 <div id="tree-view" class="col-lg-2" style="background-color: #e9e9e9; min-height: 400px;">
-
-                    <!--<div class="folder">-->
-                    <!--<span class="ui-icon ui-icon-triangle-1-e" style="display: inline-block"></span>-->
-                    <!--<span class="ui-icon ui-icon-folder-collapsed" style="display: inline-block"></span>-->
-                    <!--<span>Project Literature (10)</span>-->
-                    <!--</div>-->
-
+                    <!-- content generated -->
                 </div>
                 <div class="col-lg-10">
 
@@ -268,9 +267,25 @@
 
 </div>
 
-<div style="display: none">
 
-</div>
+<script type="text/html" id="tmpl-text-editor">
+
+    <div class="container">
+        <div class="row">
+            <button id="safe-doc">Safe</button>
+            <button id="delete-doc">Delete</button>
+            <button id="maximize-view">Maximize</button>
+            <button id="close-view">Close</button>
+        </div>
+        <div class="row"><label for="field-title">Title</label>
+            <input id="field-title" class="ui-widget-content ui-corner-all" type="text"
+                   name="title" value="<%=title %>"/></div>
+        <div class="row"><textarea type="text" name="content" id="field-text"
+                                   class="text ui-widget-content ui-corner-all"
+                                   style="width:100%; min-height:300px; padding:5px 10px;"><%=text %></textarea></div>
+    </div>
+
+</script>
 
 </body>
 </html>
