@@ -82,13 +82,12 @@ public class FolderService {
 
     @DELETE
     @MethodCache
-    @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse deleteFolder(
-            @PathParam("id") long folderId
+            Folder folder
     ) throws Exception {
         try {
-            return NotesResponse.ok(folderManager.deleteFolder(folderId));
+            return NotesResponse.ok(folderManager.deleteFolder(folder));
         } catch (Exception e) {
             return NotesResponse.error(e);
         }

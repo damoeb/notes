@@ -29,7 +29,11 @@ public class DatabaseService {
     public NotesResponse createDatabase(
             Database database
     ) throws Exception {
-        return NotesResponse.ok(databaseManager.createDatabase(database));
+        try {
+            return NotesResponse.ok(databaseManager.createDatabase(database));
+        } catch (Exception e) {
+            return NotesResponse.error(e);
+        }
     }
 
     @PUT
@@ -38,9 +42,13 @@ public class DatabaseService {
     public NotesResponse updateDatabase(
             Database database
     ) throws Exception {
-        Database result = databaseManager.updateDatabase(database);
-        result.setFolders(null);
-        return NotesResponse.ok(result);
+        try {
+            Database result = databaseManager.updateDatabase(database);
+            result.setFolders(null);
+            return NotesResponse.ok(result);
+        } catch (Exception e) {
+            return NotesResponse.error(e);
+        }
     }
 
     @GET
@@ -50,35 +58,39 @@ public class DatabaseService {
     public NotesResponse getDatabase(
             @PathParam("id") long databaseId
     ) throws Exception {
-        Database database = databaseManager.getDatabase(databaseId);
-        Map<Long, Folder> folders = new HashMap(100);
-        Comparator<Folder> sortedByName = new Comparator<Folder>() {
-            @Override
-            public int compare(Folder f1, Folder f2) {
-                return f2.getName().compareTo(f1.getName());
-            }
-        };
-        SortedSet tree = new TreeSet(sortedByName);
-        for (Folder f : database.getFolders()) {
-            f.setDocuments(null);
-            folders.put(f.getId(), f);
-            if (f.getLevel() == 0) {
-                tree.add(f);
-            }
-        }
-        for (Folder f : database.getFolders()) {
-            if (f.getLevel() != 0) {
-                Folder parent = folders.get(f.getParentId());
-                if (parent.getChildren() == null) {
-                    parent.setChildren(new TreeSet(sortedByName));
+        try {
+            Database database = databaseManager.getDatabase(databaseId);
+            Map<Long, Folder> folders = new HashMap(100);
+            Comparator<Folder> sortedByName = new Comparator<Folder>() {
+                @Override
+                public int compare(Folder f1, Folder f2) {
+                    return f2.getName().compareTo(f1.getName());
                 }
-                parent.getChildren().add(f);
-                parent.setDocumentCount(parent.getDocumentCount() + f.getDocumentCount());
+            };
+            SortedSet tree = new TreeSet(sortedByName);
+            for (Folder f : database.getFolders()) {
+                f.setDocuments(null);
+                folders.put(f.getId(), f);
+                if (f.getLevel() == 0) {
+                    tree.add(f);
+                }
             }
-        }
+            for (Folder f : database.getFolders()) {
+                if (f.getLevel() != 0) {
+                    Folder parent = folders.get(f.getParentId());
+                    if (parent.getChildren() == null) {
+                        parent.setChildren(new TreeSet(sortedByName));
+                    }
+                    parent.getChildren().add(f);
+                    parent.setDocumentCount(parent.getDocumentCount() + f.getDocumentCount());
+                }
+            }
 
-        database.setFolders(tree);
-        return NotesResponse.ok(database);
+            database.setFolders(tree);
+            return NotesResponse.ok(database);
+        } catch (Exception e) {
+            return NotesResponse.error(e);
+        }
     }
 
     @DELETE
@@ -87,7 +99,11 @@ public class DatabaseService {
     public NotesResponse deleteDatabase(
             Database database
     ) throws Exception {
-        return NotesResponse.ok(databaseManager.deleteDatabase(database));
+        try {
+            return NotesResponse.ok(databaseManager.deleteDatabase(database));
+        } catch (Exception e) {
+            return NotesResponse.error(e);
+        }
     }
 
     @GET
@@ -96,11 +112,15 @@ public class DatabaseService {
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse getDatabases(
     ) throws Exception {
-        List<Database> databases = databaseManager.getDatabases();
-        for (Database database : databases) {
-            database.setFolders(null);
+        try {
+            List<Database> databases = databaseManager.getDatabases();
+            for (Database database : databases) {
+                database.setFolders(null);
+            }
+            return NotesResponse.ok(databases);
+        } catch (Exception e) {
+            return NotesResponse.error(e);
         }
-        return NotesResponse.ok(databases);
     }
 
 }

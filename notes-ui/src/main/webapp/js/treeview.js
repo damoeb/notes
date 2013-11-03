@@ -30,6 +30,8 @@ $.widget("notes.treeItem", {
             .appendTo(target);
         var label = $('<div/>', {class: 'name', text: model.name + '(' + model.documentCount + ')'})
             .appendTo(target);
+
+
         $this._newMenu(target, model);
 
         children
@@ -87,7 +89,10 @@ $.widget("notes.treeItem", {
     _newDelFolderButton: function (model) {
         var link = $('<a/>', {text: 'Delete'});
         link.click(function () {
-            console.log(model)
+            var Folder = Backbone.Model.extend({
+                url: '/notes/rest/folder'
+            });
+            new Folder(model).destroy();
         })
         return $('<li/>').append(link);
     },

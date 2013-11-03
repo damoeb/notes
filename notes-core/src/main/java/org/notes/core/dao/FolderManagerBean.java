@@ -98,14 +98,14 @@ public class FolderManagerBean implements FolderManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public Folder deleteFolder(long folderId) throws NotesException {
+    public Folder deleteFolder(Folder folder) throws NotesException {
         try {
-            return _delete(folderId);
+            return _delete(folder);
 
         } catch (NotesException e) {
             throw e;
         } catch (Throwable t) {
-            throw new NotesException("delete folder " + folderId, t);
+            throw new NotesException("delete folder " + folder, t);
         }
     }
 
@@ -190,8 +190,15 @@ public class FolderManagerBean implements FolderManager {
 
     }
 
-    private Folder _delete(long folderId) throws NotesException {
-        Folder folder = _get(folderId);
+    private Folder _delete(Folder folder) throws NotesException {
+        if (folder == null) {
+            throw new NotesException("Folder is null");
+        }
+        if (folder.getId() <= 0) {
+            throw new NotesException("Folder Id is invalid");
+        }
+
+        folder = _get(folder.getId());
         folder.setDeleted(true);
         em.merge(folder);
 
