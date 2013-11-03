@@ -24,20 +24,32 @@ public class FolderService {
     @MethodCache
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse createFolder(
-            Folder database
+            Folder folder
     ) throws Exception {
-        return NotesResponse.ok(folderManager.createFolder(database));
+        try {
+            Folder result = folderManager.createFolder(folder);
+            result.setDocuments(null);
+            result.setChildren(null);
+            return NotesResponse.ok(result);
+        } catch (Exception e) {
+            return NotesResponse.error(e);
+        }
     }
 
     @PUT
     @MethodCache
-    @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse updateFolder(
-            Folder database,
-            @PathParam("id") long folderId
+            Folder folder
     ) throws Exception {
-        return NotesResponse.ok(folderManager.updateFolder(folderId, database));
+        try {
+            Folder result = folderManager.updateFolder(folder);
+            result.setDocuments(null);
+            result.setChildren(null);
+            return NotesResponse.ok(result);
+        } catch (Exception e) {
+            return NotesResponse.error(e);
+        }
     }
 
     @GET
@@ -47,7 +59,11 @@ public class FolderService {
     public NotesResponse getFolder(
             @PathParam("id") long folderId
     ) throws Exception {
-        return NotesResponse.ok(folderManager.getFolder(folderId));
+        try {
+            return NotesResponse.ok(folderManager.getFolder(folderId));
+        } catch (Exception e) {
+            return NotesResponse.error(e);
+        }
     }
 
     @GET
@@ -57,7 +73,11 @@ public class FolderService {
     public NotesResponse getDocumentsInFolder(
             @PathParam("id") long folderId
     ) throws Exception {
-        return NotesResponse.ok(folderManager.getDocuments(folderId));
+        try {
+            return NotesResponse.ok(folderManager.getDocuments(folderId));
+        } catch (Exception e) {
+            return NotesResponse.error(e);
+        }
     }
 
     @DELETE
@@ -67,7 +87,11 @@ public class FolderService {
     public NotesResponse deleteFolder(
             @PathParam("id") long folderId
     ) throws Exception {
-        return NotesResponse.ok(folderManager.deleteFolder(folderId));
+        try {
+            return NotesResponse.ok(folderManager.deleteFolder(folderId));
+        } catch (Exception e) {
+            return NotesResponse.error(e);
+        }
     }
 
 

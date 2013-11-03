@@ -53,8 +53,6 @@ $.widget("notes.editor", {
             $this.element.empty().append(template);
 
             var model = new kind.model(document);
-            $this.model = model;
-
             $this[kind.fnLoad](template, model);
         });
     },

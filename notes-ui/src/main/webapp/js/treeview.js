@@ -30,7 +30,7 @@ $.widget("notes.treeItem", {
             .appendTo(target);
         var label = $('<div/>', {class: 'name', text: model.name + '(' + model.documentCount + ')'})
             .appendTo(target);
-        $this._createEditButton().appendTo(target);
+        $this._newMenu(target, model);
 
         children
             .appendTo(target);
@@ -52,16 +52,20 @@ $.widget("notes.treeItem", {
         });
     },
 
-    _createEditButton: function () {
+    _newMenu: function (target, model) {
 
-        var button = $('<div/>', {class: 'edit ui-icon ui-icon-gear'});
+        var $this = this;
+
+        var button = $('<div/>', {class: 'edit ui-icon ui-icon-gear'})
+            .appendTo(target);
 
         var menuwrapper = $('<div/>', {class: 'tree-menu'})
             .hide()
-            .appendTo(button);
+            .appendTo(target);
 
         var menu = $('<ul/>')
-            .append('<li><a href="#"><span class="ui-icon ui-icon-trash"></span>Delete</a></li>')
+            .append($this._newAddFolderButton(model))
+            .append($this._newDelFolderButton(model))
             .appendTo(menuwrapper)
             .menu();
 
@@ -78,7 +82,33 @@ $.widget("notes.treeItem", {
             return false;
         });
 
-        return button;
+    },
+
+    _newDelFolderButton: function (model) {
+        var link = $('<a/>', {text: 'Delete'});
+        link.click(function () {
+            console.log(model)
+        })
+        return $('<li/>').append(link);
+    },
+
+    _newAddFolderButton: function (model) {
+        var link = $('<a/>', {text: 'Add'});
+        link.click(function () {
+            var name = prompt("Gimme a name");
+
+            var Folder = Backbone.Model.extend({
+                url: '/notes/rest/folder'
+            });
+            var folder = new Folder({
+                name: name,
+                parentId: model.id,
+                databaseId: model.databaseId
+            });
+            folder.save();
+            // todo reload tree
+        })
+        return $('<li/>').append(link);
     },
 
     _createToggleButton: function () {

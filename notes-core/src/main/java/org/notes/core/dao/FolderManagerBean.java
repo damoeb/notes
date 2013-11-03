@@ -44,7 +44,7 @@ public class FolderManagerBean implements FolderManager {
     public Folder createFolder(Folder folder) throws NotesException {
         try {
             if (folder.getDatabaseId() == null) {
-                throw new NotesException("folderId is null");
+                throw new NotesException("databaseId is null");
             }
 
             Database database = databaseManager.getDatabase(folder.getDatabaseId());
@@ -111,12 +111,12 @@ public class FolderManagerBean implements FolderManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public Folder updateFolder(long folderId, Folder newFolder) throws NotesException {
+    public Folder updateFolder(Folder newFolder) throws NotesException {
         try {
-            return _update(folderId, newFolder);
+            return _update(newFolder);
 
         } catch (Throwable t) {
-            throw new NotesException("update folder " + folderId, t);
+            throw new NotesException("update folder: " + t.getMessage(), t);
         }
     }
 
@@ -171,13 +171,16 @@ public class FolderManagerBean implements FolderManager {
 
     }
 
-    private Folder _update(long folderId, Folder newFolder) throws NotesException {
+    private Folder _update(Folder newFolder) throws NotesException {
 
         if (newFolder == null) {
             throw new NotesException("Folder is null");
         }
+        if (newFolder.getId() <= 0) {
+            throw new NotesException("Folder Id is invalid");
+        }
 
-        Folder folder = _get(folderId);
+        Folder folder = _get(newFolder.getId());
         folder.setName(newFolder.getName());
         em.merge(folder);
         em.flush();

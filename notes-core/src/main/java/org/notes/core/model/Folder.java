@@ -57,11 +57,9 @@ public class Folder extends Node {
     @JoinColumn(name = "parent_id")
     private Folder parent;
 
-    @JsonIgnore
     @Column(updatable = false, insertable = false, nullable = true, name = "parent_id")
     private Long parentId;
 
-    @JsonIgnore
     @Column(updatable = false, insertable = false, nullable = true, name = Database.FK_DATABASE_ID)
     private Long databaseId;
 
