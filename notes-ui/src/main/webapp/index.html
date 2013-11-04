@@ -57,8 +57,6 @@
 
         $(document).ready(function () {
             /*
-             //           $('#n-editor').editor();
-             //           $('#n-list').list({url: '/notes/rest/note/list'});
 
              $( '#create-note' ).button({
              icons: {
@@ -102,7 +100,7 @@
                 },
                 url: '/notes/rest/database'
             });
-            var ItemView = Backbone.View.extend({
+            var DatabaseView = Backbone.View.extend({
 
                 template: _.template('<b class="item"><button class="remove">X</button> <b><button class="edit">Edit</button> <%= name %></b>'),
                 editTemplate: _.template('<input class="name" value="<%= name %>" /><button class="save">Save</button>'),
@@ -178,10 +176,10 @@
                 },
 
                 renderItem: function (item) {
-                    var itemView = new ItemView({
+                    var dbView = new DatabaseView({
                         model: item
                     });
-                    this.list.append(itemView.render().el);
+                    this.list.append(dbView.render().el);
                 }
 
             });

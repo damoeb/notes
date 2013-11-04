@@ -3,7 +3,6 @@ package org.notes.core.services;
 import org.notes.common.cache.MethodCache;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.core.interfaces.FolderManager;
-import org.notes.core.interfaces.UserManager;
 import org.notes.core.model.Folder;
 
 import javax.inject.Inject;
@@ -16,9 +15,6 @@ public class FolderService {
 
     @Inject
     private FolderManager folderManager;
-
-    @Inject
-    private UserManager userManager;
 
     @POST
     @MethodCache

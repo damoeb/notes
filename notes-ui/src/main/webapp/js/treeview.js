@@ -48,7 +48,6 @@ $.widget("notes.treeItem", {
         }
 
         // -- Events
-
         label.click(function () {
             $this.loadDocuments()
         });
@@ -100,6 +99,7 @@ $.widget("notes.treeItem", {
     _newAddFolderButton: function (model) {
         var link = $('<a/>', {text: 'Add'});
         link.click(function () {
+
             var name = prompt("Gimme a name");
 
             var Folder = Backbone.Model.extend({
@@ -111,7 +111,9 @@ $.widget("notes.treeItem", {
                 databaseId: model.databaseId
             });
             folder.save();
-            // todo reload tree
+
+            $('#tree').treeView('reload');
+
         })
         return $('<li/>').append(link);
     },
@@ -148,10 +150,14 @@ $.widget("notes.treeItem", {
     },
     loadDocuments: function () {
         var $this = this;
-        // todo sync model: database current folder
+
+        var folderId = $this.options.model.id;
         $('#document-list-view').documentListView({
-            folderId: $this.options.model.id
+            folderId: folderId
         });
+
+        // sync model: active folder in database
+        $('#tree').treeView('activateFolder', folderId);
     }
 });
 
@@ -162,12 +168,20 @@ $.widget("notes.treeView", {
     },
 
     _init: function () {
-        this.container = {};
+        var $this = this;
+        $this.container = {};
+        $this.activeFolderId = null;
+        $this.databaseId = null;
     },
 
     _create: function () {
 
         var $this = this;
+
+        $this.databaseId = $this.options.databaseId;
+        if (typeof($this.databaseId) == 'undefined') {
+            throw 'databaseId is null'
+        }
 
         var Node = Backbone.Model.extend({
             defaults: {
@@ -176,7 +190,16 @@ $.widget("notes.treeView", {
             url: '/notes/rest/folder'
         });
 
-        notes.util.jsonCall('GET', '/notes/rest/database/${dbId}', {'${dbId}': $this.options.databaseId}, null, function (database) {
+        $this.reload();
+    },
+
+    reload: function () {
+
+        var $this = this;
+
+        notes.util.jsonCall('GET', '/notes/rest/database/${dbId}', {'${dbId}': $this.databaseId}, null, function (database) {
+
+            $this.activeFolderId = database.activeFolderId;
 
             $.each(database.folders, function (index, folderData) {
 
@@ -188,6 +211,11 @@ $.widget("notes.treeView", {
             });
 
         });
+    },
+
+    activateFolder: function (folderId) {
+        this.activeFolderId = folderId;
     }
+
 
 });

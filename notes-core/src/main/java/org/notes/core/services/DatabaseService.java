@@ -3,7 +3,6 @@ package org.notes.core.services;
 import org.notes.common.cache.MethodCache;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.core.interfaces.DatabaseManager;
-import org.notes.core.interfaces.UserManager;
 import org.notes.core.model.Database;
 import org.notes.core.model.Folder;
 
@@ -18,10 +17,6 @@ public class DatabaseService {
 
     @Inject
     private DatabaseManager databaseManager;
-
-    @Inject
-    private UserManager userManager;
-
 
     @POST
     @MethodCache
