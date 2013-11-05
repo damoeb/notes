@@ -7,6 +7,10 @@ $.widget("notes.editor", {
     kinds: {
         text: {
             model: Backbone.Model.extend({
+                defaults: {
+                    title: '',
+                    text: ''
+                },
                 url: '/notes/rest/document/text/'
             }),
             url: '/notes/rest/document/text/${documentId}',
@@ -49,13 +53,34 @@ $.widget("notes.editor", {
         notes.util.jsonCall('GET', url, {'${documentId}': documentId}, null, function (document) {
             $this.documentId = document.id;
 
-            var template = $(_.template($(kind.templateId).html(), document));
-            $this.element.empty().append(template);
-
-            var model = new kind.model(document);
-            $this[kind.fnLoad](template, model);
+            $this.loadDocument(kind, new kind.model(document));
+//            var template = $(_.template($(kind.templateId).html(), document));
+//            $this.element.empty().append(template);
+//
+//            var model = new kind.model(document);
+//            $this[kind.fnLoad](template, model);
         });
     },
+
+    loadDocument: function (kind, model) {
+        var $this = this;
+        var template = $(_.template($(kind.templateId).html(), model.toJSON()));
+        $this.element.empty().append(template);
+
+        $this[kind.fnLoad](template, model);
+    },
+
+    createDocument: function () {
+        var $this = this;
+        var folderId = $('#tree-view').treeView('activeFolder');
+        console.log('create in ' + folderId);
+        var kindString = 'text';
+
+        var kind = $this.kinds[kindString.toLowerCase()];
+        $this.loadDocument(kind, new kind.model({}));
+    },
+
+    // -- TEXT EDITOR --------------------------------------------------------------------------------------------------
 
     _loadTextEditor: function (template, model) {
         var $this = this;
@@ -66,7 +91,7 @@ $.widget("notes.editor", {
         template.find('#maximize-view').button().click(function () {
             model.destroy();
             $this._unloadTextEditor(template, model);
-            $this._updateListAfterModelUpdate(model);
+            $this._refreshListAfterModelUpdate(model);
         });
         template.find('#safe-doc').button().click(function () {
             $this._syncTextModel(template, model)
@@ -79,10 +104,10 @@ $.widget("notes.editor", {
         model.set('title', template.find('#field-title').val());
         model.set('text', template.find('#field-text').val());
         model.save();
-        $this._updateListAfterModelUpdate(model);
+        $this._refreshListAfterModelUpdate(model);
     },
 
-    _updateListAfterModelUpdate: function (model) {
+    _refreshListAfterModelUpdate: function (model) {
 
     },
 

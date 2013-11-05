@@ -192,8 +192,11 @@
             $('#tree-view').treeView({databaseId: 1});
 
             $('#document-list-view').documentListView();
-            $('#editor').editor();
+            var editor = $('#editor').editor();
 
+            $('#create-document').button().click(function () {
+                editor.editor('createDocument');
+            });
 
         });
 
@@ -219,7 +222,7 @@
             <input id="field-search" class="ui-widget-content ui-corner-all" type="text" name="title"
                    style="width:300px; font-size:14px; padding:3px 4px;"/>
             <button id="run-search">Search</button>
-            <button id="create-note">Create Note</button>
+            <button id="create-document">Create</button>
         </div>
     </div>
 

@@ -202,7 +202,7 @@ $.widget("notes.treeView", {
 
         notes.util.jsonCall('GET', '/notes/rest/database/${dbId}', {'${dbId}': $this.options.databaseId}, null, function (database) {
 
-            $this.activeFolderId = database.activeFolderId;
+            $this.activeFolder(database.activeFolderId);
 
             $.each(database.folders, function (index, folderData) {
 
