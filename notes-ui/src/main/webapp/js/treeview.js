@@ -110,9 +110,11 @@ $.widget("notes.treeItem", {
                 parentId: model.id,
                 databaseId: model.databaseId
             });
-            folder.save();
-
-            $('#tree').treeView('reload');
+            folder.save({
+                success: function () {
+                    $('#tree-view').treeView('reload')
+                }
+            });
 
         })
         return $('<li/>').append(link);
@@ -157,7 +159,7 @@ $.widget("notes.treeItem", {
         });
 
         // sync model: active folder in database
-        $('#tree').treeView('activateFolder', folderId);
+        $('#tree-view').treeView('activeFolder', folderId);
     }
 });
 
@@ -171,15 +173,14 @@ $.widget("notes.treeView", {
         var $this = this;
         $this.container = {};
         $this.activeFolderId = null;
-        $this.databaseId = null;
     },
 
     _create: function () {
 
         var $this = this;
 
-        $this.databaseId = $this.options.databaseId;
-        if (typeof($this.databaseId) == 'undefined') {
+        var databaseId = $this.options.databaseId;
+        if (typeof(databaseId) == 'undefined') {
             throw 'databaseId is null'
         }
 
@@ -197,7 +198,9 @@ $.widget("notes.treeView", {
 
         var $this = this;
 
-        notes.util.jsonCall('GET', '/notes/rest/database/${dbId}', {'${dbId}': $this.databaseId}, null, function (database) {
+        $this.element.empty();
+
+        notes.util.jsonCall('GET', '/notes/rest/database/${dbId}', {'${dbId}': $this.options.databaseId}, null, function (database) {
 
             $this.activeFolderId = database.activeFolderId;
 
@@ -213,8 +216,13 @@ $.widget("notes.treeView", {
         });
     },
 
-    activateFolder: function (folderId) {
-        this.activeFolderId = folderId;
+    activeFolder: function (folderId) {
+        if (folderId) {
+            console.log('activeFolderId ' + folderId);
+            this.activeFolderId = folderId;
+        } else {
+            return this.activeFolderId;
+        }
     }
 
 
