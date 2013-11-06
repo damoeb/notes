@@ -13,29 +13,36 @@ $.widget("notes.treeItem", {
         var $this = this;
         $this._reset();
 
-        var target = $this.element.addClass('item');
+        var model = $this.options.model;
 
         // -- Render
 
-        var model = $this.options.model;
+        var target = $this.element;
 
-        var children = $('<div/>', {class: 'children'});
+        var item = $('<div/>', {class: 'item level-' + model.level})
+            .appendTo(target);
+        if (model.documentCount == 0) {
+            item.addClass('empty');
+        }
+
+        var children = $('<div/>', {class: 'children'}).appendTo(target);
 
         $this.container.children = children;
 
-        $this._createToggleButton()
-            .appendTo(target);
+        $this._createExpandChildrenButton()
+            .appendTo(item);
 
         var icon = $('<div/>', {class: 'icon ui-icon ui-icon-folder-collapsed' })
-            .appendTo(target);
-        var label = $('<div/>', {class: 'name', text: model.name + '(' + model.documentCount + ')'})
-            .appendTo(target);
+            .appendTo(item);
 
+        var label = $('<div/>', {class: 'name', text: model.name })
+            .appendTo(item);
+        var docCount = $('<div/>', {class: 'doc-count', text: '(' + model.documentCount + ')'})
+            .appendTo(item);
 
-        $this._newMenu(target, model);
+        $this._newSettingsMenu(item, model);
 
-        children
-            .appendTo(target);
+        item.append($('<div/>', {style: 'clear:both'}));
 
         if (!model.leaf) {
 
@@ -53,7 +60,7 @@ $.widget("notes.treeItem", {
         });
     },
 
-    _newMenu: function (target, model) {
+    _newSettingsMenu: function (target, model) {
 
         var $this = this;
 
@@ -120,20 +127,25 @@ $.widget("notes.treeItem", {
         return $('<li/>').append(link);
     },
 
-    _createToggleButton: function () {
+    _createExpandChildrenButton: function () {
         var $this = this;
 
         var toggle = $('<div/>', {class: 'toggle ui-icon'});
 
         var fApplyExpanded = function () {
-            if ($this.options.model.expanded) {
-                toggle.addClass('ui-icon-triangle-1-e');
-                toggle.removeClass('ui-icon-triangle-1-s');
-                $this.showChildren();
+            var model = $this.options.model;
+            if (model.leaf) {
+                toggle.addClass('ui-icon-radio-off');
             } else {
-                toggle.removeClass('ui-icon-triangle-1-e');
-                toggle.addClass('ui-icon-triangle-1-s');
-                $this.hideChildren();
+                if (model.expanded) {
+                    toggle.addClass('ui-icon-triangle-1-e');
+                    toggle.removeClass('ui-icon-triangle-1-s');
+                    $this.showChildren();
+                } else {
+                    toggle.removeClass('ui-icon-triangle-1-e');
+                    toggle.addClass('ui-icon-triangle-1-s');
+                    $this.hideChildren();
+                }
             }
         };
         fApplyExpanded();
@@ -195,6 +207,8 @@ $.widget("notes.treeView", {
     },
 
     reload: function () {
+
+        console.info('reload');
 
         var $this = this;
 

@@ -183,32 +183,70 @@ table.dataTable td {
     color: #666666;
 }
 
+/* todo remove cause unused */
 .active {
     background: -moz-linear-gradient(bottom, #84a0b6, #aec0d4); /* Firefox */
     background: -webkit-gradient(linear, left top, left bottom, from(#84a0b6), to(#aec0d4)); /* Chrome, Safari */
-    filter: progid:DXImageTransform.Microsoft.gradient(start Colorstr='#84a0b6', endColorstr='#aec0d4'); /* Internet Explorer */
+    filter: progid:DXImageTransform.Microsoft.gradient(start Colorstr = '#84a0b6', endColorstr = '#aec0d4'); /* Internet Explorer */
     border-top: 1px solid #84a0b6;
     border-bottom: 1px solid #84a0b6;
 }
 
 /* treeview */
 .children {
-    margin-left: 5px;
+    /*margin-left: 5px;*/
 }
 
 .item {
     clear: both;
     cursor: pointer;
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+
+.item.level-0 {
+}
+
+.item.level-1 {
+    padding-left: 10px;
+}
+
+.item.level-2 {
+    padding-left: 20px;
+}
+
+.item.level-3 {
+    padding-left: 30px;
+}
+
+.item>.edit {
+    display: none;
+}
+
+.item:hover>.edit,
+.item.active>.edit {
+    display: block;
 }
 
 .item .toggle,
 .item .icon {
     float: left;
-    margin-right: 10px;
+    margin-right: 5px;
 }
 
 .item .name {
     float: left;
+    font-weight: bold;
+}
+
+.item.empty {
+    color: #7e7e7e;
+}
+
+.item .doc-count {
+    float: left;
+    color: #7e7e7e;
+    padding-left: 3px;
 }
 
 .item .edit {
