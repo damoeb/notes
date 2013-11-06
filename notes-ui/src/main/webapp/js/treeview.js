@@ -144,7 +144,7 @@ $.widget("notes.treeItem", {
                 parentId: model.id,
                 databaseId: model.databaseId
             });
-            folder.save({
+            folder.save(null, {
                 success: function () {
                     $('#tree-view').treeView('reload')
                 }
