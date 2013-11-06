@@ -124,6 +124,17 @@ public class TextDocumentManagerBean implements TextDocumentManager {
 
             TextDocument oldDoc = getDocument(newDoc.getId());
 
+            // has document been moved?
+            if (newDoc.getFolderId() != null && newDoc.getFolderId() != oldDoc.getFolderId()) {
+                // todo implement
+//                // test if new folder exists
+//                folderManager.getFolder(newDoc.getFolderId());
+//
+//                // update folderId
+//                oldDoc.setFolderId(newDoc.getFolderId());
+//                em.merge(oldDoc);
+            }
+
             oldDoc.setTitle(newDoc.getTitle());
             oldDoc.setText(newDoc.getText());
 

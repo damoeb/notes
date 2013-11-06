@@ -182,6 +182,11 @@ public class FolderManagerBean implements FolderManager {
             throw new NotesException("Folder Id is invalid");
         }
 
+        /*
+        todo
+        check if parentId changed -> ..
+          */
+
         Folder folder = _get(newFolder.getId());
         folder.setName(newFolder.getName());
         folder.setModified(new Date());
