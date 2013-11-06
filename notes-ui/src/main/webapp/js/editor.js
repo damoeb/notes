@@ -54,11 +54,6 @@ $.widget("notes.editor", {
             $this.documentId = document.id;
 
             $this.loadDocument(kind, new kind.model(document));
-//            var template = $(_.template($(kind.templateId).html(), document));
-//            $this.element.empty().append(template);
-//
-//            var model = new kind.model(document);
-//            $this[kind.fnLoad](template, model);
         });
     },
 
