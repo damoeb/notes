@@ -74,23 +74,23 @@ $.widget("notes.treeItem", {
 
         // -- Events
         item.click(function () {
-            $this.select();
+            $this.highlight();
         });
 
         if (selectedId == model.id) {
-            $this.select(false);
+            $this.highlight(false);
         }
     },
 
-    select: function (sync) {
+    highlight: function (sync) {
         var $this = this;
 
         sync = typeof sync !== 'undefined' ? sync : true;
 
         var folderId = $this.options.model.id;
 
-        $('#tree-view .active-folder').removeClass('active-folder');
-        $this.item.addClass('active-folder');
+        $('#tree-view .active').removeClass('active');
+        $this.item.addClass('active');
         $this.loadDocuments();
 
         if (sync) {
@@ -272,7 +272,7 @@ $.widget("notes.treeView", {
                     });
 
                 if (folderData.id == database.selectedFolderId) {
-                    item.treeItem('select');
+                    item.treeItem('highlight');
                 }
 
             });
@@ -283,8 +283,6 @@ $.widget("notes.treeView", {
         var $this = this;
         if (folderId) {
             console.log('selectedFolderId ' + folderId);
-            //this.selectedFolderId = folderId;
-
             $this.model.set('selectedFolderId', folderId);
             $this.model.save();
 
