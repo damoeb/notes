@@ -232,6 +232,21 @@ $.widget("notes.treeView", {
 
         notes.util.jsonCall('GET', '/notes/rest/database/${dbId}', {'${dbId}': $this.options.databaseId}, null, function (database) {
 
+            // -- create database model --------------------------------------------------------------------------------
+
+            var Database = Backbone.Model.extend({
+                url: '/notes/rest/database'
+            });
+
+            // remove folder information
+            var minDatabaseData = {
+                id: database.id,
+                ownerId: database.ownerId,
+                documentCount: database.documentCount,
+                name: database.name
+            };
+            $this.model = new Database(minDatabaseData);
+
 
             // -- render children --------------------------------------------------------------------------------------
 
@@ -249,22 +264,6 @@ $.widget("notes.treeView", {
                 }
 
             });
-
-            // -- create database model --------------------------------------------------------------------------------
-
-            var Database = Backbone.Model.extend({
-                url: '/notes/rest/database'
-            });
-
-            // remove folder information
-            var minDatabaseData = {
-                id: database.id,
-                ownerId: database.ownerId,
-                documentCount: database.documentCount,
-                name: database.name
-            };
-            $this.model = new Database(minDatabaseData);
-
         });
     },
 
