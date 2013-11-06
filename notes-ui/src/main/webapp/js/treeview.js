@@ -1,6 +1,7 @@
 $.widget("notes.treeItem", {
     options: {
-        model: null
+        model: null,
+        selectedId: null
     },
     _create: function () {
         this._reset();
@@ -14,6 +15,7 @@ $.widget("notes.treeItem", {
         $this._reset();
 
         var model = $this.options.model;
+        var selectedId = $this.options.selectedId;
 
         // -- Render
 
@@ -25,11 +27,11 @@ $.widget("notes.treeItem", {
             item.addClass('empty');
         }
 
-        var children = $('<div/>', {class: 'children'}).appendTo(target);
+        var childrenWrapper = $('<div/>', {class: 'children'}).appendTo(target);
 
-        $this.container.children = children;
+        $this.container.children = childrenWrapper;
 
-        $this._createExpandChildrenButton()
+        $this._createExpandChildrenButton(model)
             .appendTo(item);
 
         var icon = $('<div/>', {class: 'icon ui-icon ui-icon-folder-collapsed' })
@@ -49,15 +51,40 @@ $.widget("notes.treeItem", {
             $.each(model.children, function (index, folderData) {
 
                 $('<div/>')
-                    .appendTo(children)
-                    .treeItem({model: folderData});
+                    .appendTo(childrenWrapper)
+                    .treeItem({
+                        model: folderData,
+                        selectedId: selectedId
+                    });
             });
         }
+        $this.item = item;
 
         // -- Events
-        label.click(function () {
-            $this.loadDocuments()
+        item.click(function () {
+            $this.select();
         });
+
+        if (selectedId == model.id) {
+            $this.select(false);
+        }
+    },
+
+    select: function (sync) {
+        var $this = this;
+
+        sync = typeof sync !== 'undefined' ? sync : true;
+
+        var folderId = $this.options.model.id;
+
+        $('#tree-view .active-folder').removeClass('active-folder');
+        $this.item.addClass('active-folder');
+        $this.loadDocuments();
+
+        if (sync) {
+            // sync model: selected folder in database
+            $('#tree-view').treeView('selectedFolder', folderId);
+        }
     },
 
     _newSettingsMenu: function (target, model) {
@@ -127,13 +154,12 @@ $.widget("notes.treeItem", {
         return $('<li/>').append(link);
     },
 
-    _createExpandChildrenButton: function () {
+    _createExpandChildrenButton: function (model) {
         var $this = this;
 
         var toggle = $('<div/>', {class: 'toggle ui-icon'});
 
         var fApplyExpanded = function () {
-            var model = $this.options.model;
             if (model.leaf) {
                 toggle.addClass('ui-icon-radio-off');
             } else {
@@ -169,9 +195,6 @@ $.widget("notes.treeItem", {
         $('#document-list-view').documentListView({
             folderId: folderId
         });
-
-        // sync model: active folder in database
-        $('#tree-view').treeView('activeFolder', folderId);
     }
 });
 
@@ -184,7 +207,7 @@ $.widget("notes.treeView", {
     _init: function () {
         var $this = this;
         $this.container = {};
-        $this.activeFolderId = null;
+        $this.selectedFolderId = null;
     },
 
     _create: function () {
@@ -195,13 +218,6 @@ $.widget("notes.treeView", {
         if (typeof(databaseId) == 'undefined') {
             throw 'databaseId is null'
         }
-
-        var Node = Backbone.Model.extend({
-            defaults: {
-                name: 'blank'
-            },
-            url: '/notes/rest/folder'
-        });
 
         $this.reload();
     },
@@ -216,26 +232,54 @@ $.widget("notes.treeView", {
 
         notes.util.jsonCall('GET', '/notes/rest/database/${dbId}', {'${dbId}': $this.options.databaseId}, null, function (database) {
 
-            $this.activeFolder(database.activeFolderId);
+
+            // -- render children --------------------------------------------------------------------------------------
 
             $.each(database.folders, function (index, folderData) {
 
-                $('<div/>')
+                var item = $('<div/>')
                     .appendTo($this.element)
                     .treeItem({
-                        model: folderData
+                        model: folderData,
+                        selectedId: database.selectedFolderId
                     });
+
+                if (folderData.id == database.selectedFolderId) {
+                    item.treeItem('select');
+                }
+
             });
+
+            // -- create database model --------------------------------------------------------------------------------
+
+            var Database = Backbone.Model.extend({
+                url: '/notes/rest/database'
+            });
+
+            // remove folder information
+            var minDatabaseData = {
+                id: database.id,
+                ownerId: database.ownerId,
+                documentCount: database.documentCount,
+                name: database.name
+            };
+            $this.model = new Database(minDatabaseData);
 
         });
     },
 
-    activeFolder: function (folderId) {
+    selectedFolder: function (folderId) {
+        var $this = this;
         if (folderId) {
-            console.log('activeFolderId ' + folderId);
-            this.activeFolderId = folderId;
+            console.log('selectedFolderId ' + folderId);
+            //this.selectedFolderId = folderId;
+
+            $this.model.set('selectedFolderId', folderId);
+            $this.model.save();
+
         } else {
-            return this.activeFolderId;
+            //return this.selectedFolderId;
+            return $this.model.set('selectedFolderId');
         }
     }
 

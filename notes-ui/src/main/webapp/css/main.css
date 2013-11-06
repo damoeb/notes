@@ -204,6 +204,20 @@ table.dataTable td {
     padding-bottom: 3px;
 }
 
+.item.empty {
+    color: #7e7e7e;
+}
+
+.item.active-folder {
+    background-color: #6792ff;
+    color: white;
+}
+
+.item.active-folder .doc-count {
+    color: #dadada;
+}
+
+/* levels indention */
 .item.level-0 {
 }
 
@@ -219,6 +233,7 @@ table.dataTable td {
     padding-left: 30px;
 }
 
+/* edit button */
 .item>.edit {
     display: none;
 }
@@ -228,6 +243,7 @@ table.dataTable td {
     display: block;
 }
 
+/* elements in item div */
 .item .toggle,
 .item .icon {
     float: left;
@@ -237,10 +253,6 @@ table.dataTable td {
 .item .name {
     float: left;
     font-weight: bold;
-}
-
-.item.empty {
-    color: #7e7e7e;
 }
 
 .item .doc-count {

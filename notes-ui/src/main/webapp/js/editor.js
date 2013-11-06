@@ -67,7 +67,7 @@ $.widget("notes.editor", {
 
     createDocument: function () {
         var $this = this;
-        var folderId = $('#tree-view').treeView('activeFolder');
+        var folderId = $('#tree-view').treeView('selectedFolder');
         console.log('create in ' + folderId);
         var kindString = 'text';
 

@@ -154,6 +154,7 @@ public class DatabaseManagerBean implements DatabaseManager {
 
         Database database = _get(databaseId);
         database.setName(newDatabase.getName());
+        database.setSelectedFolderId(newDatabase.getSelectedFolderId());
         database.setModified(new Date());
         em.merge(database);
         em.flush();

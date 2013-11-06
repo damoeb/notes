@@ -29,7 +29,7 @@ public class Database extends Node {
     private Collection<Folder> folders = new LinkedList();
 
     @Basic
-    private Long activeFolderId;
+    private Long selectedFolderId;
 
     public Database() {
         //
@@ -43,11 +43,11 @@ public class Database extends Node {
         this.folders = folders;
     }
 
-    public Long getActiveFolderId() {
-        return activeFolderId;
+    public Long getSelectedFolderId() {
+        return selectedFolderId;
     }
 
-    public void setActiveFolderId(Long activeFolderId) {
-        this.activeFolderId = activeFolderId;
+    public void setSelectedFolderId(Long selectedFolderId) {
+        this.selectedFolderId = selectedFolderId;
     }
 }
