@@ -46,6 +46,10 @@ public class Document implements Serializable {
     private String fulltext;
 
     @Basic
+    @Column(nullable = false, length = 256)
+    private String outline;
+
+    @Basic
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Kind kind;
@@ -235,4 +239,11 @@ public class Document implements Serializable {
         this.fulltext = fulltext;
     }
 
+    public String getOutline() {
+        return outline;
+    }
+
+    public void setOutline(String outline) {
+        this.outline = outline;
+    }
 }

@@ -57,6 +57,8 @@ public class TextDocumentManagerBean implements TextDocumentManager {
             Folder folder = folderManager.getFolder(document.getFolderId());
             User user = userManager.getUser(1l); // todo userId
 
+            // todo write outline and fulltext
+
             em.persist(document);
             em.flush();
             em.refresh(document);
@@ -137,6 +139,8 @@ public class TextDocumentManagerBean implements TextDocumentManager {
 
             oldDoc.setTitle(newDoc.getTitle());
             oldDoc.setText(newDoc.getText());
+
+            // todo write outline and fulltext
 
             em.merge(oldDoc);
             em.flush();
