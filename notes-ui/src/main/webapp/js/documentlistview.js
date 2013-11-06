@@ -46,6 +46,7 @@ $.widget("notes.documentListView", {
             }
 
             $this.table.find('td').unbind('click');
+            //$this.table.find('tr').draggable('destroy');
 
             var dataTable = $this.table.dataTable();
             dataTable.fnClearTable();
@@ -60,8 +61,9 @@ $.widget("notes.documentListView", {
                 var kind = aData[3];
 
                 $('#editor').editor('edit', documentId, kind);
-
             });
+
+            dataTable.find('tr').draggable({helper: "clone", opacity: 0.5, scope: 'folder'});
 
         });
     },

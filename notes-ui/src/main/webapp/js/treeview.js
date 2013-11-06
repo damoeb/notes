@@ -26,6 +26,18 @@ $.widget("notes.treeItem", {
         if (model.documentCount == 0) {
             item.addClass('empty');
         }
+        item.draggable({containment: '#tree-view', helper: "clone", opacity: 0.5, scope: 'folder'})
+            .droppable({hoverClass: 'ui-state-active', scope: 'folder', drop: function (event, ui) {
+                var draggable = $(ui.draggable);
+                if (draggable.hasClass('item')) {
+                    console.log('dropped folder');
+                }
+                if (draggable.is('tr')) {
+                    console.log('dropped document');
+                }
+                //$(ui.draggable).remove();
+            }});
+
 
         var childrenWrapper = $('<div/>', {class: 'children'}).appendTo(target);
 
