@@ -19,6 +19,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.util.Date;
 import java.util.List;
 
 //@LocalBean
@@ -159,6 +160,7 @@ public class FolderManagerBean implements FolderManager {
 
         User user = userManager.getUser(1l);
         folder.setParent(parent);
+        folder.setModified(new Date());
 
         em.persist(folder);
         em.flush();
@@ -182,6 +184,7 @@ public class FolderManagerBean implements FolderManager {
 
         Folder folder = _get(newFolder.getId());
         folder.setName(newFolder.getName());
+        folder.setModified(new Date());
         em.merge(folder);
         em.flush();
         em.refresh(folder);

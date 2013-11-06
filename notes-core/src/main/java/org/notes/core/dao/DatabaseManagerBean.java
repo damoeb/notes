@@ -16,6 +16,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.util.Date;
 import java.util.List;
 
 //@LocalBean
@@ -132,6 +133,7 @@ public class DatabaseManagerBean implements DatabaseManager {
         }
 
         database.setDocumentCount(0);
+        database.setModified(new Date());
 
         User user = userManager.getUser(1l);
         em.persist(database);
@@ -152,6 +154,7 @@ public class DatabaseManagerBean implements DatabaseManager {
 
         Database database = _get(databaseId);
         database.setName(newDatabase.getName());
+        database.setModified(new Date());
         em.merge(database);
         em.flush();
         em.refresh(database);

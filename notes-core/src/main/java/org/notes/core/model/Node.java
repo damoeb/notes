@@ -1,9 +1,14 @@
 package org.notes.core.model;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.notes.common.service.CustomDateDeserializer;
+import org.notes.common.service.CustomDateSerializer;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 @MappedSuperclass
 public abstract class Node implements Serializable {
@@ -26,6 +31,11 @@ public abstract class Node implements Serializable {
     @Basic
     protected boolean deleted;
 
+    @Column(nullable = false)
+    @JsonDeserialize(using = CustomDateDeserializer.class)
+    @JsonSerialize(using = CustomDateSerializer.class)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date modified;
 
     public Node() {
         //
@@ -69,5 +79,13 @@ public abstract class Node implements Serializable {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public Date getModified() {
+        return modified;
+    }
+
+    public void setModified(Date modified) {
+        this.modified = modified;
     }
 }
