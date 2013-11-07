@@ -67,8 +67,6 @@ $.widget("notes.editor", {
 
     createDocument: function () {
         var $this = this;
-        var folderId = $('#tree-view').treeView('selectedFolder');
-        console.log('create in ' + folderId);
         var kindString = 'text';
 
         var kind = $this.kinds[kindString.toLowerCase()];
@@ -98,6 +96,11 @@ $.widget("notes.editor", {
         var $this = this;
         model.set('title', template.find('#field-title').val());
         model.set('text', template.find('#field-text').val());
+
+        var folderId = $('#tree-view').treeView('selectedFolder');
+        console.log('in ' + folderId);
+        model.set('folderId', folderId);
+
         model.save();
         $this._refreshListAfterModelUpdate(model);
     },

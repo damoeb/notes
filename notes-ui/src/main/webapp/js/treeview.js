@@ -308,13 +308,13 @@ $.widget("notes.treeView", {
     selectedFolder: function (folderId) {
         var $this = this;
         if (folderId) {
-            console.log('selectedFolderId ' + folderId);
             $this.model.set('selectedFolderId', folderId);
+            console.log('selectedFolderId ' + $this.model.get('selectedFolderId'));
             $this.model.save();
 
         } else {
             //return this.selectedFolderId;
-            return $this.model.set('selectedFolderId');
+            return $this.model.get('selectedFolderId');
         }
     }
 

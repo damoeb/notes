@@ -40,7 +40,7 @@ $.widget("notes.documentListView", {
                     doc.id,
                     $this._createTitleText(doc.title, doc.description),
                     notes.util.formatDate(doc.modified),
-                    '<div style="width:40px">' + doc.kind + '</div>',
+                    doc.kind,
                     notes.util.formatBytesNum(doc.size)
                 ]);
             }
