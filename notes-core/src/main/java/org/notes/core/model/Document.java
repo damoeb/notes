@@ -4,6 +4,7 @@ import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.notes.common.configuration.Configuration;
 import org.notes.common.service.CustomDateDeserializer;
 import org.notes.common.service.CustomDateSerializer;
 
@@ -30,7 +31,6 @@ public class Document implements Serializable {
     public static final String QUERY_ALL = "Document.QUERY_ALL";
     public static final String QUERY_REMOVE = "Document.QUERY_REMOVE";
     public static final String FK_NOTE_ID = "note_id";
-    private static final int OUTLINE_LENGTH = 512;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,7 +47,7 @@ public class Document implements Serializable {
     private String fulltext;
 
     @Basic
-    @Column(length = OUTLINE_LENGTH)
+    @Column(length = Configuration.Constants.OUTLINE_LENGTH)
     private String outline;
 
     @Basic
@@ -83,9 +83,10 @@ public class Document implements Serializable {
         // default
     }
 
-    public Document(Long id, String title, Kind kind, Date created, Date modified) {
+    public Document(Long id, String title, String outline, Kind kind, Date created, Date modified) {
         this.id = id;
         this.title = title;
+        this.outline = outline;
         this.kind = kind;
         this.modified = modified;
         this.created = created;

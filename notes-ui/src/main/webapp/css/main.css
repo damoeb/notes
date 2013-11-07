@@ -144,6 +144,23 @@ table.dataTable tr.even {
     color: #666666;
 }
 
+/* dialog */
+.dialog {
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 15px 20px;
+    width: 400px;
+    line-height: 25px;
+    z-index: 10;
+    margin: auto;
+}
+
+.dialog A {
+    display: block;
+    line-height: 25px;
+}
+
 /* menu */
 .menu-group {
     float: left;
@@ -153,6 +170,18 @@ table.dataTable tr.even {
 /* document list */
 .document-list-view {
     min-height: 400px;
+}
+
+.doc-title {
+    float: left;
+    margin-right: 5px;
+}
+
+.doc-outline {
+    float: left;
+    overflow: hidden;
+    color: #666666;
+    white-space: nowrap;
 }
 
 TR.active TD,

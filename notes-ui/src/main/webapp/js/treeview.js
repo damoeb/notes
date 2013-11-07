@@ -111,27 +111,31 @@ $.widget("notes.treeItem", {
             .appendTo(target);
 
         // todo should be a dialog
+        /*
+         var menuwrapper = $('<div/>', {class: 'tree-menu'})
+         .hide()
+         .appendTo(target);
 
-        var menuwrapper = $('<div/>', {class: 'tree-menu'})
-            .hide()
-            .appendTo(target);
-
-        var menu = $('<ul/>')
-            .append($this._newAddFolderButton(modelData, modelClass))
-            .append($this._newRenameFolderButton(modelData, modelClass))
-            .append($this._newShareFolderButton(modelData, modelClass))
-            .append($this._newDelFolderButton(modelData, modelClass))
-            .appendTo(menuwrapper)
-            .menu();
+         var menu = $('<ul/>')
+         .append($this._newAddFolderButton(modelData, modelClass))
+         .append($this._newRenameFolderButton(modelData, modelClass))
+         .append($this._newShareFolderButton(modelData, modelClass))
+         .append($this._newDelFolderButton(modelData, modelClass))
+         .appendTo(menuwrapper)
+         .menu();
+         */
 
         button.click(function () {
-            menuwrapper.show().position({
-                my: "left top",
-                at: "left bottom",
-                of: button
-            });
-            $(document).one("click", function () {
-                menuwrapper.hide();
+
+            var blockUi = $('#block-ui').show();
+
+            var menuwrapper = $(_.template($('#tmpl-folder-menu').html(), {}))
+                .appendTo(target)
+                .center();
+
+            blockUi.one("click", function () {
+                menuwrapper.remove();
+                $('#block-ui').hide();
             });
 
             return false;
@@ -281,7 +285,8 @@ $.widget("notes.treeView", {
                 id: database.id,
                 ownerId: database.ownerId,
                 documentCount: database.documentCount,
-                name: database.name
+                name: database.name,
+                selectedFolderId: database.selectedFolderId
             };
             $this.model = new Database(minDatabaseData);
 
@@ -292,8 +297,9 @@ $.widget("notes.treeView", {
 
                 // database has no folder yet
                 var selectedFolderId = database.selectedFolderId;
-                if (typeof(selectedFolderId) == undefined) {
+                if (typeof(selectedFolderId) === 'undefined') {
                     selectedFolderId = database.folders[0].id;
+                    $this.model.set('selectedFolderId', selectedFolderId);
                 }
                 $.each(database.folders, function (index, folderData) {
 

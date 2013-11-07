@@ -33,6 +33,10 @@ public class Configuration {
     public static final String VERSION = "curator.version";
     public static final String RETRIEVE_SEEDS = "retrieve.seeds";
 
+    public static final class Constants {
+        public static final int OUTLINE_LENGTH = 256;
+    }
+
 
     private static Configuration getInstance() {
         if (singleton == null) {

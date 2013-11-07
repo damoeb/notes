@@ -38,7 +38,7 @@ $.widget("notes.documentListView", {
 
                 data.push([
                     doc.id,
-                    $this._createTitleText(doc.title, doc.description),
+                    $this._createTitleText(doc.title, doc.outline),
                     notes.util.formatDate(doc.modified),
                     doc.kind,
                     notes.util.formatBytesNum(doc.size)
@@ -77,7 +77,7 @@ $.widget("notes.documentListView", {
     },
 
     _createTitleText: function (title, description) {
-        return title + ' ' + description;
+        return '<div class="doc-title">' + title + '</div><div class="doc-outline">' + description + '</div>';
     }
 
 });
