@@ -288,20 +288,28 @@ $.widget("notes.treeView", {
 
             // -- render children --------------------------------------------------------------------------------------
 
-            $.each(database.folders, function (index, folderData) {
+            if (database.folders && database.folders.length > 0) {
 
-                var item = $('<div/>')
-                    .appendTo($this.element)
-                    .treeItem({
-                        model: folderData,
-                        selectedId: database.selectedFolderId
-                    });
-
-                if (folderData.id == database.selectedFolderId) {
-                    item.treeItem('highlight');
+                // database has no folder yet
+                var selectedFolderId = database.selectedFolderId;
+                if (typeof(selectedFolderId) == undefined) {
+                    selectedFolderId = database.folders[0].id;
                 }
+                $.each(database.folders, function (index, folderData) {
 
-            });
+                    var item = $('<div/>')
+                        .appendTo($this.element)
+                        .treeItem({
+                            model: folderData,
+                            selectedId: selectedFolderId
+                        });
+
+                    if (folderData.id == selectedFolderId) {
+                        item.treeItem('highlight');
+                    }
+
+                });
+            }
         });
     },
 
