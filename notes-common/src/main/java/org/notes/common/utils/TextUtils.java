@@ -11,7 +11,7 @@ public final class TextUtils {
 
     public static String trim(String str) {
 
-        if(StringUtils.isBlank(str)) {
+        if (StringUtils.isBlank(str)) {
             return null;
 
         } else {
@@ -23,5 +23,20 @@ public final class TextUtils {
             m.appendTail(sb);
             return sb.toString();
         }
+    }
+
+    public static String toOutline(String... texts) {
+        // todo should be same constant as Document.OUTLINE_LENGTH
+        int outlineSize = 512;
+        StringBuilder outline = new StringBuilder(outlineSize);
+        for (String text : texts) {
+            String normalized = trim(text.replaceAll("[\n\t\r ]+", " "));
+            if (outline.length() + normalized.length() > outlineSize) {
+                break;
+            }
+            outline.append(normalized);
+        }
+
+        return outline.toString();
     }
 }

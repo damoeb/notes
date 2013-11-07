@@ -54,7 +54,11 @@ $.widget("notes.treeItem", {
         var docCount = $('<div/>', {class: 'doc-count', text: '(' + model.documentCount + ')'})
             .appendTo(item);
 
-        $this._newSettingsMenu(item, model);
+        var Folder = Backbone.Model.extend({
+            url: '/notes/rest/folder'
+        });
+
+        $this._newSettingsMenu(item, model, Folder);
 
         item.append($('<div/>', {style: 'clear:both'}));
 
@@ -99,20 +103,24 @@ $.widget("notes.treeItem", {
         }
     },
 
-    _newSettingsMenu: function (target, model) {
+    _newSettingsMenu: function (target, modelData, modelClass) {
 
         var $this = this;
 
         var button = $('<div/>', {class: 'edit ui-icon ui-icon-gear'})
             .appendTo(target);
 
+        // todo should be a dialog
+
         var menuwrapper = $('<div/>', {class: 'tree-menu'})
             .hide()
             .appendTo(target);
 
         var menu = $('<ul/>')
-            .append($this._newAddFolderButton(model))
-            .append($this._newDelFolderButton(model))
+            .append($this._newAddFolderButton(modelData, modelClass))
+            .append($this._newRenameFolderButton(modelData, modelClass))
+            .append($this._newShareFolderButton(modelData, modelClass))
+            .append($this._newDelFolderButton(modelData, modelClass))
             .appendTo(menuwrapper)
             .menu();
 
@@ -131,30 +139,48 @@ $.widget("notes.treeItem", {
 
     },
 
-    _newDelFolderButton: function (model) {
+    _newDelFolderButton: function (model, modelClass) {
         var link = $('<a/>', {text: 'Delete'});
         link.click(function () {
-            var Folder = Backbone.Model.extend({
-                url: '/notes/rest/folder'
+            new modelClass(model).destroy();
+        })
+        return $('<li/>').append(link);
+    },
+    _newRenameFolderButton: function (modelData, modelClass) {
+        var $this = this;
+        var link = $('<a/>', {text: 'Rename'});
+        link.click(function () {
+            var newName = prompt('new name');
+
+            var folder = new modelClass(modelData);
+            folder.set('name', newName);
+            folder.save(null, {
+                success: function () {
+                    $this.item.find('.name').text(newName);
+                }
             });
-            new Folder(model).destroy();
+
+        })
+        return $('<li/>').append(link);
+    },
+    _newShareFolderButton: function (modelData, modelClass) {
+        var link = $('<a/>', {text: 'Share'});
+        link.click(function () {
+            // todo share
         })
         return $('<li/>').append(link);
     },
 
-    _newAddFolderButton: function (model) {
+    _newAddFolderButton: function (modelData, modelClass) {
         var link = $('<a/>', {text: 'Add'});
         link.click(function () {
 
             var name = prompt("Gimme a name");
 
-            var Folder = Backbone.Model.extend({
-                url: '/notes/rest/folder'
-            });
-            var folder = new Folder({
+            var folder = new modelClass({
                 name: name,
-                parentId: model.id,
-                databaseId: model.databaseId
+                parentId: modelData.id,
+                databaseId: modelData.databaseId
             });
             folder.save(null, {
                 success: function () {

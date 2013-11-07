@@ -30,6 +30,7 @@ public class Document implements Serializable {
     public static final String QUERY_ALL = "Document.QUERY_ALL";
     public static final String QUERY_REMOVE = "Document.QUERY_REMOVE";
     public static final String FK_NOTE_ID = "note_id";
+    private static final int OUTLINE_LENGTH = 512;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,7 +47,7 @@ public class Document implements Serializable {
     private String fulltext;
 
     @Basic
-    @Column(nullable = false, length = 256)
+    @Column(length = OUTLINE_LENGTH)
     private String outline;
 
     @Basic
@@ -74,6 +75,9 @@ public class Document implements Serializable {
 
     @Column(insertable = false, updatable = false, name = Folder.FK_FOLDER_ID)
     private Long folderId;
+
+    @Basic
+    private boolean deleted = false;
 
     public Document() {
         // default
@@ -245,5 +249,13 @@ public class Document implements Serializable {
 
     public void setOutline(String outline) {
         this.outline = outline;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }

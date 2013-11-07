@@ -3,6 +3,7 @@ package org.notes.core.dao;
 import org.apache.log4j.Logger;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
+import org.notes.common.utils.TextUtils;
 import org.notes.core.interfaces.*;
 import org.notes.core.model.*;
 
@@ -57,7 +58,8 @@ public class TextDocumentManagerBean implements TextDocumentManager {
             Folder folder = folderManager.getFolder(document.getFolderId());
             User user = userManager.getUser(1l); // todo userId
 
-            // todo write outline and fulltext
+            //document.setFulltext(_getFulltext(document));
+            document.setOutline(_getOutline(document));
 
             em.persist(document);
             em.flush();
@@ -77,6 +79,10 @@ public class TextDocumentManagerBean implements TextDocumentManager {
         } catch (Throwable t) {
             throw new NotesException("add document", t);
         }
+    }
+
+    private String _getOutline(TextDocument document) {
+        return TextUtils.toOutline(document.getText());
     }
 
     @Override
@@ -100,13 +106,7 @@ public class TextDocumentManagerBean implements TextDocumentManager {
         try {
 
             // todo implement
-
-//            TextDocument document = getDocument(model.getId());
-//            // todo fix folderId is null
-//            //Folder folder = folderManager.getFolder(document.getFolderId());
-//            //folder.setDocumentCount(folder.getDocumentCount() - 1);
-//            //em.merge(folder);
-//            em.remove(document);
+            // set flag deleted, don't remove
 
             return document;
 
@@ -140,7 +140,7 @@ public class TextDocumentManagerBean implements TextDocumentManager {
             oldDoc.setTitle(newDoc.getTitle());
             oldDoc.setText(newDoc.getText());
 
-            // todo write outline and fulltext
+            oldDoc.setOutline(_getOutline(oldDoc));
 
             em.merge(oldDoc);
             em.flush();
