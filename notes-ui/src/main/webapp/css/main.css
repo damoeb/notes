@@ -161,6 +161,10 @@ table.dataTable tr.even {
     line-height: 25px;
 }
 
+.no-title .ui-dialog-titlebar {
+    display: none;
+}
+
 /* menu */
 .menu-group {
     float: left;

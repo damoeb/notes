@@ -127,15 +127,17 @@ $.widget("notes.treeItem", {
 
         button.click(function () {
 
-            var blockUi = $('#block-ui').show();
-
-            var menuwrapper = $(_.template($('#tmpl-folder-menu').html(), {}))
+            var dialog = $(_.template($('#tmpl-folder-settings').html(), {folderName: modelData.name}))
                 .appendTo(target)
-                .center();
+                .dialog({
+                    modal: true,
+                    resizable: false,
+                    draggable: false,
+                    dialogClass: 'no-title'
+                });
 
             blockUi.one("click", function () {
-                menuwrapper.remove();
-                $('#block-ui').hide();
+                dialog.remove();
             });
 
             return false;
