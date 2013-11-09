@@ -17,15 +17,65 @@ $.widget("notes.treeItem", {
         var model = $this.options.model;
         var selectedId = $this.options.selectedId;
 
-        // -- Render
-
         var target = $this.element;
 
-        var item = $('<div/>', {class: 'item level-' + model.level})
-            .appendTo(target);
-        if (model.documentCount == 0) {
+        // -- Structure ------------------------------------------------------------------------------------------------
+
+        var item = $('<div/>', {class: 'item level-' + model.get('level')});
+        var childrenWrapper = $('<div/>', {class: 'children'});
+
+        target.append(item).append(childrenWrapper);
+
+        // -- Render Item ----------------------------------------------------------------------------------------------
+
+        var elName = $('<div/>', {class: 'name', text: model.get('name') });
+        var elDocCount = $('<div/>', {class: 'doc-count', text: '(' + model.get('documentCount') + ')'});
+        item.append(
+                $this._createExpandChildrenButton(model, childrenWrapper))
+            .append(
+                $('<div/>', {class: 'icon ui-icon ui-icon-folder-collapsed' })
+            ).append(
+                elName
+            ).append(
+                elDocCount
+            ).append(
+                $this._newSettingsMenu(model)
+            ).append(
+                $('<div/>', {style: 'clear:both'})
+            );
+        model.change(function () {
+            elName.text(this.get('name'));
+            elDocCount.text('(' + this.get('documentCount') + ')');
+        });
+
+
+        if (!model.get('leaf')) {
+
+            $.each(model.get('children'), function (index, folderData) {
+
+                $('<div/>')
+                    .appendTo(childrenWrapper)
+                    .treeItem({
+                        model: new notes.model.folder(folderData),
+                        selectedId: selectedId
+                    });
+            });
+        }
+
+        if (model.get('documentCount') == 0) {
             item.addClass('empty');
         }
+
+        // -- Events ---------------------------------------------------------------------------------------------------
+
+        item.click(function () {
+            $this._highlight(item, true);
+        });
+
+        if (selectedId == model.get('id')) {
+            $this._highlight(item, false);
+        }
+
         item.draggable({containment: '#tree-view', helper: "clone", opacity: 0.5, scope: 'folder'})
             .droppable({hoverClass: 'ui-state-active', scope: 'folder', drop: function (event, ui) {
                 var draggable = $(ui.draggable);
@@ -38,204 +88,62 @@ $.widget("notes.treeItem", {
                 //$(ui.draggable).remove();
             }});
 
-
-        var childrenWrapper = $('<div/>', {class: 'children'}).appendTo(target);
-
-        $this.container.children = childrenWrapper;
-
-        $this._createExpandChildrenButton(model)
-            .appendTo(item);
-
-        var icon = $('<div/>', {class: 'icon ui-icon ui-icon-folder-collapsed' })
-            .appendTo(item);
-
-        var label = $('<div/>', {class: 'name', text: model.name })
-            .appendTo(item);
-        var docCount = $('<div/>', {class: 'doc-count', text: '(' + model.documentCount + ')'})
-            .appendTo(item);
-
-        var Folder = Backbone.Model.extend({
-            url: '/notes/rest/folder'
-        });
-
-        $this._newSettingsMenu(item, model, Folder);
-
-        item.append($('<div/>', {style: 'clear:both'}));
-
-        if (!model.leaf) {
-
-            $.each(model.children, function (index, folderData) {
-
-                $('<div/>')
-                    .appendTo(childrenWrapper)
-                    .treeItem({
-                        model: folderData,
-                        selectedId: selectedId
-                    });
-            });
-        }
-        $this.item = item;
-
-        // -- Events
-        item.click(function () {
-            $this.highlight();
-        });
-
-        if (selectedId == model.id) {
-            $this.highlight(false);
-        }
     },
 
-    highlight: function (sync) {
+    _highlight: function (item, sync) {
         var $this = this;
 
-        sync = typeof sync !== 'undefined' ? sync : true;
-
-        var folderId = $this.options.model.id;
-
         $('#tree-view .active').removeClass('active');
-        $this.item.addClass('active');
+        item.addClass('active');
         $this.loadDocuments();
 
         if (sync) {
             // sync model: selected folder in database
+            var folderId = $this.options.model.get('id');
             $('#tree-view').treeView('selectedFolder', folderId);
         }
     },
 
-    _newSettingsMenu: function (target, modelData, modelClass) {
+    _newSettingsMenu: function (model) {
+        return $('<div/>', {class: 'edit ui-icon ui-icon-gear'})
+            .click(function () {
+                notes.dialog.folder.settings(model);
+            });
 
+    },
+
+    _createExpandChildrenButton: function (model, children) {
         var $this = this;
 
-        var button = $('<div/>', {class: 'edit ui-icon ui-icon-gear'})
-            .appendTo(target);
+        var button = $('<div/>', {class: 'toggle ui-icon'});
 
-        // todo should be a dialog
-        /*
-         var menuwrapper = $('<div/>', {class: 'tree-menu'})
-         .hide()
-         .appendTo(target);
-
-         var menu = $('<ul/>')
-         .append($this._newAddFolderButton(modelData, modelClass))
-         .append($this._newRenameFolderButton(modelData, modelClass))
-         .append($this._newShareFolderButton(modelData, modelClass))
-         .append($this._newDelFolderButton(modelData, modelClass))
-         .appendTo(menuwrapper)
-         .menu();
-         */
-
-        button.click(function () {
-
-            var dialog = $(_.template($('#tmpl-folder-settings').html(), {folderName: modelData.name}))
-                .appendTo(target)
-                .dialog({
-                    modal: true,
-                    resizable: false,
-                    draggable: false,
-                    dialogClass: 'no-title'
-                });
-
-            blockUi.one("click", function () {
-                dialog.remove();
-            });
-
-            return false;
-        });
-
-    },
-
-    _newDelFolderButton: function (model, modelClass) {
-        var link = $('<a/>', {text: 'Delete'});
-        link.click(function () {
-            new modelClass(model).destroy();
-        })
-        return $('<li/>').append(link);
-    },
-    _newRenameFolderButton: function (modelData, modelClass) {
-        var $this = this;
-        var link = $('<a/>', {text: 'Rename'});
-        link.click(function () {
-            var newName = prompt('new name');
-
-            var folder = new modelClass(modelData);
-            folder.set('name', newName);
-            folder.save(null, {
-                success: function () {
-                    $this.item.find('.name').text(newName);
-                }
-            });
-
-        })
-        return $('<li/>').append(link);
-    },
-    _newShareFolderButton: function (modelData, modelClass) {
-        var link = $('<a/>', {text: 'Share'});
-        link.click(function () {
-            // todo share
-        })
-        return $('<li/>').append(link);
-    },
-
-    _newAddFolderButton: function (modelData, modelClass) {
-        var link = $('<a/>', {text: 'Add'});
-        link.click(function () {
-
-            var name = prompt("Gimme a name");
-
-            var folder = new modelClass({
-                name: name,
-                parentId: modelData.id,
-                databaseId: modelData.databaseId
-            });
-            folder.save(null, {
-                success: function () {
-                    $('#tree-view').treeView('reload')
-                }
-            });
-
-        })
-        return $('<li/>').append(link);
-    },
-
-    _createExpandChildrenButton: function (model) {
-        var $this = this;
-
-        var toggle = $('<div/>', {class: 'toggle ui-icon'});
-
-        var fApplyExpanded = function () {
-            if (model.leaf) {
-                toggle.addClass('ui-icon-radio-off');
+        var showHideChildren = function () {
+            if (model.get('leaf')) {
+                button.addClass('ui-icon-radio-off');
             } else {
-                if (model.expanded) {
-                    toggle.addClass('ui-icon-triangle-1-e');
-                    toggle.removeClass('ui-icon-triangle-1-s');
-                    $this.showChildren();
+                if (model.get('expanded')) {
+                    button.addClass('ui-icon-triangle-1-e');
+                    button.removeClass('ui-icon-triangle-1-s');
+                    children.addClass('hidden')
                 } else {
-                    toggle.removeClass('ui-icon-triangle-1-e');
-                    toggle.addClass('ui-icon-triangle-1-s');
-                    $this.hideChildren();
+                    button.removeClass('ui-icon-triangle-1-e');
+                    button.addClass('ui-icon-triangle-1-s');
+                    children.removeClass('hidden')
                 }
             }
         };
-        fApplyExpanded();
+        showHideChildren();
 
-        return toggle.click(function () {
-            $this.options.model.expanded = !$this.options.model.expanded;
+        return button.click(function () {
+            $this.options.model.set('expanded', !$this.options.model.get('expanded'));
             // todo sync model
-            fApplyExpanded();
+            showHideChildren();
         });
-    },
-    hideChildren: function () {
-        this.container.children.removeClass('hidden');
-    },
-    showChildren: function () {
-        this.container.children.addClass('hidden');
     },
     loadDocuments: function () {
         var $this = this;
 
-        var folderId = $this.options.model.id;
+        var folderId = $this.options.model.get('id');
         $('#document-list-view').documentListView({
             folderId: folderId
         });
@@ -274,47 +182,36 @@ $.widget("notes.treeView", {
 
         $this.element.empty();
 
-        notes.util.jsonCall('GET', '/notes/rest/database/${dbId}', {'${dbId}': $this.options.databaseId}, null, function (database) {
-
-            // -- create database model --------------------------------------------------------------------------------
-
-            var Database = Backbone.Model.extend({
-                url: '/notes/rest/database'
-            });
+        notes.util.jsonCall('GET', '/notes/rest/database/${dbId}', {'${dbId}': $this.options.databaseId}, null, function (databaseJson) {
 
             // remove folder information
             var minDatabaseData = {
-                id: database.id,
-                ownerId: database.ownerId,
-                documentCount: database.documentCount,
-                name: database.name,
-                selectedFolderId: database.selectedFolderId
+                id: databaseJson.id,
+                ownerId: databaseJson.ownerId,
+                documentCount: databaseJson.documentCount,
+                name: databaseJson.name,
+                selectedFolderId: databaseJson.selectedFolderId
             };
-            $this.model = new Database(minDatabaseData);
+            $this.model = new notes.model.database(minDatabaseData);
 
 
             // -- render children --------------------------------------------------------------------------------------
 
-            if (database.folders && database.folders.length > 0) {
+            if (databaseJson.folders && databaseJson.folders.length > 0) {
 
-                // database has no folder yet
-                var selectedFolderId = database.selectedFolderId;
-                if (typeof(selectedFolderId) === 'undefined') {
-                    selectedFolderId = database.folders[0].id;
-                    $this.model.set('selectedFolderId', selectedFolderId);
-                }
-                $.each(database.folders, function (index, folderData) {
+                $.each(databaseJson.folders, function (index, folderJson) {
 
                     var item = $('<div/>')
                         .appendTo($this.element)
                         .treeItem({
-                            model: folderData,
-                            selectedId: selectedFolderId
+                            model: new notes.model.folder(folderJson),
+                            selectedId: databaseJson.selectedFolderId
                         });
-
-                    if (folderData.id == selectedFolderId) {
-                        item.treeItem('highlight');
-                    }
+                    /*
+                     if (folderJson.id == databaseJson.selectedFolderId) {
+                     item.treeItem('highlight');
+                     }
+                     */
 
                 });
             }

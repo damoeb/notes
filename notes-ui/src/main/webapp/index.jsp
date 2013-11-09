@@ -10,106 +10,105 @@
 <html class="no-js" xmlns="http://www.w3.org/1999/html"> <!--<![endif]-->
 <head>
 
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-<title></title>
-<meta name="description" content="">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
-<link rel="stylesheet" href="css/bootstrap.css">
-<%--<link rel="stylesheet" href="css/normalize.css">--%>
-<link rel="stylesheet" href="css/main.css">
-<link rel="stylesheet" href="css/vendor/jquery-ui-1.9.2.custom.css">
-<link rel="stylesheet" href="css/vendor/jquery.dataTables.css">
-<link href="js/pdf/pdf.css" rel="stylesheet" media="screen" />
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <%--<link rel="stylesheet" href="css/normalize.css">--%>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/vendor/jquery-ui-1.9.2.custom.css">
+    <link rel="stylesheet" href="css/vendor/jquery.dataTables.css">
+    <link href="js/pdf/pdf.css" rel="stylesheet" media="screen"/>
 
-<script src="js/vendor/modernizr-2.6.2.min.js"></script>
+    <script src="js/vendor/modernizr-2.6.2.min.js"></script>
 
-<script src="js/vendor/jquery-1.8.2.min.js"></script>
-<script src="js/vendor/jquery.raty.js"></script>
-<script src="js/vendor/jquery-ui-1.9.2.custom.js"></script>
-<script src="js/vendor/jquery.dataTables.js"></script>
-<script src="js/vendor/jquery.timeago.js"></script>
-<script src="js/vendor/jquery.paginate.js"></script>
-<script src="js/vendor/jquery.jstree.js"></script>
+    <script src="js/vendor/jquery-1.8.2.min.js"></script>
+    <script src="js/vendor/jquery.raty.js"></script>
+    <script src="js/vendor/jquery-ui-1.9.2.custom.js"></script>
+    <script src="js/vendor/jquery.dataTables.js"></script>
+    <script src="js/vendor/jquery.timeago.js"></script>
+    <script src="js/vendor/jquery.paginate.js"></script>
+    <script src="js/vendor/jquery.jstree.js"></script>
 
-<!-- notifications -->
-<!-- see http://needim.github.com/noty/-->
-<script src="js/vendor/jquery.noty.js"></script>
-<script src="js/vendor/noty/layouts/top.js"></script>
-<script src="js/vendor/noty/themes/default.js"></script>
+    <!-- notifications -->
+    <!-- see http://needim.github.com/noty/-->
+    <script src="js/vendor/jquery.noty.js"></script>
+    <script src="js/vendor/noty/layouts/top.js"></script>
+    <script src="js/vendor/noty/themes/default.js"></script>
 
-<script src="js/plugins.js"></script>
-<script src="js/ckeditor/ckeditor.js"></script>
-<script src="js/ckeditor/adapters/jquery.js"></script>
+    <script src="js/plugins.js"></script>
+    <script src="js/ckeditor/ckeditor.js"></script>
+    <script src="js/ckeditor/adapters/jquery.js"></script>
 
-<script src="js/fileupload/jquery.iframe-transport.js"></script>
-<script src="js/fileupload/jquery.fileupload.js"></script>
-<%--<script src="js/fileupload/jquery.fileupload-ui.js"></script>--%>
-<%--<script src="js/fileupload/jquery.fileupload-process.js"></script>--%>
-<link rel="stylesheet" href="js/fileupload/jquery.fileupload-ui.css">
-
-
-<script src="js/pdf/pdf.js" type="text/javascript"></script>
-<script src="js/pdf/textlayerbuilder.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-    var notes = {};
-</script>
-
-<script src="js/util.js"></script>
-<script src="js/editor.js"></script>
-<script src="js/notes.js"></script>
-<script src="js/annotate.js"></script>
-
-<script type="text/javascript">
+    <script src="js/fileupload/jquery.iframe-transport.js"></script>
+    <script src="js/fileupload/jquery.fileupload.js"></script>
+    <%--<script src="js/fileupload/jquery.fileupload-ui.js"></script>--%>
+    <%--<script src="js/fileupload/jquery.fileupload-process.js"></script>--%>
+    <link rel="stylesheet" href="js/fileupload/jquery.fileupload-ui.css">
 
 
-$(document).ready(function () {
+    <script src="js/pdf/pdf.js" type="text/javascript"></script>
+    <script src="js/pdf/textlayerbuilder.js" type="text/javascript"></script>
 
-    $('#n-editor').editor();
+    <script type="text/javascript">
+        var notes = {};
+    </script>
 
-    // --------------------
+    <script src="js/util.js"></script>
+    <script src="js/editor.js"></script>
+    <script src="js/annotate.js"></script>
 
-    $('#create-note').button({
-        icons: {
-            primary: 'ui-icon-plus'
-        },
-        label: 'New Note'
-    }).click(function() {
-        $('#n-editor').editor('create');
-    });
-
-    $('#action-settings').button({
-        icons: {
-            primary: "ui-icon-gear"
-        },
-        text: false
-    });
-
-    $('#run-search').button({
-        icons: {
-            primary: 'ui-icon-search'
-        },
-        text: false
-    });
-
-    $('#markieren').button({
-        icons: {
-            primary: 'ui-icon-search'
-        }
-    }).click(function() {
-        // popup
-    });
+    <script type="text/javascript">
 
 
-    $('#n-list').notes();
+        $(document).ready(function () {
 
-});
+            $('#n-editor').editor();
 
-</script>
+            // --------------------
+
+            $('#create-note').button({
+                icons: {
+                    primary: 'ui-icon-plus'
+                },
+                label: 'New Note'
+            }).click(function () {
+                        $('#n-editor').editor('create');
+                    });
+
+            $('#action-settings').button({
+                icons: {
+                    primary: "ui-icon-gear"
+                },
+                text: false
+            });
+
+            $('#run-search').button({
+                icons: {
+                    primary: 'ui-icon-search'
+                },
+                text: false
+            });
+
+            $('#markieren').button({
+                icons: {
+                    primary: 'ui-icon-search'
+                }
+            }).click(function () {
+                        // popup
+                    });
+
+
+            $('#n-list').notes();
+
+        });
+
+    </script>
 
 </head>
 <body>
@@ -188,7 +187,8 @@ $(document).ready(function () {
 
                         <div>
                             <label for="field-url">URL</label>
-                            <input id="field-url" class="ui-widget-content ui-corner-all" type="text" name="url"/><a id="markieren">Markieren</a>
+                            <input id="field-url" class="ui-widget-content ui-corner-all" type="text" name="url"/><a
+                                id="markieren">Markieren</a>
                         </div>
 
                         <div id="progress">
@@ -202,6 +202,7 @@ $(document).ready(function () {
 
                         <div id="attachments" style="display: none">
                             <label style="float: left">Files</label>
+
                             <div id="n-attachments">
 
                             </div>
@@ -246,7 +247,7 @@ $(document).ready(function () {
 
     <div id="dialog-promt-new-name" title="Rename Note">
         <label for="name">Rename to</label>
-        <input type="text" name="name" id="name" class="text ui-widget-content ui-corner-all" />
+        <input type="text" name="name" id="name" class="text ui-widget-content ui-corner-all"/>
     </div>
 
     <jsp:include page="inc-templates.jsp"/>

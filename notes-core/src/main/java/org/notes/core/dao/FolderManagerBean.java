@@ -53,6 +53,8 @@ public class FolderManagerBean implements FolderManager {
 
             folder = _create(folder);
 
+            database.setSelectedFolderId(folder.getId());
+
             database.getFolders().add(folder);
             em.merge(database);
 
