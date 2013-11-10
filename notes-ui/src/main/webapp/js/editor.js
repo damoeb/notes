@@ -59,10 +59,9 @@ $.widget("notes.editor", {
 
     loadDocument: function (kind, model) {
         var $this = this;
-        var template = $(_.template($(kind.templateId).html(), model.toJSON()));
-        $this.element.empty().append(template);
 
-        $this[kind.fnLoad](template, model);
+        console.log(model.get('folderId'));
+        $this[kind.fnLoad](model);
     },
 
     createDocument: function () {
@@ -70,49 +69,70 @@ $.widget("notes.editor", {
         var kindString = 'text';
 
         var kind = $this.kinds[kindString.toLowerCase()];
-        $this.loadDocument(kind, new kind.model({}));
+        $this.loadDocument(kind, new kind.model({
+            folderId: $('#tree-view').treeView('selectedFolder')
+        }));
     },
 
     // -- TEXT EDITOR --------------------------------------------------------------------------------------------------
 
-    _loadTextEditor: function (template, model) {
+    // todo: models to models.js
+    // listener for changes
+
+    _loadTextEditor: function (model) {
         var $this = this;
-        template.find('#close-view').button().click(function () {
-            // todo close
-            $this._syncTextModel(template, model);
-        });
-        template.find('#maximize-view').button().click(function () {
-            model.destroy();
-            $this._unloadTextEditor(template, model);
-            $this._refreshListAfterModelUpdate(model);
-        });
-        template.find('#safe-doc').button().click(function () {
-            $this._syncTextModel(template, model)
-        });
-        template.find('#delete-doc').button().parent().buttonset();
+
+        var fieldTitle = $('<input/>', {class: 'ui-widget-content ui-corner-all', type: 'text', value: model.get('title')});
+        var fieldText = $('<textarea/>', {class: 'ui-widget-content ui-corner-all', type: 'text', value: model.get('text')});
+
+        var target = $this.element.empty().show().addClass('container');
+
+        var header = $('<div/>', {class: 'row'}).append(
+                $('<button/>').button({
+                    label: 'Close',
+                    icons: {
+                        primary: 'ui-icon-arrowreturn-1-w'
+                    }
+                }).click(
+                    function () {
+                        model.set('title', fieldTitle.val());
+                        model.set('text', fieldText.val());
+                        model.save(null, {success: function () {
+
+                            $('#document-list-view').documentListView('updateDocument', model);
+
+                        }});
+
+                        $this._unloadTextEditor(model);
+                    }
+                )
+            ).append(
+                $('<button/>', {style: 'float:right'}).button({
+                    label: 'Maximize',
+                    icons: {
+                        primary: 'ui-icon-arrow-4-diag'
+                    }
+                }).click(
+                    function () {
+                        // todo implement
+                    }
+                )
+            );
+        target.append(
+                header
+            ).append(
+                $('<div/>', {class: 'row'}).append(
+                    fieldTitle
+                )
+            ).append(
+                $('<div/>', {class: 'row'}).append(
+                    fieldText
+                )
+            );
     },
 
-    _syncTextModel: function (template, model) {
-        var $this = this;
-        model.set('title', template.find('#field-title').val());
-        model.set('text', template.find('#field-text').val());
-
-        var folderId = $('#tree-view').treeView('selectedFolder');
-        console.log('in ' + folderId);
-        model.set('folderId', folderId);
-
-        model.save();
-        $this._refreshListAfterModelUpdate(model);
-    },
-
-    _refreshListAfterModelUpdate: function (model) {
-
-    },
-
-    _unloadTextEditor: function (template, model) {
-        template.find('#close-view').button('destroy');
-        template.find('#maximize-view').button('destroy');
-        template.find('#safe-doc').button('destroy');
-        template.find('#delete-doc').button('destroy');
+    _unloadTextEditor: function (model) {
+        // todo implement
+        this.element.hide();
     }
 });

@@ -114,6 +114,10 @@ body {
     width: 10px;
 }
 
+.clear {
+    clear: both;
+}
+
 .bar {
     height: 5px;
     background: black;
@@ -165,6 +169,41 @@ table.dataTable tr.even {
     display: none;
 }
 
+/* groups on sidebar */
+.group-header {
+    margin-top: 5px;
+    margin-bottom: 2px;
+    font-weight: bold;
+}
+
+.group-icon {
+    float: left;
+}
+
+.group-doc-count {
+    float: right;
+    padding: 1px 3px;
+    background-color: #d9d9d9;
+    font-weight: bold;
+}
+
+.group-label {
+    float: left;
+}
+
+.group-item {
+    padding: 2px 3px;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+/*
+.group-item.active {
+    background-color: #6792ff;
+    color: white;
+}
+*/
+
 /* menu */
 .menu-group {
     float: left;
@@ -172,8 +211,8 @@ table.dataTable tr.even {
 }
 
 /* document list */
-.document-list-view {
-    min-height: 400px;
+#document-list-view {
+    min-height: 200px;
 }
 
 .doc-title {
@@ -186,6 +225,7 @@ table.dataTable tr.even {
     overflow: hidden;
     color: #666666;
     white-space: nowrap;
+    width: 200px;
 }
 
 TR.active TD,
