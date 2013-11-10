@@ -1,7 +1,8 @@
 $.widget("notes.treeItem", {
     options: {
         model: null,
-        selectedId: null
+        selectedId: null,
+        refresh: null
     },
     _create: function () {
         this._reset();
@@ -28,8 +29,43 @@ $.widget("notes.treeItem", {
 
         // -- Render Item ----------------------------------------------------------------------------------------------
 
+        // my change
+        model.change(function () {
+            $this.refresh();
+        });
+
+        $this.models = [];
+
+        var documentCount = model.get('documentCount');
+
+        if (!model.get('leaf')) {
+
+            var children = model.get('children');
+            for (var i = 0; i < children.length; i++) {
+
+                var childModel = new notes.model.folder(children[i]);
+                $this.models.push(childModel);
+
+                documentCount += childModel.get('documentCount');
+
+                $('<div/>')
+                    .appendTo(childrenWrapper)
+                    .treeItem({
+                        model: childModel,
+                        selectedId: selectedId,
+                        refresh: function () {
+                            $this.refresh();
+                        }
+                    });
+            }
+        }
+
         var elName = $('<div/>', {class: 'name', text: model.get('name') });
-        var elDocCount = $('<div/>', {class: 'doc-count', text: '(' + model.get('documentCount') + ')'});
+        var elDocCount = $('<div/>', {class: 'doc-count', text: '(' + documentCount + ')'});
+
+        $this.elName = elName;
+        $this.elDocCount = elDocCount;
+
         item.append(
                 $this._createExpandChildrenButton(model, childrenWrapper))
             .append(
@@ -43,28 +79,12 @@ $.widget("notes.treeItem", {
             ).append(
                 $('<div/>', {style: 'clear:both'})
             );
-        model.change(function () {
-            elName.text(this.get('name'));
-            elDocCount.text('(' + this.get('documentCount') + ')');
-        });
 
-
-        if (!model.get('leaf')) {
-
-            $.each(model.get('children'), function (index, folderData) {
-
-                $('<div/>')
-                    .appendTo(childrenWrapper)
-                    .treeItem({
-                        model: new notes.model.folder(folderData),
-                        selectedId: selectedId
-                    });
-            });
-        }
-
-        if (model.get('documentCount') == 0) {
+        if (documentCount == 0) {
             item.addClass('empty');
         }
+
+        $('#tree-view').treeView('addDescendant', model.get('id'), $this);
 
         // -- Events ---------------------------------------------------------------------------------------------------
 
@@ -87,6 +107,32 @@ $.widget("notes.treeItem", {
                 }
                 //$(ui.draggable).remove();
             }});
+
+    },
+
+    model: function () {
+        return this.options.model;
+    },
+
+    /**
+     * render again
+     */
+    refresh: function () {
+        var $this = this;
+
+        var model = $this.options.model;
+
+        $this.elName.text(model.get('name'));
+
+        var docCount = model.get('documentCount');
+        for (var i = 0; i < $this.models.length; i++) {
+            docCount += $this.models[i].get('documentCount');
+        }
+        $this.elDocCount.text('(' + docCount + ')');
+
+        if ($this.options.refresh) {
+            $this.options.refresh();
+        }
 
     },
 
@@ -160,6 +206,7 @@ $.widget("notes.treeView", {
         var $this = this;
         $this.container = {};
         $this.selectedFolderId = null;
+        $this.descendants = {};
     },
 
     _create: function () {
@@ -207,12 +254,6 @@ $.widget("notes.treeView", {
                             model: new notes.model.folder(folderJson),
                             selectedId: databaseJson.selectedFolderId
                         });
-                    /*
-                     if (folderJson.id == databaseJson.selectedFolderId) {
-                     item.treeItem('highlight');
-                     }
-                     */
-
                 });
             }
         });
@@ -222,14 +263,23 @@ $.widget("notes.treeView", {
         var $this = this;
         if (folderId) {
             $this.model.set('selectedFolderId', folderId);
-            console.log('selectedFolderId ' + $this.model.get('selectedFolderId'));
             $this.model.save();
 
         } else {
-            //return this.selectedFolderId;
             return $this.model.get('selectedFolderId');
         }
-    }
+    },
 
+    addDescendant: function (folderId, descendant) {
+        var $this = this;
+
+        console.log('add descedant ' + folderId);
+        $this.descendants[folderId] = descendant;
+    },
+
+    getItem: function (folderId) {
+        var $this = this;
+        return $this.descendants[folderId];
+    }
 
 });

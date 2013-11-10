@@ -18,12 +18,34 @@ $.widget("notes.documentListView", {
                     { 'sTitle': 'Kind', sClass: 'column-s' },
                     { 'sTitle': 'Size', sClass: 'column-m' }
                 ],
-                'fnDrawCallback': function (oSettings) {
-                    this.find('.folder-id').each(function () {
+                'fnDrawCallback': function () {
+                    var $this = this;
+                    $this.find('.folder-id').each(function () {
                         $(this).
                             removeClass('folder-id').
                             addClass('folder-id-' + $(this).text());
-                    })
+                    });
+
+                    // todo should only be done once
+                    $this.find('td')
+                        .dblclick(function () {
+                            var aPos = $this.fnGetPosition(this);
+
+                            // Get the data array for this row
+                            var aData = $this.fnGetData(aPos[0]);
+                            var documentId = aData[0];
+                            var kind = aData[3];
+
+                            // call editor
+                            $('#editor').editor('edit', documentId, kind);
+
+                        })
+                        .click(function () {
+                            // highlight
+                            $this.find('tr.active').removeClass('active');
+                            $(this).parent('tr').addClass('active');
+                        });
+
                 }
             });
     },
@@ -58,26 +80,6 @@ $.widget("notes.documentListView", {
             var dataTable = $this.table.dataTable();
             dataTable.fnClearTable();
             dataTable.fnAddData(data);
-
-            dataTable.find('td')
-                .dblclick(function () {
-                    var aPos = dataTable.fnGetPosition(this);
-
-                    // Get the data array for this row
-                    var aData = dataTable.fnGetData(aPos[0]);
-                    var documentId = aData[0];
-                    var kind = aData[3];
-
-                    // call editor
-                    $('#editor').editor('edit', documentId, kind);
-
-                })
-                .click(function () {
-                    // highlight
-                    $this.table.find('tr.active').removeClass('active');
-                    $(this).parent('tr').addClass('active');
-                });
-
             dataTable.find('tr').draggable({helper: "clone", opacity: 0.5, scope: 'folder'});
 
         });
@@ -89,7 +91,7 @@ $.widget("notes.documentListView", {
     },
     _createSizeElement: function (bytes) {
         // todo <span hidden>long</span> string
-        return notes.util.formatBytesNum(model.get('size'))
+        return notes.util.formatBytesNum(bytes)
     },
     _createTitleText: function (title, description) {
         return '<div class="doc-title">' + title + '</div><div class="doc-outline">' + description + '</div>';
@@ -111,7 +113,12 @@ $.widget("notes.documentListView", {
 
         if (element.length == 0) {
             // add line
-            dataTable.fnAddData(data)
+            dataTable.fnAddData(data);
+            var item = $('#tree-view').treeView('getItem', model.get('folderId'));
+            var model = item.model();
+            model.set('documentCount', model.get('documentCount') + 1);
+            item.refresh();
+
         } else {
             var aPos = dataTable.fnGetPosition(element[0]);
             dataTable.fnUpdate(data, aPos[0])

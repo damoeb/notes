@@ -77,7 +77,7 @@ public class DatabaseService {
                         parent.setChildren(new TreeSet(sortedByName));
                     }
                     parent.getChildren().add(f);
-                    parent.setDocumentCount(parent.getDocumentCount() + f.getDocumentCount());
+                    //parent.setDocumentCount(parent.getDocumentCount() + f.getDocumentCount());
                 }
             }
 
