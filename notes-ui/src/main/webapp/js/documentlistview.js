@@ -1,4 +1,4 @@
-$.widget("notes.documentListView", {
+$.widget("notes.documentList", {
     options: {
 
     },
@@ -114,7 +114,7 @@ $.widget("notes.documentListView", {
         if (element.length == 0) {
             // add line
             dataTable.fnAddData(data);
-            var item = $('#tree-view').treeView('getItem', model.get('folderId'));
+            var item = $('#tree-view').treeView('folder', model.get('folderId'));
             var model = item.model();
             model.set('documentCount', model.get('documentCount') + 1);
             item.refresh();

@@ -75,13 +75,16 @@
             // todo get settings
             var settings = {databaseId: 1};
 
-            $('#databases').databaseListView({
-                url: '/notes/rest/database/list'
+            $('#databases').databaseList({
+                url: '/notes/rest/database/list',
+                databaseId: settings.databaseId
             });
 
-            $('#tree-view').treeView({databaseId: settings.databaseId});
+            $('#tree-view').treeView({
+                databaseId: settings.databaseId
+            });
 
-            $('#document-list-view').documentListView();
+            $('#document-list-view').documentList();
             var editor = $('#editor').editor();
 
 

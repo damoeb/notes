@@ -85,7 +85,7 @@ $.widget("notes.editor", {
         var fieldTitle = $('<input/>', {class: 'ui-widget-content ui-corner-all', type: 'text', value: model.get('title')});
         var fieldText = $('<textarea/>', {class: 'ui-widget-content ui-corner-all', type: 'text', value: model.get('text')});
 
-        var target = $this.element.empty().show().addClass('container');
+        var target = $this.element.empty().show().addClass('container text-editor');
 
         var header = $('<div/>', {class: 'row'}).append(
                 $('<button/>').button({
@@ -99,7 +99,7 @@ $.widget("notes.editor", {
                         model.set('text', fieldText.val());
                         model.save(null, {success: function () {
 
-                            $('#document-list-view').documentListView('updateDocument', model);
+                            $('#document-list-view').documentList('updateDocument', model);
 
                         }});
 

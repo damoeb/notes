@@ -197,12 +197,9 @@ table.dataTable tr.even {
     cursor: pointer;
 }
 
-/*
-.group-item.active {
-    background-color: #6792ff;
-    color: white;
+.group-item.active DIV {
+    font-weight: bold;
 }
-*/
 
 /* menu */
 .menu-group {
@@ -326,6 +323,16 @@ TR.active TD.sorting_1 {
 .tree-menu {
     position: absolute;
     z-index: 999;
+}
+
+/* editor */
+.text-editor input {
+    width: 100%
+}
+
+.text-editor textarea {
+    width: 100%;
+    height: 50px
 }
 
 /* ==========================================================================

@@ -190,7 +190,7 @@ $.widget("notes.treeItem", {
         var $this = this;
 
         var folderId = $this.options.model.get('id');
-        $('#document-list-view').documentListView({
+        $('#document-list-view').documentList({
             folderId: folderId
         });
     }
@@ -277,7 +277,7 @@ $.widget("notes.treeView", {
         $this.descendants[folderId] = descendant;
     },
 
-    getItem: function (folderId) {
+    folder: function (folderId) {
         var $this = this;
         return $this.descendants[folderId];
     }
