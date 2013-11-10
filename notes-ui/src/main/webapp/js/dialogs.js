@@ -61,7 +61,11 @@ notes.dialog.folder = {
                         text: 'Rename',
                         click: function () {
                             model.set('name', input.val());
-                            model.save();
+                            model.save(null, {
+                                success: function () {
+                                    model.change();
+                                }
+                            });
                             $(this).dialog("close");
                         }
                     },
@@ -96,7 +100,6 @@ notes.dialog.folder = {
                             });
                             model.save(null, {
                                 success: function () {
-                                    console.log('success');
                                     $('#tree-view').treeView('reload');
                                 }
                             });

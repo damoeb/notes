@@ -19,7 +19,7 @@ import java.util.Date;
 )
 @NamedQueries({
         @NamedQuery(name = Document.QUERY_BY_ID, query = "SELECT a FROM Document a where a.id=:ID"),
-        @NamedQuery(name = Document.QUERY_REMOVE, query = "DELETE FROM Document a where a.id=:ID"),
+        @NamedQuery(name = Document.QUERY_MARK_DELETED, query = "UPDATE Document a set a.deleted = true where a.id=:ID and a.ownerId=:OWNER"),
         @NamedQuery(name = Document.QUERY_ALL, query = "SELECT a FROM Document a")
 })
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -29,7 +29,8 @@ public class Document implements Serializable {
 
     public static final String QUERY_BY_ID = "Document.QUERY_BY_ID";
     public static final String QUERY_ALL = "Document.QUERY_ALL";
-    public static final String QUERY_REMOVE = "Document.QUERY_REMOVE";
+    public static final String QUERY_MARK_DELETED = "Document.QUERY_MARK_DELETED";
+
     public static final String FK_NOTE_ID = "note_id";
 
     @Id
@@ -77,7 +78,7 @@ public class Document implements Serializable {
     private Long folderId;
 
     @Basic
-    private boolean deleted = false;
+    private boolean deleted;
 
     public Document() {
         // default

@@ -112,6 +112,7 @@ $.widget("notes.editor", {
                     }
                 }).click(function () {
                         $('#document-list-view').documentList('deleteDocument', model);
+                        // todo destory does not work
                         model.destroy();
                         $this._unloadTextEditor();
                     })

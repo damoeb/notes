@@ -218,12 +218,10 @@ table.dataTable tr.even {
 }
 
 .doc-title {
-    float: left;
     margin-right: 5px;
 }
 
 .doc-outline {
-    float: left;
     overflow: hidden;
     color: #666666;
     white-space: nowrap;

@@ -104,9 +104,11 @@ public class TextDocumentManagerBean implements TextDocumentManager {
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public TextDocument deleteDocument(TextDocument d) throws NotesException {
         try {
-            TextDocument document = getDocument(d.getId());
-            document.setDeleted(true);
-            em.merge(document);
+            Query query = em.createNamedQuery(Document.QUERY_MARK_DELETED);
+            query.setParameter("ID", d.getId());
+            query.setParameter("OWNER", 1l); // todo userId
+
+            query.executeUpdate();
 
             return d;
 

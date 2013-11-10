@@ -4,12 +4,10 @@ notes.model = {
         initialize: function () {
             this.listener = []
         },
-        change: function (callback) {
+        onChange: function (callback) {
             this.listener.push(callback);
         },
-        set: function (attributes, options) {
-            Backbone.Model.prototype.set.apply(this, arguments);
-
+        change: function () {
             var $this = this;
             if (typeof(this.listener) !== 'undefined') {
                 $.each(this.listener, function (index, callback) {

@@ -86,7 +86,7 @@ $.widget("notes.treeItem", {
         //
 
         // model change listener
-        model.change(function () {
+        model.onChange(function () {
             $this.refresh();
         });
 
@@ -130,7 +130,7 @@ $.widget("notes.treeItem", {
             $this.refresh();
         }
 
-        $('#tree-view').treeView('addDescendant', model.get('id'), $this);
+        $('#tree-view').treeView('pushFolder', $this);
 
     },
 
@@ -145,8 +145,6 @@ $.widget("notes.treeItem", {
         var $this = this;
 
         var model = $this.options.model;
-
-        console.log('refresh ' + model.get('name'));
 
         $this.elName.text(model.get('name'));
 
@@ -255,8 +253,6 @@ $.widget("notes.treeView", {
 
     reload: function () {
 
-        console.info('reload');
-
         var $this = this;
 
         $this.element.empty();
@@ -282,7 +278,8 @@ $.widget("notes.treeView", {
                     databaseId: databaseJson.id
                 }));
             });
-            $('<div/>', {class: 'group-item'}).append(
+
+            $('<div/>', {class: 'group-item active'}).append(
                     $('<div/>', {class: 'group-icon ui-icon ui-icon-clipboard'})
                 ).append(
                     $('<div/>', {text: databaseJson.name, class: 'group-label'})
@@ -322,10 +319,10 @@ $.widget("notes.treeView", {
         }
     },
 
-    addDescendant: function (folderId, descendant) {
+    pushFolder: function (treeItem) {
         var $this = this;
 
-        $this.descendants[folderId] = descendant;
+        $this.descendants[treeItem.model().get('id')] = treeItem;
     },
 
     folder: function (folderId) {
