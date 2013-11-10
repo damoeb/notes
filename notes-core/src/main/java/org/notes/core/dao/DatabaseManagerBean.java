@@ -52,6 +52,7 @@ public class DatabaseManagerBean implements DatabaseManager {
     public Database getDatabase(long databaseId) throws NotesException {
         try {
             Database database = _get(databaseId);
+            // todo only folders that are open or direct children of opened folders
             Hibernate.initialize(database.getFolders());
             return database;
 

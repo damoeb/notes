@@ -102,13 +102,13 @@ public class TextDocumentManagerBean implements TextDocumentManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public TextDocument deleteDocument(TextDocument document) throws NotesException {
+    public TextDocument deleteDocument(TextDocument d) throws NotesException {
         try {
+            TextDocument document = getDocument(d.getId());
+            document.setDeleted(true);
+            em.merge(document);
 
-            // todo implement
-            // set flag deleted, don't remove
-
-            return document;
+            return d;
 
         } catch (Throwable t) {
             throw new NotesException("delete document failed: " + t.getMessage(), t);

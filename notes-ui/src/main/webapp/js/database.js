@@ -16,9 +16,14 @@ $.widget("notes.databaseList", {
     reload: function () {
         var $this = this;
 
+        var editButton = $('<div/>', {class: 'ui-icon ui-icon-gear', style: 'float:right'}).click(function () {
+            notes.dialog.database.settings();
+        });
         var target = $this.element.empty()
             .append(
-                $('<div/>', {text: $this.options.name, class: 'group-header'})
+                $('<div/>', {text: $this.options.name, class: 'group-header'}).append(
+                    editButton
+                )
             );
 
         notes.util.jsonCall('GET', $this.options.url, null, null, function (list) {

@@ -13,7 +13,7 @@ $.widget("notes.documentList", {
                 'bPaginate': false,
                 'aoColumns': [
                     { 'sTitle': 'Id', sClass: 'column-s folder-id' },
-                    { 'sTitle': 'Name' },
+                    { 'sTitle': 'Name', sClass: 'column-text'},
                     { 'sTitle': 'Date', sClass: 'column-l' },
                     { 'sTitle': 'Kind', sClass: 'column-s' },
                     { 'sTitle': 'Size', sClass: 'column-m' }
@@ -123,6 +123,16 @@ $.widget("notes.documentList", {
             var aPos = dataTable.fnGetPosition(element[0]);
             dataTable.fnUpdate(data, aPos[0])
         }
+    },
+
+    deleteDocument: function (model) {
+        var $this = this;
+        var element = $this.table.find('.folder-id-' + model.get('id'));
+
+        var dataTable = $this.table.dataTable();
+
+        var aPos = dataTable.fnGetPosition(element[0]);
+        dataTable.fnDeleteRow(aPos[0])
     }
 
 });

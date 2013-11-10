@@ -130,6 +130,11 @@ table.dataTable tr.even {
     border-bottom: 1px solid rgba(221, 221, 221, 0.85);
 }
 
+.column-text {
+    overflow: hidden;
+    white-space: nowrap;
+}
+
 .column-1 {
     width: 10px;
 }
@@ -251,11 +256,15 @@ TR.active TD.sorting_1 {
 }
 
 /* treeview */
+.tree-root {
+    font-weight: bold;
+}
+
 .item {
     clear: both;
-    cursor: pointer;
     padding-top: 3px;
     padding-bottom: 3px;
+    cursor: default;
 }
 
 .item.empty {

@@ -156,6 +156,7 @@ public class FolderManagerBean implements FolderManager {
         } else {
             parent = _get(folder.getParentId());
             parent.setLeaf(false);
+            parent.setExpanded(true);
             em.merge(parent);
             folder.setLevel(parent.getLevel() + 1);
         }
@@ -192,6 +193,7 @@ public class FolderManagerBean implements FolderManager {
         Folder folder = _get(newFolder.getId());
         folder.setName(newFolder.getName());
         folder.setModified(new Date());
+        folder.setExpanded(newFolder.isExpanded());
         em.merge(folder);
         em.flush();
         em.refresh(folder);

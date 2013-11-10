@@ -15,8 +15,7 @@ $.widget("notes.editor", {
             }),
             url: '/notes/rest/document/text/${documentId}',
             templateId: '#tmpl-text-editor',
-            fnLoad: '_loadTextEditor',
-            fnUnload: '_unloadTextEditor'
+            fnLoad: '_loadTextEditor'
         }
     },
 
@@ -60,7 +59,6 @@ $.widget("notes.editor", {
     loadDocument: function (kind, model) {
         var $this = this;
 
-        console.log(model.get('folderId'));
         $this[kind.fnLoad](model);
     },
 
@@ -103,9 +101,29 @@ $.widget("notes.editor", {
 
                         }});
 
-                        $this._unloadTextEditor(model);
+                        $this._unloadTextEditor();
                     }
                 )
+            ).append(
+                $('<button/>').button({
+                    label: 'Delete',
+                    icons: {
+                        primary: 'ui-icon-trash'
+                    }
+                }).click(function () {
+                        $('#document-list-view').documentList('deleteDocument', model);
+                        model.destroy();
+                        $this._unloadTextEditor();
+                    })
+            ).append(
+                $('<button/>').button({
+                    label: 'Alarm',
+                    icons: {
+                        primary: 'ui-icon-clock'
+                    }
+                }).click(function () {
+                        // todo implement
+                    })
             ).append(
                 $('<button/>', {style: 'float:right'}).button({
                     label: 'Maximize',
@@ -131,7 +149,7 @@ $.widget("notes.editor", {
             );
     },
 
-    _unloadTextEditor: function (model) {
+    _unloadTextEditor: function () {
         // todo implement
         this.element.hide();
     }

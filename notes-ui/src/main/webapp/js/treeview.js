@@ -10,6 +10,7 @@ $.widget("notes.treeItem", {
     _reset: function () {
         this.element.empty();
         this.container = {};
+        this.documentCount = 0;
     },
     _init: function () {
         var $this = this;
@@ -27,38 +28,11 @@ $.widget("notes.treeItem", {
 
         target.append(item).append(childrenWrapper);
 
-        // -- Render Item ----------------------------------------------------------------------------------------------
-
-        // my change
-        model.change(function () {
-            $this.refresh();
-        });
-
-        $this.models = [];
+        //
+        // -- Render ---------------------------------------------------------------------------------------------------
+        //
 
         var documentCount = model.get('documentCount');
-
-        if (!model.get('leaf')) {
-
-            var children = model.get('children');
-            for (var i = 0; i < children.length; i++) {
-
-                var childModel = new notes.model.folder(children[i]);
-                $this.models.push(childModel);
-
-                documentCount += childModel.get('documentCount');
-
-                $('<div/>')
-                    .appendTo(childrenWrapper)
-                    .treeItem({
-                        model: childModel,
-                        selectedId: selectedId,
-                        refresh: function () {
-                            $this.refresh();
-                        }
-                    });
-            }
-        }
 
         var elName = $('<div/>', {class: 'name', text: model.get('name') });
         var elDocCount = $('<div/>', {class: 'doc-count', text: '(' + documentCount + ')'});
@@ -80,21 +54,55 @@ $.widget("notes.treeItem", {
                 $('<div/>', {style: 'clear:both'})
             );
 
-        if (documentCount == 0) {
-            item.addClass('empty');
+        //
+        // -- Children -------------------------------------------------------------------------------------------------
+        //
+
+        $this.children = [];
+
+        if (!model.get('leaf')) {
+
+            var children = model.get('children');
+            if (children) {
+                for (var i = 0; i < children.length; i++) {
+
+                    $this.children.push(
+                        $('<div/>')
+                            .appendTo(childrenWrapper)
+                            .treeItem({
+                                model: new notes.model.folder(children[i]),
+                                selectedId: selectedId,
+                                onRefresh: function () {
+                                    $this.refresh();
+                                }
+                            })
+                    );
+                }
+            }
         }
 
-        $('#tree-view').treeView('addDescendant', model.get('id'), $this);
-
+        //
         // -- Events ---------------------------------------------------------------------------------------------------
+        //
 
-        item.click(function () {
-            $this._highlight(item, true);
+        // model change listener
+        model.change(function () {
+            $this.refresh();
         });
 
-        if (selectedId == model.get('id')) {
-            $this._highlight(item, false);
-        }
+        // load documents
+        item.dblclick(function () {
+            $this.loadDocuments();
+
+            // sync model: selected folder in database
+            var folderId = $this.options.model.get('id');
+            $('#tree-view').treeView('selectedFolder', folderId);
+        });
+
+        // highlight
+        item.click(function () {
+            $this._highlight(item);
+        });
 
         item.draggable({containment: '#tree-view', helper: "clone", opacity: 0.5, scope: 'folder'})
             .droppable({hoverClass: 'ui-state-active', scope: 'folder', drop: function (event, ui) {
@@ -107,6 +115,22 @@ $.widget("notes.treeItem", {
                 }
                 //$(ui.draggable).remove();
             }});
+
+        //
+        // -- Triggers -------------------------------------------------------------------------------------------------
+        //
+
+        if (selectedId == model.get('id')) {
+            $this.loadDocuments();
+            $this._highlight(item);
+        }
+
+        if (model.get('leaf')) {
+            $this.documentCount = documentCount;
+            $this.refresh();
+        }
+
+        $('#tree-view').treeView('addDescendant', model.get('id'), $this);
 
     },
 
@@ -122,32 +146,39 @@ $.widget("notes.treeItem", {
 
         var model = $this.options.model;
 
+        console.log('refresh ' + model.get('name'));
+
         $this.elName.text(model.get('name'));
 
-        var docCount = model.get('documentCount');
-        for (var i = 0; i < $this.models.length; i++) {
-            docCount += $this.models[i].get('documentCount');
+        var documentCount = model.get('documentCount');
+        for (var i = 0; i < $this.children.length; i++) {
+            documentCount += $this.children[i].treeItem('getDocumentCount');
         }
-        $this.elDocCount.text('(' + docCount + ')');
 
-        if ($this.options.refresh) {
-            $this.options.refresh();
+        if (documentCount == 0) {
+            $this.elName.parent().addClass('empty');
+        } else {
+            $this.elName.parent().removeClass('empty');
+        }
+
+        $this.documentCount = documentCount;
+
+        $this.elDocCount.text('(' + documentCount + ')');
+
+        if ($this.options.onRefresh) {
+            $this.options.onRefresh();
         }
 
     },
 
-    _highlight: function (item, sync) {
-        var $this = this;
+    getDocumentCount: function () {
+        return this.documentCount;
+    },
+
+    _highlight: function (item) {
 
         $('#tree-view .active').removeClass('active');
         item.addClass('active');
-        $this.loadDocuments();
-
-        if (sync) {
-            // sync model: selected folder in database
-            var folderId = $this.options.model.get('id');
-            $('#tree-view').treeView('selectedFolder', folderId);
-        }
     },
 
     _newSettingsMenu: function (model) {
@@ -168,14 +199,15 @@ $.widget("notes.treeItem", {
                 button.addClass('ui-icon-radio-off');
             } else {
                 if (model.get('expanded')) {
-                    button.addClass('ui-icon-triangle-1-e');
-                    button.removeClass('ui-icon-triangle-1-s');
-                    children.addClass('hidden')
-                } else {
                     button.removeClass('ui-icon-triangle-1-e');
                     button.addClass('ui-icon-triangle-1-s');
-                    children.removeClass('hidden')
+                    children.removeClass('hidden');
+                } else {
+                    button.addClass('ui-icon-triangle-1-e');
+                    button.removeClass('ui-icon-triangle-1-s');
+                    children.addClass('hidden');
                 }
+                model.save();
             }
         };
         showHideChildren();
@@ -235,11 +267,32 @@ $.widget("notes.treeView", {
             var minDatabaseData = {
                 id: databaseJson.id,
                 ownerId: databaseJson.ownerId,
-                documentCount: databaseJson.documentCount,
                 name: databaseJson.name,
                 selectedFolderId: databaseJson.selectedFolderId
             };
             $this.model = new notes.model.database(minDatabaseData);
+
+
+            // -- render root ------------------------------------------------------------------------------------------
+            var root = $('<div/>').appendTo($this.element);
+
+
+            var rootSettings = $('<div/>', {class: 'ui-icon ui-icon-gear', style: 'float:right'}).click(function () {
+                notes.dialog.folder.settings(new notes.model.folder({
+                    databaseId: databaseJson.id
+                }));
+            });
+            $('<div/>', {class: 'group-item'}).append(
+                    $('<div/>', {class: 'group-icon ui-icon ui-icon-clipboard'})
+                ).append(
+                    $('<div/>', {text: databaseJson.name, class: 'group-label'})
+                ).append(
+                    rootSettings
+                ).append(
+                    $('<div/>', {class: 'clear'})
+                ).appendTo(
+                    root
+                );
 
 
             // -- render children --------------------------------------------------------------------------------------
@@ -247,9 +300,8 @@ $.widget("notes.treeView", {
             if (databaseJson.folders && databaseJson.folders.length > 0) {
 
                 $.each(databaseJson.folders, function (index, folderJson) {
-
-                    var item = $('<div/>')
-                        .appendTo($this.element)
+                    $('<div/>')
+                        .appendTo(root)
                         .treeItem({
                             model: new notes.model.folder(folderJson),
                             selectedId: databaseJson.selectedFolderId
@@ -273,7 +325,6 @@ $.widget("notes.treeView", {
     addDescendant: function (folderId, descendant) {
         var $this = this;
 
-        console.log('add descedant ' + folderId);
         $this.descendants[folderId] = descendant;
     },
 
