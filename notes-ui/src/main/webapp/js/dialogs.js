@@ -100,7 +100,7 @@ notes.dialog.folder = {
                             });
                             model.save(null, {
                                 success: function () {
-                                    $('#tree-view').treeView('reload');
+                                    $('#tree-view').directory('reload');
                                 }
                             });
                             $(this).dialog("close");

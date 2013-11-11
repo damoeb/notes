@@ -51,7 +51,8 @@
     <script src="js/editor.js"></script>
     <script src="js/documentlist.js"></script>
     <script src="js/database.js"></script>
-    <script src="js/treeview.js"></script>
+    <script src="js/folder.js"></script>
+    <script src="js/directory.js"></script>
     <script src="js/dialogs.js"></script>
     <script src="js/models.js"></script>
 
@@ -76,12 +77,10 @@
             var settings = {databaseId: 1};
 
             $('#databases').databaseList({
-                url: '/notes/rest/database/list',
-                name: 'Databases',
                 databaseId: settings.databaseId
             });
 
-            $('#tree-view').treeView({
+            $('#tree-view').directory({
                 databaseId: settings.databaseId
             });
 
@@ -198,25 +197,6 @@
 
 </div>
 
-
-<script type="text/html" id="tmpl-text-editor">
-
-    <div class="container">
-        <div class="row">
-            <button id="safe-doc">Safe</button>
-            <button id="delete-doc">Delete</button>
-            <button id="maximize-view">Maximize</button>
-            <button id="close-view">Close</button>
-        </div>
-        <div class="row"><label for="field-title">Title</label>
-            <input id="field-title" class="ui-widget-content ui-corner-all" type="text"
-                   name="title" value="<%=title %>"/></div>
-        <div class="row"><textarea type="text" name="content" id="field-text"
-                                   class="text ui-widget-content ui-corner-all"
-                                   style="width:100%; min-height:300px; padding:5px 10px;"><%=text %></textarea></div>
-    </div>
-
-</script>
 
 <div id="dialog"></div>
 

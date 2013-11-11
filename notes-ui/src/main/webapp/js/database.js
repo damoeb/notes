@@ -1,9 +1,9 @@
 $.widget("notes.databaseList", {
 
+    url: '/notes/rest/database/list',
+
     options: {
-        name: 'Group',
-        databaseId: null,
-        url: null
+        databaseId: null
     },
 
     _create: function () {
@@ -21,12 +21,12 @@ $.widget("notes.databaseList", {
         });
         var target = $this.element.empty()
             .append(
-                $('<div/>', {text: $this.options.name, class: 'group-header'}).append(
+                $('<div/>', {text: 'Databases', class: 'group-header'}).append(
                     editButton
                 )
             );
 
-        notes.util.jsonCall('GET', $this.options.url, null, null, function (list) {
+        notes.util.jsonCall('GET', $this.url, null, null, function (list) {
 
             $.each(list, function (index, json) {
 
@@ -49,7 +49,7 @@ $.widget("notes.databaseList", {
                         target.find('.active').removeClass('active');
                         $(this).addClass('active');
 
-                        $('#tree-view').treeView({databaseId: model.get('id')});
+                        $('#tree-view').directory({databaseId: model.get('id')});
                     });
 
                 if ($this.options.databaseId == model.get('id')) {

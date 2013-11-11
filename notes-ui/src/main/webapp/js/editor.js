@@ -14,7 +14,6 @@ $.widget("notes.editor", {
                 url: '/notes/rest/document/text/'
             }),
             url: '/notes/rest/document/text/${documentId}',
-            templateId: '#tmpl-text-editor',
             fnLoad: '_loadTextEditor'
         }
     },
@@ -68,7 +67,7 @@ $.widget("notes.editor", {
 
         var kind = $this.kinds[kindString.toLowerCase()];
         $this.loadDocument(kind, new kind.model({
-            folderId: $('#tree-view').treeView('selectedFolder')
+            folderId: $('#tree-view').directory('selectedFolder')
         }));
     },
 
