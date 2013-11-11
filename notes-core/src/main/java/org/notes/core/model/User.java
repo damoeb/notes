@@ -5,8 +5,8 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity(name = "User")
 @Table(name = "User")
@@ -35,7 +35,7 @@ public class User implements Serializable {
     @JsonIgnore
     @OneToMany(cascade = {}, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = User.FK_OWNER_ID)
-    private List<Document> documents = new LinkedList();
+    private Set<Document> documents = new HashSet(100);
 
     @Column(name = Account.FK_ACCOUNT_ID, insertable = false, updatable = false)
     private Long accountId;
@@ -43,12 +43,12 @@ public class User implements Serializable {
     @JsonIgnore
     @OneToMany(cascade = {}, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = User.FK_OWNER_ID)
-    private List<Database> databases = new LinkedList();
+    private Set<Database> databases = new HashSet(100);
 
     @JsonIgnore
     @OneToMany(cascade = {}, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = User.FK_OWNER_ID)
-    private List<Folder> folders = new LinkedList();
+    private Set<Folder> folders = new HashSet(100);
 
     public long getId() {
         return id;
@@ -66,11 +66,11 @@ public class User implements Serializable {
         this.username = username;
     }
 
-    public List<Document> getDocuments() {
+    public Set<Document> getDocuments() {
         return documents;
     }
 
-    public void setDocuments(List<Document> notes) {
+    public void setDocuments(Set<Document> notes) {
         this.documents = notes;
     }
 
@@ -82,19 +82,19 @@ public class User implements Serializable {
         this.accountId = accountId;
     }
 
-    public List<Database> getDatabases() {
+    public Set<Database> getDatabases() {
         return databases;
     }
 
-    public void setDatabases(List<Database> databases) {
+    public void setDatabases(Set<Database> databases) {
         this.databases = databases;
     }
 
-    public List<Folder> getFolders() {
+    public Set<Folder> getFolders() {
         return folders;
     }
 
-    public void setFolders(List<Folder> folders) {
+    public void setFolders(Set<Folder> folders) {
         this.folders = folders;
     }
 }

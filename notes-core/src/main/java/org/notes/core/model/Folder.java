@@ -4,8 +4,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import javax.persistence.*;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity(name = "Folder")
@@ -35,7 +34,7 @@ public class Folder extends Node {
 
     @OneToMany(fetch = FetchType.LAZY, cascade = {})
     @JoinColumn(name = Folder.FK_FOLDER_ID)
-    private List<Document> documents = new LinkedList();
+    private Set<Document> documents = new HashSet(100);
 
     @Transient
     private Set<Folder> children = null;
@@ -67,11 +66,11 @@ public class Folder extends Node {
         //
     }
 
-    public List<Document> getDocuments() {
+    public Set<Document> getDocuments() {
         return documents;
     }
 
-    public void setDocuments(List<Document> documents) {
+    public void setDocuments(Set<Document> documents) {
         this.documents = documents;
     }
 

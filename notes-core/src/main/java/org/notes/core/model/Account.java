@@ -5,8 +5,8 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity(name = "Account")
 @Table(name = "Account")
@@ -36,7 +36,7 @@ public class Account implements Serializable {
     @JsonIgnore
     @OneToMany(cascade = {}, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = Account.FK_ACCOUNT_ID)
-    private List<User> users = new LinkedList();
+    private Set<User> users = new HashSet(100);
 
     public Account() {
         //
@@ -66,11 +66,11 @@ public class Account implements Serializable {
         this.quota = quota;
     }
 
-    public List<User> getUsers() {
+    public Set<User> getUsers() {
         return users;
     }
 
-    public void setUsers(List<User> users) {
+    public void setUsers(Set<User> users) {
         this.users = users;
     }
 }

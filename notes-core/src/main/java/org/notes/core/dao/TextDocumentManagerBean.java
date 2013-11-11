@@ -69,6 +69,16 @@ public class TextDocumentManagerBean implements TextDocumentManager {
             folder.setDocumentCount(folder.getDocumentCount() + 1);
             em.merge(folder);
 
+            /*
+            todo add document to parents, as raw inserts
+            Folder parent = folder;
+            while((parent = parent.getParent()) != null) {
+                parent.getDocuments().add(document);
+                //parent.setDocumentCount(parent.getDocumentCount() + 1);
+                em.merge(parent);
+            }
+            */
+
             user.getDocuments().add(document);
             em.merge(user);
 
