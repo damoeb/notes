@@ -86,13 +86,25 @@ $.widget("notes.documentList", {
     },
 
     _createDateElement: function (dateString) {
-        // todo <span hidden>long</span> datestring
-        return notes.util.formatDate(dateString)
+
+        var date = new Date(dateString.replace(/ /g, 'T'));
+
+        return $('<div/>').append(
+                $('<span/>', {class: 'hidden', text: date.getTime()})
+            ).append(
+                $('<span/>', {text: notes.util.formatDate(date)})
+            ).html()
     },
+
     _createSizeElement: function (bytes) {
-        // todo <span hidden>long</span> string
-        return notes.util.formatBytesNum(bytes)
+
+        return $('<div/>').append(
+                $('<span/>', {class: 'hidden', text: bytes})
+            ).append(
+                $('<span/>', {text: notes.util.formatBytesNum(bytes)})
+            ).html()
     },
+
     _createTitleText: function (title, description) {
         return '<div class="doc-title">' + title + '</div><div class="doc-outline">' + description + '</div>';
     },

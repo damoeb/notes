@@ -128,9 +128,26 @@
             return true;
         };
 
-        this.formatDate = function (dateString) {
-            // todo implement
-            return dateString;
+        this.formatDate = function (date) {
+
+            var millis = date.getTime();
+            var now = new Date().getTime();
+
+            var offset_day = 1000 * 60 * 60 * 24;
+
+            var aDayAgoOrLess = millis + offset_day > now;
+            if (aDayAgoOrLess) {
+                return $.timeago(date);
+            }
+
+            var offset_week = offset_day * 7;
+            var aWeekAgoOrLess = millis + offset_week > now;
+            var hours = date.getHours() + ':' + (date.getMinutes() < 10 ? '0' : '') + date.getMinutes();
+            if (aWeekAgoOrLess) {
+                return $.timeago(date) + ', ' + hours;
+            }
+
+            return $.datepicker.formatDate('DD d.m.yy', date) + ' ' + hours;
         };
 
         this.formatBytesNum = function (bytes) {
