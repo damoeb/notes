@@ -67,7 +67,7 @@ $.widget("notes.editor", {
 
         var kind = $this.kinds[kindString.toLowerCase()];
         $this.loadDocument(kind, new kind.model({
-            folderId: $('#tree-view').directory('selectedFolder')
+            folderId: $('#directory').directory('selectedFolder')
         }));
     },
 

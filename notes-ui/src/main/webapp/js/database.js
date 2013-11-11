@@ -49,7 +49,7 @@ $.widget("notes.databaseList", {
                         target.find('.active').removeClass('active');
                         $(this).addClass('active');
 
-                        $('#tree-view').directory({databaseId: model.get('id')});
+                        $('#directory').directory({databaseId: model.get('id')});
                     });
 
                 if ($this.options.databaseId == model.get('id')) {

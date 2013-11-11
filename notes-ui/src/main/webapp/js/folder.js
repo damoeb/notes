@@ -23,10 +23,10 @@ $.widget("notes.folder", {
 
         // -- Structure ------------------------------------------------------------------------------------------------
 
-        var item = $('<div/>', {class: 'item level-' + model.get('level')});
+        var folder = $('<div/>', {class: 'folder level-' + model.get('level')});
         var childrenWrapper = $('<div/>', {class: 'children'});
 
-        target.append(item).append(childrenWrapper);
+        target.append(folder).append(childrenWrapper);
 
         //
         // -- Render ---------------------------------------------------------------------------------------------------
@@ -40,7 +40,7 @@ $.widget("notes.folder", {
         $this.elName = elName;
         $this.elDocCount = elDocCount;
 
-        item.append(
+        folder.append(
                 $this._createExpandChildrenButton(model, childrenWrapper))
             .append(
                 $('<div/>', {class: 'icon ui-icon ui-icon-folder-collapsed' })
@@ -66,15 +66,15 @@ $.widget("notes.folder", {
             if (children) {
                 for (var i = 0; i < children.length; i++) {
 
-                    var folder = $('<div/>')
+                    var childFolder = $('<div/>')
                             .appendTo(childrenWrapper)
                         ;
 
                     $this.children.push(
-                        folder
+                        childFolder
                     );
 
-                    folder.folder({
+                    childFolder.folder({
                         model: new notes.model.folder(children[i]),
                         selectedId: selectedId,
                         onRefresh: function () {
@@ -95,21 +95,21 @@ $.widget("notes.folder", {
         });
 
         // load documents
-        item.dblclick(function () {
+        folder.dblclick(function () {
             $this.loadDocuments();
 
             // sync model: selected folder in database
             var folderId = $this.options.model.get('id');
-            $('#tree-view').directory('selectedFolder', folderId);
+            $('#directory').directory('selectedFolder', folderId);
         });
 
         // highlight
-        item.click(function () {
-            $this._highlight(item);
+        folder.click(function () {
+            $this._highlight(folder);
         });
 
-        item.draggable({containment: '#tree-view', helper: "clone", opacity: 0.5, scope: 'folder'})
-            .droppable({hoverClass: 'ui-state-active', scope: 'folder', drop: function (event, ui) {
+        folder.draggable({containment: '#directory', helper: "clone", opacity: 0.5, scope: 'childFolder'})
+            .droppable({hoverClass: 'ui-state-active', scope: 'childFolder', drop: function (event, ui) {
                 var draggable = $(ui.draggable);
                 if (draggable.hasClass('item')) {
                     console.log('dropped folder');
@@ -126,7 +126,7 @@ $.widget("notes.folder", {
 
         if (selectedId == model.get('id')) {
             $this.loadDocuments();
-            $this._highlight(item);
+            $this._highlight(folder);
         }
 
         if (model.get('leaf')) {
@@ -134,7 +134,7 @@ $.widget("notes.folder", {
             $this.refresh();
         }
 
-        $('#tree-view').directory('pushFolder', $this);
+        $('#directory').directory('pushFolder', $this);
 
     },
 
@@ -179,7 +179,7 @@ $.widget("notes.folder", {
 
     _highlight: function (item) {
 
-        $('#tree-view .active').removeClass('active');
+        $('#directory .active').removeClass('active');
         item.addClass('active');
     },
 

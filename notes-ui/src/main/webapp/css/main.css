@@ -258,71 +258,71 @@ TR.active TD.sorting_1 {
     font-weight: bold;
 }
 
-.item {
+.folder {
     clear: both;
     padding-top: 3px;
     padding-bottom: 3px;
     cursor: default;
 }
 
-.item.empty {
+.folder.empty {
     color: #7e7e7e;
 }
 
-.item.active {
+.folder.active {
     background-color: #6792ff;
     color: white;
 }
 
-.item.active .doc-count {
+.folder.active .doc-count {
     color: #dadada;
 }
 
 /* levels indention */
-.item.level-0 {
+.folder.level-0 {
 }
 
-.item.level-1 {
+.folder.level-1 {
     padding-left: 10px;
 }
 
-.item.level-2 {
+.folder.level-2 {
     padding-left: 20px;
 }
 
-.item.level-3 {
+.folder.level-3 {
     padding-left: 30px;
 }
 
 /* edit button */
-.item>.edit {
+.folder>.edit {
     display: none;
 }
 
-.item:hover>.edit,
-.item.active>.edit {
+.folder:hover>.edit,
+.folder.active>.edit {
     display: block;
 }
 
-/* elements in item div */
-.item .toggle,
-.item .icon {
+/* elements in folder div */
+.folder .toggle,
+.folder .icon {
     float: left;
     margin-right: 5px;
 }
 
-.item .name {
+.folder .name {
     float: left;
     font-weight: bold;
 }
 
-.item .doc-count {
+.folder .doc-count {
     float: left;
     color: #7e7e7e;
     padding-left: 3px;
 }
 
-.item .edit {
+.folder .edit {
     float: right;
     margin-left: 5px;
 }
