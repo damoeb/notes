@@ -36,6 +36,11 @@ public class Folder extends Node {
     @JoinColumn(name = Folder.FK_FOLDER_ID)
     private Set<Document> documents = new HashSet(100);
 
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {})
+    @JoinTable(name = "folder2document")
+    private Set<Document> inheritedDocuments = new HashSet(100);
+
     @Transient
     private Set<Folder> children = null;
 
@@ -128,5 +133,13 @@ public class Folder extends Node {
 
     public void setExpanded(boolean expanded) {
         this.expanded = expanded;
+    }
+
+    public Set<Document> getInheritedDocuments() {
+        return inheritedDocuments;
+    }
+
+    public void setInheritedDocuments(Set<Document> inheritedDocuments) {
+        this.inheritedDocuments = inheritedDocuments;
     }
 }
