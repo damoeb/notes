@@ -12,15 +12,20 @@ $.widget("notes.documentList", {
                 'bStateSave': true,
                 'bPaginate': false,
                 'aoColumns': [
-                    { 'sTitle': 'Id', sClass: 'column-s folder-id', bVisible: false },
-                    { 'sTitle': 'Group', bVisible: false },
+                    { 'sTitle': 'Id', sClass: 'column-s folder-id' },
+                    { 'sTitle': 'Category', sClass: 'column-s' },
                     { 'sTitle': 'Name', sClass: 'column-text'},
                     { 'sTitle': 'Date', sClass: 'column-l' },
                     { 'sTitle': 'Kind', sClass: 'column-s' },
                     { 'sTitle': 'Size', sClass: 'column-m' }
                 ],
                 'fnRowCallback': function (nRow, aData, iDisplayIndex) {
-                    // todo move folder-id logics to here
+
+                    $(nRow).find('.folder-id').each(function () {
+                        $(this).
+                            removeClass('folder-id').
+                            addClass('folder-id-' + $(this).text());
+                    });
 
                     if (aData[1] == 'related') {
                         $(nRow).addClass('document-related');
@@ -29,11 +34,6 @@ $.widget("notes.documentList", {
                 },
                 'fnDrawCallback': function () {
                     var $this = this;
-                    $this.find('.folder-id').each(function () {
-                        $(this).
-                            removeClass('folder-id').
-                            addClass('folder-id-' + $(this).text());
-                    });
 
                     // todo should only be done once
                     $this.find('td')
@@ -70,7 +70,7 @@ $.widget("notes.documentList", {
         var sources = [
             {
                 url: '/notes/rest/folder/${folderId}/documents',
-                group: 'root',
+                group: '',
                 params: {'${folderId}': folderId}
             },
             {

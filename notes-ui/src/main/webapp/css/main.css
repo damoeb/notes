@@ -154,7 +154,7 @@ table.dataTable tr.even {
 /* row of related doc */
 table.dataTable tr.odd.document-related,
 table.dataTable tr.even.document-related {
-    background-color: #c7c9ff;
+    background-color: #c7c9ff !important;;
 }
 
 /* dialog */
