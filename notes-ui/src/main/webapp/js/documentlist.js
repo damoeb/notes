@@ -12,12 +12,21 @@ $.widget("notes.documentList", {
                 'bStateSave': true,
                 'bPaginate': false,
                 'aoColumns': [
-                    { 'sTitle': 'Id', sClass: 'column-s folder-id' },
+                    { 'sTitle': 'Id', sClass: 'column-s folder-id', bVisible: false },
+                    { 'sTitle': 'Group', bVisible: false },
                     { 'sTitle': 'Name', sClass: 'column-text'},
                     { 'sTitle': 'Date', sClass: 'column-l' },
                     { 'sTitle': 'Kind', sClass: 'column-s' },
                     { 'sTitle': 'Size', sClass: 'column-m' }
                 ],
+                'fnRowCallback': function (nRow, aData, iDisplayIndex) {
+                    // todo move folder-id logics to here
+
+                    if (aData[1] == 'related') {
+                        $(nRow).addClass('document-related');
+                    }
+                    return nRow;
+                },
                 'fnDrawCallback': function () {
                     var $this = this;
                     $this.find('.folder-id').each(function () {
@@ -34,7 +43,7 @@ $.widget("notes.documentList", {
                             // Get the data array for this row
                             var aData = $this.fnGetData(aPos[0]);
                             var documentId = aData[0];
-                            var kind = aData[3];
+                            var kind = aData[4];
 
                             // call editor
                             $('#editor').editor('edit', documentId, kind);
@@ -45,7 +54,6 @@ $.widget("notes.documentList", {
                             $this.find('tr.active').removeClass('active');
                             $(this).parent('tr').addClass('active');
                         });
-
                 }
             });
     },
@@ -59,29 +67,51 @@ $.widget("notes.documentList", {
     _fetch: function (folderId) {
         var $this = this;
 
-        notes.util.jsonCall('GET', '/notes/rest/folder/${folderId}/documents', {'${folderId}': folderId}, null, function (documents) {
-
-            var data = [];
-            for (var id in documents) {
-                var doc = documents[id];
-
-                data.push([
-                    doc.id,
-                    $this._createTitleText(doc.title, doc.outline),
-                    $this._createDateElement(doc.modified),
-                    doc.kind,
-                    $this._createSizeElement(doc.size)
-                ]);
+        var sources = [
+            {
+                url: '/notes/rest/folder/${folderId}/documents',
+                group: 'root',
+                params: {'${folderId}': folderId}
+            },
+            {
+                url: '/notes/rest/folder/${folderId}/related-documents?offset=${offset}&count=${count}',
+                group: 'related',
+                params: {
+                    '${folderId}': folderId,
+                    '${offset}': '0',
+                    '${count}': 100
+                }
             }
+        ];
 
-            $this.table.find('td').unbind('dblclick');
-            // todo $this.table.find('tr').draggable('destroy');
+        $this.table.dataTable().fnClearTable();
 
-            var dataTable = $this.table.dataTable();
-            dataTable.fnClearTable();
-            dataTable.fnAddData(data);
-            dataTable.find('tr').draggable({helper: "clone", opacity: 0.5, scope: 'folder'});
+        $.each(sources, function (index, source) {
 
+            notes.util.jsonCall('GET', source.url, source.params, null, function (documents) {
+
+                var data = [];
+                for (var id in documents) {
+                    var doc = documents[id];
+
+                    data.push([
+                        doc.id,
+                        source.group,
+                        $this._createTitleText(doc.title, doc.outline),
+                        $this._createDateElement(doc.modified),
+                        doc.kind,
+                        $this._createSizeElement(doc.size)
+                    ]);
+                }
+
+                $this.table.find('td').unbind('dblclick');
+                // todo $this.table.find('tr').draggable('destroy');
+
+                var dataTable = $this.table.dataTable();
+                dataTable.fnAddData(data);
+                dataTable.find('tr').draggable({helper: "clone", opacity: 0.5, scope: 'folder'});
+
+            });
         });
     },
 
@@ -117,6 +147,7 @@ $.widget("notes.documentList", {
 
         var data = [
             model.get('id'),
+            'root',
             $this._createTitleText(model.get('title'), model.get('outline')),
             $this._createDateElement(model.get('modified')),
             model.get('kind'),

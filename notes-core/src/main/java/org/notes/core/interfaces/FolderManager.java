@@ -19,4 +19,6 @@ public interface FolderManager {
     Folder updateFolder(Folder folder) throws NotesException;
 
     List<Document> getDocuments(Long folderId) throws NotesException;
+
+    List<Document> getRelatedDocuments(Long folderId, int offset, int count) throws NotesException;
 }

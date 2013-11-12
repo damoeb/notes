@@ -123,34 +123,38 @@ body {
     background: black;
 }
 
+/* document list */
+#document-list-view {
+    min-height: 300px;
+}
+
 /* datatable */
+.column-text {
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.doc-title {
+    margin-right: 5px;
+}
+
+.doc-outline {
+    overflow: hidden;
+    color: #666666;
+    white-space: nowrap;
+    width: 200px;
+}
+
 table.dataTable tr.odd,
 table.dataTable tr.even {
     background-color: rgba(243, 243, 243, 0.851) !important;
     border-bottom: 1px solid rgba(221, 221, 221, 0.85);
 }
 
-.column-text {
-    overflow: hidden;
-    white-space: nowrap;
-}
-
-.column-1 {
-    width: 10px;
-}
-
-.column-3 {
-}
-
-.column-4 {
-}
-
-.column-5 {
-}
-
-.odd .column-6,
-.even .column-6 {
-    color: #666666;
+/* row of related doc */
+table.dataTable tr.odd.document-related,
+table.dataTable tr.even.document-related {
+    background-color: #c7c9ff;
 }
 
 /* dialog */
@@ -210,22 +214,6 @@ table.dataTable tr.even {
 .menu-group {
     float: left;
     margin-right: 10px;
-}
-
-/* document list */
-#document-list-view {
-    min-height: 200px;
-}
-
-.doc-title {
-    margin-right: 5px;
-}
-
-.doc-outline {
-    overflow: hidden;
-    color: #666666;
-    white-space: nowrap;
-    width: 200px;
 }
 
 TR.active TD,

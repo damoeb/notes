@@ -1,6 +1,7 @@
 package org.notes.core.dao;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Session;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
 import org.notes.common.utils.TextUtils;
@@ -55,7 +56,14 @@ public class TextDocumentManagerBean implements TextDocumentManager {
                 throw new NotesException("folderId is null");
             }
 
-            Folder folder = folderManager.getFolder(document.getFolderId());
+            Session session = em.unwrap(Session.class);
+
+            //Folder folder = folderManager.getFolder(document.getFolderId());
+            Folder folder = (Folder) session.load(Folder.class, document.getFolderId());
+            if (folder == null) {
+                throw new NotesException(String.format("folder with id %s is null", document.getFolderId()));
+            }
+
             User user = userManager.getUser(1l); // todo userId
 
             //document.setFulltext(_getFulltext(document));
@@ -69,13 +77,11 @@ public class TextDocumentManagerBean implements TextDocumentManager {
             folder.setDocumentCount(folder.getDocumentCount() + 1);
             em.merge(folder);
 
-//            Session session = em.unwrap(Session.class);
-//
-//            //todo add document to parents, as raw inserts
-//            Folder parent = folder.getParent();
-//            while(parent != null) {
-//                session.load(Folder.class, parent.getParentId())
-//            }
+            while (folder.getParentId() != null) {
+                Folder parent = (Folder) session.load(Folder.class, folder.getParentId());
+                parent.getInheritedDocuments().add(document);
+                folder = parent;
+            }
 
             user.getDocuments().add(document);
             em.merge(user);

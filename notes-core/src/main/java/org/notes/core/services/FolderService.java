@@ -76,6 +76,23 @@ public class FolderService {
         }
     }
 
+    @GET
+    @MethodCache
+    @Path("/{id}/related-documents")
+    @Produces(MediaType.APPLICATION_JSON)
+    public NotesResponse getRelatedDocumentsInFolder(
+            @PathParam("id") long folderId,
+            @QueryParam("offset") int offset,
+            @QueryParam("count") int count
+
+    ) throws Exception {
+        try {
+            return NotesResponse.ok(folderManager.getRelatedDocuments(folderId, offset, count));
+        } catch (Exception e) {
+            return NotesResponse.error(e);
+        }
+    }
+
     @DELETE
     @MethodCache
     @Produces(MediaType.APPLICATION_JSON)

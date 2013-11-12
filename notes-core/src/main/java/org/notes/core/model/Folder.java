@@ -14,6 +14,7 @@ import java.util.Set;
 @NamedQueries({
         @NamedQuery(name = Folder.QUERY_BY_ID, query = "SELECT a FROM Folder a where a.id=:ID"),
         @NamedQuery(name = Folder.QUERY_DOCUMENTS, query = "SELECT new Document(a.id, a.title, a.outline, a.kind, a.created, a.modified) FROM Document a where a.folderId=:ID AND a.deleted=false"),
+        @NamedQuery(name = Folder.QUERY_RELATED_DOCUMENTS, query = "SELECT new Document(a.id, a.title, a.outline, a.kind, a.created, a.modified) FROM Folder f JOIN f.inheritedDocuments a WHERE f.id=:ID AND a.deleted=false"),
         @NamedQuery(name = Folder.QUERY_BY_VALUE, query = "SELECT a FROM Folder a where LOWER(a.name)=LOWER(:VAL)"),
         @NamedQuery(name = Folder.QUERY_ALL, query = "SELECT a FROM Folder a"),
         @NamedQuery(name = Folder.QUERY_USERS_NOTEBOOKS, query = "SELECT a FROM Folder a where a.ownerId=:ID and a.parentId IS NULL")
@@ -28,6 +29,7 @@ public class Folder extends Node {
     public static final String QUERY_USERS_NOTEBOOKS = "Folder.QUERY_USERS_NOTEBOOKS";
     public static final String FK_FOLDER_ID = "folder_id";
     public static final String QUERY_DOCUMENTS = "Folder.QUERY_DOCUMENTS";
+    public static final String QUERY_RELATED_DOCUMENTS = "Folder.QUERY_RELATED_DOCUMENTS";
 
     @Basic
     private Integer level = 0;
@@ -38,7 +40,7 @@ public class Folder extends Node {
 
     @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY, cascade = {})
-    @JoinTable(name = "folder2document")
+    @JoinTable(name = "folder2document", joinColumns = @JoinColumn(name = "folder_id"), inverseJoinColumns = @JoinColumn(name = "document_id"))
     private Set<Document> inheritedDocuments = new HashSet(100);
 
     @Transient
