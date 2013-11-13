@@ -1,8 +1,17 @@
 $.widget("notes.documentList", {
+    constants: {
+        doc: {
+            related: 'doc-origin-related',
+            native: 'doc-origin-native'
+        }
+    },
     options: {
 
     },
     _create: function () {
+
+        var $this = this;
+
         this.table = $('<table></table>')
             .appendTo(this.element)
             .dataTable({
@@ -11,9 +20,12 @@ $.widget("notes.documentList", {
                 'bInfo': false,
                 'bStateSave': true,
                 'bPaginate': false,
+                'aaSorting': [
+                    [ 3, 'desc' ]
+                ],
                 'aoColumns': [
                     { 'sTitle': 'Id', sClass: 'column-s folder-id' },
-                    { 'sTitle': 'Category', sClass: 'column-s' },
+                    { 'sTitle': 'Origin', sClass: 'column-s', bVisible: false },
                     { 'sTitle': 'Name', sClass: 'column-text'},
                     { 'sTitle': 'Date', sClass: 'column-l' },
                     { 'sTitle': 'Kind', sClass: 'column-s' },
@@ -21,15 +33,16 @@ $.widget("notes.documentList", {
                 ],
                 'fnRowCallback': function (nRow, aData, iDisplayIndex) {
 
-                    $(nRow).find('.folder-id').each(function () {
+                    var row = $(nRow);
+                    row.find('.folder-id').each(function () {
                         $(this).
                             removeClass('folder-id').
                             addClass('folder-id-' + $(this).text());
                     });
 
-                    if (aData[1] == 'related') {
-                        $(nRow).addClass('document-related');
-                    }
+                    // adds origin of document
+                    row.addClass(aData[1]);
+
                     return nRow;
                 },
                 'fnDrawCallback': function () {
@@ -70,12 +83,12 @@ $.widget("notes.documentList", {
         var sources = [
             {
                 url: '/notes/rest/folder/${folderId}/documents',
-                group: '',
+                origin: $this.constants.doc.native,
                 params: {'${folderId}': folderId}
             },
             {
                 url: '/notes/rest/folder/${folderId}/related-documents?offset=${offset}&count=${count}',
-                group: 'related',
+                origin: $this.constants.doc.related,
                 params: {
                     '${folderId}': folderId,
                     '${offset}': '0',
@@ -96,7 +109,7 @@ $.widget("notes.documentList", {
 
                     data.push([
                         doc.id,
-                        source.group,
+                        source.origin,
                         $this._createTitleText(doc.title, doc.outline),
                         $this._createDateElement(doc.modified),
                         doc.kind,
@@ -147,7 +160,7 @@ $.widget("notes.documentList", {
 
         var data = [
             model.get('id'),
-            'root',
+            $this.constants.doc.native,
             $this._createTitleText(model.get('title'), model.get('outline')),
             $this._createDateElement(model.get('modified')),
             model.get('kind'),

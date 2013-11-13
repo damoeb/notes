@@ -145,16 +145,27 @@ body {
     width: 200px;
 }
 
-table.dataTable tr.odd,
-table.dataTable tr.even {
-    background-color: rgba(243, 243, 243, 0.851) !important;
-    border-bottom: 1px solid rgba(221, 221, 221, 0.85);
+table.dataTable tr.odd.doc-origin-native,
+table.dataTable tr.even.doc-origin-native {
+    cursor: default;
+    background-color: transparent !important;
+    border-bottom: 1px solid #eaeaea;
+}
+
+table.dataTable tr.doc-origin-native td:first-child {
+    border-left: 3px solid #6792ff;
+}
+
+table.dataTable tr.doc-origin-related td:first-child {
+    border-left: 3px solid transparent;
 }
 
 /* row of related doc */
-table.dataTable tr.odd.document-related,
-table.dataTable tr.even.document-related {
-    background-color: #c7c9ff !important;;
+table.dataTable tr.odd.doc-origin-related,
+table.dataTable tr.even.doc-origin-related {
+    cursor: default;
+    background-color: transparent !important;
+    border-bottom: 1px solid #eaeaea;
 }
 
 /* dialog */
@@ -220,6 +231,10 @@ TR.active TD,
 TR.active TD.sorting_1 {
     background-color: #6792ff !important;
     color: white;
+}
+
+TR.active .doc-outline {
+    color: #efefef;
 }
 
 .column-s,
