@@ -24,7 +24,7 @@ $.widget("notes.documentList", {
                     [ 3, 'desc' ]
                 ],
                 'aoColumns': [
-                    { 'sTitle': 'Id', sClass: 'column-s folder-id' },
+                    { 'sTitle': 'Id', sClass: 'column-s' },
                     { 'sTitle': 'Origin', sClass: 'column-s', bVisible: false },
                     { 'sTitle': 'Name', sClass: 'column-text'},
                     { 'sTitle': 'Date', sClass: 'column-l' },
@@ -34,39 +34,30 @@ $.widget("notes.documentList", {
                 'fnRowCallback': function (nRow, aData, iDisplayIndex) {
 
                     var row = $(nRow);
-                    row.find('.folder-id').each(function () {
-                        $(this).
-                            removeClass('folder-id').
-                            addClass('folder-id-' + $(this).text());
-                    });
+
+                    row.children().first().addClass('folder-id-' + aData[0]);
 
                     // adds origin of document
                     row.addClass(aData[1]);
 
-                    return nRow;
-                },
-                'fnDrawCallback': function () {
-                    var $this = this;
 
-                    // todo should only be done once
-                    $this.find('td')
-                        .dblclick(function () {
-                            var aPos = $this.fnGetPosition(this);
+                    row.dblclick(function () {
 
-                            // Get the data array for this row
-                            var aData = $this.fnGetData(aPos[0]);
-                            var documentId = aData[0];
-                            var kind = aData[4];
+                        var documentId = aData[0];
+                        var kind = aData[4];
 
-                            // call editor
-                            $('#editor').editor('edit', documentId, kind);
+                        // call editor
+                        $('#editor').editor('edit', documentId, kind);
 
-                        })
+                    })
                         .click(function () {
                             // highlight
-                            $this.find('tr.active').removeClass('active');
-                            $(this).parent('tr').addClass('active');
+                            $this.table.find('tr.active').removeClass('active');
+                            row.addClass('active');
                         });
+
+
+                    return nRow;
                 }
             });
     },

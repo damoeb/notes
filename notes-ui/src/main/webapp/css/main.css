@@ -131,7 +131,6 @@ body {
 /* datatable */
 .column-text {
     overflow: hidden;
-    white-space: nowrap;
 }
 
 .doc-title {
@@ -139,7 +138,6 @@ body {
 }
 
 .doc-outline {
-    overflow: hidden;
     color: #666666;
     white-space: nowrap;
     width: 200px;

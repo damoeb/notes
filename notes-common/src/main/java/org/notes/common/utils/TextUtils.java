@@ -1,6 +1,10 @@
 package org.notes.common.utils;
 
 import org.apache.commons.lang.StringUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.safety.Cleaner;
+import org.jsoup.safety.Whitelist;
 import org.notes.common.configuration.Configuration;
 
 import java.util.regex.Matcher;
@@ -37,6 +41,9 @@ public final class TextUtils {
             outline.append(normalized);
         }
 
-        return StringUtils.substring(outline.toString(), 0, outlineSize);
+        Cleaner cleaner = new Cleaner(Whitelist.simpleText());
+        Document cleaned = cleaner.clean(Jsoup.parse(outline.toString()));
+
+        return StringUtils.substring(cleaned.html(), 0, outlineSize);
     }
 }

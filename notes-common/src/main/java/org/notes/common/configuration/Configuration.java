@@ -37,7 +37,6 @@ public class Configuration {
         public static final int OUTLINE_LENGTH = 256;
     }
 
-
     private static Configuration getInstance() {
         if (singleton == null) {
             singleton = new Configuration();
