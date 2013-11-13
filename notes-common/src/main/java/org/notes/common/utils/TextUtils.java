@@ -44,6 +44,7 @@ public final class TextUtils {
         Cleaner cleaner = new Cleaner(Whitelist.simpleText());
         Document cleaned = cleaner.clean(Jsoup.parse(outline.toString()));
 
-        return StringUtils.substring(cleaned.html(), 0, outlineSize);
+        // todo check
+        return StringUtils.substring(cleaned.body().html(), 0, outlineSize);
     }
 }

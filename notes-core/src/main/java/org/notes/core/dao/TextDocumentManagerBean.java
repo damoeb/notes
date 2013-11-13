@@ -68,6 +68,7 @@ public class TextDocumentManagerBean implements TextDocumentManager {
 
             //document.setFulltext(_getFulltext(document));
             document.setOutline(_getOutline(document));
+            document.setProgress(_getProgress(document));
 
             em.persist(document);
             em.flush();
@@ -157,6 +158,8 @@ public class TextDocumentManagerBean implements TextDocumentManager {
             oldDoc.setText(newDoc.getText());
 
             oldDoc.setOutline(_getOutline(oldDoc));
+            // todo check if working
+            oldDoc.setProgress(_getProgress(oldDoc));
 
             em.merge(oldDoc);
             em.flush();
@@ -169,6 +172,14 @@ public class TextDocumentManagerBean implements TextDocumentManager {
         } catch (Throwable t) {
             throw new NotesException("update document failed: " + t.getMessage(), t);
         }
+    }
+
+    private Integer _getProgress(TextDocument document) {
+        Integer progress = document.getProgress();
+        if (progress == null || progress <= 0 || progress > 100) {
+            return null;
+        }
+        return progress;
     }
 
 }

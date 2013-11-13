@@ -84,6 +84,30 @@ $.widget("notes.editor", {
 
         var target = $this.element.empty().show().addClass('container text-editor');
 
+
+        // todo fix slider, does not appear as intendet
+        var value = model.has('progress') ? model.get('progress') : 0;
+        var slider = $('<div/>').slider({
+            range: "min",
+            value: value,
+            min: 0,
+            max: 100,
+            slide: function (event, ui) {
+                console.log(ui.value);
+                model.set('progress', ui.value);
+            }
+        });
+
+        var progress = $('<div/>', {class: 'row'}).append(
+                $('<label/>', {text: 'Progress'})
+            ).append(
+                slider
+            );
+        if (value <= 0) {
+            //progress.hide();
+        }
+
+
         var header = $('<div/>', {class: 'row'}).append(
                 $('<button/>').button({
                     label: 'Close',
@@ -117,9 +141,18 @@ $.widget("notes.editor", {
                     })
             ).append(
                 $('<button/>').button({
-                    label: 'Alarm',
+                    label: 'Reminder',
                     icons: {
                         primary: 'ui-icon-clock'
+                    }
+                }).click(function () {
+                        progress.slideToggle();
+                    })
+            ).append(
+                $('<button/>').button({
+                    label: 'Progress',
+                    icons: {
+                        primary: 'ui-icon-signal'
                     }
                 }).click(function () {
                         // todo implement
@@ -138,6 +171,8 @@ $.widget("notes.editor", {
             );
         target.append(
                 header
+            ).append(
+                progress
             ).append(
                 $('<div/>', {class: 'row'}).append(
                     fieldTitle

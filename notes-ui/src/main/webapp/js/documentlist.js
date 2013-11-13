@@ -64,8 +64,9 @@ $.widget("notes.documentList", {
     _init: function () {
         var $this = this;
 
-        if ($this.options.folderId && $this.options.folderId > 0) {
-            $this._fetch($this.options.folderId);
+        var folderId = $this.options.folderId;
+        if (folderId && folderId > 0) {
+            $this._fetch(folderId);
         }
     },
     _fetch: function (folderId) {
@@ -101,7 +102,7 @@ $.widget("notes.documentList", {
                     data.push([
                         doc.id,
                         source.origin,
-                        $this._createTitleText(doc.title, doc.outline),
+                        $this._createTitleText(doc),
                         $this._createDateElement(doc.modified),
                         doc.kind,
                         $this._createSizeElement(doc.size)
@@ -139,8 +140,14 @@ $.widget("notes.documentList", {
             ).html()
     },
 
-    _createTitleText: function (title, description) {
-        return '<div class="doc-title">' + title + '</div><div class="doc-outline">' + description + '</div>';
+    _createTitleText: function (document) {
+        var text = '<div class="doc-title">' + document.title + '</div><div class="doc-outline">' + document.outline + '</div>';
+
+        if (document.progress) {
+            text += '<div style="height:4px; background-color:#cccccc; width:46%; margin-top:5px" class="ui-corner-all"></div>';
+        }
+
+        return text;
     },
 
     updateDocument: function (model) {
@@ -152,7 +159,10 @@ $.widget("notes.documentList", {
         var data = [
             model.get('id'),
             $this.constants.doc.native,
-            $this._createTitleText(model.get('title'), model.get('outline')),
+            $this._createTitleText({
+                title: model.get('title'),
+                outline: model.get('outline')
+            }),
             $this._createDateElement(model.get('modified')),
             model.get('kind'),
             $this._createSizeElement(model.get('size'))

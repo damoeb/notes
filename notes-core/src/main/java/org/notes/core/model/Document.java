@@ -78,17 +78,21 @@ public class Document implements Serializable {
     private Long folderId;
 
     @Basic
+    private Integer progress;
+
+    @Basic
     private boolean deleted;
 
     public Document() {
         // default
     }
 
-    public Document(Long id, String title, String outline, Kind kind, Date created, Date modified) {
+    public Document(Long id, String title, String outline, Kind kind, Integer progress, Date created, Date modified) {
         this.id = id;
         this.title = title;
         this.outline = outline;
         this.kind = kind;
+        this.progress = progress;
         this.modified = modified;
         this.created = created;
     }
@@ -259,5 +263,13 @@ public class Document implements Serializable {
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public Integer getProgress() {
+        return progress;
+    }
+
+    public void setProgress(Integer progress) {
+        this.progress = progress;
     }
 }
