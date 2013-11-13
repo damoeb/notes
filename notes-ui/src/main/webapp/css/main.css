@@ -225,14 +225,38 @@ table.dataTable tr.even.doc-origin-related {
     margin-right: 10px;
 }
 
-TR.active TD,
-TR.active TD.sorting_1 {
+TR.highlighted TD,
+TR.highlighted TD.sorting_1 {
     background-color: #6792ff !important;
     color: white;
 }
 
-TR.active .doc-outline {
+TR.highlighted .doc-outline {
     color: #efefef;
+}
+
+TR.highlighted .progress-of-task {
+    background-color: #efefef;
+}
+
+/*
+TR.active TD,
+TR.active TD.sorting_1 {
+    background-color: #efefef !important;
+    color: #333333;
+}
+TR.active .doc-outline {
+    color: #666666;
+}
+TR.active .progress-of-task {
+    background-color:#6792ff;
+}
+*/
+
+.progress-of-task {
+    height: 4px;
+    background-color: #cccccc;
+    margin-top: 5px
 }
 
 .column-s,
@@ -334,6 +358,15 @@ TR.active .doc-outline {
 }
 
 /* editor */
+.text-editor.maximized {
+    background-color: white;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 10px 20px;
+}
+
 .text-editor input {
     width: 100%
 }
@@ -341,6 +374,14 @@ TR.active .doc-outline {
 .text-editor textarea {
     width: 100%;
     height: 150px
+}
+
+.progress-settings {
+    height: 30px;
+}
+
+.ui-slider-range {
+    background: #6792FF !important;
 }
 
 /* ==========================================================================

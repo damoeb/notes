@@ -16,22 +16,16 @@ public class Configuration {
 
     private static Configuration singleton = null;
     private PropertyResourceBundle rb;
-    public static final String CONFIG_FILE_NAME = "note.properties";
-    public static final String DATE_FORMAT_PATTERN = "yyyy-MM-dd HH:mm:ss";
+    public static final String CONFIG_FILE_NAME = "note.properties"; // todo rename to notes
+    public static final String DATE_FORMAT_PATTERN = "yyyy-MM-dd'T'HH:mmZ";
     public static final String ARRAY_DELIMITER = ",";
 
     public static final String CONTEXT_SUFFIX_KEY = "environment";
 
-    public static final String SERVICE_TWITTER_REQ_DELAY_MSEC = "service.twitter.request.delay";
-    public static final String LIMIT_MAX_COMMENT_COUNT = "limit.upper.comment.count";
-    public static final String HTTP_CLIENT_LIMIT_MAX_CONNECTIONS = "http.client.limit.max.connections";
-    public static final String HTTP_CLIENT_SO_TIMEOUT = "http.client.socket.timeout";
-    public static final String HTTP_CLIENT_CONNECTION_MANAGER_TIMEOUT = "http.client.connection.manager.timeout";
-    public static final String REQUEST_DELAY = "curator.request-delay";
+    public static final String REQUEST_DELAY = "notes.request-delay";
 
-    public static final String REST_TIME_PATTERN = "curator.rest.time_pattern";
-    public static final String VERSION = "curator.version";
-    public static final String RETRIEVE_SEEDS = "retrieve.seeds";
+    public static final String REST_TIME_PATTERN = "notes.rest.iso_time_pattern";
+    public static final String VERSION = "notes.version";
 
     public static final class Constants {
         public static final int OUTLINE_LENGTH = 256;

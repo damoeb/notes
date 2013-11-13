@@ -30,7 +30,7 @@ $.widget("notes.editor", {
 
     },
 
-    edit: function (documentId, kindString) {
+    edit: function (documentId, kindString, onUnload) {
 
         var $this = this;
 
@@ -51,14 +51,14 @@ $.widget("notes.editor", {
         notes.util.jsonCall('GET', url, {'${documentId}': documentId}, null, function (document) {
             $this.documentId = document.id;
 
-            $this.loadDocument(kind, new kind.model(document));
+            $this.loadDocument(kind, new kind.model(document), onUnload);
         });
     },
 
-    loadDocument: function (kind, model) {
+    loadDocument: function (kind, model, onUnload) {
         var $this = this;
 
-        $this[kind.fnLoad](model);
+        $this[kind.fnLoad](model, onUnload);
     },
 
     createDocument: function () {
@@ -76,37 +76,19 @@ $.widget("notes.editor", {
     // todo: models to models.js
     // listener for changes
 
-    _loadTextEditor: function (model) {
+    _loadTextEditor: function (model, onUnload) {
         var $this = this;
 
         var fieldTitle = $('<input/>', {class: 'ui-widget-content ui-corner-all', type: 'text', value: model.get('title')});
         var fieldText = $('<textarea/>', {class: 'ui-widget-content ui-corner-all', type: 'text', value: model.get('text')});
 
-        var target = $this.element.empty().show().addClass('container text-editor');
+        var target = $this.element.empty().show().
+            addClass('container text-editor').
+            // resets from maximized mode
+            removeClass('maximized').
+            addClass('row');
 
-
-        // todo fix slider, does not appear as intendet
-        var value = model.has('progress') ? model.get('progress') : 0;
-        var slider = $('<div/>').slider({
-            range: "min",
-            value: value,
-            min: 0,
-            max: 100,
-            slide: function (event, ui) {
-                console.log(ui.value);
-                model.set('progress', ui.value);
-            }
-        });
-
-        var progress = $('<div/>', {class: 'row'}).append(
-                $('<label/>', {text: 'Progress'})
-            ).append(
-                slider
-            );
-        if (value <= 0) {
-            //progress.hide();
-        }
-
+        var progressSettings = $this._newProgressSettings(model);
 
         var header = $('<div/>', {class: 'row'}).append(
                 $('<button/>').button({
@@ -124,7 +106,7 @@ $.widget("notes.editor", {
 
                         }});
 
-                        $this._unloadTextEditor();
+                        $this._unloadTextEditor(onUnload);
                     }
                 )
             ).append(
@@ -137,7 +119,7 @@ $.widget("notes.editor", {
                         $('#document-list-view').documentList('deleteDocument', model);
                         // todo destory does not work
                         model.destroy();
-                        $this._unloadTextEditor();
+                        $this._unloadTextEditor(onUnload);
                     })
             ).append(
                 $('<button/>').button({
@@ -146,7 +128,7 @@ $.widget("notes.editor", {
                         primary: 'ui-icon-clock'
                     }
                 }).click(function () {
-                        progress.slideToggle();
+                        // todo implement
                     })
             ).append(
                 $('<button/>').button({
@@ -155,7 +137,7 @@ $.widget("notes.editor", {
                         primary: 'ui-icon-signal'
                     }
                 }).click(function () {
-                        // todo implement
+                        progressSettings.slideToggle();
                     })
             ).append(
                 $('<button/>', {style: 'float:right'}).button({
@@ -165,14 +147,30 @@ $.widget("notes.editor", {
                     }
                 }).click(
                     function () {
-                        // todo implement
+
+                        if (target.hasClass('maximized')) {
+                            target.
+                                removeClass('maximized').
+                                addClass('row');
+                            $(this).
+                                button('option', 'label', 'Maximize').
+                                button('option', 'icons', { primary: 'ui-icon-arrow-4-diag'});
+
+                        } else {
+                            target.
+                                removeClass('row').
+                                addClass('maximized');
+                            $(this).
+                                button('option', 'label', 'Unmaximize').
+                                button('option', 'icons', { primary: 'ui-icon-arrow-1-se'});
+                        }
                     }
                 )
             );
         target.append(
                 header
             ).append(
-                progress
+                progressSettings
             ).append(
                 $('<div/>', {class: 'row'}).append(
                     fieldTitle
@@ -184,7 +182,56 @@ $.widget("notes.editor", {
             );
     },
 
-    _unloadTextEditor: function () {
+    _newProgressSettings: function (model) {
+
+        var precentageLabel = $('<span/>', {style: 'font-weight:bold; line-height:25px; margin: 7px'});
+
+        var __setPercentageLabel = function (value) {
+            if (value == 0) {
+                precentageLabel.text('OFF');
+            } else {
+                precentageLabel.text(value + ' %');
+            }
+        };
+
+        var value = model.has('progress') ? model.get('progress') : 0;
+        __setPercentageLabel(value);
+
+        var slider = $('<div/>', {style: 'margin:7px 0 7px 0;'}).slider({
+            range: "min",
+            value: value,
+            min: 0,
+            max: 100,
+            slide: function (event, ui) {
+                __setPercentageLabel(ui.value);
+                model.set('progress', ui.value);
+            }
+        });
+
+        var progress = $('<div/>', {class: 'row progress-settings'}).append(
+                $('<div/>', {text: 'Progress', class: 'col-lg-2'}).append(
+                    precentageLabel
+                )
+            ).append(
+                $('<div/>', {class: 'col-lg-8'}).append(
+                    slider
+                )
+            );
+
+        if (value <= 0) {
+            progress.hide();
+        }
+
+        return progress;
+
+    },
+
+    _unloadTextEditor: function (onUnload) {
+
+        if ($.isFunction(onUnload)) {
+            onUnload();
+        }
+
         // todo implement
         this.element.hide();
     }

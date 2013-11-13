@@ -9,19 +9,18 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
-/**
- * @author Daniel Scheidle, daniel.scheidle@ucs.at
- *         10:28, 28.03.12
- */
 public class CustomDateDeserializer extends JsonDeserializer<Date> {
 
-    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Configuration.getStringValue(Configuration.REST_TIME_PATTERN, "yyyy-MM-dd HH:mm"));
+    private TimeZone tz = TimeZone.getTimeZone("UTC");
+    private SimpleDateFormat dateFormat = new SimpleDateFormat(Configuration.getStringValue(Configuration.REST_TIME_PATTERN, "yyyy-MM-dd'T'HH:mmZ"));
 
     @Override
     public Date deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
         try {
-            return simpleDateFormat.parse(jsonParser.getText());
+            dateFormat.setTimeZone(tz);
+            return dateFormat.parse(jsonParser.getText());
         } catch (ParseException e) {
             throw new IOException(e);
         }

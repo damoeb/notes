@@ -47,13 +47,14 @@ $.widget("notes.documentList", {
                         var kind = aData[4];
 
                         // call editor
-                        $('#editor').editor('edit', documentId, kind);
+                        $('#editor').editor('edit', documentId, kind, function () {
 
+                        });
                     })
                         .click(function () {
                             // highlight
-                            $this.table.find('tr.active').removeClass('active');
-                            row.addClass('active');
+                            $this.table.find('tr.highlighted').removeClass('highlighted');
+                            row.addClass('highlighted');
                         });
 
 
@@ -120,9 +121,9 @@ $.widget("notes.documentList", {
         });
     },
 
-    _createDateElement: function (dateString) {
+    _createDateElement: function (isoDateString) {
 
-        var date = new Date(dateString.replace(/ /g, 'T'));
+        var date = new Date(isoDateString);
 
         return $('<div/>').append(
                 $('<span/>', {class: 'hidden', text: date.getTime()})
@@ -144,7 +145,7 @@ $.widget("notes.documentList", {
         var text = '<div class="doc-title">' + document.title + '</div><div class="doc-outline">' + document.outline + '</div>';
 
         if (document.progress) {
-            text += '<div style="height:4px; background-color:#cccccc; width:46%; margin-top:5px" class="ui-corner-all"></div>';
+            text += '<div class="progress-of-task ui-corner-all" style="width:' + parseInt(document.progress) + '%; height:4px;"></div>';
         }
 
         return text;
@@ -161,7 +162,8 @@ $.widget("notes.documentList", {
             $this.constants.doc.native,
             $this._createTitleText({
                 title: model.get('title'),
-                outline: model.get('outline')
+                outline: model.get('outline'),
+                progress: model.get('progress')
             }),
             $this._createDateElement(model.get('modified')),
             model.get('kind'),

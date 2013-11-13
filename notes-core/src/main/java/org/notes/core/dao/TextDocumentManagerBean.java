@@ -159,7 +159,7 @@ public class TextDocumentManagerBean implements TextDocumentManager {
 
             oldDoc.setOutline(_getOutline(oldDoc));
             // todo check if working
-            oldDoc.setProgress(_getProgress(oldDoc));
+            oldDoc.setProgress(_getProgress(newDoc));
 
             em.merge(oldDoc);
             em.flush();

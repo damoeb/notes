@@ -8,17 +8,16 @@ import org.notes.common.configuration.Configuration;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
-/**
- * @author Daniel Scheidle, daniel.scheidle@ucs.at
- *         09:52, 28.03.12
- */
 public class CustomDateSerializer extends JsonSerializer<Date> {
 
-    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Configuration.getStringValue(Configuration.REST_TIME_PATTERN, "yyyy-MM-dd HH:mm"));
+    private TimeZone tz = TimeZone.getTimeZone("UTC");
+    private SimpleDateFormat dateFormat = new SimpleDateFormat(Configuration.getStringValue(Configuration.REST_TIME_PATTERN, "yyyy-MM-dd'T'HH:mmZ"));
 
     @Override
     public void serialize(Date date, JsonGenerator jgen, SerializerProvider provider) throws IOException {
-        jgen.writeString(simpleDateFormat.format(date));
+        dateFormat.setTimeZone(tz);
+        jgen.writeString(dateFormat.format(date));
     }
 }
