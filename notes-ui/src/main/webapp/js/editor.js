@@ -100,10 +100,9 @@ $.widget("notes.editor", {
                     function () {
                         model.set('title', fieldTitle.val());
                         model.set('text', fieldText.val());
+
                         model.save(null, {success: function () {
-
                             $('#document-list-view').documentList('updateDocument', model);
-
                         }});
 
                         $this._unloadTextEditor(onUnload);

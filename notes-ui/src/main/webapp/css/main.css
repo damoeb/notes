@@ -166,6 +166,11 @@ table.dataTable tr.even.doc-origin-related {
     border-bottom: 1px solid #eaeaea;
 }
 
+#document-list-view table.dataTable tr.even td.sorting_1,
+#document-list-view table.dataTable tr.odd td.sorting_1 {
+    background-color: #ecf2ff;
+}
+
 /* dialog */
 .dialog {
     position: absolute;

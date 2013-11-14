@@ -10,6 +10,9 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * Common base of Folder and Database
+ */
 @MappedSuperclass
 public abstract class Node implements Serializable {
 

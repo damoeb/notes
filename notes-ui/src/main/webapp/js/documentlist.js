@@ -28,9 +28,12 @@ $.widget("notes.documentList", {
                     { 'sTitle': 'Origin', sClass: 'column-s', bVisible: false },
                     { 'sTitle': 'Name', sClass: 'column-text'},
                     { 'sTitle': 'Date', sClass: 'column-l' },
-                    { 'sTitle': 'Kind', sClass: 'column-s' },
+                    { 'sTitle': 'Kind', sClass: 'column-s center' },
                     { 'sTitle': 'Size', sClass: 'column-m' }
                 ],
+                'oLanguage': {
+                    'sEmptyTable': "My Custom Message On Empty Table"
+                },
                 'fnRowCallback': function (nRow, aData, iDisplayIndex) {
 
                     var row = $(nRow);
@@ -40,11 +43,12 @@ $.widget("notes.documentList", {
                     // adds origin of document
                     row.addClass(aData[1]);
 
-
                     row.dblclick(function () {
 
                         var documentId = aData[0];
-                        var kind = aData[4];
+                        var kind = $(aData[4]).attr('kind');
+
+                        console.log(kind);
 
                         // call editor
                         $('#editor').editor('edit', documentId, kind, function () {
@@ -105,7 +109,7 @@ $.widget("notes.documentList", {
                         source.origin,
                         $this._createTitleText(doc),
                         $this._createDateElement(doc.modified),
-                        doc.kind,
+                        $this._createKindElement(doc),
                         $this._createSizeElement(doc.size)
                     ]);
                 }
@@ -130,6 +134,19 @@ $.widget("notes.documentList", {
             ).append(
                 $('<span/>', {text: notes.util.formatDate(date)})
             ).html()
+    },
+
+    _createKindElement: function (document) {
+
+        var kind = document.kind;
+
+        if (typeof(document.reminderId) != 'undefined') {
+            kind += ' + ALARM'
+        }
+
+        return $('<div/>').append(
+            $('<span/>', {kind: document.kind, text: kind})
+        ).html()
     },
 
     _createSizeElement: function (bytes) {
@@ -166,7 +183,7 @@ $.widget("notes.documentList", {
                 progress: model.get('progress')
             }),
             $this._createDateElement(model.get('modified')),
-            model.get('kind'),
+            $this._createKindElement(model.get('kind')),
             $this._createSizeElement(model.get('size'))
         ];
 

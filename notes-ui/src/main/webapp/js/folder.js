@@ -209,7 +209,6 @@ $.widget("notes.folder", {
                     button.removeClass('ui-icon-triangle-1-s');
                     children.addClass('hidden');
                 }
-                model.save();
             }
         };
         showHideChildren();

@@ -84,6 +84,8 @@ $.widget("notes.directory", {
         var $this = this;
         if (folderId) {
             $this.model.set('selectedFolderId', folderId);
+
+            // todo improve
             $this.model.save();
 
         } else {

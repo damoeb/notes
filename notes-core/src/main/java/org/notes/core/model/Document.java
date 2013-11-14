@@ -12,6 +12,9 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * The basic document
+ */
 @SuppressWarnings("serial")
 @Entity(name = "Document")
 @Table(name = "Document"
@@ -19,7 +22,8 @@ import java.util.Date;
 )
 @NamedQueries({
         @NamedQuery(name = Document.QUERY_BY_ID, query = "SELECT a FROM Document a where a.id=:ID"),
-        @NamedQuery(name = Document.QUERY_MARK_DELETED, query = "UPDATE Document a set a.deleted = true where a.id=:ID and a.ownerId=:OWNER"),
+        @NamedQuery(name = Document.QUERY_WITH_REMINDER, query = "SELECT a FROM Document a LEFT JOIN FETCH a.reminder where a.id=:ID"),
+        @NamedQuery(name = Document.DELETE_DOCUMENT, query = "UPDATE Document a set a.deleted = true where a.id=:ID and a.ownerId=:OWNER"),
         @NamedQuery(name = Document.QUERY_ALL, query = "SELECT a FROM Document a")
 })
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -28,8 +32,9 @@ import java.util.Date;
 public class Document implements Serializable {
 
     public static final String QUERY_BY_ID = "Document.QUERY_BY_ID";
+    public static final String QUERY_WITH_REMINDER = "Document.QUERY_WITH_REMINDER";
     public static final String QUERY_ALL = "Document.QUERY_ALL";
-    public static final String QUERY_MARK_DELETED = "Document.QUERY_MARK_DELETED";
+    public static final String DELETE_DOCUMENT = "Document.DELETE_DOCUMENT";
 
     public static final String FK_NOTE_ID = "note_id";
 
@@ -83,16 +88,24 @@ public class Document implements Serializable {
     @Basic
     private boolean deleted;
 
+    @OneToOne(cascade = CascadeType.ALL, optional = true)
+    @JoinColumn(name = Reminder.FK_REMINDER_ID)
+    private Reminder reminder;
+
+    @Column(insertable = false, updatable = false, name = Reminder.FK_REMINDER_ID)
+    private Long reminderId;
+
     public Document() {
         // default
     }
 
-    public Document(Long id, String title, String outline, Kind kind, Integer progress, Date created, Date modified) {
+    public Document(Long id, String title, String outline, Kind kind, Integer progress, Long reminderId, Date modified) {
         this.id = id;
         this.title = title;
         this.outline = outline;
         this.kind = kind;
         this.progress = progress;
+        this.reminderId = reminderId;
         this.modified = modified;
         this.created = created;
     }
@@ -271,5 +284,21 @@ public class Document implements Serializable {
 
     public void setProgress(Integer progress) {
         this.progress = progress;
+    }
+
+    public Reminder getReminder() {
+        return reminder;
+    }
+
+    public void setReminder(Reminder reminder) {
+        this.reminder = reminder;
+    }
+
+    public Long getReminderId() {
+        return reminderId;
+    }
+
+    public void setReminderId(Long reminderId) {
+        this.reminderId = reminderId;
     }
 }

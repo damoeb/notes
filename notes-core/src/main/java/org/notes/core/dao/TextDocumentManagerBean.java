@@ -104,7 +104,7 @@ public class TextDocumentManagerBean implements TextDocumentManager {
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public TextDocument getDocument(long documentId) throws NotesException {
         try {
-            Query query = em.createNamedQuery(Document.QUERY_BY_ID);
+            Query query = em.createNamedQuery(Document.QUERY_WITH_REMINDER);
             query.setParameter("ID", documentId);
             return (TextDocument) query.getSingleResult();
 
@@ -119,7 +119,7 @@ public class TextDocumentManagerBean implements TextDocumentManager {
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public TextDocument deleteDocument(TextDocument d) throws NotesException {
         try {
-            Query query = em.createNamedQuery(Document.QUERY_MARK_DELETED);
+            Query query = em.createNamedQuery(Document.DELETE_DOCUMENT);
             query.setParameter("ID", d.getId());
             query.setParameter("OWNER", 1l); // todo userId
 
@@ -141,7 +141,7 @@ public class TextDocumentManagerBean implements TextDocumentManager {
                 throw new IllegalArgumentException("document is null");
             }
 
-            TextDocument oldDoc = getDocument(newDoc.getId());
+            TextDocument oldDoc = _get(newDoc.getId());
 
             // has document been moved?
             if (newDoc.getFolderId() != null && newDoc.getFolderId() != oldDoc.getFolderId()) {
@@ -182,4 +182,9 @@ public class TextDocumentManagerBean implements TextDocumentManager {
         return progress;
     }
 
+    private TextDocument _get(long documentId) throws NotesException {
+        Query query = em.createNamedQuery(Document.QUERY_BY_ID);
+        query.setParameter("ID", documentId);
+        return (TextDocument) query.getSingleResult();
+    }
 }
