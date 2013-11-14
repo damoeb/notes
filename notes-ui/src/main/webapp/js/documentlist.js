@@ -48,8 +48,6 @@ $.widget("notes.documentList", {
                         var documentId = aData[0];
                         var kind = $(aData[4]).attr('kind');
 
-                        console.log(kind);
-
                         // call editor
                         $('#editor').editor('edit', documentId, kind, function () {
 
@@ -183,7 +181,10 @@ $.widget("notes.documentList", {
                 progress: model.get('progress')
             }),
             $this._createDateElement(model.get('modified')),
-            $this._createKindElement(model.get('kind')),
+            $this._createKindElement({
+                kind: model.get('kind'),
+                reminderId: model.get('reminderId')
+            }),
             $this._createSizeElement(model.get('size'))
         ];
 

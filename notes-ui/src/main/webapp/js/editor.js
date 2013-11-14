@@ -79,7 +79,7 @@ $.widget("notes.editor", {
     _loadTextEditor: function (model, onUnload) {
         var $this = this;
 
-        var fieldTitle = $('<input/>', {class: 'ui-widget-content ui-corner-all', type: 'text', value: model.get('title')});
+        var fieldTitle = $('<input/>', {class: 'ui-widget-content ui-corner-all title', type: 'text', value: model.get('title')});
         var fieldText = $('<textarea/>', {class: 'ui-widget-content ui-corner-all', type: 'text', value: model.get('text')});
 
         var target = $this.element.empty().show().
@@ -89,6 +89,7 @@ $.widget("notes.editor", {
             addClass('row');
 
         var progressSettings = $this._newProgressSettings(model);
+        var reminderSettings = $this._newReminderSettings(model);
 
         var header = $('<div/>', {class: 'row'}).append(
                 $('<button/>').button({
@@ -127,7 +128,7 @@ $.widget("notes.editor", {
                         primary: 'ui-icon-clock'
                     }
                 }).click(function () {
-                        // todo implement
+                        reminderSettings.slideToggle();
                     })
             ).append(
                 $('<button/>').button({
@@ -169,13 +170,15 @@ $.widget("notes.editor", {
         target.append(
                 header
             ).append(
+                reminderSettings
+            ).append(
                 progressSettings
             ).append(
-                $('<div/>', {class: 'row'}).append(
+                $('<div/>', {class: 'row', style: 'margin-top:5px'}).append(
                     fieldTitle
                 )
             ).append(
-                $('<div/>', {class: 'row'}).append(
+                $('<div/>', {class: 'row', style: 'margin-top:5px'}).append(
                     fieldText
                 )
             );
@@ -207,12 +210,14 @@ $.widget("notes.editor", {
             }
         });
 
-        var progress = $('<div/>', {class: 'row progress-settings'}).append(
-                $('<div/>', {text: 'Progress', class: 'col-lg-2'}).append(
-                    precentageLabel
-                )
+        var progress = $('<div/>', {class: 'row settings'}).append(
+                $('<div/>', {style: 'float:left'}).append(
+                        $('<label/>', {text: 'Progress'})
+                    ).append(
+                        precentageLabel
+                    )
             ).append(
-                $('<div/>', {class: 'col-lg-8'}).append(
+                $('<div/>', {class: 'col-lg-5'}).append(
                     slider
                 )
             );
@@ -222,7 +227,65 @@ $.widget("notes.editor", {
         }
 
         return progress;
+    },
 
+    _newReminderSettings: function (model) {
+
+        var __updateModel = function (date, repeatString) {
+            if (date) {
+                model.set('reminder', {
+                    referenceDate: date.toISOString(),
+                    repetition: repeatString
+                });
+                console.log(model.get('reminder'))
+            }
+        }
+
+        // todo fix time format, cannot be parsed currently
+        // todo delete reminder button
+
+        var repetitionSelect = $('<select/>', {class: 'ui-corner-all'});
+
+        var datePicker = $('<input/>', {type: 'text', class: 'ui-corner-all date-field'}).
+            datepicker({
+                format: 'yy-mm-dd',
+                autoSize: true,
+                onSelect: function () {
+                    var _date = $(this).datepicker('getDate');
+                    var _val = repetitionSelect.val();
+                    __updateModel(_date, _val);
+                }
+            });
+
+        repetitionSelect.change(function () {
+            var _date = datePicker.datepicker('getDate');
+            var _val = $(this).val();
+            __updateModel(_date, _val);
+        })
+
+        var repeatModes = ['never', 'weekly', 'monthly', 'yearly'];
+        for (var i = 0; i < repeatModes.length; i++) {
+            var mode = repeatModes[i];
+            repetitionSelect.append(
+                $('<option/>', {value: mode.toUpperCase(), text: mode})
+            )
+        }
+
+        var reminder = $('<div/>', {class: 'row settings'}).append(
+                $('<div/>', {style: 'float:left'}).append(
+                    $('<span/>', {text: 'Remind me, starting on '})
+                )
+            ).append(
+                $('<div/>', {class: 'col-lg-5'}).append(
+                        datePicker
+                    ).append(
+                        $('<span/>', {text: 'repeat', style: 'margin-left:5px; margin-right:5px;'})
+                    ).append(
+                        repetitionSelect
+                    )
+            ).hide();
+
+        return reminder;
     },
 
     _unloadTextEditor: function (onUnload) {

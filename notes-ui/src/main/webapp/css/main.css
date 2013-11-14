@@ -372,7 +372,7 @@ TR.active .progress-of-task {
     padding: 10px 20px;
 }
 
-.text-editor input {
+.text-editor .title {
     width: 100%
 }
 
@@ -381,7 +381,8 @@ TR.active .progress-of-task {
     height: 150px
 }
 
-.progress-settings {
+.settings {
+    margin-top: 10px;
     height: 30px;
 }
 
