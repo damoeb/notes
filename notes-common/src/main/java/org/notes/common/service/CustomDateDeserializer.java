@@ -14,7 +14,7 @@ import java.util.TimeZone;
 public class CustomDateDeserializer extends JsonDeserializer<Date> {
 
     private TimeZone tz = TimeZone.getTimeZone("UTC");
-    private SimpleDateFormat dateFormat = new SimpleDateFormat(Configuration.getStringValue(Configuration.REST_TIME_PATTERN, "yyyy-MM-dd'T'HH:mmZ"));
+    private SimpleDateFormat dateFormat = new SimpleDateFormat(Configuration.getStringValue(Configuration.REST_TIME_PATTERN, Configuration.DATE_FORMAT_PATTERN));
 
     @Override
     public Date deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {

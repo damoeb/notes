@@ -13,7 +13,7 @@ import java.util.TimeZone;
 public class CustomDateSerializer extends JsonSerializer<Date> {
 
     private TimeZone tz = TimeZone.getTimeZone("UTC");
-    private SimpleDateFormat dateFormat = new SimpleDateFormat(Configuration.getStringValue(Configuration.REST_TIME_PATTERN, "yyyy-MM-dd'T'HH:mmZ"));
+    private SimpleDateFormat dateFormat = new SimpleDateFormat(Configuration.getStringValue(Configuration.REST_TIME_PATTERN, Configuration.DATE_FORMAT_PATTERN));
 
     @Override
     public void serialize(Date date, JsonGenerator jgen, SerializerProvider provider) throws IOException {
