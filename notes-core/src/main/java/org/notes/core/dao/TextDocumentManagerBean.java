@@ -158,7 +158,20 @@ public class TextDocumentManagerBean implements TextDocumentManager {
             oldDoc.setText(newDoc.getText());
 
             oldDoc.setOutline(_getOutline(oldDoc));
-            // todo check if working
+
+            Reminder reminder = newDoc.getReminder();
+            if (oldDoc.getReminderId() == null) {
+                oldDoc.setReminder(reminder);
+            } else {
+                if (reminder == null) {
+                    oldDoc.setReminder(null);
+
+                } else {
+                    reminder.setId(oldDoc.getReminderId());
+                    em.merge(reminder);
+                }
+            }
+
             oldDoc.setProgress(_getProgress(newDoc));
 
             em.merge(oldDoc);

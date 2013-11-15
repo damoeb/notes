@@ -73,9 +73,6 @@ $.widget("notes.editor", {
 
     // -- TEXT EDITOR --------------------------------------------------------------------------------------------------
 
-    // todo: models to models.js
-    // listener for changes
-
     _loadTextEditor: function (model, onUnload) {
         var $this = this;
 
@@ -231,20 +228,25 @@ $.widget("notes.editor", {
 
     _newReminderSettings: function (model) {
 
-        var __updateModel = function (date, repeatString) {
+        var __fnUpdateModel = function (date, repeatString) {
             if (date) {
                 model.set('reminder', {
                     referenceDate: date.toISOString(),
                     repetition: repeatString
                 });
-                console.log(model.get('reminder'))
             }
-        }
+        };
 
-        // todo fix time format, cannot be parsed currently
-        // todo delete reminder button
+        // todo reminder on/off button
 
         var repetitionSelect = $('<select/>', {class: 'ui-corner-all'});
+
+        var _defaultDate;
+        if (model.has('reminder')) {
+            _defaultDate = new Date(model.get('reminder').referenceDate);
+        } else {
+            _defaultDate = new Date();
+        }
 
         var datePicker = $('<input/>', {type: 'text', class: 'ui-corner-all date-field'}).
             datepicker({
@@ -253,37 +255,103 @@ $.widget("notes.editor", {
                 onSelect: function () {
                     var _date = $(this).datepicker('getDate');
                     var _val = repetitionSelect.val();
-                    __updateModel(_date, _val);
+                    __fnUpdateModel(_date, _val);
                 }
-            });
+            }).datepicker('setDate', _defaultDate);
 
         repetitionSelect.change(function () {
             var _date = datePicker.datepicker('getDate');
             var _val = $(this).val();
-            __updateModel(_date, _val);
-        })
+            __fnUpdateModel(_date, _val);
+        });
 
         var repeatModes = ['never', 'weekly', 'monthly', 'yearly'];
         for (var i = 0; i < repeatModes.length; i++) {
             var mode = repeatModes[i];
+            var _option = $('<option/>', {value: mode.toUpperCase(), text: mode});
+            if (model.has('reminder') && model.get('reminder').repetition.toLowerCase() == mode.toLowerCase()) {
+                _option.attr('selected', true);
+            }
+
             repetitionSelect.append(
-                $('<option/>', {value: mode.toUpperCase(), text: mode})
+                _option
             )
         }
 
+        var __fnRemoveFromModel = function () {
+            model.unset('reminder');
+            model.unset('reminderId');
+        };
+
+        var _onOffLabel = model.has('reminder') ? 'active' : 'inactive';
+        var _onOffButton = $('<div/>').button({
+            label: _onOffLabel
+        }).click(function () {
+                var label = $(this).button('option', 'label');
+                if (label == 'active') {
+                    $(this).button('option', 'label', 'inactive');
+                    __fnRemoveFromModel();
+
+                } else {
+                    $(this).button('option', 'label', 'active');
+                    __fnUpdateModel(datePicker.datepicker('getDate'), repetitionSelect.val());
+                }
+            });
+
+        var _col1 = 'col-lg-2';
+        var _col2 = 'col-lg-3';
+
         var reminder = $('<div/>', {class: 'row settings'}).append(
-                $('<div/>', {style: 'float:left'}).append(
-                    $('<span/>', {text: 'Remind me, starting on '})
+                $('<div/>', {class: 'col-lg-1'}).append(
+                    $('<label/>', {text: 'Reminder '})
                 )
             ).append(
-                $('<div/>', {class: 'col-lg-5'}).append(
-                        datePicker
+                $('<div/>', {class: 'col-lg-8'}).append(
+                        $('<div/>', {class: 'row'}).append(
+                                $('<div/>', {class: _col1, text: 'Status'})
+                            ).append(
+                                $('<div/>', {class: _col2}).append(_onOffButton)
+                            )
                     ).append(
-                        $('<span/>', {text: 'repeat', style: 'margin-left:5px; margin-right:5px;'})
+                        $('<div/>', {class: 'row'}).append(
+                                $('<div/>', {class: _col1, text: 'Next notification'})
+                            ).append(
+                                $('<div/>', {class: _col2}).append(datePicker)
+                            )
                     ).append(
-                        repetitionSelect
+                        $('<div/>', {class: 'row'}).append(
+                                $('<div/>', {class: _col1, text: 'Repeat'})
+                            ).append(
+                                $('<div/>', {class: _col2}).append(repetitionSelect)
+                            )
                     )
-            ).hide();
+            );
+
+
+        /*
+
+         .append(
+         _onOffButton
+         ).append(
+         $('<span/>', {text: ' first notification on '})
+         )
+         ).append(
+         $('<div/>', {class: 'col-lg-5'}).append(
+         datePicker
+         ).append(
+         $('<span/>', {text: 'Repeat', style: 'margin-left:5px; margin-right:5px;'})
+         ).append(
+         repetitionSelect
+         )
+         );
+
+         */
+
+        if (model.has('reminder')) {
+            reminder.show();
+        } else {
+            reminder.hide();
+        }
 
         return reminder;
     },

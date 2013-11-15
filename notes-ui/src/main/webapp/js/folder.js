@@ -52,7 +52,7 @@ $.widget("notes.folder", {
                 $this._newSettingsMenu(model)
             ).append(
                 $('<div/>', {style: 'clear:both'})
-            );
+            ).data('folderId', model.get('id'));
 
         //
         // -- Children -------------------------------------------------------------------------------------------------
@@ -108,14 +108,16 @@ $.widget("notes.folder", {
             $this._highlight(folder);
         });
 
-        folder.draggable({containment: '#directory', helper: "clone", opacity: 0.5, scope: 'childFolder'})
-            .droppable({hoverClass: 'ui-state-active', scope: 'childFolder', drop: function (event, ui) {
+        folder.draggable({containment: '#directory', helper: "clone", opacity: 0.6})
+            .droppable({hoverClass: 'ui-state-active', drop: function (event, ui) {
                 var draggable = $(ui.draggable);
-                if (draggable.hasClass('item')) {
-                    console.log('dropped folder');
+
+                if (draggable.hasClass('folder')) {
+                    // todo implement
+                    console.log('dropped folder ' + draggable.folder('model').get('id'));
                 }
                 if (draggable.is('tr')) {
-                    console.log('dropped document');
+                    console.log('dropped document ' + draggable.data('documentId'));
                 }
                 //$(ui.draggable).remove();
             }});

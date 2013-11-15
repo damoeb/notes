@@ -17,7 +17,7 @@ public class Configuration {
     private static Configuration singleton = null;
     private PropertyResourceBundle rb;
     public static final String CONFIG_FILE_NAME = "note.properties"; // todo rename to notes
-    public static final String DATE_FORMAT_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+    public static final String DATE_FORMAT_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.S'Z'";
     public static final String ARRAY_DELIMITER = ",";
 
     public static final String CONTEXT_SUFFIX_KEY = "environment";

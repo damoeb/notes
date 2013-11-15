@@ -38,10 +38,20 @@ $.widget("notes.documentList", {
 
                     var row = $(nRow);
 
-                    row.children().first().addClass('folder-id-' + aData[0]);
+                    row.children().first().addClass('document-id-' + aData[0]);
+
+                    // todo destroy this event too
+                    row.data('documentId', aData[0]);
+
+                    row.unbind('click dblclick draggable');
+
+                    row.draggable({helper: "clone", opacity: 0.6});
+
 
                     // adds origin of document
                     row.addClass(aData[1]);
+
+                    // -- Events --
 
                     row.dblclick(function () {
 
@@ -113,12 +123,9 @@ $.widget("notes.documentList", {
                 }
 
                 $this.table.find('td').unbind('dblclick');
-                // todo $this.table.find('tr').draggable('destroy');
 
                 var dataTable = $this.table.dataTable();
                 dataTable.fnAddData(data);
-                dataTable.find('tr').draggable({helper: "clone", opacity: 0.5, scope: 'folder'});
-
             });
         });
     },
@@ -168,7 +175,7 @@ $.widget("notes.documentList", {
 
     updateDocument: function (model) {
         var $this = this;
-        var element = $this.table.find('.folder-id-' + model.get('id'));
+        var element = $this.table.find('.document-id-' + model.get('id'));
 
         var dataTable = $this.table.dataTable();
 
@@ -204,7 +211,7 @@ $.widget("notes.documentList", {
 
     deleteDocument: function (model) {
         var $this = this;
-        var element = $this.table.find('.folder-id-' + model.get('id'));
+        var element = $this.table.find('.document-id-' + model.get('id'));
 
         var dataTable = $this.table.dataTable();
 

@@ -1,5 +1,6 @@
 package org.notes.core.model;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.notes.common.service.CustomDateDeserializer;
@@ -20,6 +21,7 @@ public class Reminder implements Serializable {
     public static final String QUERY_BY_ID = "Reminder.QUERY_BY_ID";
     public static final String FK_REMINDER_ID = "reminder_id";
 
+    @JsonIgnore
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
