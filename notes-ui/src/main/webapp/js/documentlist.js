@@ -21,14 +21,20 @@ $.widget("notes.documentList", {
                 'bStateSave': true,
                 'bPaginate': false,
                 'aaSorting': [
-                    [ 3, 'desc' ]
+                    [ 4, 'desc' ]
                 ],
                 'aoColumns': [
                     { 'sTitle': 'Id', sClass: 'column-s' },
                     { 'sTitle': 'Origin', sClass: 'column-s', bVisible: false },
                     { 'sTitle': 'Name', sClass: 'column-text'},
                     { 'sTitle': 'Date', sClass: 'column-l' },
-                    { 'sTitle': 'Kind', sClass: 'column-s center' }
+                    { 'sTitle': 'Kind', sClass: 'column-s center no-sort' }
+                ],
+                'aoColumnDefs': [
+                    {
+                        'bSortable': false,
+                        'aTargets': [ 'no-sort' ]
+                    }
                 ],
                 'oLanguage': {
                     'sEmptyTable': "My Custom Message On Empty Table"
@@ -52,21 +58,23 @@ $.widget("notes.documentList", {
 
                     // -- Events --
 
-                    row.dblclick(function () {
+                    row.click(function () {
 
                         var documentId = aData[0];
                         var kind = $(aData[4]).attr('kind');
 
                         // call editor
                         $('#editor').editor('edit', documentId, kind, function () {
-
+                            row.removeClass('highlighted');
                         });
-                    })
-                        .click(function () {
-                            // highlight
-                            $this.table.find('tr.highlighted').removeClass('highlighted');
-                            row.addClass('highlighted');
-                        });
+                        /*
+                         })
+                         .click(function () {
+                         */
+                        // highlight
+                        $this.table.find('tr.highlighted').removeClass('highlighted');
+                        row.addClass('highlighted');
+                    });
 
 
                     return nRow;
@@ -160,6 +168,10 @@ $.widget("notes.documentList", {
         }
 
         return text;
+    },
+
+    _createSpecialElement: function (document) {
+        return '<span class="ui-icon ui-icon-star"></span>';
     },
 
     updateDocument: function (model) {

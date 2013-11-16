@@ -106,24 +106,24 @@ $.widget("notes.editor", {
                         $this._unloadTextEditor(onUnload);
                     }
                 )
-            ).append(
-                $('<button/>').button({
-                    label: 'Star',
-                    icons: {
-                        primary: 'ui-icon-star'
-                    }
-                }).click(function () {
-                        // todo implement
-                    })
-            ).append(
-                $('<button/>').button({
-                    label: 'Pin',
-                    icons: {
-                        primary: 'ui-icon-pin-s'
-                    }
-                }).click(function () {
-                        // todo implement
-                    })
+//            ).append(
+//                $('<button/>').button({
+//                    label: 'Star',
+//                    icons: {
+//                        primary: 'ui-icon-star'
+//                    }
+//                }).click(function () {
+//                        // todo implement
+//                    })
+//            ).append(
+//                $('<button/>').button({
+//                    label: 'Pin',
+//                    icons: {
+//                        primary: 'ui-icon-pin-s'
+//                    }
+//                }).click(function () {
+//                        // todo implement
+//                    })
             ).append(
                 $('<button/>').button({
                     label: 'Delete',
@@ -332,7 +332,7 @@ $.widget("notes.editor", {
                             )
                     ).append(
                         $('<div/>', {class: 'row'}).append(
-                                $('<div/>', {class: _col1, text: 'Next notification'})
+                                $('<div/>', {class: _col1, text: 'Next'})
                             ).append(
                                 $('<div/>', {class: _col2}).append(datePicker)
                             )

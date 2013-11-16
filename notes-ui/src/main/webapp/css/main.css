@@ -152,6 +152,10 @@ body {
     width: 200px;
 }
 
+span[kind] {
+    font-size: 10px;
+}
+
 table.dataTable tr.odd.doc-origin-native,
 table.dataTable tr.even.doc-origin-native {
     cursor: default;

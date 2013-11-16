@@ -1,2 +1,2 @@
-- different documents: PDF, RTF, Text only, Web archive
-- mandatory
+- solr data is in bin/
+- make a search module

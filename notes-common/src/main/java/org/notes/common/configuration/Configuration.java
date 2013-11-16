@@ -16,7 +16,7 @@ public class Configuration {
 
     private static Configuration singleton = null;
     private PropertyResourceBundle rb;
-    public static final String CONFIG_FILE_NAME = "note.properties"; // todo rename to notes
+    public static final String CONFIG_FILE_NAME = "notes.properties";
     public static final String DATE_FORMAT_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.S'Z'";
     public static final String ARRAY_DELIMITER = ",";
 
@@ -26,6 +26,8 @@ public class Configuration {
 
     public static final String REST_TIME_PATTERN = "notes.rest.iso_time_pattern";
     public static final String VERSION = "notes.version";
+
+    public static final String SOLR_SERVER = "notes.solr-server";
 
     public static final class Constants {
         public static final int OUTLINE_LENGTH = 256;
