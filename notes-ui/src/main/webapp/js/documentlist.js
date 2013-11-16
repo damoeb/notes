@@ -28,8 +28,7 @@ $.widget("notes.documentList", {
                     { 'sTitle': 'Origin', sClass: 'column-s', bVisible: false },
                     { 'sTitle': 'Name', sClass: 'column-text'},
                     { 'sTitle': 'Date', sClass: 'column-l' },
-                    { 'sTitle': 'Kind', sClass: 'column-s center' },
-                    { 'sTitle': 'Size', sClass: 'column-m' }
+                    { 'sTitle': 'Kind', sClass: 'column-s center' }
                 ],
                 'oLanguage': {
                     'sEmptyTable': "My Custom Message On Empty Table"
@@ -117,8 +116,7 @@ $.widget("notes.documentList", {
                         source.origin,
                         $this._createTitleText(doc),
                         $this._createDateElement(doc.modified),
-                        $this._createKindElement(doc),
-                        $this._createSizeElement(doc.size)
+                        $this._createKindElement(doc)
                     ]);
                 }
 
@@ -154,15 +152,6 @@ $.widget("notes.documentList", {
         ).html()
     },
 
-    _createSizeElement: function (bytes) {
-
-        return $('<div/>').append(
-                $('<span/>', {class: 'hidden', text: bytes})
-            ).append(
-                $('<span/>', {text: notes.util.formatBytesNum(bytes)})
-            ).html()
-    },
-
     _createTitleText: function (document) {
         var text = '<div class="doc-title">' + document.title + '</div><div class="doc-outline">' + document.outline + '</div>';
 
@@ -191,8 +180,7 @@ $.widget("notes.documentList", {
             $this._createKindElement({
                 kind: model.get('kind'),
                 reminderId: model.get('reminderId')
-            }),
-            $this._createSizeElement(model.get('size'))
+            })
         ];
 
         if (element.length == 0) {

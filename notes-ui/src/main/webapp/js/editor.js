@@ -108,6 +108,24 @@ $.widget("notes.editor", {
                 )
             ).append(
                 $('<button/>').button({
+                    label: 'Star',
+                    icons: {
+                        primary: 'ui-icon-star'
+                    }
+                }).click(function () {
+                        // todo implement
+                    })
+            ).append(
+                $('<button/>').button({
+                    label: 'Pin',
+                    icons: {
+                        primary: 'ui-icon-pin-s'
+                    }
+                }).click(function () {
+                        // todo implement
+                    })
+            ).append(
+                $('<button/>').button({
                     label: 'Delete',
                     icons: {
                         primary: 'ui-icon-trash'
@@ -299,14 +317,14 @@ $.widget("notes.editor", {
             });
 
         var _col1 = 'col-lg-2';
-        var _col2 = 'col-lg-3';
+        var _col2 = 'col-lg-10';
 
         var reminder = $('<div/>', {class: 'row settings'}).append(
                 $('<div/>', {class: 'col-lg-1'}).append(
                     $('<label/>', {text: 'Reminder '})
                 )
             ).append(
-                $('<div/>', {class: 'col-lg-8'}).append(
+                $('<div/>', {class: 'col-lg-11'}).append(
                         $('<div/>', {class: 'row'}).append(
                                 $('<div/>', {class: _col1, text: 'Status'})
                             ).append(

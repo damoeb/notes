@@ -35,7 +35,7 @@ notes.dialog.folder = {
                 )
             ).append(
                 $('<div/>').append(
-                    $('<a/>', {text: 'Share'})
+                    $('<a/>', {text: 'Add to favourites'})
                 )
             ).append(
                 $('<div/>').append(
