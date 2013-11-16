@@ -27,7 +27,7 @@ public class Configuration {
     public static final String REST_TIME_PATTERN = "notes.rest.iso_time_pattern";
     public static final String VERSION = "notes.version";
 
-    public static final String SOLR_SERVER = "notes.solr-server";
+    public static final String SOLR_SERVER = "notes.solr.server-url";
 
     public static final class Constants {
         public static final int OUTLINE_LENGTH = 256;
