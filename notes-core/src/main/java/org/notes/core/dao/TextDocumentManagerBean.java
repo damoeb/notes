@@ -6,7 +6,10 @@ import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
 import org.notes.common.model.Kind;
 import org.notes.common.utils.TextUtils;
-import org.notes.core.interfaces.*;
+import org.notes.core.interfaces.FolderManager;
+import org.notes.core.interfaces.TextDocumentManager;
+import org.notes.core.interfaces.TextManager;
+import org.notes.core.interfaces.UserManager;
 import org.notes.core.model.*;
 import org.notes.search.interfaces.SearchManager;
 
@@ -32,9 +35,6 @@ public class TextDocumentManagerBean implements TextDocumentManager {
 
     @Inject
     private TextManager textManager;
-
-    @Inject
-    private FileManager fileManager;
 
     @Inject
     private FolderManager folderManager;
