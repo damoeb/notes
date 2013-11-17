@@ -135,4 +135,64 @@ notes.dialog.database = {
                 title: 'Settings'
             }));
     }
+};
+
+notes.dialog.document = {
+
+    import: function () {
+
+        var dialog = $('<div/>', {class: 'dialog'});
+
+        dialog.append(
+                $('<div/>').append(
+                    $('<a/>', {text: 'From File'}).click(
+                        function () {
+
+                            var upload = $('<input type="file" name="files[]" multiple>');
+                            dialog.append(upload);
+
+                            upload.css('visibility', 'hidden').fileupload({
+                                url: '/notes/rest/notes/file/add',
+                                dataType: 'json'
+                            });
+
+                            upload
+                                .bind('fileuploadadd', function (e) {
+                                    console.log('add file');
+                                })
+                                .bind('fileuploadsubmit', function (e, data) {
+                                    console.log('fileuploadsubmit');
+                                    //data.formData = {noteId: $this.noteId};
+                                    //$($this.options.cProgress).slideDown();
+                                })
+                                .bind('fileuploaddone', function (e, data) {
+                                    console.log('done');
+                                    /*
+                                     $.each(data.result.result, function (index, file) {
+                                     $this._addAttachment(file);
+                                     });
+
+                                     editor.find('input[type="file"]').fileupload('destroy').remove();
+                                     */
+                                });
+
+                            upload.click();
+
+                            dialog.dialog('close');
+
+                        })
+                )
+            ).append(
+                $('<div/>').append(
+                    $('<a/>', {text: 'From Web'}).click(
+                        function () {
+                            dialog.dialog('close');
+
+                        })
+                )
+
+            ).dialog($.extend({}, notes.dialog.defaults, {
+                title: 'Settings'
+            }));
+    }
 }

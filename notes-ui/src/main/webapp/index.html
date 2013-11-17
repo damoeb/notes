@@ -59,9 +59,13 @@
     <script src="js/vendor/noty/layouts/top.js"></script>
     <script src="js/vendor/noty/themes/default.js"></script>
 
+    <!-- file upload -->
+    <script src="js/fileupload/jquery.iframe-transport.js"></script>
+    <script src="js/fileupload/jquery.fileupload.js"></script>
+    <link rel="stylesheet" href="js/fileupload/jquery.fileupload-ui.css">
+
+
     <script src="js/plugins.js"></script>
-    <script src="js/ckeditor/ckeditor.js"></script>
-    <script src="js/ckeditor/adapters/jquery.js"></script>
 
     <script type="text/javascript">
         var notes = {};
@@ -127,7 +131,7 @@
                         icons: {primary: 'ui-icon-clipboard'}
                     })
                     .click(function () {
-                        // todo implement
+                        notes.dialog.document.import();
                     })
                     .parent().buttonset();
 

@@ -1,1 +1,15 @@
-- make a search module
+- related to: find documents, check literature, to find out relatedness
+
+------
+
+Skills associated with personal knowledge management.
+
+    Reflection. Continuous improvement on how the individual operates.
+    Manage learning. Manage how and when the individual learns.
+    Information literacy. Understanding what information is important and how to find unknown information.
+    Organizational skills. Personal librarianship. Personal categorization and taxonomies.
+    Networking with others. Knowing what your network of people knows. Knowing who might have additional knowledge and resources to help you
+    Researching, canvassing, paying attention, interviewing and observational 'cultural anthropology' skills
+    Communication skills. Perception, intuition, expression, visualization, and interpretation.
+    Creative skills. Imagination, pattern recognition, appreciation, innovation, inference. Understanding of complex adaptive systems.
+    Collaboration skills. Coordination, synchronization, experimentation, cooperation, and design.
