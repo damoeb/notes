@@ -27,9 +27,6 @@ public class FileReference implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(updatable = false, insertable = false, nullable = true, name = Document.FK_NOTE_ID)
-    private Long noteId;
-
     @Basic
     @Index(name = "checksumIdx")
     @Column(name = "checksum", nullable = false)
@@ -62,14 +59,6 @@ public class FileReference implements Serializable {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public Long getNoteId() {
-        return noteId;
-    }
-
-    public void setNoteId(Long noteId) {
-        this.noteId = noteId;
     }
 
     public String getReference() {

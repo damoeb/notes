@@ -11,9 +11,9 @@ $.widget("notes.editor", {
                     title: '',
                     text: ''
                 },
-                url: '/notes/rest/document/text/'
+                url: '/notes/rest/document/'
             }),
-            url: '/notes/rest/document/text/${documentId}',
+            url: '/notes/rest/document/${documentId}',
             fnLoad: '_loadTextEditor'
         }
     },

@@ -34,6 +34,9 @@ public final class TextUtils {
         int outlineSize = Configuration.Constants.OUTLINE_LENGTH;
         StringBuilder outline = new StringBuilder(outlineSize * 2);
         for (String text : texts) {
+            if (StringUtils.isBlank(text)) {
+                continue;
+            }
             if (outline.length() > outlineSize) {
                 break;
             }

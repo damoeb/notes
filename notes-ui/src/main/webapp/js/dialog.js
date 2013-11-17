@@ -148,11 +148,10 @@ notes.dialog.document = {
                     $('<a/>', {text: 'From File'}).click(
                         function () {
 
-                            var upload = $('<input type="file" name="files[]" multiple>');
-                            dialog.append(upload);
+                            var upload = $('#file-upload');
 
-                            upload.css('visibility', 'hidden').fileupload({
-                                url: '/notes/rest/notes/file/add',
+                            upload.fileupload({
+                                url: '/notes/rest/document/upload',
                                 dataType: 'json'
                             });
 
@@ -161,8 +160,9 @@ notes.dialog.document = {
                                     console.log('add file');
                                 })
                                 .bind('fileuploadsubmit', function (e, data) {
-                                    console.log('fileuploadsubmit');
-                                    //data.formData = {noteId: $this.noteId};
+                                    var _folderId = $('#directory').directory('selectedFolder');
+                                    console.log(_folderId);
+                                    data.formData = {folderId: _folderId};
                                     //$($this.options.cProgress).slideDown();
                                 })
                                 .bind('fileuploaddone', function (e, data) {

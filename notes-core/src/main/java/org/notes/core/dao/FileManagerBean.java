@@ -7,7 +7,6 @@ import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
 import org.notes.core.interfaces.FileManager;
 import org.notes.core.model.FileReference;
-import org.notes.core.request.NotesRequestException;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
@@ -28,7 +27,6 @@ import java.util.List;
 @Stateless
 @NotesInterceptors
 @TransactionAttribute(TransactionAttributeType.NEVER)
-@Deprecated
 public class FileManagerBean implements FileManager {
 
     private static final Logger LOGGER = Logger.getLogger(FileManagerBean.class);
@@ -54,13 +52,8 @@ public class FileManagerBean implements FileManager {
     }
 
     @Override
-    public File getTempRepository() {
-        return new File(System.getProperty("java.io.tmpdir"));
-    }
-
-    @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public RepositoryFile storeInRepository(FileItem item) {
+    public FileReference store(FileItem item) throws NotesException {
 
         try {
 
@@ -68,24 +61,50 @@ public class FileManagerBean implements FileManager {
                 throw new IllegalArgumentException("item is null");
             }
 
-            File fileInRepo = getNewPath(item);
+            String checksum = getChecksum(item);
+
+            FileReference reference = find(checksum, item.getSize());
+
+            if (reference != null) {
+                return reference;
+            }
+
+            reference = new FileReference();
 
             // store
+            File fileInRepo = getNewPath(checksum);
             item.write(fileInRepo);
+
+            String contentType = getContentType(fileInRepo);
+
+            if (!validContentType(contentType)) {
+                throw new IllegalArgumentException(String.format("MimeType %s is not supported", contentType));
+            }
+
             fileInRepo.setExecutable(false);
 
-            RepositoryFile repositoryFile = new RepositoryFile();
-            repositoryFile.setContentType(getContentType(fileInRepo));
-            repositoryFile.setSize(item.getSize());
-            repositoryFile.setPath(fileInRepo.getAbsolutePath());
+            reference.setContentType(contentType);
+            reference.setChecksum(checksum);
+            reference.setSize(item.getSize());
+            reference.setReference(fileInRepo.getAbsolutePath());
 
-            return repositoryFile;
+            em.persist(reference);
+            em.flush();
 
-        } catch (NotesRequestException t) {
-            throw t;
+            return reference;
+
         } catch (Throwable t) {
-            throw new NotesRequestException("upload file", t);
+            throw new NotesException("store failed: " + t.getMessage(), t);
         }
+    }
+
+    private boolean validContentType(String contentType) {
+        // todo implement
+        return true;
+    }
+
+    private String getContentType(File file) throws IOException {
+        return Files.probeContentType(Paths.get(file.toURI()));
     }
 
     @Override
@@ -117,38 +136,13 @@ public class FileManagerBean implements FileManager {
         }
     }
 
-    private String getContentType(File fileInRepo) throws IOException, InterruptedException {
-        /*
-        Process process = null;
-        String contentType = null;
-        try {
-            process = new ProcessBuilder("mimetype", "-i", "--magic-only", "--output-format", "%m", fileInRepo.getAbsolutePath()).start();
-            process.waitFor();
-            BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()));
+    private File getNewPath(String checksum) throws NoSuchAlgorithmException {
 
-            contentType = StringUtils.trim(br.readLine());
-
-            if(process.exitValue()!=0) {
-                LOGGER.error("mimetype command exists with "+process.exitValue());
-            }
-
-        } finally {
-            if(process!=null) {
-                process.getInputStream().close();
-                process.getErrorStream().close();
-                process.getOutputStream().close();
-                process.destroy();
-            }
-
-        }
-        return contentType;
-        */
-        return Files.probeContentType(Paths.get(fileInRepo.toURI()));
+        // todo: ensure it does not exist
+        return new File(getRepositoryPath() + File.separator + checksum + "." + System.currentTimeMillis() + ".dat");
     }
 
-    private File getNewPath(FileItem item) throws NoSuchAlgorithmException {
-
-        // create filename
+    private String getChecksum(FileItem item) throws NoSuchAlgorithmException {
 
         MessageDigest md = MessageDigest.getInstance("MD5");
         byte[] digest = md.digest((item.getName() + item.toString()).getBytes());
@@ -158,8 +152,6 @@ public class FileManagerBean implements FileManager {
         while (hashtext.length() < 32) {
             hashtext = "0" + hashtext;
         }
-
-        // todo: ensure it does not exist
-        return new File(getRepositoryPath() + File.separator + hashtext + "." + System.currentTimeMillis() + ".dat");
+        return hashtext;
     }
 }

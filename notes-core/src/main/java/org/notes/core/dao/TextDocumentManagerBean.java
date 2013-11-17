@@ -1,15 +1,15 @@
 package org.notes.core.dao;
 
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
 import org.notes.common.model.Kind;
 import org.notes.common.utils.TextUtils;
-import org.notes.core.interfaces.FolderManager;
-import org.notes.core.interfaces.TextDocumentManager;
-import org.notes.core.interfaces.TextManager;
-import org.notes.core.interfaces.UserManager;
+import org.notes.core.interfaces.*;
 import org.notes.core.model.*;
 import org.notes.search.interfaces.SearchManager;
 
@@ -21,6 +21,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.util.List;
 
 //@LocalBean
 @Stateless
@@ -38,6 +39,9 @@ public class TextDocumentManagerBean implements TextDocumentManager {
 
     @Inject
     private FolderManager folderManager;
+
+    @Inject
+    private FileManager fileManager;
 
     @Inject
     private UserManager userManager;
@@ -93,7 +97,7 @@ public class TextDocumentManagerBean implements TextDocumentManager {
             em.merge(user);
 
             // -- Postprocesing --
-            searchManager.index(document);
+            //searchManager.index(document);
 
             return document;
 
@@ -102,6 +106,10 @@ public class TextDocumentManagerBean implements TextDocumentManager {
         } catch (Throwable t) {
             throw new NotesException("add document", t);
         }
+    }
+
+    private Document _createDocument(Document document) {
+        return null;
     }
 
     private String _getOutline(TextDocument document) {
@@ -134,7 +142,7 @@ public class TextDocumentManagerBean implements TextDocumentManager {
             query.executeUpdate();
 
             // -- Postprocesing --
-            searchManager.delete(d);
+            //searchManager.delete(d);
 
             return d;
 
@@ -190,7 +198,7 @@ public class TextDocumentManagerBean implements TextDocumentManager {
             em.refresh(oldDoc);
 
             // -- Postprocesing --
-            searchManager.index(oldDoc);
+            //searchManager.index(oldDoc);
 
             return oldDoc;
 
@@ -199,6 +207,70 @@ public class TextDocumentManagerBean implements TextDocumentManager {
         } catch (Throwable t) {
             throw new NotesException("update document failed: " + t.getMessage(), t);
         }
+    }
+
+    @Override
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public FileDocument uploadDocument(List<FileItem> items) throws NotesException {
+        try {
+
+            FileReference reference = null;
+            String title = null;
+
+            Long folderId = NumberUtils.createLong(_getFieldValue("folderId", items));
+
+            for (FileItem item : items) {
+
+                if (!item.isFormField()) {
+
+                    try {
+                        reference = fileManager.store(item);
+                        title = item.getName();
+                        break;
+
+                    } catch (NotesException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            if (reference == null || folderId == null) {
+                throw new IllegalArgumentException("No valid files found");
+            }
+
+            FileDocument document = new FileDocument();
+            document.setKind(Kind.PDF);
+            document.setTitle(title);
+            document.setFileReference(reference);
+            document.setOutline(_getFileOutline(reference));
+
+            em.persist(document);
+            em.flush();
+
+            return document;
+
+        } catch (Throwable t) {
+            throw new NotesException("upload document failed: " + t.getMessage(), t);
+        }
+    }
+
+    private String _getFileOutline(FileReference reference) {
+        return TextUtils.toOutline(reference.getSize() + " bytes", reference.getFullText());
+    }
+
+    private String _getFieldValue(String fieldName, List<FileItem> items) throws NotesException {
+        for (FileItem item : items) {
+
+            if (item.isFormField()) {
+
+                String someFieldName = item.getFieldName();
+                if (StringUtils.equalsIgnoreCase(someFieldName, fieldName)) {
+                    return item.getString();
+                }
+            }
+        }
+
+        return null;
     }
 
     private Integer _getProgress(TextDocument document) {

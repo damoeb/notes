@@ -1,9 +1,12 @@
 package org.notes.core.interfaces;
 
+import org.apache.commons.fileupload.FileItem;
 import org.notes.common.exceptions.NotesException;
+import org.notes.core.model.FileDocument;
 import org.notes.core.model.TextDocument;
 
 import javax.ejb.Local;
+import java.util.List;
 
 @Local
 public interface TextDocumentManager extends DocumentManager<TextDocument> {
@@ -15,4 +18,6 @@ public interface TextDocumentManager extends DocumentManager<TextDocument> {
     TextDocument deleteDocument(TextDocument document) throws NotesException;
 
     TextDocument updateDocument(TextDocument document) throws NotesException;
+
+    FileDocument uploadDocument(List<FileItem> items) throws NotesException;
 }

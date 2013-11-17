@@ -1,11 +1,9 @@
 package org.notes.core.model;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity(name = "FileDocument")
 @Table(name = "FileDocument")
@@ -13,19 +11,20 @@ import javax.persistence.Table;
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class FileDocument extends Document {
 
-    @OneToOne(optional = false)
-    @JoinColumn(name = "attachment_id")
-    private Attachment attachment;
+    @JsonIgnore
+    @ManyToOne(cascade = {}, fetch = FetchType.LAZY)
+    @JoinColumn(name = FileReference.FK_FILE_REFERENCE_ID)
+    private FileReference fileReference;
 
     public FileDocument() {
         // default
     }
 
-    public Attachment getAttachment() {
-        return attachment;
+    public FileReference getFileReference() {
+        return fileReference;
     }
 
-    public void setAttachment(Attachment attachment) {
-        this.attachment = attachment;
+    public void setFileReference(FileReference fileReference) {
+        this.fileReference = fileReference;
     }
 }

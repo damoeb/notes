@@ -1,6 +1,5 @@
 package org.notes.core.model;
 
-import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
@@ -63,9 +62,6 @@ public class Document implements Serializable, Indexable {
     @Enumerated(EnumType.STRING)
     private Kind kind;
 
-    @Basic
-    private long size;
-
     @Column(nullable = false)
     @JsonDeserialize(using = CustomDateDeserializer.class)
     @JsonSerialize(using = CustomDateSerializer.class)
@@ -109,7 +105,6 @@ public class Document implements Serializable, Indexable {
         this.progress = progress;
         this.reminderId = reminderId;
         this.modified = modified;
-        this.created = created;
     }
 
     @PrePersist
@@ -120,17 +115,14 @@ public class Document implements Serializable, Indexable {
             setCreated(now);
         }
         setModified(now);
-
-        long totalSize = _getBytes(getTitle());
-        setSize(totalSize);
     }
-
-    private long _getBytes(String value) {
-        if (StringUtils.isBlank(value)) {
-            return 0;
-        }
-        return value.getBytes().length;
-    }
+//
+//    private long _getBytes(String value) {
+//        if (StringUtils.isBlank(value)) {
+//            return 0;
+//        }
+//        return value.getBytes().length;
+//    }
 
 //    todo validate fields
 //    @SuppressWarnings({"ConstantConditions"})
@@ -238,14 +230,6 @@ public class Document implements Serializable, Indexable {
 
     public void setOwnerId(Long ownerId) {
         this.ownerId = ownerId;
-    }
-
-    public long getSize() {
-        return size;
-    }
-
-    private void setSize(long size) {
-        this.size = size;
     }
 
     public Kind getKind() {
