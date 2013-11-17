@@ -164,6 +164,7 @@ notes.dialog.document = {
                                     console.log('done');
 
                                     // todo add to table
+                                    //$('#document-list-view').documentList('updateDocument', model);
                                 });
 
                             upload.click();

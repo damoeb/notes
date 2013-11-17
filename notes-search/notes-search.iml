@@ -18,10 +18,14 @@
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.6.1" level="project" />
     <orderEntry type="library" name="Maven: net.sf.ehcache:ehcache-terracotta:2.6.3" level="project" />
     <orderEntry type="library" name="Maven: org.terracotta:terracotta-toolkit-1.6-runtime:5.3.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.pdfbox:pdfbox:1.7.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.pdfbox:fontbox:1.7.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.pdfbox:jempbox:1.7.0" level="project" />
+    <orderEntry type="library" name="Maven: commons-logging:commons-logging:1.1.1" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.poi:poi:3.9" level="project" />
+    <orderEntry type="library" name="Maven: commons-codec:commons-codec:1.5" level="project" />
     <orderEntry type="library" name="Maven: org.apache.solr:solr-solrj:3.6.1" level="project" />
     <orderEntry type="library" name="Maven: commons-httpclient:commons-httpclient:3.1" level="project" />
-    <orderEntry type="library" name="Maven: commons-logging:commons-logging:1.1.1" level="project" />
-    <orderEntry type="library" name="Maven: commons-codec:commons-codec:1.4" level="project" />
     <orderEntry type="library" name="Maven: commons-io:commons-io:2.1" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.codehaus.woodstox:wstx-asl:3.2.7" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:jcl-over-slf4j:1.6.1" level="project" />

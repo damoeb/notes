@@ -1,12 +1,12 @@
-package org.notes.core.dao;
+package org.notes.search.dao;
 
 import org.apache.log4j.Logger;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
-import org.notes.core.interfaces.TextExtractor;
-import org.notes.core.interfaces.TextManager;
-import org.notes.core.model.FileReference;
-import org.notes.core.text.PdfTextExtractor;
+import org.notes.common.model.FileReference;
+import org.notes.search.interfaces.TextExtractor;
+import org.notes.search.interfaces.TextManager;
+import org.notes.search.text.PdfTextExtractor;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.*;
@@ -17,7 +17,6 @@ import java.util.concurrent.Future;
 @Singleton
 @NotesInterceptors
 @TransactionAttribute(TransactionAttributeType.NEVER)
-@Deprecated // todo move to different package
 public class TextManagerBean implements TextManager {
 
     private static final Logger LOGGER = Logger.getLogger(TextManagerBean.class);

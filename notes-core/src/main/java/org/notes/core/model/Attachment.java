@@ -3,6 +3,7 @@ package org.notes.core.model;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.hibernate.annotations.Index;
+import org.notes.common.model.FileReference;
 
 import javax.persistence.*;
 import java.io.Serializable;

@@ -5,8 +5,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
+import org.notes.common.model.FileReference;
 import org.notes.core.interfaces.FileManager;
-import org.notes.core.model.FileReference;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;

@@ -13,7 +13,7 @@
         <class>org.notes.core.model.User</class>
         <class>org.notes.core.model.Account</class>
         <class>org.notes.core.model.Reminder</class>
-        <class>org.notes.core.model.FileReference</class>
+        <class>org.notes.common.model.FileReference</class>
         <class>org.notes.core.model.Attachment</class>
         <class>org.notes.core.model.Database</class>
         <class>org.notes.core.model.Folder</class>

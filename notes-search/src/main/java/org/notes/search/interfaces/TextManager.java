@@ -1,7 +1,7 @@
-package org.notes.core.interfaces;
+package org.notes.search.interfaces;
 
 import org.notes.common.exceptions.NotesException;
-import org.notes.core.model.FileReference;
+import org.notes.common.model.FileReference;
 
 import javax.ejb.Asynchronous;
 import javax.ejb.Local;

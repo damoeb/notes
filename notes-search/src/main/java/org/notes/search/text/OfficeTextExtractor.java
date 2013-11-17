@@ -1,12 +1,12 @@
-package org.notes.core.text;
+package org.notes.search.text;
 
 import org.apache.pdfbox.cos.COSDocument;
 import org.apache.pdfbox.pdfparser.PDFParser;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.util.PDFTextStripper;
 import org.notes.common.exceptions.NotesException;
-import org.notes.core.interfaces.TextExtractor;
-import org.notes.core.model.FileReference;
+import org.notes.common.model.FileReference;
+import org.notes.search.interfaces.TextExtractor;
 
 import java.io.File;
 import java.io.FileInputStream;

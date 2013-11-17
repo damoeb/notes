@@ -7,11 +7,16 @@ import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
+import org.notes.common.model.FileReference;
 import org.notes.common.model.Kind;
 import org.notes.common.utils.TextUtils;
-import org.notes.core.interfaces.*;
+import org.notes.core.interfaces.FileManager;
+import org.notes.core.interfaces.FolderManager;
+import org.notes.core.interfaces.TextDocumentManager;
+import org.notes.core.interfaces.UserManager;
 import org.notes.core.model.*;
 import org.notes.search.interfaces.SearchManager;
+import org.notes.search.interfaces.TextManager;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -86,6 +91,7 @@ public class TextDocumentManagerBean implements TextDocumentManager {
 
         em.persist(document);
         em.flush();
+        em.refresh(document);
 
         Session session = em.unwrap(Session.class);
 
@@ -247,7 +253,11 @@ public class TextDocumentManagerBean implements TextDocumentManager {
             document.setFileReference(reference);
             document.setOutline(_getFileOutline(reference));
 
-            _createDocument(document, folderId);
+            document = (FileDocument) _createDocument(document, folderId);
+
+            // -- Postprocesing --
+
+            //searchManager.index(document);
 
             return document;
 

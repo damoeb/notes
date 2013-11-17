@@ -2,7 +2,7 @@ package org.notes.core.interfaces;
 
 import org.apache.commons.fileupload.FileItem;
 import org.notes.common.exceptions.NotesException;
-import org.notes.core.model.FileReference;
+import org.notes.common.model.FileReference;
 
 import javax.ejb.Local;
 import java.io.File;
