@@ -8,6 +8,7 @@ import org.notes.common.model.Kind;
 import org.notes.common.utils.TextUtils;
 import org.notes.core.interfaces.*;
 import org.notes.core.model.*;
+import org.notes.search.interfaces.SearchManager;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -40,6 +41,9 @@ public class TextDocumentManagerBean implements TextDocumentManager {
 
     @Inject
     private UserManager userManager;
+
+    @Inject
+    private SearchManager searchManager;
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
@@ -88,6 +92,9 @@ public class TextDocumentManagerBean implements TextDocumentManager {
             user.getDocuments().add(document);
             em.merge(user);
 
+            // -- Postprocesing --
+            searchManager.index(document);
+
             return document;
 
         } catch (NotesException e) {
@@ -125,6 +132,9 @@ public class TextDocumentManagerBean implements TextDocumentManager {
             query.setParameter("OWNER", 1l); // todo userId
 
             query.executeUpdate();
+
+            // -- Postprocesing --
+            searchManager.delete(d);
 
             return d;
 
@@ -178,6 +188,9 @@ public class TextDocumentManagerBean implements TextDocumentManager {
             em.merge(oldDoc);
             em.flush();
             em.refresh(oldDoc);
+
+            // -- Postprocesing --
+            searchManager.index(oldDoc);
 
             return oldDoc;
 

@@ -8,6 +8,7 @@ import org.notes.common.configuration.Configuration;
 import org.notes.common.model.Kind;
 import org.notes.common.service.CustomDateDeserializer;
 import org.notes.common.service.CustomDateSerializer;
+import org.notes.search.interfaces.Indexable;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -30,7 +31,7 @@ import java.util.Date;
 @Inheritance(strategy = InheritanceType.JOINED)
 //@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-public class Document implements Serializable {
+public class Document implements Serializable, Indexable {
 
     public static final String QUERY_BY_ID = "Document.QUERY_BY_ID";
     public static final String QUERY_WITH_REMINDER = "Document.QUERY_WITH_REMINDER";

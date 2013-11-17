@@ -12,7 +12,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 @NotesInterceptors
-@Path("/query")
+@Path("/search")
 public class SearchService {
 
     @Inject
