@@ -65,39 +65,13 @@ public class TextDocumentManagerBean implements TextDocumentManager {
                 throw new NotesException("folderId is null");
             }
 
-            Session session = em.unwrap(Session.class);
-
-            //Folder folder = folderManager.getFolder(document.getFolderId());
-            Folder folder = (Folder) session.load(Folder.class, document.getFolderId());
-            if (folder == null) {
-                throw new NotesException(String.format("folder with id %s is null", document.getFolderId()));
-            }
-
-            User user = userManager.getUser(1l); // todo userId
+            Long folderId = document.getFolderId();
 
             //document.setFulltext(_getFulltext(document));
             document.setOutline(_getOutline(document));
             document.setProgress(_getProgress(document));
 
-            em.persist(document);
-            em.flush();
-            em.refresh(document);
-
-            folder.getDocuments().add(document);
-            folder.setDocumentCount(folder.getDocumentCount() + 1);
-            em.merge(folder);
-
-            while (folder.getParentId() != null) {
-                Folder parent = (Folder) session.load(Folder.class, folder.getParentId());
-                parent.getInheritedDocuments().add(document);
-                folder = parent;
-            }
-
-            user.getDocuments().add(document);
-            em.merge(user);
-
-            // -- Postprocesing --
-            //searchManager.index(document);
+            _createDocument(document, folderId);
 
             return document;
 
@@ -108,8 +82,37 @@ public class TextDocumentManagerBean implements TextDocumentManager {
         }
     }
 
-    private Document _createDocument(Document document) {
-        return null;
+    private Document _createDocument(Document document, Long folderId) throws NotesException {
+
+        em.persist(document);
+        em.flush();
+
+        Session session = em.unwrap(Session.class);
+
+        //Folder folder = folderManager.getFolder(document.getFolderId());
+        Folder folder = (Folder) session.load(Folder.class, folderId);
+        if (folder == null) {
+            throw new NotesException(String.format("folder with id %s is null", document.getFolderId()));
+        }
+
+        User user = userManager.getUser(1l); // todo userId
+        folder.getDocuments().add(document);
+        folder.setDocumentCount(folder.getDocumentCount() + 1);
+        em.merge(folder);
+
+        while (folder.getParentId() != null) {
+            Folder parent = (Folder) session.load(Folder.class, folder.getParentId());
+            parent.getInheritedDocuments().add(document);
+            folder = parent;
+        }
+
+        user.getDocuments().add(document);
+        em.merge(user);
+
+        // -- Postprocesing --
+        //searchManager.index(document);
+
+        return document;
     }
 
     private String _getOutline(TextDocument document) {
@@ -244,8 +247,7 @@ public class TextDocumentManagerBean implements TextDocumentManager {
             document.setFileReference(reference);
             document.setOutline(_getFileOutline(reference));
 
-            em.persist(document);
-            em.flush();
+            _createDocument(document, folderId);
 
             return document;
 

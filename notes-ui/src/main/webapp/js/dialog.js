@@ -156,24 +156,14 @@ notes.dialog.document = {
                             });
 
                             upload
-                                .bind('fileuploadadd', function (e) {
-                                    console.log('add file');
-                                })
                                 .bind('fileuploadsubmit', function (e, data) {
                                     var _folderId = $('#directory').directory('selectedFolder');
-                                    console.log(_folderId);
                                     data.formData = {folderId: _folderId};
-                                    //$($this.options.cProgress).slideDown();
                                 })
                                 .bind('fileuploaddone', function (e, data) {
                                     console.log('done');
-                                    /*
-                                     $.each(data.result.result, function (index, file) {
-                                     $this._addAttachment(file);
-                                     });
 
-                                     editor.find('input[type="file"]').fileupload('destroy').remove();
-                                     */
+                                    // todo add to table
                                 });
 
                             upload.click();
