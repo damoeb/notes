@@ -11,10 +11,11 @@
     </parent>
 
     <groupId>org.notes</groupId>
-    <artifactId>notes-core</artifactId>
+    <artifactId>notes-search</artifactId>
     <version>0.1</version>
-    <packaging>war</packaging>
-    <name>notes core</name>
+    <!--packaging>ejb</packaging-->
+    <packaging>jar</packaging>
+    <name>notes search</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -43,28 +44,27 @@
             <scope>compile</scope>
         </dependency>
 
+        <!-- Solr -->
         <dependency>
-            <groupId>org.notes</groupId>
-            <artifactId>notes-search</artifactId>
-            <version>0.1</version>
+            <groupId>org.apache.solr</groupId>
+            <artifactId>solr-solrj</artifactId>
+            <version>3.6.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-dbcp</groupId>
+            <artifactId>commons-dbcp</artifactId>
+            <version>1.4</version>
+        </dependency>
+
+        <!-- -->
+
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.7.2</version>
             <scope>compile</scope>
         </dependency>
-
-        <!-- TEXT EXTRACTION -->
-
-        <dependency>
-            <groupId>org.apache.pdfbox</groupId>
-            <artifactId>pdfbox</artifactId>
-            <version>1.7.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi</artifactId>
-            <version>3.9</version>
-        </dependency>
-
-        <!-- ### -->
 
         <dependency>
             <groupId>javax.enterprise</groupId>
@@ -125,6 +125,13 @@
             <scope>compile</scope>
         </dependency>
 
+        <!--<dependency>-->
+        <!--<groupId>org.jdom</groupId>-->
+        <!--<artifactId>jdom</artifactId>-->
+        <!--<version>2.0.1</version>-->
+        <!--<scope>compile</scope>-->
+        <!--</dependency>-->
+
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
@@ -136,12 +143,6 @@
             <groupId>org.hibernate.javax.persistence</groupId>
             <artifactId>hibernate-jpa-2.0-api</artifactId>
             <scope>provided</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>net.sf.ehcache</groupId>
-                    <artifactId>ehcache</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <dependency>
@@ -151,101 +152,23 @@
             <scope>provided</scope>
         </dependency>
 
-        <!--<dependency>-->
-        <!--<groupId>org.infinispan</groupId>-->
-        <!--<artifactId>infinispan-core</artifactId>-->
-        <!--<version>5.1.2.FINAL</version>-->
-        <!--<scope>provided</scope>-->
-        <!--</dependency>-->
-
         <dependency>
-            <groupId>org.jsoup</groupId>
-            <artifactId>jsoup</artifactId>
-            <version>1.7.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jdom</groupId>
-            <artifactId>jdom</artifactId>
-            <version>1.1.3</version>
-        </dependency>
-        <dependency>
-            <groupId>jaxen</groupId>
-            <artifactId>jaxen</artifactId>
-            <version>1.1.4</version>
-        </dependency>
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20090211</version>
-        </dependency>
-        <!-- Logging -->
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.17</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-            <version>1.1.1</version>
-        </dependency>
-
-        <!-- Jackson JSON Mapper -->
-        <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-mapper-asl</artifactId>
-            <version>1.9.10</version>
-        </dependency>
-
-        <!-- Web -->
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>2.5</version>
+            <groupId>org.infinispan</groupId>
+            <artifactId>infinispan-core</artifactId>
+            <version>5.1.2.FINAL</version>
             <scope>provided</scope>
         </dependency>
+
+
         <dependency>
-            <groupId>javax.servlet.jsp</groupId>
-            <artifactId>jsp-api</artifactId>
-            <version>2.2</version>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.1.2</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>jstl</artifactId>
-            <version>1.2</version>
-        </dependency>
 
-        <!-- spring security -->
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-core</artifactId>
-            <version>3.1.3.RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-web</artifactId>
-            <version>3.1.3.RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-config</artifactId>
-            <version>3.1.3.RELEASE</version>
-        </dependency>
-
-        <!-- wiki support -->
-        <!--<dependency>-->
-        <!--<groupId>org.eclipse.mylyn.wikitext</groupId>-->
-        <!--<artifactId>wikitext</artifactId>-->
-        <!--<version>1.8.0</version>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>org.eclipse.mylyn.wikitext</groupId>-->
-        <!--<artifactId>wikitext.mediawiki</artifactId>-->
-        <!--<version>1.8.0</version>-->
-        <!--</dependency>-->
-
-        <!-- TESTING -->
+        <!-- TESTING
+        -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -259,26 +182,18 @@
             <version>1.0.0.CR7</version>
             <scope>test</scope>
         </dependency>
+
         <dependency>
-            <groupId>org.mongodb</groupId>
-            <artifactId>mongo-java-driver</artifactId>
-            <version>1.3</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-beans</artifactId>
-            <version>3.0.6.RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-fileupload</groupId>
-            <artifactId>commons-fileupload</artifactId>
-            <version>1.2.1</version>
+            <groupId>net.sf.ehcache</groupId>
+            <artifactId>ehcache</artifactId>
+            <version>2.6.3</version>
+            <type>pom</type>
         </dependency>
 
     </dependencies>
 
     <build>
-        <finalName>notes-core.war</finalName>
+        <finalName>notes-common.jar</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -290,49 +205,46 @@
                 </configuration>
             </plugin>
             <plugin>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>2.1.1</version>
+                <artifactId>maven-ejb-plugin</artifactId>
+                <version>2.3</version>
                 <configuration>
-                    <!-- Java EE 6 doesn't require web.xml, Maven needs to catch
-                   up! -->
-                    <failOnMissingWebXml>false</failOnMissingWebXml>
-
+                    <ejbVersion>3.1</ejbVersion>
                 </configuration>
             </plugin>
         </plugins>
     </build>
 
     <profiles>
-        <!--<profile>-->
-        <!--&lt;!&ndash; The default profile skips all tests, though you can tune it-->
-        <!--to run just unit tests based on a custom pattern &ndash;&gt;-->
-        <!--&lt;!&ndash; Seperate profiles are provided for running all tests, including-->
-        <!--Arquillian tests that execute in the specified container &ndash;&gt;-->
-        <!--<id>default</id>-->
-        <!--<activation>-->
-        <!--<activeByDefault>true</activeByDefault>-->
-        <!--</activation>-->
-        <!--<build>-->
-        <!--<plugins>-->
-        <!--<plugin>-->
-        <!--<artifactId>maven-surefire-plugin</artifactId>-->
-        <!--<version>2.4.3</version>-->
-        <!--<configuration>-->
-        <!--<skip>true</skip>-->
-        <!--</configuration>-->
-        <!--</plugin>-->
-        <!--&lt;!&ndash; The JBoss AS plugin deploys your war to a local JBoss-->
-        <!--AS container &ndash;&gt;-->
-        <!--&lt;!&ndash; To use, set the JBOSS_HOME environment variable and run:-->
-        <!--mvn package jboss-as:deploy &ndash;&gt;-->
-        <!--<plugin>-->
-        <!--<groupId>org.jboss.as.plugins</groupId>-->
-        <!--<artifactId>jboss-as-maven-plugin</artifactId>-->
-        <!--<version>7.1.0.Beta1b</version>-->
-        <!--</plugin>-->
-        <!--</plugins>-->
-        <!--</build>-->
-        <!--</profile>-->
+        <profile>
+            <!-- The default profile skips all tests, though you can tune it
+  to run just unit tests based on a custom pattern -->
+            <!-- Seperate profiles are provided for running all tests, including
+    Arquillian tests that execute in the specified container -->
+            <id>default</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>2.4.3</version>
+                        <configuration>
+                            <skip>true</skip>
+                        </configuration>
+                    </plugin>
+                    <!-- The JBoss AS plugin deploys your war to a local JBoss
+                  AS container -->
+                    <!-- To use, set the JBOSS_HOME environment variable and run:
+                 mvn package jboss-as:deploy -->
+                    <plugin>
+                        <groupId>org.jboss.as.plugins</groupId>
+                        <artifactId>jboss-as-maven-plugin</artifactId>
+                        <version>7.1.0.Beta1b</version>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
 
         <profile>
             <!-- We add the JBoss repository as we need the JBoss AS connectors for Arquillian -->

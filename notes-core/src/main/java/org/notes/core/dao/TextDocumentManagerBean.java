@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
+import org.notes.common.model.Kind;
 import org.notes.common.utils.TextUtils;
 import org.notes.core.interfaces.*;
 import org.notes.core.model.*;

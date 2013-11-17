@@ -85,6 +85,7 @@ $.widget("notes.editor", {
             removeClass('maximized').
             addClass('row');
 
+        // todo both should be dialogs?
         var progressSettings = $this._newProgressSettings(model);
         var reminderSettings = $this._newReminderSettings(model);
 
@@ -136,15 +137,15 @@ $.widget("notes.editor", {
                         model.destroy();
                         $this._unloadTextEditor(onUnload);
                     })
-            ).append(
-                $('<button/>').button({
-                    label: 'Reminder',
-                    icons: {
-                        primary: 'ui-icon-clock'
-                    }
-                }).click(function () {
-                        reminderSettings.slideToggle();
-                    })
+//            ).append(
+//                $('<button/>').button({
+//                    label: 'Reminder',
+//                    icons: {
+//                        primary: 'ui-icon-clock'
+//                    }
+//                }).click(function () {
+//                        reminderSettings.slideToggle();
+//                    })
             ).append(
                 $('<button/>').button({
                     label: 'Progress',
@@ -184,8 +185,8 @@ $.widget("notes.editor", {
             );
         target.append(
                 header
-            ).append(
-                reminderSettings
+//            ).append(
+//                reminderSettings
             ).append(
                 progressSettings
             ).append(

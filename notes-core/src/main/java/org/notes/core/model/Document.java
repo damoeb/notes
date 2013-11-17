@@ -5,6 +5,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.notes.common.configuration.Configuration;
+import org.notes.common.model.Kind;
 import org.notes.common.service.CustomDateDeserializer;
 import org.notes.common.service.CustomDateSerializer;
 

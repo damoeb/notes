@@ -1,4 +1,6 @@
-package org.notes.core.model;
+package org.notes.search.model;
+
+import org.notes.common.model.Kind;
 
 import java.util.Date;
 

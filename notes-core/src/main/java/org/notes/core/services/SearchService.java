@@ -2,7 +2,7 @@ package org.notes.core.services;
 
 import org.notes.common.cache.MethodCache;
 import org.notes.common.configuration.NotesInterceptors;
-import org.notes.core.interfaces.SearchManager;
+import org.notes.search.interfaces.SearchManager;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;

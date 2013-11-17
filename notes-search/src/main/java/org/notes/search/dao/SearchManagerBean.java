@@ -1,4 +1,4 @@
-package org.notes.core.dao;
+package org.notes.search.dao;
 
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -10,9 +10,9 @@ import org.notes.common.configuration.Configuration;
 import org.notes.common.configuration.ConfigurationProperty;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
-import org.notes.core.interfaces.SearchManager;
-import org.notes.core.model.DocumentHit;
-import org.notes.core.model.Kind;
+import org.notes.common.model.Kind;
+import org.notes.search.interfaces.SearchManager;
+import org.notes.search.model.DocumentHit;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;

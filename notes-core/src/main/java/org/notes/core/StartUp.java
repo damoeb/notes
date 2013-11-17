@@ -52,6 +52,8 @@ public class StartUp {
     @PostConstruct
     public void onInit() {
 
+        LOGGER.info("Notes Version " + getVersion());
+
         synchronized (Startup.class) {
             if (!initialized) {
                 initialized = false;

@@ -1,7 +1,7 @@
-package org.notes.core.interfaces;
+package org.notes.search.interfaces;
 
 import org.notes.common.exceptions.NotesException;
-import org.notes.core.model.DocumentHit;
+import org.notes.search.model.DocumentHit;
 
 import javax.ejb.Local;
 import java.util.List;
