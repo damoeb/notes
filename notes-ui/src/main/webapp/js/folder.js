@@ -108,8 +108,6 @@ $.widget("notes.folder", {
             $this._highlight(folder);
         });
 
-        //.draggable({containment: '#directory', helper: "clone", opacity: 0.6})
-
         folder
             .droppable({hoverClass: 'ui-state-active', drop: function (event, ui) {
                 var draggable = $(ui.draggable);
@@ -129,9 +127,7 @@ $.widget("notes.folder", {
                                 console.log('dropped document ' + draggable.data('documentId'));
 
                                 // refresh ui
-                                $('#directory').
-                                    directory('selectedFolder', model.get('id')). // todo fix problem
-                                    directory('reload');
+                                $('#directory').directory('reload');
                             }
                         });
                 }
