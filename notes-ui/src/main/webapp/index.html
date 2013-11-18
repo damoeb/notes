@@ -136,6 +136,28 @@
                     .parent().buttonset();
 
 
+            // todo if file is dropped to document and upload started -> block screen or other indicator
+//            var overallProgress = $('#fileupload').fileupload('progress');
+//            var activeUploads = $('#fileupload').fileupload('active');
+
+            var upload = $('#file-upload').
+                    fileupload({
+                        url: '/notes/rest/document/upload',
+                        dataType: 'json'
+                    })
+                    .bind('fileuploadsubmit', function (e, data) {
+                        var _folderId = $('#directory').directory('selectedFolder');
+                        data.formData = {folderId: _folderId};
+                    })
+                    .bind('fileuploaddone', function (e, xhr) {
+                        console.log('done');
+
+                        var _model = new notes.model.document(xhr.result.result);
+
+                        $('#document-list-view').documentList('updateDocument', _model);
+                    });
+
+
         });
 
     </script>

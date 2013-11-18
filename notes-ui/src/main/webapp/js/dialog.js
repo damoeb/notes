@@ -150,23 +150,6 @@ notes.dialog.document = {
 
                             var upload = $('#file-upload');
 
-                            upload.fileupload({
-                                url: '/notes/rest/document/upload',
-                                dataType: 'json'
-                            });
-
-                            upload
-                                .bind('fileuploadsubmit', function (e, data) {
-                                    var _folderId = $('#directory').directory('selectedFolder');
-                                    data.formData = {folderId: _folderId};
-                                })
-                                .bind('fileuploaddone', function (e, data) {
-                                    console.log('done');
-
-                                    // todo add to table
-                                    //$('#document-list-view').documentList('updateDocument', model);
-                                });
-
                             upload.click();
 
                             dialog.dialog('close');

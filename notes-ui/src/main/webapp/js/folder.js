@@ -113,11 +113,21 @@ $.widget("notes.folder", {
                 var draggable = $(ui.draggable);
 
                 if (draggable.hasClass('folder')) {
-                    // todo implement
+                    // ignore implement
                     console.log('dropped folder ' + draggable.folder('model').get('id'));
                 }
                 if (draggable.is('tr')) {
-                    console.log('dropped document ' + draggable.data('documentId'));
+
+                    new notes.model.document({
+                        id: draggable.data('documentId'),
+                        folderId: model.get('id'),
+                        event: 'MOVE'
+                    }).save(null, {
+                            success: function () {
+                                console.log('dropped document ' + draggable.data('documentId'));
+                                // todo refresh,...
+                            }
+                        });
                 }
                 //$(ui.draggable).remove();
             }});

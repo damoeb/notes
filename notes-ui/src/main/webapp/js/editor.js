@@ -6,13 +6,6 @@ $.widget("notes.editor", {
 
     kinds: {
         text: {
-            model: Backbone.Model.extend({
-                defaults: {
-                    title: '',
-                    text: ''
-                },
-                url: '/notes/rest/document/'
-            }),
             url: '/notes/rest/document/${documentId}',
             fnLoad: '_loadTextEditor'
         }
@@ -51,7 +44,7 @@ $.widget("notes.editor", {
         notes.util.jsonCall('GET', url, {'${documentId}': documentId}, null, function (document) {
             $this.documentId = document.id;
 
-            $this.loadDocument(kind, new kind.model(document), onUnload);
+            $this.loadDocument(kind, new notes.model.document(document), onUnload);
         });
     },
 

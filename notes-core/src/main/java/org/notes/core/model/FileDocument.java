@@ -7,7 +7,12 @@ import org.notes.common.model.FileReference;
 import javax.persistence.*;
 
 @Entity(name = "FileDocument")
-@Table(name = "FileDocument")
+@Table(name = "FileDocument"
+//    todo uniqueConstraints = @UniqueConstraint(columnNames = {
+//            FileReference.FK_FILE_REFERENCE_ID,
+//            Folder.FK_FOLDER_ID
+//    })
+)
 //@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class FileDocument extends Document {

@@ -4,6 +4,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.notes.common.configuration.Configuration;
+import org.notes.common.model.Event;
 import org.notes.common.model.Kind;
 import org.notes.common.service.CustomDateDeserializer;
 import org.notes.common.service.CustomDateSerializer;
@@ -92,6 +93,9 @@ public class Document implements Serializable, Indexable {
 
     @Column(insertable = false, updatable = false, name = Reminder.FK_REMINDER_ID)
     private Long reminderId;
+
+    @Transient
+    private Event event;
 
     public Document() {
         // default
@@ -286,5 +290,13 @@ public class Document implements Serializable, Indexable {
 
     public void setReminderId(Long reminderId) {
         this.reminderId = reminderId;
+    }
+
+    public Event getEvent() {
+        return event;
+    }
+
+    public void setEvent(Event event) {
+        this.event = event;
     }
 }

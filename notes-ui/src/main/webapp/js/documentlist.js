@@ -43,14 +43,22 @@ $.widget("notes.documentList", {
 
                     var row = $(nRow);
 
-                    row.children().first().addClass('document-id-' + aData[0]);
+                    var documentId = aData[0];
+                    row.children().first().addClass('document-id-' + documentId);
 
                     // todo destroy this event too
-                    row.data('documentId', aData[0]);
+                    row.data('documentId', documentId);
 
                     row.unbind('click dblclick draggable');
 
-                    row.draggable({helper: "clone", opacity: 0.6});
+                    row.draggable({
+                        cursor: 'move',
+                        cursorAt: { top: 0, left: -5 },
+                        helper: function (event) {
+                            return $('<div class="ui-widget-header">Document ' + documentId + '</div>');
+                        },
+                        opacity: 0.6
+                    });
 
 
                     // adds origin of document

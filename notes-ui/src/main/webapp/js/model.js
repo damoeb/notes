@@ -19,5 +19,14 @@ notes.model = {
 
     database: Backbone.Model.extend({
         url: '/notes/rest/database'
+    }),
+
+    document: Backbone.Model.extend({
+        defaults: {
+            title: '',
+            text: '',
+            event: 'UPDATE'
+        },
+        url: '/notes/rest/document/'
     })
 };

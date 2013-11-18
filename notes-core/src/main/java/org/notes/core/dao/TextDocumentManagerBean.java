@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
+import org.notes.common.model.Event;
 import org.notes.common.model.FileReference;
 import org.notes.common.model.Kind;
 import org.notes.common.utils.TextUtils;
@@ -76,7 +77,7 @@ public class TextDocumentManagerBean implements TextDocumentManager {
             document.setOutline(_getOutline(document));
             document.setProgress(_getProgress(document));
 
-            _createDocument(document, folderId);
+            document = (TextDocument) _createDocument(document, folderId);
 
             return document;
 
@@ -90,8 +91,6 @@ public class TextDocumentManagerBean implements TextDocumentManager {
     private Document _createDocument(Document document, Long folderId) throws NotesException {
 
         em.persist(document);
-        em.flush();
-        em.refresh(document);
 
         Session session = em.unwrap(Session.class);
 
@@ -114,6 +113,9 @@ public class TextDocumentManagerBean implements TextDocumentManager {
 
         user.getDocuments().add(document);
         em.merge(user);
+        em.flush();
+
+        em.refresh(document);
 
         // -- Postprocesing --
         //searchManager.index(document);
@@ -127,11 +129,11 @@ public class TextDocumentManagerBean implements TextDocumentManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public TextDocument getDocument(long documentId) throws NotesException {
+    public Document getDocument(long documentId) throws NotesException {
         try {
             Query query = em.createNamedQuery(Document.QUERY_WITH_REMINDER);
             query.setParameter("ID", documentId);
-            return (TextDocument) query.getSingleResult();
+            return (Document) query.getSingleResult();
 
         } catch (NoResultException t) {
             throw new NotesException("document '" + documentId + "' does not exist");
@@ -142,7 +144,7 @@ public class TextDocumentManagerBean implements TextDocumentManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public TextDocument deleteDocument(TextDocument d) throws NotesException {
+    public Document deleteDocument(Document d) throws NotesException {
         try {
             Query query = em.createNamedQuery(Document.DELETE_DOCUMENT);
             query.setParameter("ID", d.getId());
@@ -171,8 +173,18 @@ public class TextDocumentManagerBean implements TextDocumentManager {
 
             TextDocument oldDoc = _get(newDoc.getId());
 
-            // has document been moved?
-            if (newDoc.getFolderId() != null && newDoc.getFolderId() != oldDoc.getFolderId()) {
+            // decide whether move or update
+
+
+            if (Event.MOVE.equals(newDoc.getEvent())) {
+
+                boolean caMove = newDoc.getFolderId() != null && newDoc.getFolderId() != oldDoc.getFolderId();
+
+                // get all parents, remove from doc list
+                // find all docs, that have newDoc in doclist
+
+                // get all new parents, add to doc list
+
                 // todo implement
 //                // test if new folder exists
 //                folderManager.getFolder(newDoc.getFolderId());
@@ -182,29 +194,32 @@ public class TextDocumentManagerBean implements TextDocumentManager {
 //                em.merge(oldDoc);
             }
 
-            oldDoc.setTitle(newDoc.getTitle());
-            oldDoc.setText(newDoc.getText());
+            if (Event.UPDATE.equals(newDoc.getEvent())) {
 
-            oldDoc.setOutline(_getOutline(oldDoc));
+                oldDoc.setTitle(newDoc.getTitle());
+                oldDoc.setText(newDoc.getText());
 
-            Reminder reminder = newDoc.getReminder();
-            if (oldDoc.getReminderId() == null) {
-                oldDoc.setReminder(reminder);
-            } else {
-                if (reminder == null) {
-                    oldDoc.setReminder(null);
+                oldDoc.setOutline(_getOutline(oldDoc));
 
+                Reminder reminder = newDoc.getReminder();
+                if (oldDoc.getReminderId() == null) {
+                    oldDoc.setReminder(reminder);
                 } else {
-                    reminder.setId(oldDoc.getReminderId());
-                    em.merge(reminder);
+                    if (reminder == null) {
+                        oldDoc.setReminder(null);
+
+                    } else {
+                        reminder.setId(oldDoc.getReminderId());
+                        em.merge(reminder);
+                    }
                 }
+
+                oldDoc.setProgress(_getProgress(newDoc));
+                em.merge(oldDoc);
+                em.flush();
+                em.refresh(oldDoc);
+
             }
-
-            oldDoc.setProgress(_getProgress(newDoc));
-
-            em.merge(oldDoc);
-            em.flush();
-            em.refresh(oldDoc);
 
             // -- Postprocesing --
             //searchManager.index(oldDoc);
