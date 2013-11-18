@@ -92,6 +92,25 @@ public class TextDocumentManagerBean implements TextDocumentManager {
 
         em.persist(document);
 
+        User user = userManager.getUser(1l); // todo userId
+        user.getDocuments().add(document);
+        em.merge(user);
+
+        _addToParentFolders(document, folderId);
+
+
+        em.flush();
+
+        em.refresh(document);
+
+        // -- Postprocesing --
+        //searchManager.index(document);
+
+        return document;
+    }
+
+    private void _addToParentFolders(Document document, Long folderId) throws NotesException {
+
         Session session = em.unwrap(Session.class);
 
         //Folder folder = folderManager.getFolder(document.getFolderId());
@@ -100,7 +119,6 @@ public class TextDocumentManagerBean implements TextDocumentManager {
             throw new NotesException(String.format("folder with id %s is null", document.getFolderId()));
         }
 
-        User user = userManager.getUser(1l); // todo userId
         folder.getDocuments().add(document);
         folder.setDocumentCount(folder.getDocumentCount() + 1);
         em.merge(folder);
@@ -110,17 +128,6 @@ public class TextDocumentManagerBean implements TextDocumentManager {
             parent.getInheritedDocuments().add(document);
             folder = parent;
         }
-
-        user.getDocuments().add(document);
-        em.merge(user);
-        em.flush();
-
-        em.refresh(document);
-
-        // -- Postprocesing --
-        //searchManager.index(document);
-
-        return document;
     }
 
     private String _getOutline(TextDocument document) {
@@ -164,42 +171,43 @@ public class TextDocumentManagerBean implements TextDocumentManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public TextDocument updateDocument(TextDocument newDoc) throws NotesException {
+    public Document updateDocument(Document newDoc) throws NotesException {
         try {
 
             if (newDoc == null) {
                 throw new IllegalArgumentException("document is null");
             }
 
-            TextDocument oldDoc = _get(newDoc.getId());
+            Document oldDoc = _get(newDoc.getId());
 
             // decide whether move or update
-
-
             if (Event.MOVE.equals(newDoc.getEvent())) {
 
-                boolean caMove = newDoc.getFolderId() != null && newDoc.getFolderId() != oldDoc.getFolderId();
+                Query query;
 
-                // get all parents, remove from doc list
-                // find all docs, that have newDoc in doclist
+                query = em.createNativeQuery("UPDATE Folder f SET f.documentCount = f.documentCount - 1 WHERE f.id = :FOLDER_ID");
+                query.setParameter("FOLDER_ID", oldDoc.getFolderId());
+                query.executeUpdate();
 
-                // get all new parents, add to doc list
+                query = em.createNativeQuery("DELETE FROM folder2document WHERE document_id = :DOC_ID");
+                query.setParameter("DOC_ID", oldDoc.getId());
+                query.executeUpdate();
 
-                // todo implement
-//                // test if new folder exists
-//                folderManager.getFolder(newDoc.getFolderId());
-//
-//                // update folderId
-//                oldDoc.setFolderId(newDoc.getFolderId());
-//                em.merge(oldDoc);
+                em.flush();
+
+                _addToParentFolders(oldDoc, newDoc.getFolderId());
             }
 
             if (Event.UPDATE.equals(newDoc.getEvent())) {
 
-                oldDoc.setTitle(newDoc.getTitle());
-                oldDoc.setText(newDoc.getText());
+                TextDocument tdoc = (TextDocument) oldDoc;
+                TextDocument ndoc = (TextDocument) newDoc;
 
-                oldDoc.setOutline(_getOutline(oldDoc));
+                tdoc.setTitle(ndoc.getTitle());
+                tdoc.setText(ndoc.getText());
+
+                oldDoc.setOutline(_getOutline(tdoc));
+                oldDoc.setProgress(_getProgress(newDoc));
 
                 Reminder reminder = newDoc.getReminder();
                 if (oldDoc.getReminderId() == null) {
@@ -214,7 +222,6 @@ public class TextDocumentManagerBean implements TextDocumentManager {
                     }
                 }
 
-                oldDoc.setProgress(_getProgress(newDoc));
                 em.merge(oldDoc);
                 em.flush();
                 em.refresh(oldDoc);
@@ -300,7 +307,7 @@ public class TextDocumentManagerBean implements TextDocumentManager {
         return null;
     }
 
-    private Integer _getProgress(TextDocument document) {
+    private Integer _getProgress(Document document) {
         Integer progress = document.getProgress();
         if (progress == null || progress <= 0 || progress > 100) {
             return null;
@@ -308,9 +315,9 @@ public class TextDocumentManagerBean implements TextDocumentManager {
         return progress;
     }
 
-    private TextDocument _get(long documentId) throws NotesException {
+    private Document _get(long documentId) throws NotesException {
         Query query = em.createNamedQuery(Document.QUERY_BY_ID);
         query.setParameter("ID", documentId);
-        return (TextDocument) query.getSingleResult();
+        return (Document) query.getSingleResult();
     }
 }

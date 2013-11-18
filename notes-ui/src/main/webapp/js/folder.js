@@ -108,7 +108,9 @@ $.widget("notes.folder", {
             $this._highlight(folder);
         });
 
-        folder.draggable({containment: '#directory', helper: "clone", opacity: 0.6})
+        //.draggable({containment: '#directory', helper: "clone", opacity: 0.6})
+
+        folder
             .droppable({hoverClass: 'ui-state-active', drop: function (event, ui) {
                 var draggable = $(ui.draggable);
 
@@ -125,11 +127,14 @@ $.widget("notes.folder", {
                     }).save(null, {
                             success: function () {
                                 console.log('dropped document ' + draggable.data('documentId'));
-                                // todo refresh,...
+
+                                // refresh ui
+                                $('#directory').
+                                    directory('selectedFolder', model.get('id')). // todo fix problem
+                                    directory('reload');
                             }
                         });
                 }
-                //$(ui.draggable).remove();
             }});
 
         //

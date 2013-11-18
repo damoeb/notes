@@ -18,7 +18,7 @@ public interface TextDocumentManager {
 
     Document deleteDocument(Document document) throws NotesException;
 
-    TextDocument updateDocument(TextDocument document) throws NotesException;
+    Document updateDocument(Document document) throws NotesException;
 
     FileDocument uploadDocument(List<FileItem> items) throws NotesException;
 }

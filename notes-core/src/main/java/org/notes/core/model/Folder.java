@@ -40,7 +40,7 @@ public class Folder extends Node {
 
     @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY, cascade = {})
-    @JoinTable(name = "folder2document", joinColumns = @JoinColumn(name = "folder_id"), inverseJoinColumns = @JoinColumn(name = "document_id"))
+    @JoinTable(name = "folder2document", joinColumns = @JoinColumn(name = "folder_id"), inverseJoinColumns = @JoinColumn(name = Document.FK_DOCUMENT_ID))
     private Set<Document> inheritedDocuments = new HashSet(100);
 
     @Transient
