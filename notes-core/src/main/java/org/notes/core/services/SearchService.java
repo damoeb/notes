@@ -24,10 +24,13 @@ public class SearchService {
     public NotesResponse search(
             @QueryParam("query") String query,
             @QueryParam("databaseId") Long databaseId,
-            @QueryParam("folderId") Long folderId
+            @QueryParam("folderId") Long folderId,
+            @QueryParam("start") int start,
+            @QueryParam("rows") int rows
+
     ) throws Exception {
         try {
-            return NotesResponse.ok(searchManager.query(query, databaseId, folderId));
+            return NotesResponse.ok(searchManager.query(query, start, rows));
         } catch (Exception e) {
             return NotesResponse.error(e);
         }

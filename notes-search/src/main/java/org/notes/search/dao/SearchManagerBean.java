@@ -3,6 +3,7 @@ package org.notes.search.dao;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.log4j.Logger;
+import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.impl.HttpSolrServer;
 import org.apache.solr.client.solrj.impl.XMLResponseParser;
@@ -21,8 +22,8 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.Arrays;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 
 //@LocalBean
@@ -41,15 +42,23 @@ public class SearchManagerBean implements SearchManager {
 
 
     @Override
-    public List<DocumentHit> query(String query, Long databaseId, Long folderId) throws NotesException {
+    public List<DocumentHit> query(String queryString, int start, int rows) throws NotesException {
         try {
-            List<DocumentHit> response = new LinkedList<>();
 
-            response.add(new DocumentHit(1d, 1l, new Date(), "Example query result a", "matching highlights", Kind.TEXT));
+            SolrServer server = _getSolrServer();
 
-            // todo support facets
+            SolrQuery query = new SolrQuery();
+            query.setQuery(queryString);
+            query.addFilterQuery("userId:1", "store:amazon.com");
+            query.setFields("id", "title", "outline", "modified", "kind");
+            query.setStart(0);
+            query.setRows(100);
 
-            return response;
+            // todo join http://wiki.apache.org/solr/Join
+
+            // todo facets
+
+            return Arrays.asList(new DocumentHit(1d, 1l, new Date(), "Example query result a", "matching highlights", Kind.TEXT));
 
         } catch (Throwable t) {
             throw new NotesException("query: " + t.getMessage(), t);
@@ -60,10 +69,9 @@ public class SearchManagerBean implements SearchManager {
     public void index(Indexable indexable) throws NotesException {
         try {
 
-            //SolrServer server = _getSolrServer();
-            //server.add(_getSolrDocument(indexable), 4000);
+            SolrServer server = _getSolrServer();
 
-            //join http://wiki.apache.org/solr/Join
+            server.add(_toSolrDocument(indexable), 4000);
 
         } catch (Throwable t) {
             throw new NotesException("index: " + t.getMessage(), t);
@@ -75,7 +83,8 @@ public class SearchManagerBean implements SearchManager {
 
     }
 
-    private SolrInputDocument _getSolrDocument(Indexable indexable) {
+    private SolrInputDocument _toSolrDocument(Indexable indexable) {
+        // todo update document http://wiki.apache.org/solr/UpdateXmlMessages#Optional_attributes_for_.22field.22
         SolrInputDocument document = new SolrInputDocument();
         document.setField("title", indexable.getTitle());
         return document;

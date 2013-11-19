@@ -10,7 +10,7 @@ import java.util.List;
 @Local
 public interface SearchManager {
 
-    List<DocumentHit> query(String query, Long databaseId, Long folderId) throws NotesException;
+    List<DocumentHit> query(String queryString, int start, int rows) throws NotesException;
 
     @Asynchronous
     void index(Indexable indexable) throws NotesException;
