@@ -5,7 +5,7 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.notes.common.cache.MethodCache;
 import org.notes.common.configuration.NotesInterceptors;
-import org.notes.core.interfaces.TextDocumentManager;
+import org.notes.core.interfaces.DocumentManager;
 import org.notes.core.model.Document;
 import org.notes.core.model.FileDocument;
 import org.notes.core.model.TextDocument;
@@ -20,12 +20,12 @@ import java.util.List;
 
 @NotesInterceptors
 @Path("/document")
-public class TextDocumentService {
+public class DocumentService {
 
     @Inject
-    private TextDocumentManager documentManager;
+    private DocumentManager documentManager;
 
-    public TextDocumentManager getDocumentManager() {
+    public DocumentManager getDocumentManager() {
         return documentManager;
     }
 

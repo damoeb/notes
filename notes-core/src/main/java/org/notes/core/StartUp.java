@@ -33,7 +33,7 @@ public class StartUp {
     private FolderManager folderManager;
 
     @Inject
-    private TextDocumentManager documentManager;
+    private DocumentManager documentManager;
 
     @Inject
     private UserManager userManager;

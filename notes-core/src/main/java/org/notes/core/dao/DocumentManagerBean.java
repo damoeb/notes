@@ -11,9 +11,9 @@ import org.notes.common.model.Event;
 import org.notes.common.model.FileReference;
 import org.notes.common.model.Kind;
 import org.notes.common.utils.TextUtils;
+import org.notes.core.interfaces.DocumentManager;
 import org.notes.core.interfaces.FileManager;
 import org.notes.core.interfaces.FolderManager;
-import org.notes.core.interfaces.TextDocumentManager;
 import org.notes.core.interfaces.UserManager;
 import org.notes.core.model.*;
 import org.notes.search.interfaces.SearchManager;
@@ -33,9 +33,9 @@ import java.util.List;
 @Stateless
 @NotesInterceptors
 @TransactionAttribute(TransactionAttributeType.NEVER)
-public class TextDocumentManagerBean implements TextDocumentManager {
+public class DocumentManagerBean implements DocumentManager {
 
-    private static final Logger LOGGER = Logger.getLogger(TextDocumentManagerBean.class);
+    private static final Logger LOGGER = Logger.getLogger(DocumentManagerBean.class);
 
     @PersistenceContext(unitName = "primary")
     private EntityManager em;
@@ -104,7 +104,7 @@ public class TextDocumentManagerBean implements TextDocumentManager {
         em.refresh(document);
 
         // -- Postprocesing --
-        //searchManager.index(document);
+        searchManager.index(document);
 
         return document;
     }
@@ -160,7 +160,7 @@ public class TextDocumentManagerBean implements TextDocumentManager {
             query.executeUpdate();
 
             // -- Postprocesing --
-            //searchManager.delete(d);
+            searchManager.delete(d);
 
             return d;
 
@@ -264,6 +264,9 @@ public class TextDocumentManagerBean implements TextDocumentManager {
                     }
                 }
             }
+
+            // todo uploaded file may be zip to create structure from
+            // reference.getContentType()
 
             if (reference == null || folderId == null) {
                 throw new IllegalArgumentException("No valid files found");

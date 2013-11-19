@@ -1,3 +1,7 @@
+- annotate audio
+- import/export
+- unit tests!!!
+- search
 - related to: find documents, check literature, to find out relatedness
 
 ------

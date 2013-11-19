@@ -118,6 +118,11 @@
                 icons: {primary: 'ui-icon-search'}
             });
 
+            $('#settings').button({
+                icons: {primary: 'ui-icon-gear'},
+                text: false
+            }).click(notes.dialog.settings.general);
+
             $('#create-document')
                     .button({
                         icons: {primary: 'ui-icon-document'}
@@ -130,9 +135,7 @@
                     .button({
                         icons: {primary: 'ui-icon-clipboard'}
                     })
-                    .click(function () {
-                        notes.dialog.document.import();
-                    })
+                    .click(notes.dialog.document.import)
                     .parent().buttonset();
 
 
@@ -174,7 +177,7 @@
 
     <!-- NORTH -->
 
-    <div class="row" style="background-color:#a8a8a8; padding-top:10px; padding-bottom:10px">
+    <div class="row" style="background-color:#F1F1F1; padding-top:10px; padding-bottom:10px; margin-bottom: 5px;">
         <div style="width: 200px; float:left">
             [logo]
         </div>
@@ -193,6 +196,7 @@
                     <input class="ui-widget-content ui-corner-all" type="text" name="query"
                            style="width:200px; font-size:14px; padding:3px 4px;"/>
                     <button id="run-search">Search</button>
+                    <button id="settings">Settings</button>
                 </div>
 
             </div>

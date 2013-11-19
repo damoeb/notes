@@ -169,4 +169,32 @@ notes.dialog.document = {
                 title: 'Settings'
             }));
     }
+};
+
+notes.dialog.settings = {
+
+    general: function () {
+
+        var dialog = $('<div/>', {class: 'dialog'});
+
+        dialog.append(
+                $('<div/>').append(
+                    $('<a/>', {text: 'Export'}).click(
+                        function () {
+                            dialog.dialog('close');
+                        })
+                )
+            ).append(
+                $('<div/>').append(
+                    $('<a/>', {text: 'Import'}).click(
+                        function () {
+                            dialog.dialog('close');
+                            notes.dialog.document.import();
+                        })
+                )
+
+            ).dialog($.extend({}, notes.dialog.defaults, {
+                title: 'Settings'
+            }));
+    }
 }

@@ -1,6 +1,7 @@
 package org.notes.common.model;
 
 import org.apache.commons.lang.StringUtils;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.hibernate.annotations.Index;
 
@@ -32,13 +33,14 @@ public class FileReference implements Serializable {
     @Column(name = "checksum", nullable = false)
     private String checksum;
 
+    @JsonIgnore
     @Basic
-    // todo hide in json
     @Column(nullable = false)
     private String reference;
 
     @Basic
     @Column(nullable = false)
+    // todo should be enum
     private String contentType;
 
     @Lob

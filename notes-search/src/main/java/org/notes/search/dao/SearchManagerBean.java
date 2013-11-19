@@ -28,7 +28,7 @@ import java.util.List;
 //@LocalBean
 @Stateless
 @NotesInterceptors
-@TransactionAttribute(TransactionAttributeType.NEVER)
+@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 public class SearchManagerBean implements SearchManager {
 
     private static final Logger LOGGER = Logger.getLogger(SearchManagerBean.class);
