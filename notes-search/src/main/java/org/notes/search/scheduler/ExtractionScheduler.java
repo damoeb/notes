@@ -5,10 +5,7 @@ import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.model.Document;
 import org.notes.common.model.Trigger;
 
-import javax.ejb.Schedule;
-import javax.ejb.Singleton;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
+import javax.ejb.*;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -26,20 +23,28 @@ public class ExtractionScheduler {
 
     @Schedule(second = "*/10", minute = "*", hour = "*", persistent = false)
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @Lock(LockType.WRITE)
     public void extract() {
         try {
             Query query = em.createNamedQuery(Document.QUERY_TRIGGER);
             query.setParameter("TRIGGER", Trigger.EXTRACT);
             List<Document> list = query.getResultList();
 
-            for (Document document : list) {
-                //document.extractFullText();
+            if (!list.isEmpty()) {
+
+                for (Document document : list) {
+
+                    LOGGER.info("extract " + document.getId());
+
+                    document.extractFullText();
+                    document.setTrigger(Trigger.INDEX);
+                    em.merge(document);
+                    em.flush();
+                }
             }
 
-            // todo get documents where Trigger.EXTRACT
-
         } catch (Throwable t) {
-            // todo some probs
+            LOGGER.error(t);
         }
     }
 

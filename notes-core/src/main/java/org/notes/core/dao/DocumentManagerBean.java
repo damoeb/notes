@@ -68,6 +68,7 @@ public class DocumentManagerBean implements DocumentManager {
 
             document.setOutline(_getOutline(document));
             document.setProgress(_getProgress(document));
+            document.setTrigger(Trigger.INDEX);
 
             return (TextDocument) _createDocument(document, folderId);
 
@@ -79,8 +80,6 @@ public class DocumentManagerBean implements DocumentManager {
     }
 
     private Document _createDocument(Document document, Long folderId) throws NotesException {
-
-        document.setTrigger(Trigger.INDEX);
 
         em.persist(document);
 

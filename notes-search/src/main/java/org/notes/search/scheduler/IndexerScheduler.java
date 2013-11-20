@@ -10,19 +10,20 @@ import org.apache.solr.common.SolrInputDocument;
 import org.notes.common.configuration.Configuration;
 import org.notes.common.configuration.ConfigurationProperty;
 import org.notes.common.configuration.NotesInterceptors;
+import org.notes.common.model.Document;
+import org.notes.common.model.Trigger;
 import org.notes.search.interfaces.Indexable;
 
-import javax.ejb.Schedule;
-import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
+import javax.ejb.*;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import java.util.List;
 
 //@LocalBean
 @Stateless
 @NotesInterceptors
-@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+@TransactionAttribute(TransactionAttributeType.NEVER)
 public class IndexerScheduler {
 
     private static final Logger LOGGER = Logger.getLogger(IndexerScheduler.class);
@@ -34,6 +35,8 @@ public class IndexerScheduler {
     private EntityManager em;
 
 
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @Lock(LockType.READ)
     @Schedule(second = "*/10", minute = "*", hour = "*", persistent = false)
     public void index() {
 
@@ -41,9 +44,26 @@ public class IndexerScheduler {
 
             SolrServer server = _getSolrServer();
 
-            // todo get documents where Trigger.INDEX
+            // todo get documents where Trigger.DELETE
 
-//            server.add(_toSolrDocument(indexable), 4000);
+            Query query = em.createNamedQuery(Document.QUERY_TRIGGER);
+            query.setParameter("TRIGGER", Trigger.INDEX);
+            List<Document> list = query.getResultList();
+
+            if (!list.isEmpty()) {
+
+                for (Document document : list) {
+
+                    LOGGER.info("index " + document.getId());
+
+                    // todo index
+
+                    document.setTrigger(Trigger.NONE);
+                    em.merge(document);
+                    em.flush();
+                }
+            }
+
 
         } catch (Throwable t) {
             LOGGER.error(t);

@@ -1,32 +1,24 @@
 package org.notes.search.text;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.pdfbox.cos.COSDocument;
 import org.apache.pdfbox.pdfparser.PDFParser;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.util.PDFTextStripper;
 import org.notes.common.exceptions.NotesException;
-import org.notes.common.model.ContentType;
 import org.notes.common.model.FileReference;
 import org.notes.search.interfaces.TextExtractor;
-import org.notes.search.model.ExtractionResult;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
 public class PdfTextExtractor implements TextExtractor {
 
     @Override
-    public Collection<ContentType> getSupported() {
-        return Arrays.asList(ContentType.PDF);
-    }
-
-    @Override
-    public ExtractionResult extract(FileReference file) throws NotesException {
+    public String extract(FileReference file) throws NotesException {
 
         PDDocument pdDoc = null;
         COSDocument cosDoc = null;
@@ -48,11 +40,12 @@ public class PdfTextExtractor implements TextExtractor {
                 pages.add(stripper.getText(pdDoc));
             }
 
-            //todo return pages;
-            return null;
+            // todo page information should not been lost
+            return StringUtils.join(pages, " ");
 
         } catch (IOException e) {
-            throw new NotesException("pdf extractor", e);
+            throw new NotesException("pdf extractor failed", e);
+
         } finally {
             try {
                 if (cosDoc != null)

@@ -295,4 +295,9 @@ public class Document implements Serializable {
     public void setTrigger(Trigger trigger) {
         this.trigger = trigger;
     }
+
+    public void extractFullText() {
+        // not used
+    }
+
 }
