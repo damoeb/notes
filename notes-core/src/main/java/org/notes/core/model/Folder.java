@@ -2,6 +2,8 @@ package org.notes.core.model;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.notes.common.ForeignKey;
+import org.notes.common.model.Document;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -9,7 +11,7 @@ import java.util.Set;
 
 @Entity(name = "Folder")
 @Table(name = "Folder",
-        uniqueConstraints = @UniqueConstraint(columnNames = {User.FK_OWNER_ID, "parent_id", "name"})
+        uniqueConstraints = @UniqueConstraint(columnNames = {ForeignKey.OWNER_ID, "parent_id", "name"})
 )
 @NamedQueries({
         @NamedQuery(name = Folder.QUERY_BY_ID, query = "SELECT a FROM Folder a where a.id=:ID"),
@@ -27,7 +29,6 @@ public class Folder extends Node {
     public static final String QUERY_BY_VALUE = "Folder.QUERY_BY_VALUE";
     public static final String QUERY_ALL = "Folder.QUERY_ALL";
     public static final String QUERY_USERS_NOTEBOOKS = "Folder.QUERY_USERS_NOTEBOOKS";
-    public static final String FK_FOLDER_ID = "folder_id";
     public static final String QUERY_DOCUMENTS = "Folder.QUERY_DOCUMENTS";
     public static final String QUERY_RELATED_DOCUMENTS = "Folder.QUERY_RELATED_DOCUMENTS";
 
@@ -35,12 +36,12 @@ public class Folder extends Node {
     private Integer level = 0;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = {})
-    @JoinColumn(name = Folder.FK_FOLDER_ID)
+    @JoinColumn(name = ForeignKey.FOLDER_ID)
     private Set<Document> documents = new HashSet(100);
 
     @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY, cascade = {})
-    @JoinTable(name = "folder2document", joinColumns = @JoinColumn(name = "folder_id"), inverseJoinColumns = @JoinColumn(name = Document.FK_DOCUMENT_ID))
+    @JoinTable(name = "folder2document", joinColumns = @JoinColumn(name = ForeignKey.FOLDER_ID), inverseJoinColumns = @JoinColumn(name = Document.FK_DOCUMENT_ID))
     private Set<Document> inheritedDocuments = new HashSet(100);
 
     @Transient

@@ -3,6 +3,7 @@ package org.notes.core.model;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.notes.common.ForeignKey;
 import org.notes.common.service.CustomDateDeserializer;
 import org.notes.common.service.CustomDateSerializer;
 
@@ -20,7 +21,7 @@ public abstract class Node implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(updatable = false, insertable = false, name = User.FK_OWNER_ID)
+    @Column(updatable = false, insertable = false, name = ForeignKey.OWNER_ID)
     protected Long ownerId;
 
     @Basic

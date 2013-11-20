@@ -1,15 +1,12 @@
-package org.notes.core.model;
+package org.notes.common.model;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.notes.common.ForeignKey;
 import org.notes.common.configuration.Configuration;
-import org.notes.common.model.Event;
-import org.notes.common.model.Kind;
-import org.notes.common.model.Trigger;
 import org.notes.common.service.CustomDateDeserializer;
 import org.notes.common.service.CustomDateSerializer;
-import org.notes.search.interfaces.Indexable;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -31,7 +28,7 @@ import java.util.Date;
 @Inheritance(strategy = InheritanceType.JOINED)
 //@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-public class Document implements Serializable, Indexable {
+public class Document implements Serializable {
 
     public static final String QUERY_BY_ID = "Document.QUERY_BY_ID";
     public static final String QUERY_TRIGGER = "Document.QUERY_TRIGGER";
@@ -69,10 +66,10 @@ public class Document implements Serializable, Indexable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date modified;
 
-    @Column(insertable = false, updatable = false, name = User.FK_OWNER_ID)
+    @Column(insertable = false, updatable = false, name = ForeignKey.OWNER_ID)
     private Long ownerId;
 
-    @Column(insertable = false, updatable = false, name = Folder.FK_FOLDER_ID)
+    @Column(insertable = false, updatable = false, name = ForeignKey.FOLDER_ID)
     private Long folderId;
 
     @Basic
@@ -81,19 +78,19 @@ public class Document implements Serializable, Indexable {
     @Basic
     private boolean deleted;
 
-    @OneToOne(cascade = CascadeType.ALL, optional = true)
-    @JoinColumn(name = Reminder.FK_REMINDER_ID)
+    @OneToOne(cascade = CascadeType.ALL, optional = true, orphanRemoval = true)
+    @JoinColumn(name = ForeignKey.REMINDER_ID)
     private Reminder reminder;
 
-    @Column(insertable = false, updatable = false, name = Reminder.FK_REMINDER_ID)
+    @Column(insertable = false, updatable = false, name = ForeignKey.REMINDER_ID)
     private Long reminderId;
 
     @Transient
     private Event event;
 
     @JsonIgnore
-    @Basic
     @Enumerated(EnumType.STRING)
+    @Column(name = "event_trigger", nullable = true)
     private Trigger trigger;
 
     public Document() {

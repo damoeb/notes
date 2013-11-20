@@ -2,6 +2,7 @@ package org.notes.core.model;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.notes.common.model.Document;
 import org.notes.common.model.FileReference;
 
 import javax.persistence.*;
@@ -13,7 +14,6 @@ import javax.persistence.*;
 //            Folder.FK_FOLDER_ID
 //    })
 )
-//@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class PdfDocument extends Document {
 

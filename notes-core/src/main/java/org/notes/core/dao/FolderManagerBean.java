@@ -4,11 +4,11 @@ import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
+import org.notes.common.model.Document;
 import org.notes.core.interfaces.DatabaseManager;
 import org.notes.core.interfaces.FolderManager;
 import org.notes.core.interfaces.UserManager;
 import org.notes.core.model.Database;
-import org.notes.core.model.Document;
 import org.notes.core.model.Folder;
 import org.notes.core.model.User;
 

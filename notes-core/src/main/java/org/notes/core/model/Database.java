@@ -1,6 +1,7 @@
 package org.notes.core.model;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.notes.common.ForeignKey;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -8,14 +9,13 @@ import java.util.Set;
 
 @Entity(name = "DDatabase")
 @Table(name = "DDatabase",
-        uniqueConstraints = @UniqueConstraint(columnNames = {User.FK_OWNER_ID, "name"})
+        uniqueConstraints = @UniqueConstraint(columnNames = {ForeignKey.OWNER_ID, "name"})
 )
 @NamedQueries({
         @NamedQuery(name = Database.QUERY_BY_ID, query = "SELECT a FROM DDatabase a where a.id=:ID"),
         @NamedQuery(name = Database.QUERY_ALL, query = "SELECT a FROM DDatabase a where a.ownerId=:USER_ID")
 })
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-//@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Database extends Node {
 
     public static final String QUERY_BY_ID = "Database.QUERY_BY_ID";

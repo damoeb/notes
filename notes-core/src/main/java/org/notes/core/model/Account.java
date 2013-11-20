@@ -15,7 +15,6 @@ import java.util.Set;
         @NamedQuery(name = Account.QUERY_ALL, query = "SELECT a FROM Account a")
 })
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-//@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Account implements Serializable {
 
     public static final String QUERY_BY_ID = "Account.QUERY_BY_ID";

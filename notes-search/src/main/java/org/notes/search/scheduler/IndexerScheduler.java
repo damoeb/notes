@@ -45,8 +45,6 @@ public class IndexerScheduler {
 
 //            server.add(_toSolrDocument(indexable), 4000);
 
-            LOGGER.info("index");
-
         } catch (Throwable t) {
             LOGGER.error(t);
         }

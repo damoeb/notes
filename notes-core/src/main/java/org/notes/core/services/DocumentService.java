@@ -5,8 +5,8 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.notes.common.cache.MethodCache;
 import org.notes.common.configuration.NotesInterceptors;
+import org.notes.common.model.Document;
 import org.notes.core.interfaces.DocumentManager;
-import org.notes.core.model.Document;
 import org.notes.core.model.PdfDocument;
 import org.notes.core.model.TextDocument;
 

@@ -3,6 +3,8 @@ package org.notes.core;
 import org.apache.log4j.Logger;
 import org.notes.common.configuration.Configuration;
 import org.notes.common.configuration.ConfigurationProperty;
+import org.notes.common.model.Reminder;
+import org.notes.common.model.Repetition;
 import org.notes.core.interfaces.*;
 import org.notes.core.model.*;
 

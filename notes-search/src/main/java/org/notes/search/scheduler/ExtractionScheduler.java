@@ -2,6 +2,8 @@ package org.notes.search.scheduler;
 
 import org.apache.log4j.Logger;
 import org.notes.common.configuration.NotesInterceptors;
+import org.notes.common.model.Document;
+import org.notes.common.model.Trigger;
 
 import javax.ejb.Schedule;
 import javax.ejb.Singleton;
@@ -9,6 +11,8 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import java.util.List;
 
 @Singleton
 @NotesInterceptors
@@ -21,13 +25,17 @@ public class ExtractionScheduler {
     private EntityManager em;
 
     @Schedule(second = "*/10", minute = "*", hour = "*", persistent = false)
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void extract() {
         try {
-            /*
-            Query query = em.createNamedQuery(Document.QUERY_TRIGGER_EXTRACT);
+            Query query = em.createNamedQuery(Document.QUERY_TRIGGER);
             query.setParameter("TRIGGER", Trigger.EXTRACT);
-            list query.getResultList();
-            */
+            List<Document> list = query.getResultList();
+
+            for (Document document : list) {
+                //document.extractFullText();
+            }
+
             // todo get documents where Trigger.EXTRACT
 
         } catch (Throwable t) {

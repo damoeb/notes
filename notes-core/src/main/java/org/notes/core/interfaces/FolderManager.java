@@ -1,7 +1,7 @@
 package org.notes.core.interfaces;
 
 import org.notes.common.exceptions.NotesException;
-import org.notes.core.model.Document;
+import org.notes.common.model.Document;
 import org.notes.core.model.Folder;
 
 import javax.ejb.Local;

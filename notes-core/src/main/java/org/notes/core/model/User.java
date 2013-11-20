@@ -2,6 +2,8 @@ package org.notes.core.model;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.notes.common.ForeignKey;
+import org.notes.common.model.Document;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -22,7 +24,6 @@ public class User implements Serializable {
     public static final String QUERY_BY_ID = "User.QUERY_BY_ID";
     public static final String QUERY_BY_USERNAME = "User.QUERY_BY_USERNAME";
     public static final String QUERY_ALL = "User.QUERY_ALL";
-    public static final String FK_OWNER_ID = "owner_id";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +35,7 @@ public class User implements Serializable {
 
     @JsonIgnore
     @OneToMany(cascade = {}, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = User.FK_OWNER_ID)
+    @JoinColumn(name = ForeignKey.OWNER_ID)
     private Set<Document> documents = new HashSet(100);
 
     @Column(name = Account.FK_ACCOUNT_ID, insertable = false, updatable = false)
@@ -42,12 +43,12 @@ public class User implements Serializable {
 
     @JsonIgnore
     @OneToMany(cascade = {}, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = User.FK_OWNER_ID)
+    @JoinColumn(name = ForeignKey.OWNER_ID)
     private Set<Database> databases = new HashSet(100);
 
     @JsonIgnore
     @OneToMany(cascade = {}, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = User.FK_OWNER_ID)
+    @JoinColumn(name = ForeignKey.OWNER_ID)
     private Set<Folder> folders = new HashSet(100);
 
     public long getId() {
