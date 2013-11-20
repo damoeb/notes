@@ -25,6 +25,7 @@ import java.util.Date;
 )
 @NamedQueries({
         @NamedQuery(name = Document.QUERY_BY_ID, query = "SELECT a FROM Document a where a.id=:ID"),
+        @NamedQuery(name = Document.QUERY_TRIGGER, query = "SELECT a FROM Document a where a.trigger=:TRIGGER"),
         @NamedQuery(name = Document.QUERY_WITH_REMINDER, query = "SELECT a FROM Document a LEFT JOIN FETCH a.reminder where a.id=:ID")
 })
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -33,6 +34,7 @@ import java.util.Date;
 public class Document implements Serializable, Indexable {
 
     public static final String QUERY_BY_ID = "Document.QUERY_BY_ID";
+    public static final String QUERY_TRIGGER = "Document.QUERY_TRIGGER";
     public static final String QUERY_WITH_REMINDER = "Document.QUERY_WITH_REMINDER";
 
     public static final String FK_DOCUMENT_ID = "document_id";

@@ -1,26 +1,33 @@
-package org.notes.search.dao;
+package org.notes.search.scheduler;
 
 import org.apache.log4j.Logger;
 import org.notes.common.configuration.NotesInterceptors;
-import org.notes.search.interfaces.ExtractionManager;
 
 import javax.ejb.Schedule;
 import javax.ejb.Singleton;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 @Singleton
 @NotesInterceptors
 @TransactionAttribute(TransactionAttributeType.NEVER)
-public class ExtractionManagerBean implements ExtractionManager {
+public class ExtractionScheduler {
 
-    private static final Logger LOGGER = Logger.getLogger(ExtractionManagerBean.class);
+    private static final Logger LOGGER = Logger.getLogger(ExtractionScheduler.class);
 
+    @PersistenceContext(unitName = "primary")
+    private EntityManager em;
 
     @Schedule(second = "*/10", minute = "*", hour = "*", persistent = false)
     public void extract() {
         try {
-
+            /*
+            Query query = em.createNamedQuery(Document.QUERY_TRIGGER_EXTRACT);
+            query.setParameter("TRIGGER", Trigger.EXTRACT);
+            list query.getResultList();
+            */
             // todo get documents where Trigger.EXTRACT
 
         } catch (Throwable t) {
