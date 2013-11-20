@@ -6,6 +6,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.notes.common.configuration.Configuration;
 import org.notes.common.model.Event;
 import org.notes.common.model.Kind;
+import org.notes.common.model.Trigger;
 import org.notes.common.service.CustomDateDeserializer;
 import org.notes.common.service.CustomDateSerializer;
 import org.notes.search.interfaces.Indexable;
@@ -24,8 +25,7 @@ import java.util.Date;
 )
 @NamedQueries({
         @NamedQuery(name = Document.QUERY_BY_ID, query = "SELECT a FROM Document a where a.id=:ID"),
-        @NamedQuery(name = Document.QUERY_WITH_REMINDER, query = "SELECT a FROM Document a LEFT JOIN FETCH a.reminder where a.id=:ID"),
-        @NamedQuery(name = Document.DELETE_DOCUMENT, query = "UPDATE Document a set a.deleted = true where a.id=:ID and a.ownerId=:OWNER")
+        @NamedQuery(name = Document.QUERY_WITH_REMINDER, query = "SELECT a FROM Document a LEFT JOIN FETCH a.reminder where a.id=:ID")
 })
 @Inheritance(strategy = InheritanceType.JOINED)
 //@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -34,7 +34,6 @@ public class Document implements Serializable, Indexable {
 
     public static final String QUERY_BY_ID = "Document.QUERY_BY_ID";
     public static final String QUERY_WITH_REMINDER = "Document.QUERY_WITH_REMINDER";
-    public static final String DELETE_DOCUMENT = "Document.DELETE_DOCUMENT";
 
     public static final String FK_DOCUMENT_ID = "document_id";
 
@@ -46,11 +45,6 @@ public class Document implements Serializable, Indexable {
     @Basic
     @Column(nullable = false, length = 256)
     private String title;
-
-    @JsonIgnore
-    @Lob
-    @Column(name = "full_text")
-    private String fulltext;
 
     @Basic
     @Column(length = Configuration.Constants.OUTLINE_LENGTH)
@@ -94,6 +88,11 @@ public class Document implements Serializable, Indexable {
 
     @Transient
     private Event event;
+
+    @JsonIgnore
+    @Basic
+    @Enumerated(EnumType.STRING)
+    private Trigger trigger;
 
     public Document() {
         // default
@@ -242,14 +241,6 @@ public class Document implements Serializable, Indexable {
         this.kind = kind;
     }
 
-    public String getFulltext() {
-        return fulltext;
-    }
-
-    public void setFulltext(String fulltext) {
-        this.fulltext = fulltext;
-    }
-
     public String getOutline() {
         return outline;
     }
@@ -296,5 +287,13 @@ public class Document implements Serializable, Indexable {
 
     public void setEvent(Event event) {
         this.event = event;
+    }
+
+    public Trigger getTrigger() {
+        return trigger;
+    }
+
+    public void setTrigger(Trigger trigger) {
+        this.trigger = trigger;
     }
 }

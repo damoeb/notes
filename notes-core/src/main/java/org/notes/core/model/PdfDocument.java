@@ -6,8 +6,8 @@ import org.notes.common.model.FileReference;
 
 import javax.persistence.*;
 
-@Entity(name = "FileDocument")
-@Table(name = "FileDocument"
+@Entity(name = "PdfDocument")
+@Table(name = "PdfDocument"
 //    todo uniqueConstraints = @UniqueConstraint(columnNames = {
 //            FileReference.FK_FILE_REFERENCE_ID,
 //            Folder.FK_FOLDER_ID
@@ -15,14 +15,14 @@ import javax.persistence.*;
 )
 //@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-public class FileDocument extends Document {
+public class PdfDocument extends Document {
 
     @JsonIgnore
     @ManyToOne(cascade = {}, fetch = FetchType.LAZY)
     @JoinColumn(name = FileReference.FK_FILE_REFERENCE_ID)
     private FileReference fileReference;
 
-    public FileDocument() {
+    public PdfDocument() {
         // default
     }
 

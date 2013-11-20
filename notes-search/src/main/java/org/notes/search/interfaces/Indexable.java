@@ -10,15 +10,13 @@ public interface Indexable {
 
     String getTitle();
 
-    String getFulltext();
-
     Kind getKind();
 
     Date getModified();
 
     Long getOwnerId();
 
-    // todo implement? Collection<Long> getFolderIds();
     Long getFolderId();
+
     // todo implement! Long getDatabaseId();
 }

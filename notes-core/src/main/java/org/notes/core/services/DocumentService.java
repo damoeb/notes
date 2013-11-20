@@ -7,7 +7,7 @@ import org.notes.common.cache.MethodCache;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.core.interfaces.DocumentManager;
 import org.notes.core.model.Document;
-import org.notes.core.model.FileDocument;
+import org.notes.core.model.PdfDocument;
 import org.notes.core.model.TextDocument;
 
 import javax.inject.Inject;
@@ -95,9 +95,9 @@ public class DocumentService {
 
             //String tmp = _getFieldValue("", items);
 
-            FileDocument fileDocument = documentManager.uploadDocument(items);
+            PdfDocument pdfDocument = documentManager.uploadDocument(items);
 
-            return NotesResponse.ok(fileDocument);
+            return NotesResponse.ok(pdfDocument);
 
         } catch (Throwable t) {
             t.printStackTrace();

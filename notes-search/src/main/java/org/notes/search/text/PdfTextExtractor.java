@@ -5,23 +5,28 @@ import org.apache.pdfbox.pdfparser.PDFParser;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.util.PDFTextStripper;
 import org.notes.common.exceptions.NotesException;
+import org.notes.common.model.ContentType;
 import org.notes.common.model.FileReference;
 import org.notes.search.interfaces.TextExtractor;
+import org.notes.search.model.ExtractionResult;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
 public class PdfTextExtractor implements TextExtractor {
+
     @Override
-    public String[] getContentTypes() {
-        return new String[]{"application/pdf"};
+    public Collection<ContentType> getSupported() {
+        return Arrays.asList(ContentType.PDF);
     }
 
     @Override
-    public List<String> extract(FileReference file) throws NotesException {
+    public ExtractionResult extract(FileReference file) throws NotesException {
 
         PDDocument pdDoc = null;
         COSDocument cosDoc = null;
@@ -43,7 +48,8 @@ public class PdfTextExtractor implements TextExtractor {
                 pages.add(stripper.getText(pdDoc));
             }
 
-            return pages;
+            //todo return pages;
+            return null;
 
         } catch (IOException e) {
             throw new NotesException("pdf extractor", e);

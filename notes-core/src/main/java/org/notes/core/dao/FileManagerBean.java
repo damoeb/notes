@@ -5,6 +5,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
+import org.notes.common.model.ContentType;
 import org.notes.common.model.FileReference;
 import org.notes.core.interfaces.FileManager;
 
@@ -75,9 +76,9 @@ public class FileManagerBean implements FileManager {
             File fileInRepo = getNewPath(checksum);
             item.write(fileInRepo);
 
-            String contentType = getContentType(fileInRepo);
+            ContentType contentType = getContentType(fileInRepo);
 
-            if (!validContentType(contentType)) {
+            if (ContentType.UNKNOWN == contentType) {
                 throw new IllegalArgumentException(String.format("MimeType %s is not supported", contentType));
             }
 
@@ -91,6 +92,7 @@ public class FileManagerBean implements FileManager {
             em.persist(reference);
             em.flush();
 
+
             return reference;
 
         } catch (Throwable t) {
@@ -98,13 +100,8 @@ public class FileManagerBean implements FileManager {
         }
     }
 
-    private boolean validContentType(String contentType) {
-        // todo implement
-        return true;
-    }
-
-    private String getContentType(File file) throws IOException {
-        return Files.probeContentType(Paths.get(file.toURI()));
+    private ContentType getContentType(File file) throws IOException {
+        return ContentType.fromString(Files.probeContentType(Paths.get(file.toURI())));
     }
 
     @Override

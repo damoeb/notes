@@ -1,6 +1,5 @@
 package org.notes.common.model;
 
-import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.hibernate.annotations.Index;
@@ -40,8 +39,8 @@ public class FileReference implements Serializable {
 
     @Basic
     @Column(nullable = false)
-    // todo should be enum
-    private String contentType;
+    @Enumerated(EnumType.STRING)
+    private ContentType contentType;
 
     @Lob
     @Column(name = "full_text")
@@ -71,12 +70,12 @@ public class FileReference implements Serializable {
         this.reference = reference;
     }
 
-    public String getContentType() {
+    public ContentType getContentType() {
         return contentType;
     }
 
-    public void setContentType(String contentType) {
-        this.contentType = StringUtils.lowerCase(contentType);
+    public void setContentType(ContentType contentType) {
+        this.contentType = contentType;
     }
 
     public long getSize() {

@@ -1,13 +1,15 @@
 package org.notes.search.interfaces;
 
 import org.notes.common.exceptions.NotesException;
+import org.notes.common.model.ContentType;
 import org.notes.common.model.FileReference;
+import org.notes.search.model.ExtractionResult;
 
-import java.util.List;
+import java.util.Collection;
 
 public interface TextExtractor {
 
-    String[] getContentTypes();
+    Collection<ContentType> getSupported();
 
-    List<String> extract(FileReference file) throws NotesException;
+    ExtractionResult extract(FileReference file) throws NotesException;
 }

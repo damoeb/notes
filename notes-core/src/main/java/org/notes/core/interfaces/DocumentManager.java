@@ -3,7 +3,7 @@ package org.notes.core.interfaces;
 import org.apache.commons.fileupload.FileItem;
 import org.notes.common.exceptions.NotesException;
 import org.notes.core.model.Document;
-import org.notes.core.model.FileDocument;
+import org.notes.core.model.PdfDocument;
 import org.notes.core.model.TextDocument;
 
 import javax.ejb.Local;
@@ -20,5 +20,5 @@ public interface DocumentManager {
 
     Document updateDocument(Document document) throws NotesException;
 
-    FileDocument uploadDocument(List<FileItem> items) throws NotesException;
+    PdfDocument uploadDocument(List<FileItem> items) throws NotesException;
 }

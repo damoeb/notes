@@ -10,14 +10,13 @@ import org.notes.common.exceptions.NotesException;
 import org.notes.common.model.Event;
 import org.notes.common.model.FileReference;
 import org.notes.common.model.Kind;
+import org.notes.common.model.Trigger;
 import org.notes.common.utils.TextUtils;
 import org.notes.core.interfaces.DocumentManager;
 import org.notes.core.interfaces.FileManager;
 import org.notes.core.interfaces.FolderManager;
 import org.notes.core.interfaces.UserManager;
 import org.notes.core.model.*;
-import org.notes.search.interfaces.SearchManager;
-import org.notes.search.interfaces.TextManager;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -41,9 +40,6 @@ public class DocumentManagerBean implements DocumentManager {
     private EntityManager em;
 
     @Inject
-    private TextManager textManager;
-
-    @Inject
     private FolderManager folderManager;
 
     @Inject
@@ -51,9 +47,6 @@ public class DocumentManagerBean implements DocumentManager {
 
     @Inject
     private UserManager userManager;
-
-    @Inject
-    private SearchManager searchManager;
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
@@ -73,13 +66,10 @@ public class DocumentManagerBean implements DocumentManager {
 
             Long folderId = document.getFolderId();
 
-            //document.setFulltext(_getFulltext(document));
             document.setOutline(_getOutline(document));
             document.setProgress(_getProgress(document));
 
-            document = (TextDocument) _createDocument(document, folderId);
-
-            return document;
+            return (TextDocument) _createDocument(document, folderId);
 
         } catch (NotesException e) {
             throw e;
@@ -89,6 +79,8 @@ public class DocumentManagerBean implements DocumentManager {
     }
 
     private Document _createDocument(Document document, Long folderId) throws NotesException {
+
+        document.setTrigger(Trigger.INDEX);
 
         em.persist(document);
 
@@ -102,9 +94,6 @@ public class DocumentManagerBean implements DocumentManager {
         em.flush();
 
         em.refresh(document);
-
-        // -- Postprocesing --
-        searchManager.index(document);
 
         return document;
     }
@@ -151,18 +140,14 @@ public class DocumentManagerBean implements DocumentManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public Document deleteDocument(Document d) throws NotesException {
+    public Document deleteDocument(Document ref) throws NotesException {
         try {
-            Query query = em.createNamedQuery(Document.DELETE_DOCUMENT);
-            query.setParameter("ID", d.getId());
-            query.setParameter("OWNER", 1l); // todo userId
+            Document document = _get(ref.getId());
+            document.setDeleted(true);
+            document.setTrigger(Trigger.DELETE);
+            em.merge(document);
 
-            query.executeUpdate();
-
-            // -- Postprocesing --
-            searchManager.delete(d);
-
-            return d;
+            return ref;
 
         } catch (Throwable t) {
             throw new NotesException("delete document failed: " + t.getMessage(), t);
@@ -171,67 +156,66 @@ public class DocumentManagerBean implements DocumentManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public Document updateDocument(Document newDoc) throws NotesException {
+    public Document updateDocument(Document ref) throws NotesException {
         try {
 
-            if (newDoc == null) {
+            if (ref == null) {
                 throw new IllegalArgumentException("document is null");
             }
 
-            Document oldDoc = _get(newDoc.getId());
+            Document document = _get(ref.getId());
 
             // decide whether move or update
-            if (Event.MOVE.equals(newDoc.getEvent())) {
+            if (Event.MOVE.equals(ref.getEvent())) {
 
                 Query query;
 
                 query = em.createNativeQuery("UPDATE Folder f SET f.documentCount = f.documentCount - 1 WHERE f.id = :FOLDER_ID");
-                query.setParameter("FOLDER_ID", oldDoc.getFolderId());
+                query.setParameter("FOLDER_ID", document.getFolderId());
                 query.executeUpdate();
 
                 query = em.createNativeQuery("DELETE FROM folder2document WHERE document_id = :DOC_ID");
-                query.setParameter("DOC_ID", oldDoc.getId());
+                query.setParameter("DOC_ID", document.getId());
                 query.executeUpdate();
 
                 em.flush();
 
-                _addToParentFolders(oldDoc, newDoc.getFolderId());
+                _addToParentFolders(document, ref.getFolderId());
             }
 
-            if (Event.UPDATE.equals(newDoc.getEvent())) {
+            if (Event.UPDATE.equals(ref.getEvent())) {
 
-                TextDocument tdoc = (TextDocument) oldDoc;
-                TextDocument ndoc = (TextDocument) newDoc;
+                TextDocument tdoc = (TextDocument) document;
+                TextDocument ndoc = (TextDocument) ref;
 
                 tdoc.setTitle(ndoc.getTitle());
                 tdoc.setText(ndoc.getText());
 
-                oldDoc.setOutline(_getOutline(tdoc));
-                oldDoc.setProgress(_getProgress(newDoc));
+                document.setOutline(_getOutline(tdoc));
+                document.setProgress(_getProgress(ref));
 
-                Reminder reminder = newDoc.getReminder();
-                if (oldDoc.getReminderId() == null) {
-                    oldDoc.setReminder(reminder);
+                Reminder reminder = ref.getReminder();
+                if (document.getReminderId() == null) {
+                    document.setReminder(reminder);
                 } else {
                     if (reminder == null) {
-                        oldDoc.setReminder(null);
+                        document.setReminder(null);
 
                     } else {
-                        reminder.setId(oldDoc.getReminderId());
+                        reminder.setId(document.getReminderId());
                         em.merge(reminder);
                     }
                 }
 
-                em.merge(oldDoc);
+                document.setTrigger(Trigger.INDEX);
+
+                em.merge(document);
                 em.flush();
-                em.refresh(oldDoc);
+                em.refresh(document);
 
             }
 
-            // -- Postprocesing --
-            //searchManager.index(oldDoc);
-
-            return oldDoc;
+            return document;
 
         } catch (NotesException t) {
             throw t;
@@ -242,7 +226,7 @@ public class DocumentManagerBean implements DocumentManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public FileDocument uploadDocument(List<FileItem> items) throws NotesException {
+    public PdfDocument uploadDocument(List<FileItem> items) throws NotesException {
         try {
 
             FileReference reference = null;
@@ -272,19 +256,15 @@ public class DocumentManagerBean implements DocumentManager {
                 throw new IllegalArgumentException("No valid files found");
             }
 
-            FileDocument document = new FileDocument();
+            PdfDocument document = new PdfDocument();
             document.setKind(Kind.PDF);
             document.setTitle(title);
             document.setFileReference(reference);
             document.setOutline(_getFileOutline(reference));
 
-            document = (FileDocument) _createDocument(document, folderId);
+            document.setTrigger(Trigger.EXTRACT);
 
-            // -- Postprocesing --
-
-            //searchManager.index(document);
-
-            return document;
+            return (PdfDocument) _createDocument(document, folderId);
 
         } catch (Throwable t) {
             throw new NotesException("upload document failed: " + t.getMessage(), t);

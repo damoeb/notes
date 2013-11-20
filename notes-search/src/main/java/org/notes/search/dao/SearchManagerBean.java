@@ -17,6 +17,7 @@ import org.notes.search.interfaces.Indexable;
 import org.notes.search.interfaces.SearchManager;
 import org.notes.search.model.DocumentHit;
 
+import javax.ejb.Schedule;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -41,6 +42,23 @@ public class SearchManagerBean implements SearchManager {
     private EntityManager em;
 
 
+    @Schedule(second = "*/10", minute = "*", hour = "*", persistent = false)
+    public void index() {
+
+        try {
+
+            SolrServer server = _getSolrServer();
+
+            // todo get documents where Trigger.INDEX
+
+//            server.add(_toSolrDocument(indexable), 4000);
+
+        } catch (Throwable t) {
+            // todo some probs
+        }
+
+    }
+
     @Override
     public List<DocumentHit> query(String queryString, int start, int rows) throws NotesException {
         try {
@@ -63,24 +81,6 @@ public class SearchManagerBean implements SearchManager {
         } catch (Throwable t) {
             throw new NotesException("query: " + t.getMessage(), t);
         }
-    }
-
-    @Override
-    public void index(Indexable indexable) throws NotesException {
-        try {
-
-            SolrServer server = _getSolrServer();
-
-            server.add(_toSolrDocument(indexable), 4000);
-
-        } catch (Throwable t) {
-            throw new NotesException("index: " + t.getMessage(), t);
-        }
-    }
-
-    @Override
-    public void delete(Indexable indexable) {
-
     }
 
     private SolrInputDocument _toSolrDocument(Indexable indexable) {
