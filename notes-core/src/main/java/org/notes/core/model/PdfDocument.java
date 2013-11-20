@@ -5,7 +5,10 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.notes.common.model.Document;
 import org.notes.common.model.FileReference;
+import org.notes.search.interfaces.TextExtractor;
+import org.notes.search.text.PdfTextExtractor;
 
+import javax.inject.Inject;
 import javax.persistence.*;
 
 @Entity(name = "PdfDocument")
@@ -19,6 +22,13 @@ import javax.persistence.*;
 public class PdfDocument extends Document {
 
     private static final Logger LOGGER = Logger.getLogger(PdfDocument.class);
+
+    // todo fix
+    @Transient
+    @Inject
+    private
+    @PdfTextExtractor
+    TextExtractor textExtractor;
 
     @JsonIgnore
     @ManyToOne(cascade = {}, fetch = FetchType.LAZY)

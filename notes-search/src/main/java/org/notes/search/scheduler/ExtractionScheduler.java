@@ -4,8 +4,11 @@ import org.apache.log4j.Logger;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.model.Document;
 import org.notes.common.model.Trigger;
+import org.notes.search.interfaces.TextExtractor;
+import org.notes.search.text.PdfTextExtractor;
 
 import javax.ejb.*;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -17,6 +20,11 @@ import java.util.List;
 public class ExtractionScheduler {
 
     private static final Logger LOGGER = Logger.getLogger(ExtractionScheduler.class);
+
+    @Inject
+    private
+    @PdfTextExtractor
+    TextExtractor textExtractor;
 
     @PersistenceContext(unitName = "primary")
     private EntityManager em;
@@ -47,58 +55,4 @@ public class ExtractionScheduler {
             LOGGER.error(t);
         }
     }
-
-//    private Map<String, TextExtractor> typeToExtractor = new HashMap(10);
-//
-//    @PostConstruct
-//    private void onInit() {
-//        TextExtractor[] extractors = new TextExtractor[]{
-//                new PdfTextExtractor()
-//        };
-//
-//        for (TextExtractor extractor : extractors) {
-//
-//            if (extractor.getContentTypes() == null) {
-//                LOGGER.error("content type is null");
-//                continue;
-//            }
-//
-//            for (String type : extractor.getContentTypes()) {
-//                if (typeToExtractor.containsKey(type)) {
-//                    LOGGER.error("duplicate content type " + type);
-//                    continue;
-//                }
-//
-//                typeToExtractor.put(type, extractor);
-//            }
-//
-//        }
-//    }
-//
-//    @Override
-//    @Asynchronous
-//    @TransactionAttribute(TransactionAttributeType.NEVER)
-//    @AccessTimeout(-1)
-//    @Lock(LockType.READ)
-//    public Future<String> extractAsync(FileReference reference) throws NotesException {
-//        try {
-//
-//            TextExtractor extractor = getExtractor(reference);
-//            if (extractor != null) {
-//                extractor.extract(reference);
-//            }
-//
-//            // todo implement
-//            // return new AsyncResult<String>(reference.getContentType());
-//            return null;
-//
-//        } catch (Throwable t) {
-//            LOGGER.error(t.getMessage());
-//            throw new NotesException(t.getMessage());
-//        }
-//    }
-//
-//    private TextExtractor getExtractor(FileReference reference) {
-//        return typeToExtractor.get(reference.getContentType());
-//    }
 }
