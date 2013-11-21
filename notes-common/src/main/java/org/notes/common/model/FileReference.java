@@ -16,7 +16,6 @@ import java.io.Serializable;
         @NamedQuery(name = FileReference.QUERY_BY_CHECKSUM, query = "SELECT a FROM File a where a.checksum=:CHECKSUM and a.size=:FILESIZE")
 })
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-//@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class FileReference implements Serializable {
 
     public static final String QUERY_BY_ID = "FileReference.QUERY_BY_ID";
@@ -42,6 +41,7 @@ public class FileReference implements Serializable {
     @Enumerated(EnumType.STRING)
     private ContentType contentType;
 
+    @JsonIgnore
     @Lob
     @Column(name = "full_text")
     private String fullText;

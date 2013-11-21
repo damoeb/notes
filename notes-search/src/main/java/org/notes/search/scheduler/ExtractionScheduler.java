@@ -2,30 +2,24 @@ package org.notes.search.scheduler;
 
 import org.apache.log4j.Logger;
 import org.notes.common.configuration.NotesInterceptors;
+import org.notes.common.exceptions.NotesException;
 import org.notes.common.model.Document;
 import org.notes.common.model.Trigger;
-import org.notes.search.interfaces.TextExtractor;
-import org.notes.search.text.PdfTextExtractor;
 
 import javax.ejb.*;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
-@Singleton
+@Stateless
 @NotesInterceptors
 @TransactionAttribute(TransactionAttributeType.NEVER)
 public class ExtractionScheduler {
 
     private static final Logger LOGGER = Logger.getLogger(ExtractionScheduler.class);
-
-    @Inject
-    private
-    @PdfTextExtractor
-    TextExtractor textExtractor;
 
     @PersistenceContext(unitName = "primary")
     private EntityManager em;
@@ -33,6 +27,7 @@ public class ExtractionScheduler {
     @Schedule(second = "*/10", minute = "*", hour = "*", persistent = false)
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     @Lock(LockType.WRITE)
+    @AccessTimeout(value = 3, unit = TimeUnit.SECONDS)
     public void extract() {
         try {
             Query query = em.createNamedQuery(Document.QUERY_TRIGGER);
@@ -45,8 +40,14 @@ public class ExtractionScheduler {
 
                     LOGGER.info("extract " + document.getId());
 
-                    document.extractFullText();
-                    document.setTrigger(Trigger.INDEX);
+                    try {
+                        document.extractFullText();
+                        document.setTrigger(Trigger.INDEX);
+
+                    } catch (NotesException e) {
+                        document.setTrigger(Trigger.EXTRACT_FAILED);
+                    }
+
                     em.merge(document);
                     em.flush();
                 }

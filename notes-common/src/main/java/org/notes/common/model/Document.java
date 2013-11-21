@@ -6,6 +6,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.hibernate.annotations.Index;
 import org.notes.common.ForeignKey;
 import org.notes.common.configuration.Configuration;
+import org.notes.common.exceptions.NotesException;
 import org.notes.common.service.CustomDateDeserializer;
 import org.notes.common.service.CustomDateSerializer;
 
@@ -303,7 +304,7 @@ public class Document implements Serializable {
         this.trigger = trigger;
     }
 
-    public void extractFullText() {
+    public void extractFullText() throws NotesException {
         // not used
     }
 

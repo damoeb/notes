@@ -42,6 +42,7 @@ public final class TextUtils {
             }
             String normalized = trim(text.replaceAll("[\n\t\r ]+", " "));
             outline.append(normalized);
+            outline.append(" ");
         }
 
         Cleaner cleaner = new Cleaner(Whitelist.simpleText());

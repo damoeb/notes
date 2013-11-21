@@ -8,7 +8,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.MissingResourceException;
+import java.util.PropertyResourceBundle;
 
 public class Configuration {
 
@@ -272,18 +275,6 @@ public class Configuration {
             _log.error("Failed to obtain long value for key='" + key + "', errMsg=" + t.getMessage());
             return defaultValue;
         }
-    }
-
-    public static Calendar getFreshnessExpiry() {
-        final Calendar expiry = Calendar.getInstance();
-        // one month?
-        expiry.roll(Calendar.MONTH, -2);
-//    expiry.roll(Calendar.DAY_OF_MONTH, -10);
-        return expiry;
-    }
-
-    public static Date getBestBeforeDate() {
-        return getFreshnessExpiry().getTime();
     }
 
     public boolean _containsKey(String key) {

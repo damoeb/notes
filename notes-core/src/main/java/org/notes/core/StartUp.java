@@ -2,7 +2,6 @@ package org.notes.core;
 
 import org.apache.log4j.Logger;
 import org.notes.common.configuration.Configuration;
-import org.notes.common.configuration.ConfigurationProperty;
 import org.notes.common.model.Reminder;
 import org.notes.common.model.Repetition;
 import org.notes.core.interfaces.*;
@@ -22,9 +21,6 @@ import java.util.Date;
 public class StartUp {
 
     private static final Logger LOGGER = Logger.getLogger(StartUp.class);
-
-    @ConfigurationProperty(value = Configuration.VERSION, defaultValue = "<UNKNOWN>")
-    private String version = null;
 
     private boolean initialized = false;
 
@@ -47,14 +43,10 @@ public class StartUp {
         //
     }
 
-    public String getVersion() {
-        return version;
-    }
-
     @PostConstruct
     public void onInit() {
 
-        LOGGER.info("Notes Version " + getVersion());
+        LOGGER.info("Notes Version " + Configuration.getStringValue(Configuration.VERSION, "UNKNOWN"));
 
         synchronized (Startup.class) {
             if (!initialized) {

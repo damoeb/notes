@@ -20,6 +20,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 //@LocalBean
 @Stateless
@@ -38,6 +39,7 @@ public class IndexerScheduler {
 
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     @Lock(LockType.READ)
+    @AccessTimeout(value = 3, unit = TimeUnit.SECONDS)
     @Schedule(second = "*/10", minute = "*", hour = "*", persistent = false)
     public void index() {
 
@@ -56,12 +58,16 @@ public class IndexerScheduler {
                 for (Document document : list) {
 
                     if (Trigger.DELETE == document.getTrigger()) {
-
+                        LOGGER.info("delete " + document.getId());
                     }
 
                     if (Trigger.INDEX == document.getTrigger()) {
-
+                        LOGGER.info("index " + document.getId());
                     }
+
+                    document.setTrigger(null);
+                    em.merge(document);
+                    em.flush();
 
                 }
             }

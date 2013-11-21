@@ -1,14 +1,16 @@
 package org.notes.core.model;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.notes.common.exceptions.NotesException;
 import org.notes.common.model.Document;
 import org.notes.common.model.FileReference;
 import org.notes.search.interfaces.TextExtractor;
 import org.notes.search.text.PdfTextExtractor;
 
-import javax.inject.Inject;
+import javax.naming.InitialContext;
 import javax.persistence.*;
 
 @Entity(name = "PdfDocument")
@@ -22,18 +24,6 @@ import javax.persistence.*;
 public class PdfDocument extends Document {
 
     private static final Logger LOGGER = Logger.getLogger(PdfDocument.class);
-
-    // todo fix
-    @Transient
-    @Inject
-    private
-    @PdfTextExtractor
-    TextExtractor textExtractor;
-
-    @JsonIgnore
-    @Lob
-    @Column(name = "full_text")
-    private String fullText;
 
 //  -- References ------------------------------------------------------------------------------------------------------
 
@@ -57,9 +47,23 @@ public class PdfDocument extends Document {
     }
 
     @Override
-    public void extractFullText() {
-        fullText = "Some extracted fulltext";
-        // todo check if file is already extracted
-        LOGGER.info("Extract from PDF");
+    public void extractFullText() throws NotesException {
+        try {
+
+            LOGGER.info("extract pdf " + getId());
+
+            FileReference reference = getFileReference();
+
+            if (StringUtils.isBlank(reference.getFullText())) {
+                InitialContext ic = new InitialContext();
+
+                TextExtractor extractor = (TextExtractor) ic.lookup("java:comp/env/" + PdfTextExtractor.BEAN_NAME);
+                String fullText = extractor.extract(reference);
+                reference.setFullText(fullText);
+            }
+
+        } catch (Throwable e) {
+            throw new NotesException("Cannot extract text of " + getId(), e);
+        }
     }
 }
