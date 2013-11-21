@@ -12,6 +12,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.util.Arrays;
 import java.util.List;
 
 @Singleton
@@ -35,7 +36,7 @@ public class ExtractionScheduler {
     public void extract() {
         try {
             Query query = em.createNamedQuery(Document.QUERY_TRIGGER);
-            query.setParameter("TRIGGER", Trigger.EXTRACT);
+            query.setParameter("TRIGGER", Arrays.asList(Trigger.EXTRACT));
             List<Document> list = query.getResultList();
 
             if (!list.isEmpty()) {

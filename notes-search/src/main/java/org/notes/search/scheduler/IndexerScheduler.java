@@ -18,6 +18,7 @@ import javax.ejb.*;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.util.Arrays;
 import java.util.List;
 
 //@LocalBean
@@ -47,20 +48,21 @@ public class IndexerScheduler {
             // todo get documents where Trigger.DELETE
 
             Query query = em.createNamedQuery(Document.QUERY_TRIGGER);
-            query.setParameter("TRIGGER", Trigger.INDEX);
+            query.setParameter("TRIGGER", Arrays.asList(Trigger.INDEX, Trigger.DELETE));
             List<Document> list = query.getResultList();
 
             if (!list.isEmpty()) {
 
                 for (Document document : list) {
 
-                    LOGGER.info("index " + document.getId());
+                    if (Trigger.DELETE == document.getTrigger()) {
 
-                    // todo index
+                    }
 
-                    document.setTrigger(Trigger.NONE);
-                    em.merge(document);
-                    em.flush();
+                    if (Trigger.INDEX == document.getTrigger()) {
+
+                    }
+
                 }
             }
 

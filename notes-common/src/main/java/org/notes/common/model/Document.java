@@ -23,7 +23,7 @@ import java.util.Date;
 )
 @NamedQueries({
         @NamedQuery(name = Document.QUERY_BY_ID, query = "SELECT a FROM Document a where a.id=:ID"),
-        @NamedQuery(name = Document.QUERY_TRIGGER, query = "SELECT a FROM Document a where a.trigger=:TRIGGER"),
+        @NamedQuery(name = Document.QUERY_TRIGGER, query = "SELECT a FROM Document a where a.trigger in (:TRIGGER)"),
         @NamedQuery(name = Document.QUERY_WITH_REMINDER, query = "SELECT a FROM Document a LEFT JOIN FETCH a.reminder where a.id=:ID")
 })
 @Inheritance(strategy = InheritanceType.JOINED)
