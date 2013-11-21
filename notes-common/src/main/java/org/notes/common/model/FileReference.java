@@ -50,6 +50,8 @@ public class FileReference implements Serializable {
     @Column(name = "size", nullable = false)
     private long size;
 
+//  --------------------------------------------------------------------------------------------------------------------
+
     public FileReference() {
         //
     }

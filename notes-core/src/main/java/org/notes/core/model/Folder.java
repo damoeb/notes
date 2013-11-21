@@ -9,6 +9,9 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Belongs of a database, used to classify documents.
+ */
 @Entity(name = "Folder")
 @Table(name = "Folder",
         uniqueConstraints = @UniqueConstraint(columnNames = {ForeignKey.OWNER_ID, "parent_id", "name"})
@@ -35,18 +38,6 @@ public class Folder extends Node {
     @Basic
     private Integer level = 0;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = {})
-    @JoinColumn(name = ForeignKey.FOLDER_ID)
-    private Set<Document> documents = new HashSet(100);
-
-    @JsonIgnore
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {})
-    @JoinTable(name = "folder2document", joinColumns = @JoinColumn(name = ForeignKey.FOLDER_ID), inverseJoinColumns = @JoinColumn(name = Document.FK_DOCUMENT_ID))
-    private Set<Document> inheritedDocuments = new HashSet(100);
-
-    @Transient
-    private Set<Folder> children = null;
-
     /**
      * true, if has no children folders
      */
@@ -59,6 +50,8 @@ public class Folder extends Node {
     @Basic
     private boolean expanded = false;
 
+//  -- References ------------------------------------------------------------------------------------------------------
+
     @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY, cascade = {})
     @JoinColumn(name = "parent_id")
@@ -67,11 +60,27 @@ public class Folder extends Node {
     @Column(updatable = false, insertable = false, nullable = true, name = "parent_id")
     private Long parentId;
 
+    @OneToMany(fetch = FetchType.LAZY, cascade = {})
+    @JoinColumn(name = ForeignKey.FOLDER_ID)
+    private Set<Document> documents = new HashSet(100);
+
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {})
+    @JoinTable(name = "folder2document", joinColumns = @JoinColumn(name = ForeignKey.FOLDER_ID), inverseJoinColumns = @JoinColumn(name = Document.FK_DOCUMENT_ID))
+    private Set<Document> inheritedDocuments = new HashSet(100);
+
     @Column(updatable = false, insertable = false, nullable = true, name = Database.FK_DATABASE_ID)
     private Long databaseId;
 
+//  -- Transient -------------------------------------------------------------------------------------------------------
+
+    @Transient
+    private Set<Folder> children = null;
+
+//  --------------------------------------------------------------------------------------------------------------------
+
     public Folder() {
-        //
+        // default
     }
 
     public Set<Document> getDocuments() {

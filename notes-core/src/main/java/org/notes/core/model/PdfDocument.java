@@ -31,14 +31,18 @@ public class PdfDocument extends Document {
     TextExtractor textExtractor;
 
     @JsonIgnore
+    @Lob
+    @Column(name = "full_text")
+    private String fullText;
+
+//  -- References ------------------------------------------------------------------------------------------------------
+
+    @JsonIgnore
     @ManyToOne(cascade = {}, fetch = FetchType.LAZY)
     @JoinColumn(name = FileReference.FK_FILE_REFERENCE_ID)
     private FileReference fileReference;
 
-    @JsonIgnore
-    @Lob
-    @Column(name = "full_text")
-    private String fullText;
+//  --------------------------------------------------------------------------------------------------------------------
 
     public PdfDocument() {
         // default

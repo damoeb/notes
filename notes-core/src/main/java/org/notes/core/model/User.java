@@ -33,6 +33,8 @@ public class User implements Serializable {
     @Column(nullable = false, unique = true)
     private String username;
 
+//  -- References ------------------------------------------------------------------------------------------------------
+
     @JsonIgnore
     @OneToMany(cascade = {}, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = ForeignKey.OWNER_ID)
@@ -50,6 +52,12 @@ public class User implements Serializable {
     @OneToMany(cascade = {}, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = ForeignKey.OWNER_ID)
     private Set<Folder> folders = new HashSet(100);
+
+//  --------------------------------------------------------------------------------------------------------------------
+
+    public User() {
+        // default
+    }
 
     public long getId() {
         return id;

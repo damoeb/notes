@@ -15,6 +15,8 @@ public class TextDocument extends Document {
     @Lob
     private String text;
 
+//  --------------------------------------------------------------------------------------------------------------------
+
     public TextDocument() {
         // default
     }

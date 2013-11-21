@@ -7,6 +7,9 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * A logical collection of documents. Two different <code>databases</code> are disjunct.
+ */
 @Entity(name = "DDatabase")
 @Table(name = "DDatabase",
         uniqueConstraints = @UniqueConstraint(columnNames = {ForeignKey.OWNER_ID, "name"})
@@ -22,6 +25,8 @@ public class Database extends Node {
     public static final String QUERY_ALL = "Database.QUERY_ALL";
     public static final String FK_DATABASE_ID = "database_id";
 
+//  -- References ------------------------------------------------------------------------------------------------------
+
     @OneToMany(fetch = FetchType.LAZY, cascade = {})
     @JoinColumn(name = Database.FK_DATABASE_ID)
     private Set<Folder> folders = new HashSet(100);
@@ -29,8 +34,10 @@ public class Database extends Node {
     @Basic
     private Long selectedFolderId;
 
+//  --------------------------------------------------------------------------------------------------------------------
+
     public Database() {
-        //
+        // default
     }
 
     public Set<Folder> getFolders() {

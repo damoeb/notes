@@ -18,8 +18,6 @@ public class Attachment implements Serializable {
 
     public static final String QUERY_BY_ID = "Attachment.QUERY_BY_ID";
 
-    public static final String FK_ATTACHMENT_ID = "attachment_id";
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -41,6 +39,8 @@ public class Attachment implements Serializable {
     @Column(nullable = false)
     private String contentType;
 
+//  -- References ------------------------------------------------------------------------------------------------------
+
     @JsonIgnore
     @ManyToOne(cascade = {}, fetch = FetchType.LAZY)
     @JoinColumn(name = FileReference.FK_FILE_REFERENCE_ID)
@@ -49,8 +49,10 @@ public class Attachment implements Serializable {
     @Column(name = FileReference.FK_FILE_REFERENCE_ID, insertable = false, updatable = false)
     private Long fileReferenceId;
 
+//  --------------------------------------------------------------------------------------------------------------------
+
     public Attachment() {
-        //
+        // default
     }
 
     public long getId() {

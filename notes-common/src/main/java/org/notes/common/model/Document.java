@@ -3,6 +3,7 @@ package org.notes.common.model;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.hibernate.annotations.Index;
 import org.notes.common.ForeignKey;
 import org.notes.common.configuration.Configuration;
 import org.notes.common.service.CustomDateDeserializer;
@@ -26,7 +27,6 @@ import java.util.Date;
         @NamedQuery(name = Document.QUERY_WITH_REMINDER, query = "SELECT a FROM Document a LEFT JOIN FETCH a.reminder where a.id=:ID")
 })
 @Inheritance(strategy = InheritanceType.JOINED)
-//@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class Document implements Serializable {
 
@@ -78,6 +78,8 @@ public class Document implements Serializable {
     @Basic
     private boolean deleted;
 
+//  -- References ------------------------------------------------------------------------------------------------------
+
     @OneToOne(cascade = CascadeType.ALL, optional = true, orphanRemoval = true)
     @JoinColumn(name = ForeignKey.REMINDER_ID)
     private Reminder reminder;
@@ -85,13 +87,18 @@ public class Document implements Serializable {
     @Column(insertable = false, updatable = false, name = ForeignKey.REMINDER_ID)
     private Long reminderId;
 
-    @Transient
-    private Event event;
-
     @JsonIgnore
     @Enumerated(EnumType.STRING)
     @Column(name = "event_trigger", nullable = true)
+    @Index(name = "event_trigger_idx")
     private Trigger trigger;
+
+//  -- Transient -------------------------------------------------------------------------------------------------------
+
+    @Transient
+    private Event event;
+
+//  --------------------------------------------------------------------------------------------------------------------
 
     public Document() {
         // default

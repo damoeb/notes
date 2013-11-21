@@ -35,14 +35,18 @@ public abstract class Node implements Serializable {
     @Basic
     protected boolean deleted;
 
+//  -- References ------------------------------------------------------------------------------------------------------
+
     @Column(nullable = false)
     @JsonDeserialize(using = CustomDateDeserializer.class)
     @JsonSerialize(using = CustomDateSerializer.class)
     @Temporal(TemporalType.TIMESTAMP)
     private Date modified;
 
+//  --------------------------------------------------------------------------------------------------------------------
+
     public Node() {
-        //
+        // default
     }
 
     public Long getOwnerId() {

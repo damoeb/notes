@@ -36,6 +36,8 @@ public class Reminder implements Serializable {
     @Enumerated(EnumType.STRING)
     private Repetition repetition;
 
+//  --------------------------------------------------------------------------------------------------------------------
+
     public Reminder() {
         //
     }

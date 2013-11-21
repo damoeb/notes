@@ -8,6 +8,9 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Every <code>user</code> is associated to an account, that specifies general settings like quota
+ */
 @Entity(name = "Account")
 @Table(name = "Account")
 @NamedQueries({
@@ -32,13 +35,17 @@ public class Account implements Serializable {
     @Basic
     private long quota;
 
+//  -- References ------------------------------------------------------------------------------------------------------
+
     @JsonIgnore
     @OneToMany(cascade = {}, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = Account.FK_ACCOUNT_ID)
     private Set<User> users = new HashSet(100);
 
+//  --------------------------------------------------------------------------------------------------------------------
+
     public Account() {
-        //
+        // default
     }
 
     public long getId() {
