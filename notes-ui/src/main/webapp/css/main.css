@@ -317,6 +317,12 @@ TR.active .progress-of-task {
     color: white;
 }
 
+.folder.drop-document {
+    background-color: #ffffff;
+    color: #000000;
+    border: 1px solid red;
+}
+
 .folder.active .doc-count {
     color: #dadada;
 }

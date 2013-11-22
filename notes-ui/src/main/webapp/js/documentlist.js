@@ -53,7 +53,7 @@ $.widget("notes.documentList", {
 
                     row.draggable({
                         cursor: 'move',
-                        cursorAt: { top: 0, left: -5 },
+                        cursorAt: { top: 5, left: -5 },
                         helper: function (event) {
                             return $('<div class="ui-widget-header">Document ' + documentId + '</div>');
                         },

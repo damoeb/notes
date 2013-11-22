@@ -109,13 +109,9 @@ $.widget("notes.folder", {
         });
 
         folder
-            .droppable({hoverClass: 'ui-state-active', drop: function (event, ui) {
+            .droppable({hoverClass: 'drop-document', drop: function (event, ui) {
                 var draggable = $(ui.draggable);
 
-                if (draggable.hasClass('folder')) {
-                    // ignore implement
-                    console.log('dropped folder ' + draggable.folder('model').get('id'));
-                }
                 if (draggable.is('tr')) {
 
                     new notes.model.document({
@@ -124,8 +120,6 @@ $.widget("notes.folder", {
                         event: 'MOVE'
                     }).save(null, {
                             success: function () {
-                                console.log('dropped document ' + draggable.data('documentId'));
-
                                 // refresh ui
                                 $('#directory').directory('reload');
                             }
