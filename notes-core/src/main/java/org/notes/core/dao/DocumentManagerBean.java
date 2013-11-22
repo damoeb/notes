@@ -8,7 +8,6 @@ import org.hibernate.Session;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
 import org.notes.common.model.*;
-import org.notes.common.utils.TextUtils;
 import org.notes.core.interfaces.DocumentManager;
 import org.notes.core.interfaces.FileManager;
 import org.notes.core.interfaces.FolderManager;
@@ -17,6 +16,7 @@ import org.notes.core.model.Folder;
 import org.notes.core.model.PdfDocument;
 import org.notes.core.model.TextDocument;
 import org.notes.core.model.User;
+import org.notes.search.scheduler.ExtractionScheduler;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -46,6 +46,9 @@ public class DocumentManagerBean implements DocumentManager {
     private FileManager fileManager;
 
     @Inject
+    private ExtractionScheduler extractionScheduler;
+
+    @Inject
     private UserManager userManager;
 
     @Override
@@ -66,7 +69,6 @@ public class DocumentManagerBean implements DocumentManager {
 
             Long folderId = document.getFolderId();
 
-            document.setOutline(_getOutline(document));
             document.setProgress(_getProgress(document));
             document.setTrigger(Trigger.INDEX);
 
@@ -116,10 +118,6 @@ public class DocumentManagerBean implements DocumentManager {
             parent.getInheritedDocuments().add(document);
             folder = parent;
         }
-    }
-
-    private String _getOutline(TextDocument document) {
-        return TextUtils.toOutline(document.getText());
     }
 
     @Override
@@ -190,7 +188,6 @@ public class DocumentManagerBean implements DocumentManager {
                 tdoc.setTitle(ndoc.getTitle());
                 tdoc.setText(ndoc.getText());
 
-                document.setOutline(_getOutline(tdoc));
                 document.setProgress(_getProgress(ref));
 
                 Reminder reminder = ref.getReminder();
@@ -259,8 +256,6 @@ public class DocumentManagerBean implements DocumentManager {
             document.setKind(Kind.PDF);
             document.setTitle(title);
             document.setFileReference(reference);
-            document.setOutline(_getFileOutline(reference));
-
             document.setTrigger(Trigger.EXTRACT);
 
             return (PdfDocument) _createDocument(document, folderId);
@@ -268,10 +263,6 @@ public class DocumentManagerBean implements DocumentManager {
         } catch (Throwable t) {
             throw new NotesException("upload document failed: " + t.getMessage(), t);
         }
-    }
-
-    private String _getFileOutline(FileReference reference) {
-        return TextUtils.toOutline(reference.getSize() + " bytes", reference.getFullText());
     }
 
     private String _getFieldValue(String fieldName, List<FileItem> items) throws NotesException {

@@ -2,6 +2,7 @@ package org.notes.core.model;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.notes.common.model.Document;
+import org.notes.common.utils.TextUtils;
 
 import javax.persistence.Entity;
 import javax.persistence.Lob;
@@ -27,5 +28,11 @@ public class TextDocument extends Document {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    @Override
+    public void onPersist() {
+        super.onPersist();
+        setOutline(TextUtils.toOutline(getText()));
     }
 }

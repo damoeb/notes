@@ -124,13 +124,6 @@ public class Document implements Serializable {
         }
         setModified(now);
     }
-//
-//    private long _getBytes(String value) {
-//        if (StringUtils.isBlank(value)) {
-//            return 0;
-//        }
-//        return value.getBytes().length;
-//    }
 
 //    todo validate fields
 //    @SuppressWarnings({"ConstantConditions"})

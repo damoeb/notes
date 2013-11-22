@@ -7,6 +7,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.notes.common.exceptions.NotesException;
 import org.notes.common.model.Document;
 import org.notes.common.model.FileReference;
+import org.notes.common.utils.TextUtils;
 import org.notes.search.interfaces.TextExtractor;
 import org.notes.search.text.PdfTextExtractor;
 
@@ -44,6 +45,15 @@ public class PdfDocument extends Document {
 
     public void setFileReference(FileReference fileReference) {
         this.fileReference = fileReference;
+    }
+
+
+    @Override
+    public void onPersist() {
+        super.onPersist();
+
+        FileReference reference = getFileReference();
+        setOutline(TextUtils.toOutline(reference.getSize() + " bytes", reference.getFullText()));
     }
 
     @Override
