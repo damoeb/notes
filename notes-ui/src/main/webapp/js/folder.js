@@ -233,5 +233,8 @@ $.widget("notes.folder", {
         $('#document-list-view').documentList({
             folderId: folderId
         });
+    },
+    _destroy: function () {
+        // todo implement widget method
     }
 });

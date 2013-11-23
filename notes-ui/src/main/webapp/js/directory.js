@@ -102,6 +102,9 @@ $.widget("notes.directory", {
     folder: function (folderId) {
         var $this = this;
         return $this.descendants[folderId];
+    },
+    _destroy: function () {
+        // todo implement widget method
     }
 
 });

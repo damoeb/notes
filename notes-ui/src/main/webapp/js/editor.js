@@ -117,157 +117,124 @@ $.widget("notes.editor", {
         return progress;
     },
 
-    _newReminderSettings: function (model) {
-
-        var __fnUpdateModel = function (date, repeatString) {
-            if (date) {
-                model.set('reminder', {
-                    referenceDate: date.toISOString(),
-                    repetition: repeatString
-                });
-            }
-        };
-
-        // todo reminder on/off button
-
-        var repetitionSelect = $('<select/>', {class: 'ui-corner-all'});
-
-        var _defaultDate;
-        if (model.has('reminder')) {
-            _defaultDate = new Date(model.get('reminder').referenceDate);
-        } else {
-            _defaultDate = new Date();
-        }
-
-        var datePicker = $('<input/>', {type: 'text', class: 'ui-corner-all date-field'}).
-            datepicker({
-                format: 'yy-mm-dd',
-                autoSize: true,
-                onSelect: function () {
-                    var _date = $(this).datepicker('getDate');
-                    var _val = repetitionSelect.val();
-                    __fnUpdateModel(_date, _val);
-                }
-            }).datepicker('setDate', _defaultDate);
-
-        repetitionSelect.change(function () {
-            var _date = datePicker.datepicker('getDate');
-            var _val = $(this).val();
-            __fnUpdateModel(_date, _val);
-        });
-
-        var repeatModes = ['never', 'weekly', 'monthly', 'yearly'];
-        for (var i = 0; i < repeatModes.length; i++) {
-            var mode = repeatModes[i];
-            var _option = $('<option/>', {value: mode.toUpperCase(), text: mode});
-            if (model.has('reminder') && model.get('reminder').repetition.toLowerCase() == mode.toLowerCase()) {
-                _option.attr('selected', true);
-            }
-
-            repetitionSelect.append(
-                _option
-            )
-        }
-
-        var __fnRemoveFromModel = function () {
-            model.unset('reminder');
-            model.unset('reminderId');
-        };
-
-        var _onOffLabel = model.has('reminder') ? 'active' : 'inactive';
-        var _onOffButton = $('<div/>').button({
-            label: _onOffLabel
-        }).click(function () {
-                var label = $(this).button('option', 'label');
-                if (label == 'active') {
-                    $(this).button('option', 'label', 'inactive');
-                    __fnRemoveFromModel();
-
-                } else {
-                    $(this).button('option', 'label', 'active');
-                    __fnUpdateModel(datePicker.datepicker('getDate'), repetitionSelect.val());
-                }
-            });
-
-        var _col1 = 'col-lg-2';
-        var _col2 = 'col-lg-10';
-
-        var reminder = $('<div/>', {class: 'row settings'}).append(
-                $('<div/>', {class: 'col-lg-1'}).append(
-                    $('<label/>', {text: 'Reminder '})
-                )
-            ).append(
-                $('<div/>', {class: 'col-lg-11'}).append(
-                        $('<div/>', {class: 'row'}).append(
-                                $('<div/>', {class: _col1, text: 'Status'})
-                            ).append(
-                                $('<div/>', {class: _col2}).append(_onOffButton)
-                            )
-                    ).append(
-                        $('<div/>', {class: 'row'}).append(
-                                $('<div/>', {class: _col1, text: 'Next'})
-                            ).append(
-                                $('<div/>', {class: _col2}).append(datePicker)
-                            )
-                    ).append(
-                        $('<div/>', {class: 'row'}).append(
-                                $('<div/>', {class: _col1, text: 'Repeat'})
-                            ).append(
-                                $('<div/>', {class: _col2}).append(repetitionSelect)
-                            )
-                    )
-            );
-
-
-        /*
-
-         .append(
-         _onOffButton
-         ).append(
-         $('<span/>', {text: ' first notification on '})
-         )
-         ).append(
-         $('<div/>', {class: 'col-lg-5'}).append(
-         datePicker
-         ).append(
-         $('<span/>', {text: 'Repeat', style: 'margin-left:5px; margin-right:5px;'})
-         ).append(
-         repetitionSelect
-         )
-         );
-
-         */
-
-        if (model.has('reminder')) {
-            reminder.show();
-        } else {
-            reminder.hide();
-        }
-
-        return reminder;
-    },
+//    _newReminderSettings: function (model) {
+//
+//        var __fnUpdateModel = function (date, repeatString) {
+//            if (date) {
+//                model.set('reminder', {
+//                    referenceDate: date.toISOString(),
+//                    repetition: repeatString
+//                });
+//            }
+//        };
+//
+//        // todo reminder on/off button
+//
+//        var repetitionSelect = $('<select/>', {class: 'ui-corner-all'});
+//
+//        var _defaultDate;
+//        if (model.has('reminder')) {
+//            _defaultDate = new Date(model.get('reminder').referenceDate);
+//        } else {
+//            _defaultDate = new Date();
+//        }
+//
+//        var datePicker = $('<input/>', {type: 'text', class: 'ui-corner-all date-field'}).
+//            datepicker({
+//                format: 'yy-mm-dd',
+//                autoSize: true,
+//                onSelect: function () {
+//                    var _date = $(this).datepicker('getDate');
+//                    var _val = repetitionSelect.val();
+//                    __fnUpdateModel(_date, _val);
+//                }
+//            }).datepicker('setDate', _defaultDate);
+//
+//        repetitionSelect.change(function () {
+//            var _date = datePicker.datepicker('getDate');
+//            var _val = $(this).val();
+//            __fnUpdateModel(_date, _val);
+//        });
+//
+//        var repeatModes = ['never', 'weekly', 'monthly', 'yearly'];
+//        for (var i = 0; i < repeatModes.length; i++) {
+//            var mode = repeatModes[i];
+//            var _option = $('<option/>', {value: mode.toUpperCase(), text: mode});
+//            if (model.has('reminder') && model.get('reminder').repetition.toLowerCase() == mode.toLowerCase()) {
+//                _option.attr('selected', true);
+//            }
+//
+//            repetitionSelect.append(
+//                _option
+//            )
+//        }
+//
+//        var __fnRemoveFromModel = function () {
+//            model.unset('reminder');
+//            model.unset('reminderId');
+//        };
+//
+//        var _onOffLabel = model.has('reminder') ? 'active' : 'inactive';
+//        var _onOffButton = $('<div/>').button({
+//            label: _onOffLabel
+//        }).click(function () {
+//                var label = $(this).button('option', 'label');
+//                if (label == 'active') {
+//                    $(this).button('option', 'label', 'inactive');
+//                    __fnRemoveFromModel();
+//
+//                } else {
+//                    $(this).button('option', 'label', 'active');
+//                    __fnUpdateModel(datePicker.datepicker('getDate'), repetitionSelect.val());
+//                }
+//            });
+//
+//        var _col1 = 'col-lg-2';
+//        var _col2 = 'col-lg-10';
+//
+//        var reminder = $('<div/>', {class: 'row settings'}).append(
+//                $('<div/>', {class: 'col-lg-1'}).append(
+//                    $('<label/>', {text: 'Reminder '})
+//                )
+//            ).append(
+//                $('<div/>', {class: 'col-lg-11'}).append(
+//                        $('<div/>', {class: 'row'}).append(
+//                                $('<div/>', {class: _col1, text: 'Status'})
+//                            ).append(
+//                                $('<div/>', {class: _col2}).append(_onOffButton)
+//                            )
+//                    ).append(
+//                        $('<div/>', {class: 'row'}).append(
+//                                $('<div/>', {class: _col1, text: 'Next'})
+//                            ).append(
+//                                $('<div/>', {class: _col2}).append(datePicker)
+//                            )
+//                    ).append(
+//                        $('<div/>', {class: 'row'}).append(
+//                                $('<div/>', {class: _col1, text: 'Repeat'})
+//                            ).append(
+//                                $('<div/>', {class: _col2}).append(repetitionSelect)
+//                            )
+//                    )
+//            );
+//
+//
+//        if (model.has('reminder')) {
+//            reminder.show();
+//        } else {
+//            reminder.hide();
+//        }
+//
+//        return reminder;
+//    },
 
 
-    // -- TEXT EDITOR --------------------------------------------------------------------------------------------------
-
-
-    _loadTextEditor: function (model, onUnload) {
+    _getToolbar: function (model, onUpdateModel, onUnload) {
         var $this = this;
 
-        var fieldTitle = $('<input/>', {class: 'ui-widget-content ui-corner-all title', type: 'text', value: model.get('title')});
-        var fieldText = $('<textarea/>', {class: 'ui-widget-content ui-corner-all', type: 'text', value: model.get('text')});
+        var target = $this.element;
 
-        var target = $this.element.empty().show().
-            addClass('container text-editor').
-            // resets from maximized mode
-            removeClass('maximized').
-            addClass('row');
-
-        // todo both should be dialogs?
-        var progressSettings = $this._newProgressSettings(model);
-        var reminderSettings = $this._newReminderSettings(model);
-
-        var header = $('<div/>', {class: 'row'}).append(
+        return $('<div/>', {class: 'row'}).append(
                 $('<button/>').button({
                     label: 'Close',
                     icons: {
@@ -275,8 +242,8 @@ $.widget("notes.editor", {
                     }
                 }).click(
                     function () {
-                        model.set('title', fieldTitle.val());
-                        model.set('text', fieldText.val());
+
+                        onUpdateModel();
 
                         model.save(null, {success: function () {
                             $('#document-list-view').documentList('updateDocument', model);
@@ -285,24 +252,6 @@ $.widget("notes.editor", {
                         $this._unloadTextEditor(onUnload);
                     }
                 )
-//            ).append(
-//                $('<button/>').button({
-//                    label: 'Star',
-//                    icons: {
-//                        primary: 'ui-icon-star'
-//                    }
-//                }).click(function () {
-//                        // todo implement
-//                    })
-//            ).append(
-//                $('<button/>').button({
-//                    label: 'Pin',
-//                    icons: {
-//                        primary: 'ui-icon-pin-s'
-//                    }
-//                }).click(function () {
-//                        // todo implement
-//                    })
             ).append(
                 $('<button/>').button({
                     label: 'Delete',
@@ -361,8 +310,39 @@ $.widget("notes.editor", {
                     }
                 )
             );
+    },
+
+
+    // -- TEXT EDITOR --------------------------------------------------------------------------------------------------
+
+
+    _loadTextEditor: function (model, onUnload) {
+        var $this = this;
+
+        var fieldTitle = $('<input/>', {class: 'ui-widget-content ui-corner-all title', type: 'text', value: model.get('title')});
+        var fieldText = $('<textarea/>', {class: 'ui-widget-content ui-corner-all', type: 'text', value: model.get('text')});
+
+        var target = $this.element.empty().show().
+            addClass('container text-editor').
+            // resets from maximized mode
+            removeClass('maximized').
+            addClass('row');
+
+        // todo both should be dialogs?
+        var progressSettings = $this._newProgressSettings(model);
+        //var reminderSettings = $this._newReminderSettings(model);
+
+        // todo implement star/pin functionality
+
+        var onUpdateModel = function () {
+            model.set('title', fieldTitle.val());
+            model.set('text', fieldText.val());
+        };
+
+        var toolbar = $this._getToolbar(model, onUpdateModel, onUnload);
+
         target.append(
-                header
+                toolbar
 //            ).append(
 //                reminderSettings
             ).append(
@@ -396,10 +376,28 @@ $.widget("notes.editor", {
         var $this = this;
 
         var target = $this.element.empty().show().
-            addClass('container text-editor pdf-content').
+            addClass('container text-editor').
             // resets from maximized mode
             removeClass('maximized').
             addClass('row');
 
+        var onUpdateModel = function () {
+            // todo implement annotation stuff
+        }
+
+        var toolbar = $this._getToolbar(model, onUpdateModel, onUnload);
+
+        target.append(
+                toolbar
+            ).append(
+                $('<div/>', {class: 'pdf-container', id: 'pdfContainer'})
+            );
+
+        pdfloader.loadPdf();
+
+    },
+
+    _destroy: function () {
+        // todo implement widget method
     }
 })

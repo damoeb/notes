@@ -22,7 +22,7 @@ var pdfloader = new function () {
 
     this.renderPage = function (page) {
 
-        var width = 900;
+        var width = 700;
 
         var viewport = page.getViewport(width / page.getViewport(1.0).width);
         var $canvas = jQuery("<canvas></canvas>");

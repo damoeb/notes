@@ -5,9 +5,6 @@ $.widget("notes.documentList", {
             native: 'doc-origin-native'
         }
     },
-    options: {
-
-    },
     _create: function () {
 
         var $this = this;
@@ -225,6 +222,10 @@ $.widget("notes.documentList", {
 
         var aPos = dataTable.fnGetPosition(element[0]);
         dataTable.fnDeleteRow(aPos[0])
+    },
+
+    _destroy: function () {
+        // todo implement widget method
     }
 
 });

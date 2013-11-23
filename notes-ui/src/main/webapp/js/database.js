@@ -58,5 +58,8 @@ $.widget("notes.databaseList", {
             });
 
         });
+    },
+    _destroy: function () {
+        // todo implement widget method
     }
 });
