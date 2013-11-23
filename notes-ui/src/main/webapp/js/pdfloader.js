@@ -2,18 +2,25 @@ var pdfloader = new function () {
 
     this.loadPdf = function () {
 
+        var $this = this;
+
         PDFJS.disableWorker = true; //Not using web workers. Not disabling results in an error. This line is
         //missing in the example code for rendering a pdf.
 
         var pdf = PDFJS.getDocument("http://localhost:8080/notes/rest/file/something");
-        pdf.then(renderPdf);
+        pdf.then(function (pdf) {
+            $this.renderPdf(pdf);
+        });
     }
 
-    function renderPdf(pdf) {
-        pdf.getPage(1).then(renderPage);
+    this.renderPdf = function (pdf) {
+        var $this = this;
+        pdf.getPage(1).then(function (page) {
+            $this.renderPage(page)
+        });
     }
 
-    function renderPage(page) {
+    this.renderPage = function (page) {
 
         var width = 900;
 
