@@ -1,40 +1,21 @@
-$.widget("notes.annotate", {
+var pdfloader = new function () {
 
-    options:{
-        url: '/notes/rest/note/attachment/'
-    },
+    var scale = 1.5; //Set this to whatever you want. This is basically the "zoom" factor for the PDF.
 
-    // table
+    this.loadPdf = function () {
 
-    _init:function () {
-        var $this = this;
+        PDFJS.disableWorker = true; //Not using web workers. Not disabling results in an error. This line is
+        //missing in the example code for rendering a pdf.
 
-        if(!$this.options.url) {
-            console.error('url is not set');
-            throw 'url is not set';
-        }
+        var pdf = PDFJS.getDocument("http://localhost:8080/notes/rest/file/something");
+        pdf.then(renderPdf);
+    }
 
-        $this.element.empty();
+    function renderPdf(pdf) {
+        pdf.getPage(1).then(renderPage);
+    }
 
-        PDFJS.disableWorker = true;
-
-        $this.pdf = PDFJS.getDocument('/ui/217.pdf');
-        $this.pdf.then(function(pdf) {
-            console.log('trigger renderPdf');
-            //pdf.getPage(1).then($this._renderPage);
-
-            pdf.getPage(1).then(function(page) {
-                $this._renderPage(page);
-                //console.log(page)
-            });
-        });
-
-    },
-
-    _renderPage : function (page) {
-        console.log('renderPdf');
-
-        var $this = this;
+    function renderPage(page) {
         var viewport = page.getViewport(scale);
         var $canvas = jQuery("<canvas></canvas>");
 
@@ -45,8 +26,7 @@ $.widget("notes.annotate", {
         canvas.width = viewport.width;
 
         //Append the canvas to the pdf container div
-        //var $pdfContainer = jQuery("#pdfContainer");
-        var $pdfContainer = $this.element;
+        var $pdfContainer = jQuery("#pdfContainer");
         $pdfContainer.css("height", canvas.height + "px").css("width", canvas.width + "px");
         $pdfContainer.append($canvas);
 
@@ -95,10 +75,6 @@ $.widget("notes.annotate", {
 
             page.render(renderContext);
         });
-    },
-
-    _create:function () {
-
     }
 
-});
+};

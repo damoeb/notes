@@ -80,6 +80,13 @@
     <script src="js/dialog.js"></script>
     <script src="js/model.js"></script>
 
+
+    <script src="js/pdf/pdf.js"></script>
+    <script src="js/pdf/textlayerbuilder.js"></script>
+    <script src="js/pdfloader.js"></script>
+    <link rel="stylesheet" href="js/pdf/pdf.css">
+
+
     <script type="text/javascript">
 
         $(document).ready(function () {
@@ -145,7 +152,7 @@
 
             var upload = $('#file-upload').
                     fileupload({
-                        url: '/notes/rest/document/upload',
+                        url: '/notes/rest/file/upload',
                         dataType: 'json'
                     })
                     .bind('fileuploadsubmit', function (e, data) {
@@ -269,6 +276,9 @@
         </div>
 
     </div>
+
+    <!-- todo remove -->
+    <div id="pdfContainer" class="pdf-content"></div>
 
 </div>
 
