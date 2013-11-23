@@ -1,5 +1,5 @@
 notes.model = {
-    folder: Backbone.Model.extend({
+    Folder: Backbone.Model.extend({
         url: '/notes/rest/folder',
         initialize: function () {
             this.listener = []
@@ -17,11 +17,11 @@ notes.model = {
         }
     }),
 
-    database: Backbone.Model.extend({
+    Database: Backbone.Model.extend({
         url: '/notes/rest/database'
     }),
 
-    document: Backbone.Model.extend({
+    Document: Backbone.Model.extend({
         defaults: {
             title: '',
             text: '',

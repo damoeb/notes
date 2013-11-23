@@ -38,7 +38,7 @@ $.widget("notes.directory", {
                 name: databaseJson.name,
                 selectedFolderId: databaseJson.selectedFolderId
             };
-            $this.model = new notes.model.database(minDatabaseData);
+            $this.model = new notes.model.Database(minDatabaseData);
 
 
             // -- render root ------------------------------------------------------------------------------------------
@@ -46,7 +46,7 @@ $.widget("notes.directory", {
 
 
             var rootSettings = $('<div/>', {class: 'ui-icon ui-icon-gear', style: 'float:right'}).click(function () {
-                notes.dialog.folder.settings(new notes.model.folder({
+                notes.dialog.folder.settings(new notes.model.Dolder({
                     databaseId: databaseJson.id
                 }));
             });
@@ -72,7 +72,7 @@ $.widget("notes.directory", {
                     $('<div/>')
                         .appendTo(root)
                         .folder({
-                            model: new notes.model.folder(folderJson),
+                            model: new notes.model.Folder(folderJson),
                             selectedId: databaseJson.selectedFolderId
                         });
                 });

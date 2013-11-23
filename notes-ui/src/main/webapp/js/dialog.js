@@ -93,7 +93,7 @@ notes.dialog.folder = {
                     {
                         text: 'Create',
                         click: function () {
-                            var model = new notes.model.folder({
+                            var model = new notes.model.Folder({
                                 name: input.val(),
                                 parentId: parentModel.get('id'),
                                 databaseId: parentModel.get('databaseId')

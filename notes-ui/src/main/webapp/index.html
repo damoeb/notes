@@ -162,7 +162,7 @@
                     .bind('fileuploaddone', function (e, xhr) {
                         console.log('done');
 
-                        var _model = new notes.model.document(xhr.result.result);
+                        var _model = new notes.model.Document(xhr.result.result);
 
                         $('#document-list-view').documentList('updateDocument', _model);
                     });

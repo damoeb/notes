@@ -1,7 +1,5 @@
 var pdfloader = new function () {
 
-    var scale = 1.5; //Set this to whatever you want. This is basically the "zoom" factor for the PDF.
-
     this.loadPdf = function () {
 
         PDFJS.disableWorker = true; //Not using web workers. Not disabling results in an error. This line is
@@ -16,7 +14,10 @@ var pdfloader = new function () {
     }
 
     function renderPage(page) {
-        var viewport = page.getViewport(scale);
+
+        var width = 900;
+
+        var viewport = page.getViewport(width / page.getViewport(1.0).width);
         var $canvas = jQuery("<canvas></canvas>");
 
         //Set the canvas height and width to the height and width of the viewport

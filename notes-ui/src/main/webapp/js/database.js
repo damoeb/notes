@@ -30,7 +30,7 @@ $.widget("notes.databaseList", {
 
             $.each(list, function (index, json) {
 
-                var model = new notes.model.database(json);
+                var model = new notes.model.Database(json);
 
                 $this.models[model.get('id')] = model;
 

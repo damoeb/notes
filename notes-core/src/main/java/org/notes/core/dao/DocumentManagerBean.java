@@ -124,6 +124,8 @@ public class DocumentManagerBean implements DocumentManager {
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Document getDocument(long documentId) throws NotesException {
         try {
+
+            // todo load proper document including fileref e.g
             Query query = em.createNamedQuery(Document.QUERY_WITH_REMINDER);
             query.setParameter("ID", documentId);
             return (Document) query.getSingleResult();

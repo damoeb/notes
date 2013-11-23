@@ -75,7 +75,7 @@ $.widget("notes.folder", {
                     );
 
                     childFolder.folder({
-                        model: new notes.model.folder(children[i]),
+                        model: new notes.model.Folder(children[i]),
                         selectedId: selectedId,
                         onRefresh: function () {
                             $this.refresh();
@@ -114,7 +114,7 @@ $.widget("notes.folder", {
 
                 if (draggable.is('tr')) {
 
-                    new notes.model.document({
+                    new notes.model.Document({
                         id: draggable.data('documentId'),
                         folderId: model.get('id'),
                         event: 'MOVE'

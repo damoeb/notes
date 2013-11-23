@@ -8,6 +8,10 @@ $.widget("notes.editor", {
         text: {
             url: '/notes/rest/document/${documentId}',
             fnLoad: '_loadTextEditor'
+        },
+        pdf: {
+            url: '/notes/rest/document/${documentId}',
+            fnLoad: '_loadPdfEditor'
         }
     },
 
@@ -44,7 +48,7 @@ $.widget("notes.editor", {
         notes.util.jsonCall('GET', url, {'${documentId}': documentId}, null, function (document) {
             $this.documentId = document.id;
 
-            $this.loadDocument(kind, new notes.model.document(document), onUnload);
+            $this.loadDocument(kind, new notes.model.Document(document), onUnload);
         });
     },
 
@@ -64,134 +68,9 @@ $.widget("notes.editor", {
         }));
     },
 
-    // -- TEXT EDITOR --------------------------------------------------------------------------------------------------
 
-    _loadTextEditor: function (model, onUnload) {
-        var $this = this;
+    // -----------------------------------------------------------------------------------------------------------------
 
-        var fieldTitle = $('<input/>', {class: 'ui-widget-content ui-corner-all title', type: 'text', value: model.get('title')});
-        var fieldText = $('<textarea/>', {class: 'ui-widget-content ui-corner-all', type: 'text', value: model.get('text')});
-
-        var target = $this.element.empty().show().
-            addClass('container text-editor').
-            // resets from maximized mode
-            removeClass('maximized').
-            addClass('row');
-
-        // todo both should be dialogs?
-        var progressSettings = $this._newProgressSettings(model);
-        var reminderSettings = $this._newReminderSettings(model);
-
-        var header = $('<div/>', {class: 'row'}).append(
-                $('<button/>').button({
-                    label: 'Close',
-                    icons: {
-                        primary: 'ui-icon-arrowreturn-1-w'
-                    }
-                }).click(
-                    function () {
-                        model.set('title', fieldTitle.val());
-                        model.set('text', fieldText.val());
-
-                        model.save(null, {success: function () {
-                            $('#document-list-view').documentList('updateDocument', model);
-                        }});
-
-                        $this._unloadTextEditor(onUnload);
-                    }
-                )
-//            ).append(
-//                $('<button/>').button({
-//                    label: 'Star',
-//                    icons: {
-//                        primary: 'ui-icon-star'
-//                    }
-//                }).click(function () {
-//                        // todo implement
-//                    })
-//            ).append(
-//                $('<button/>').button({
-//                    label: 'Pin',
-//                    icons: {
-//                        primary: 'ui-icon-pin-s'
-//                    }
-//                }).click(function () {
-//                        // todo implement
-//                    })
-            ).append(
-                $('<button/>').button({
-                    label: 'Delete',
-                    icons: {
-                        primary: 'ui-icon-trash'
-                    }
-                }).click(function () {
-                        $('#document-list-view').documentList('deleteDocument', model);
-                        // todo destory does not work
-                        model.destroy();
-                        $this._unloadTextEditor(onUnload);
-                    })
-//            ).append(
-//                $('<button/>').button({
-//                    label: 'Reminder',
-//                    icons: {
-//                        primary: 'ui-icon-clock'
-//                    }
-//                }).click(function () {
-//                        reminderSettings.slideToggle();
-//                    })
-            ).append(
-                $('<button/>').button({
-                    label: 'Progress',
-                    icons: {
-                        primary: 'ui-icon-signal'
-                    }
-                }).click(function () {
-                        progressSettings.slideToggle();
-                    })
-            ).append(
-                $('<button/>', {style: 'float:right'}).button({
-                    label: 'Maximize',
-                    icons: {
-                        primary: 'ui-icon-arrow-4-diag'
-                    }
-                }).click(
-                    function () {
-
-                        if (target.hasClass('maximized')) {
-                            target.
-                                removeClass('maximized').
-                                addClass('row');
-                            $(this).
-                                button('option', 'label', 'Maximize').
-                                button('option', 'icons', { primary: 'ui-icon-arrow-4-diag'});
-
-                        } else {
-                            target.
-                                removeClass('row').
-                                addClass('maximized');
-                            $(this).
-                                button('option', 'label', 'Unmaximize').
-                                button('option', 'icons', { primary: 'ui-icon-arrow-1-se'});
-                        }
-                    }
-                )
-            );
-        target.append(
-                header
-//            ).append(
-//                reminderSettings
-            ).append(
-                progressSettings
-            ).append(
-                $('<div/>', {class: 'row', style: 'margin-top:5px'}).append(
-                    fieldTitle
-                )
-            ).append(
-                $('<div/>', {class: 'row', style: 'margin-top:5px'}).append(
-                    fieldText
-                )
-            );
-    },
 
     _newProgressSettings: function (model) {
 
@@ -368,6 +247,137 @@ $.widget("notes.editor", {
         return reminder;
     },
 
+
+    // -- TEXT EDITOR --------------------------------------------------------------------------------------------------
+
+
+    _loadTextEditor: function (model, onUnload) {
+        var $this = this;
+
+        var fieldTitle = $('<input/>', {class: 'ui-widget-content ui-corner-all title', type: 'text', value: model.get('title')});
+        var fieldText = $('<textarea/>', {class: 'ui-widget-content ui-corner-all', type: 'text', value: model.get('text')});
+
+        var target = $this.element.empty().show().
+            addClass('container text-editor').
+            // resets from maximized mode
+            removeClass('maximized').
+            addClass('row');
+
+        // todo both should be dialogs?
+        var progressSettings = $this._newProgressSettings(model);
+        var reminderSettings = $this._newReminderSettings(model);
+
+        var header = $('<div/>', {class: 'row'}).append(
+                $('<button/>').button({
+                    label: 'Close',
+                    icons: {
+                        primary: 'ui-icon-arrowreturn-1-w'
+                    }
+                }).click(
+                    function () {
+                        model.set('title', fieldTitle.val());
+                        model.set('text', fieldText.val());
+
+                        model.save(null, {success: function () {
+                            $('#document-list-view').documentList('updateDocument', model);
+                        }});
+
+                        $this._unloadTextEditor(onUnload);
+                    }
+                )
+//            ).append(
+//                $('<button/>').button({
+//                    label: 'Star',
+//                    icons: {
+//                        primary: 'ui-icon-star'
+//                    }
+//                }).click(function () {
+//                        // todo implement
+//                    })
+//            ).append(
+//                $('<button/>').button({
+//                    label: 'Pin',
+//                    icons: {
+//                        primary: 'ui-icon-pin-s'
+//                    }
+//                }).click(function () {
+//                        // todo implement
+//                    })
+            ).append(
+                $('<button/>').button({
+                    label: 'Delete',
+                    icons: {
+                        primary: 'ui-icon-trash'
+                    }
+                }).click(function () {
+                        $('#document-list-view').documentList('deleteDocument', model);
+                        // todo destory does not work
+                        model.destroy();
+                        $this._unloadTextEditor(onUnload);
+                    })
+//            ).append(
+//                $('<button/>').button({
+//                    label: 'Reminder',
+//                    icons: {
+//                        primary: 'ui-icon-clock'
+//                    }
+//                }).click(function () {
+//                        reminderSettings.slideToggle();
+//                    })
+            ).append(
+                $('<button/>').button({
+                    label: 'Progress',
+                    icons: {
+                        primary: 'ui-icon-signal'
+                    }
+                }).click(function () {
+                        progressSettings.slideToggle();
+                    })
+            ).append(
+                $('<button/>', {style: 'float:right'}).button({
+                    label: 'Maximize',
+                    icons: {
+                        primary: 'ui-icon-arrow-4-diag'
+                    }
+                }).click(
+                    function () {
+
+                        if (target.hasClass('maximized')) {
+                            target.
+                                removeClass('maximized').
+                                addClass('row');
+                            $(this).
+                                button('option', 'label', 'Maximize').
+                                button('option', 'icons', { primary: 'ui-icon-arrow-4-diag'});
+
+                        } else {
+                            target.
+                                removeClass('row').
+                                addClass('maximized');
+                            $(this).
+                                button('option', 'label', 'Unmaximize').
+                                button('option', 'icons', { primary: 'ui-icon-arrow-1-se'});
+                        }
+                    }
+                )
+            );
+        target.append(
+                header
+//            ).append(
+//                reminderSettings
+            ).append(
+                progressSettings
+            ).append(
+                $('<div/>', {class: 'row', style: 'margin-top:5px'}).append(
+                    fieldTitle
+                )
+            ).append(
+                $('<div/>', {class: 'row', style: 'margin-top:5px'}).append(
+                    fieldText
+                )
+            );
+    },
+
     _unloadTextEditor: function (onUnload) {
 
         if ($.isFunction(onUnload)) {
@@ -376,5 +386,20 @@ $.widget("notes.editor", {
 
         // todo implement
         this.element.hide();
+    },
+
+
+    // -- PDF EDITOR .--------------------------------------------------------------------------------------------------
+
+    _loadPdfEditor: function (model, onUnload) {
+
+        var $this = this;
+
+        var target = $this.element.empty().show().
+            addClass('container text-editor pdf-content').
+            // resets from maximized mode
+            removeClass('maximized').
+            addClass('row');
+
     }
-});
+})
