@@ -1,105 +1,128 @@
 package org.notes.core.services;
 
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.notes.common.configuration.NotesInterceptors;
+import org.notes.core.interfaces.DocumentManager;
+import org.notes.core.model.PdfDocument;
+
+import javax.inject.Inject;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import java.io.*;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.zip.GZIPOutputStream;
 
-/**
- * A file servlet supporting resume of downloads and client-side caching and GZIP of text content.
- * This servlet can also be used for images, client-side caching would become more efficient.
- * This servlet can also be used for text files, GZIP would decrease network bandwidth.
- *
- * @author BalusC
- * @link http://balusc.blogspot.com/2009/02/fileservlet-supporting-resume-and.html
- */
-public class FileServlet extends HttpServlet {
+@NotesInterceptors
+@Path("/file")
+public class FileService {
 
-    // Constants ----------------------------------------------------------------------------------
+//  -- Constants -------------------------------------------------------------------------------------------------------
 
     private static final int DEFAULT_BUFFER_SIZE = 10240; // ..bytes = 10KB.
     private static final long DEFAULT_EXPIRE_TIME = 604800000L; // ..ms = 1 week.
     private static final String MULTIPART_BOUNDARY = "MULTIPART_BYTERANGES";
 
+//  --------------------------------------------------------------------------------------------------------------------
 
-    // Properties ---------------------------------------------------------------------------------
+    @Inject
+    private DocumentManager documentManager;
 
-    private String basePath;
+    public DocumentManager getDocumentManager() {
+        return documentManager;
+    }
 
-    // Actions ------------------------------------------------------------------------------------
+    @POST
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path(value = "/upload")
+    public NotesResponse upload(@Context HttpServletRequest request) {
+        try {
 
-    /**
-     * Initialize the servlet.
-     *
-     * @see HttpServlet#init().
-     */
-    public void init() throws ServletException {
+            DiskFileItemFactory factory = new DiskFileItemFactory();
 
-        // Get base path (path to get all resources from) as init parameter.
-        this.basePath = getServletContext().getRealPath(getInitParameter("basePath"));
+            // Set factory constraints
+            factory.setSizeThreshold(DiskFileItemFactory.DEFAULT_SIZE_THRESHOLD);
+            factory.setRepository(new File("/tmp"));
 
-        // Validate base path.
-        if (this.basePath == null) {
-            throw new ServletException("FileServlet init param 'basePath' is required.");
-        } else {
-            File path = new File(this.basePath);
-            if (!path.exists()) {
-                throw new ServletException("FileServlet init param 'basePath' value '"
-                        + this.basePath + "' does actually not exist in file system.");
-            } else if (!path.isDirectory()) {
-                throw new ServletException("FileServlet init param 'basePath' value '"
-                        + this.basePath + "' is actually not a directory in file system.");
-            } else if (!path.canRead()) {
-                throw new ServletException("FileServlet init param 'basePath' value '"
-                        + this.basePath + "' is actually not readable in file system.");
-            }
+            // Create a new file upload handler
+            ServletFileUpload upload = new ServletFileUpload(factory);
+
+            // Set overall request size constraint
+            //todo upload.setSizeMax(10000000);
+
+            List<FileItem> items = upload.parseRequest(request);
+
+            //String tmp = _getFieldValue("", items);
+
+            PdfDocument pdfDocument = getDocumentManager().uploadDocument(items);
+
+            return NotesResponse.ok(pdfDocument);
+
+        } catch (Throwable t) {
+            t.printStackTrace();
+            return NotesResponse.error(t);
         }
     }
 
     /**
-     * Process HEAD request. This returns the same headers as GET request, but without content.
+     * The following code is a modified version from
      *
-     * @see HttpServlet#doHead(HttpServletRequest, HttpServletResponse).
+     * @author BalusC
+     * @link http://balusc.blogspot.com/2009/02/fileservlet-supporting-resume-and.html
+     * <p/>
+     * A file servlet supporting resume of downloads and client-side caching and GZIP of text content.
+     * This servlet can also be used for images, client-side caching would become more efficient.
+     * This servlet can also be used for text files, GZIP would decrease network bandwidth.
      */
-    protected void doHead(HttpServletRequest request, HttpServletResponse response)
+
+    @HEAD
+    @Path("/{fileId}")
+    public void doHead(@Context HttpServletRequest request, @Context HttpServletResponse response, @Context ServletContext context, @PathParam("fileId") String fileId)
             throws ServletException, IOException {
         // Process request without content.
-        processRequest(request, response, false);
+        processRequest(request, response, context, fileId, false);
     }
 
     /**
      * Process GET request.
      *
-     * @see HttpServlet#doGet(HttpServletRequest, HttpServletResponse).
+     * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse).
      */
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    @GET
+    @Path("/{fileId}")
+    public void doGet(@Context HttpServletRequest request, @Context HttpServletResponse response, @Context ServletContext context, @PathParam("fileId") String fileId)
             throws ServletException, IOException {
         // Process request with content.
-        processRequest(request, response, true);
+        processRequest(request, response, context, fileId, true);
     }
+
 
     /**
      * Process the actual request.
      *
      * @param request  The request to be processed.
      * @param response The response to be created.
-     * @param content  Whether the request body should be written (GET) or not (HEAD).
-     * @throws IOException If something fails at I/O level.
+     * @param context
+     * @param fileId
+     * @param content  Whether the request body should be written (GET) or not (HEAD).  @throws IOException If something fails at I/O level.
      */
     private void processRequest
-    (HttpServletRequest request, HttpServletResponse response, boolean content)
+    (HttpServletRequest request, HttpServletResponse response, ServletContext context, String fileId, boolean content)
             throws IOException {
         // Validate the requested file ------------------------------------------------------------
 
         // Get requested file by path info.
-        String requestedFile = request.getPathInfo();
+        String requestedFile = "/home/damoeb/dev/notes/notes-ui/src/main/webapp/217.pdf";//request.getPathInfo();
 
         // Check if file is actually supplied to the request URL.
         if (requestedFile == null) {
@@ -110,7 +133,7 @@ public class FileServlet extends HttpServlet {
         }
 
         // URL-decode the file name (might contain spaces and on) and prepare file object.
-        File file = new File(basePath, URLDecoder.decode(requestedFile, "UTF-8"));
+        File file = new File(requestedFile);
 
         // Check if file actually exists in filesystem.
         if (!file.exists()) {
@@ -230,7 +253,7 @@ public class FileServlet extends HttpServlet {
         // Prepare and initialize response --------------------------------------------------------
 
         // Get content type by file name and set default GZIP support and content disposition.
-        String contentType = getServletContext().getMimeType(fileName);
+        String contentType = context.getMimeType(fileName);
         boolean acceptsGzip = false;
         String disposition = "inline";
 
@@ -399,7 +422,7 @@ public class FileServlet extends HttpServlet {
      * @param output The output to copy the given range from the given input for.
      * @param start  Start of the byte range.
      * @param length Length of the byte range.
-     * @throws IOException If something fails at I/O level.
+     * @throws java.io.IOException If something fails at I/O level.
      */
     private static void copy(RandomAccessFile input, OutputStream output, long start, long length)
             throws IOException {
@@ -469,5 +492,68 @@ public class FileServlet extends HttpServlet {
         }
 
     }
+
+
+//    @GET
+//    @Path("/attachment/{id}")
+//    @Produces({"application/octet-stream", "text/plain"})
+//
+//    // todo http://javaevangelist.blogspot.ch/2012/01/jersey-tip-of-day-use-gzip-compression.html
+//    //@org.jboss.resteasy.annotations.GZIP
+//    public Response getAttachment(@PathParam("id") long attachmentId) {
+//
+//        try {
+//
+//            final Attachment data = documentManager.getAttachmentWithFile(attachmentId);
+//
+//            if (data == null) {
+//                // force media type
+//                return Response.ok().type(MediaType.TEXT_PLAIN_TYPE).entity(String.format("File '%s' appears to be empty.", attachmentId)).build();
+//            }
+//
+//            CacheControl cc = new CacheControl();
+//            cc.setNoTransform(true);
+//            cc.setMustRevalidate(false);
+//            cc.setNoCache(true);
+//            cc.setMaxAge(3600);
+//
+//            final FileInputStream stream = new FileInputStream(data.getFileReference().getReference());
+//
+//            StreamingOutput entity = new StreamingOutput() {
+//                @Override
+//                public void write(OutputStream outputStream) throws IOException, WebApplicationException {
+//                    try {
+//
+//                        int len;
+//                        byte[] buffer = new byte[1024];
+//                        while ((len = stream.read(buffer)) > 0) {
+//                            outputStream.write(buffer, 0, len);
+//                        }
+//
+//                    } catch (Exception e) {
+//                        throw new WebApplicationException(e);
+//                    } finally {
+//                        stream.close();
+//                    }
+//                }
+//
+//            };
+//
+//            String fileName = URLEncoder.encode(data.getName(), "UTF-8");
+//            return Response
+//                    .ok()
+//                    .header("content-disposition", "attachment; filename*= UTF8''" + fileName)
+//                    .type(data.getContentType())
+//                    .entity(entity)
+//                    .cacheControl(cc)
+//                    .build();
+//
+//
+//        } catch (Throwable t) {
+//            // force media type
+//            return Response.ok().type(MediaType.TEXT_PLAIN_TYPE).entity(t.getMessage()).build();
+//        }
+//    }
+//
 
 }

@@ -1,22 +1,14 @@
 package org.notes.core.services;
 
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.notes.common.cache.MethodCache;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.model.Document;
 import org.notes.core.interfaces.DocumentManager;
-import org.notes.core.model.PdfDocument;
 import org.notes.core.model.TextDocument;
 
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import java.io.File;
-import java.util.List;
 
 @NotesInterceptors
 @Path("/document")
@@ -71,40 +63,6 @@ public class DocumentService {
     ) throws Exception {
         return NotesResponse.ok(getDocumentManager().deleteDocument(document));
     }
-
-    @POST
-    @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path(value = "/upload")
-    public NotesResponse upload(@Context HttpServletRequest request) {
-        try {
-
-            DiskFileItemFactory factory = new DiskFileItemFactory();
-
-            // Set factory constraints
-            factory.setSizeThreshold(DiskFileItemFactory.DEFAULT_SIZE_THRESHOLD);
-            factory.setRepository(new File("/tmp"));
-
-            // Create a new file upload handler
-            ServletFileUpload upload = new ServletFileUpload(factory);
-
-            // Set overall request size constraint
-            //todo upload.setSizeMax(10000000);
-
-            List<FileItem> items = upload.parseRequest(request);
-
-            //String tmp = _getFieldValue("", items);
-
-            PdfDocument pdfDocument = documentManager.uploadDocument(items);
-
-            return NotesResponse.ok(pdfDocument);
-
-        } catch (Throwable t) {
-            t.printStackTrace();
-            return NotesResponse.error(t);
-        }
-    }
-
 
 //    @GET
 //    @Path("/attachment/{id}")
