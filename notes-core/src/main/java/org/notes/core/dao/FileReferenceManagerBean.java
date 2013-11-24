@@ -8,7 +8,7 @@ import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
 import org.notes.common.model.ContentType;
 import org.notes.common.model.FileReference;
-import org.notes.core.interfaces.FileManager;
+import org.notes.core.interfaces.FileReferenceManager;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
@@ -27,9 +27,9 @@ import java.util.List;
 @Stateless
 @NotesInterceptors
 @TransactionAttribute(TransactionAttributeType.NEVER)
-public class FileManagerBean implements FileManager {
+public class FileReferenceManagerBean implements FileReferenceManager {
 
-    private static final Logger LOGGER = Logger.getLogger(FileManagerBean.class);
+    private static final Logger LOGGER = Logger.getLogger(FileReferenceManagerBean.class);
 
     @PersistenceContext(unitName = "primary")
     private EntityManager em;
@@ -101,6 +101,29 @@ public class FileManagerBean implements FileManager {
 
     private ContentType getContentType(File file) throws IOException {
         return ContentType.fromString(Files.probeContentType(Paths.get(file.toURI())));
+    }
+
+    @Override
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public FileReference getFileReference(Long fileId) throws NotesException {
+        try {
+            if (fileId == null || fileId <= 0) {
+                throw new NotesException(String.format("Invalid file id '%s'", fileId));
+            }
+
+            Query query = em.createNamedQuery(FileReference.QUERY_BY_ID);
+            query.setParameter("ID", fileId);
+
+            List<FileReference> fileReferences = query.getResultList();
+            if (fileReferences.isEmpty()) {
+                throw new NotesException(String.format("No file with id '%s' found", fileId));
+            }
+
+            return fileReferences.get(0);
+
+        } catch (Throwable t) {
+            throw new NotesException("Cannot load file reference: " + t.getMessage(), t);
+        }
     }
 
     @Override

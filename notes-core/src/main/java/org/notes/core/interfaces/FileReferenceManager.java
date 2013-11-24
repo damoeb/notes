@@ -8,7 +8,9 @@ import javax.ejb.Local;
 import java.io.File;
 
 @Local
-public interface FileManager {
+public interface FileReferenceManager {
+
+    FileReference getFileReference(Long fileId) throws NotesException;
 
     File getRepository();
 

@@ -29,9 +29,12 @@ public class PdfDocument extends Document {
 //  -- References ------------------------------------------------------------------------------------------------------
 
     @JsonIgnore
-    @ManyToOne(cascade = {}, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = {}, fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = FileReference.FK_FILE_REFERENCE_ID)
     private FileReference fileReference;
+
+    @Column(insertable = false, updatable = false, name = FileReference.FK_FILE_REFERENCE_ID)
+    private Long fileReferenceId;
 
 //  --------------------------------------------------------------------------------------------------------------------
 
@@ -47,6 +50,13 @@ public class PdfDocument extends Document {
         this.fileReference = fileReference;
     }
 
+    public Long getFileReferenceId() {
+        return fileReferenceId;
+    }
+
+    public void setFileReferenceId(Long fileReferenceId) {
+        this.fileReferenceId = fileReferenceId;
+    }
 
     @Override
     public void onPersist() {

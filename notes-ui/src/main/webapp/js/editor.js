@@ -393,7 +393,7 @@ $.widget("notes.editor", {
                 $('<div/>', {class: 'pdf-container', id: 'pdfContainer'})
             );
 
-        pdfloader.loadPdf();
+        pdfloader.loadPdf(model.get('fileReferenceId'), 2);
 
     },
 

@@ -24,8 +24,7 @@ import java.util.Date;
 )
 @NamedQueries({
         @NamedQuery(name = Document.QUERY_BY_ID, query = "SELECT a FROM Document a where a.id=:ID"),
-        @NamedQuery(name = Document.QUERY_TRIGGER, query = "SELECT a FROM Document a where a.trigger in (:TRIGGER)"),
-        @NamedQuery(name = Document.QUERY_WITH_REMINDER, query = "SELECT a FROM Document a LEFT JOIN FETCH a.reminder where a.id=:ID")
+        @NamedQuery(name = Document.QUERY_TRIGGER, query = "SELECT a FROM Document a where a.trigger in (:TRIGGER)")
 })
 @Inheritance(strategy = InheritanceType.JOINED)
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
@@ -33,7 +32,6 @@ public class Document implements Serializable {
 
     public static final String QUERY_BY_ID = "Document.QUERY_BY_ID";
     public static final String QUERY_TRIGGER = "Document.QUERY_TRIGGER";
-    public static final String QUERY_WITH_REMINDER = "Document.QUERY_WITH_REMINDER";
 
     public static final String FK_DOCUMENT_ID = "document_id";
 
@@ -103,6 +101,11 @@ public class Document implements Serializable {
 
     public Document() {
         // default
+    }
+
+    public Document(Long id, Kind kind) {
+        this.id = id;
+        this.kind = kind;
     }
 
     public Document(Long id, String title, String outline, Kind kind, Integer progress, Long reminderId, Date modified) {

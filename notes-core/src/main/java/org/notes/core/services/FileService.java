@@ -3,8 +3,11 @@ package org.notes.core.services;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.lang.math.NumberUtils;
 import org.notes.common.configuration.NotesInterceptors;
+import org.notes.common.model.FileReference;
 import org.notes.core.interfaces.DocumentManager;
+import org.notes.core.interfaces.FileReferenceManager;
 import org.notes.core.model.PdfDocument;
 
 import javax.inject.Inject;
@@ -36,6 +39,9 @@ public class FileService {
 
     @Inject
     private DocumentManager documentManager;
+
+    @Inject
+    private FileReferenceManager fileReferenceManager;
 
     public DocumentManager getDocumentManager() {
         return documentManager;
@@ -110,19 +116,32 @@ public class FileService {
     /**
      * Process the actual request.
      *
-     * @param request  The request to be processed.
-     * @param response The response to be created.
+     * @param request      The request to be processed.
+     * @param response     The response to be created.
      * @param context
-     * @param fileId
-     * @param content  Whether the request body should be written (GET) or not (HEAD).  @throws IOException If something fails at I/O level.
+     * @param fileIdString
+     * @param content      Whether the request body should be written (GET) or not (HEAD).  @throws IOException If something fails at I/O level.
      */
     private void processRequest
-    (HttpServletRequest request, HttpServletResponse response, ServletContext context, String fileId, boolean content)
+    (HttpServletRequest request, HttpServletResponse response, ServletContext context, String fileIdString, boolean content)
             throws IOException {
         // Validate the requested file ------------------------------------------------------------
 
         // Get requested file by path info.
-        String requestedFile = "/home/damoeb/dev/notes/notes-ui/src/main/webapp/217.pdf";//request.getPathInfo();
+
+        FileReference reference;
+        try {
+            if (!NumberUtils.isNumber(fileIdString)) {
+                throw new IllegalArgumentException("Invalid file id");
+            }
+
+            reference = fileReferenceManager.getFileReference(Long.parseLong(fileIdString));
+        } catch (Exception e) {
+            response.sendError(403, e.getMessage());
+            return;
+        }
+
+        String requestedFile = reference.getReference();
 
         // Check if file is actually supplied to the request URL.
         if (requestedFile == null) {

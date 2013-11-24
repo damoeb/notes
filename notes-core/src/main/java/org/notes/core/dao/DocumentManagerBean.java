@@ -9,7 +9,7 @@ import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
 import org.notes.common.model.*;
 import org.notes.core.interfaces.DocumentManager;
-import org.notes.core.interfaces.FileManager;
+import org.notes.core.interfaces.FileReferenceManager;
 import org.notes.core.interfaces.FolderManager;
 import org.notes.core.interfaces.UserManager;
 import org.notes.core.model.Folder;
@@ -43,7 +43,7 @@ public class DocumentManagerBean implements DocumentManager {
     private FolderManager folderManager;
 
     @Inject
-    private FileManager fileManager;
+    private FileReferenceManager fileReferenceManager;
 
     @Inject
     private ExtractionScheduler extractionScheduler;
@@ -125,8 +125,7 @@ public class DocumentManagerBean implements DocumentManager {
     public Document getDocument(long documentId) throws NotesException {
         try {
 
-            // todo load proper document including fileref e.g
-            Query query = em.createNamedQuery(Document.QUERY_WITH_REMINDER);
+            Query query = em.createNamedQuery(Document.QUERY_BY_ID);
             query.setParameter("ID", documentId);
             return (Document) query.getSingleResult();
 
@@ -237,7 +236,7 @@ public class DocumentManagerBean implements DocumentManager {
                 if (!item.isFormField()) {
 
                     try {
-                        reference = fileManager.store(item);
+                        reference = fileReferenceManager.store(item);
                         title = item.getName();
                         break;
 
