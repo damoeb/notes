@@ -392,6 +392,13 @@ TR.active .progress-of-task {
     padding: 10px 20px;
 }
 
+/* todo does not work */
+.pdf-editor .pages {
+    text-align: center;
+    min-width: 35px;
+    padding: 3px 3px;
+}
+
 .text-editor .title {
     width: 100%
 }

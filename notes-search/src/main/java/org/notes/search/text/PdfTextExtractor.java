@@ -1,6 +1,5 @@
 package org.notes.search.text;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.pdfbox.cos.COSDocument;
 import org.apache.pdfbox.pdfparser.PDFParser;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -24,7 +23,7 @@ public class PdfTextExtractor implements TextExtractor {
     public static final String BEAN_NAME = "PdfTextExtractor";
 
     @Override
-    public String extract(FileReference file) throws NotesException {
+    public ExtractionResult extract(FileReference file) throws NotesException {
 
         PDDocument pdDoc = null;
         COSDocument cosDoc = null;
@@ -47,7 +46,7 @@ public class PdfTextExtractor implements TextExtractor {
             }
 
             // todo page information should not been lost
-            return StringUtils.join(pages, " ");
+            return new ExtractionResult(pages, pdDoc.getNumberOfPages());
 
         } catch (IOException e) {
             throw new NotesException("pdf extractor failed", e);

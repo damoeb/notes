@@ -2,8 +2,9 @@ package org.notes.search.interfaces;
 
 import org.notes.common.exceptions.NotesException;
 import org.notes.common.model.FileReference;
+import org.notes.search.text.ExtractionResult;
 
 public interface TextExtractor {
 
-    String extract(FileReference file) throws NotesException;
+    ExtractionResult extract(FileReference file) throws NotesException;
 }

@@ -227,14 +227,15 @@ $.widget("notes.editor", {
 //    },
 
 
-    _createButton: function (label, icon, onClick) {
+    _createButton: function (label, icons, onClick) {
 
         var $this = this;
 
         return $('<button/>').button({
             label: label,
             icons: {
-                primary: icon
+                primary: icons.primary,
+                secondary: icons.secondary
             }
         }).click(function () {
                 if ($.isFunction(onClick)) {
@@ -244,21 +245,29 @@ $.widget("notes.editor", {
         )
     },
 
-    _getToolbar: function () {
+    _getToolbar: function (config) {
         var $this = this;
 
         var $toolbar = $('<div/>', {class: 'row'});
 
         var $left = $('<div/>', {style: 'float:left'})
             .append(
-                $this._createButton('Close', 'ui-icon-arrowreturn-1-w', $this.fnClose)
+                $this._createButton('Close', {primary: 'ui-icon-arrowreturn-1-w'}, $this.fnClose)
             ).append(
-                $this._createButton('Delete', 'ui-icon-trash', $this.fnDelete)
+                $this._createButton('Delete', {primary: 'ui-icon-trash'}, $this.fnDelete)
             ).append(
-                $this._createButton('Progress', 'ui-icon-signal', $this.fnProgress)
+                $this._createButton('Progress', {primary: 'ui-icon-signal'}, $this.fnProgress)
             );
 
         // todo add custom buttons via a config
+        if (config && config.left) {
+            for (var i = 0; i < config.left.length; i++) {
+
+                $left.append(
+                    config.left[i]
+                );
+            }
+        }
 
         var $right = $('<div/>', {style: 'float:right'}).append(
             $this._createButton('Maximize', 'ui-icon-arrow-4-diag', $this.fnMaximize)
@@ -402,7 +411,7 @@ $.widget("notes.editor", {
         var $this = this;
 
         var $target = $this.element.empty().show().
-            addClass('container text-editor').
+            addClass('container pdf-editor').
             // resets from maximized mode
             removeClass('maximized').
             addClass('row');
@@ -414,14 +423,45 @@ $.widget("notes.editor", {
             console.log('pre destory')
         };
 
+        $this.currentPage = 1;
+
+        var $numberOfPages = $('<input/>', {type: 'text', class: 'ui-widget-content ui-corner-all pages', value: '1'});
+        var $pdfLayer = $('<div/>', {class: 'pdf-container', id: 'pdfContainer'});
+
+        // todo navigation does not work
+        var fnPrevious = function () {
+            if ($this.currentPage > 1) {
+                $this.currentPage--;
+            }
+
+            $numberOfPages.val($this.currentPage);
+            pdfloader.loadPdf($this.getModel().get('fileReferenceId'), $this.currentPage);
+        };
+        var fnNext = function () {
+            if ($this.currentPage < $this.getModel().get('numberOfPages')) {
+                $this.currentPage++;
+            }
+            $numberOfPages.val($this.currentPage);
+            pdfloader.loadPdf($this.getModel().get('fileReferenceId'), $this.currentPage);
+        };
+
+        var config = {
+            left: [
+                $('<span/>', {style: 'margin-left:5px'}),
+                $this._createButton('Previous', {primary: 'ui-icon-triangle-1-w'}, fnPrevious),
+                $numberOfPages,
+                $this._createButton('Next', {secondary: 'ui-icon-triangle-1-e'}, fnNext)
+            ]
+        }
+
         $target.append(
-                $this._getToolbar()
+                $this._getToolbar(config)
             ).append(
                 $this.getProgressLayer()
             ).append(
-                $('<div/>', {class: 'pdf-container', id: 'pdfContainer'})
+                $pdfLayer
             );
 
-        pdfloader.loadPdf($this.getModel().get('fileReferenceId'), 2);
+        pdfloader.loadPdf($this.getModel().get('fileReferenceId'), $this.currentPage);
     }
 })

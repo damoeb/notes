@@ -9,6 +9,7 @@ import org.notes.common.model.Document;
 import org.notes.common.model.FileReference;
 import org.notes.common.utils.TextUtils;
 import org.notes.search.interfaces.TextExtractor;
+import org.notes.search.text.ExtractionResult;
 import org.notes.search.text.PdfTextExtractor;
 
 import javax.naming.InitialContext;
@@ -38,6 +39,9 @@ public class PdfDocument extends Document {
 
 //  --------------------------------------------------------------------------------------------------------------------
 
+    @Basic
+    private int numberOfPages;
+
     public PdfDocument() {
         // default
     }
@@ -56,6 +60,14 @@ public class PdfDocument extends Document {
 
     public void setFileReferenceId(Long fileReferenceId) {
         this.fileReferenceId = fileReferenceId;
+    }
+
+    public int getNumberOfPages() {
+        return numberOfPages;
+    }
+
+    public void setNumberOfPages(int numberOfPages) {
+        this.numberOfPages = numberOfPages;
     }
 
     @Override
@@ -78,8 +90,9 @@ public class PdfDocument extends Document {
                 InitialContext ic = new InitialContext();
 
                 TextExtractor extractor = (TextExtractor) ic.lookup("java:comp/env/" + PdfTextExtractor.BEAN_NAME);
-                String fullText = extractor.extract(reference);
-                reference.setFullText(fullText);
+                ExtractionResult result = extractor.extract(reference);
+                reference.setFullText(StringUtils.join(result.getFullTexts(), " "));
+                setNumberOfPages(result.getNumberOfPages());
             }
 
         } catch (Throwable e) {
