@@ -229,7 +229,7 @@ $.widget("notes.editor", {
 //    },
 
 
-    _getToolbar: function (model, onUpdateModel, onUnload) {
+    _getToolbar: function (model, onUpdateModel, progressSettings, onUnload) {
         var $this = this;
 
         var target = $this.element;
@@ -339,7 +339,7 @@ $.widget("notes.editor", {
             model.set('text', fieldText.val());
         };
 
-        var toolbar = $this._getToolbar(model, onUpdateModel, onUnload);
+        var toolbar = $this._getToolbar(model, onUpdateModel, progressSettings, onUnload);
 
         target.append(
                 toolbar
@@ -385,10 +385,14 @@ $.widget("notes.editor", {
             // todo implement annotation stuff
         }
 
-        var toolbar = $this._getToolbar(model, onUpdateModel, onUnload);
+        var progressSettings = $this._newProgressSettings(model);
+
+        var toolbar = $this._getToolbar(model, onUpdateModel, progressSettings, onUnload);
 
         target.append(
                 toolbar
+            ).append(
+                progressSettings
             ).append(
                 $('<div/>', {class: 'pdf-container', id: 'pdfContainer'})
             );

@@ -9,7 +9,7 @@ var pdfloader = new function () {
         PDFJS.disableWorker = true; //Not using web workers. Not disabling results in an error. This line is
         //missing in the example code for rendering a pdf.
 
-        var pdf = PDFJS.getDocument("http://localhost:8080/notes/rest/file/" + fileId);
+        var pdf = PDFJS.getDocument("/notes/rest/file/" + fileId);
         pdf.then(function (pdf) {
             $this.renderPdf(pdf);
         });
@@ -24,7 +24,10 @@ var pdfloader = new function () {
 
     this.renderPage = function (page) {
 
-        var width = 700;
+        //Append the canvas to the pdf container div
+        var $pdfContainer = jQuery("#pdfContainer");
+
+        var width = $pdfContainer.width();
 
 //        left: 30px;
 //        top: 326px;
@@ -38,8 +41,6 @@ var pdfloader = new function () {
         canvas.height = viewport.height;
         canvas.width = viewport.width;
 
-        //Append the canvas to the pdf container div
-        var $pdfContainer = jQuery("#pdfContainer");
         $pdfContainer.css("height", canvas.height + "px").css("width", canvas.width + "px");
         $pdfContainer.append($canvas);
 
@@ -69,8 +70,10 @@ var pdfloader = new function () {
             .css("height", viewport.height + "px")
             .css("width", viewport.width + "px")
             .offset({
-                top: canvasOffset.top,
-                left: canvasOffset.left
+                //top: canvasOffset.top,
+                top: 326,
+                //left: canvasOffset.left
+                left: 30
             });
 
         $pdfContainer.append($textLayerDiv);

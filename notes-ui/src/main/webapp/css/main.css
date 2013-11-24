@@ -385,6 +385,7 @@ TR.active .progress-of-task {
 .text-editor.maximized {
     background-color: white;
     position: fixed;
+    overflow-y: scroll;
     top: 0;
     left: 0;
     width: 100%;
