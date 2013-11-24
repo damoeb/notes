@@ -16,13 +16,13 @@ $.widget("notes.databaseList", {
     reload: function () {
         var $this = this;
 
-        var editButton = $('<div/>', {class: 'ui-icon ui-icon-gear', style: 'float:right'}).click(function () {
+        var $editButton = $('<div/>', {class: 'ui-icon ui-icon-gear', style: 'float:right'}).click(function () {
             notes.dialog.database.settings();
         });
-        var target = $this.element.empty()
+        var $target = $this.element.empty()
             .append(
                 $('<div/>', {text: 'Databases', class: 'group-header'}).append(
-                    editButton
+                    $editButton
                 )
             );
 
@@ -34,7 +34,7 @@ $.widget("notes.databaseList", {
 
                 $this.models[model.get('id')] = model;
 
-                var item = $('<div/>', {class: 'group-item'}).append(
+                var $item = $('<div/>', {class: 'group-item'}).append(
                         $('<div/>', {class: 'group-icon ui-icon ui-icon-clipboard'})
                     ).append(
                         $('<div/>', {text: model.get('name'), class: 'group-label'})
@@ -43,17 +43,17 @@ $.widget("notes.databaseList", {
                     ).append(
                         $('<div/>', {class: 'clear'})
                     ).appendTo(
-                        target
+                        $target
                     ).click(function () {
 
-                        target.find('.active').removeClass('active');
+                        $target.find('.active').removeClass('active');
                         $(this).addClass('active');
 
                         $('#directory').directory({databaseId: model.get('id')});
                     });
 
                 if ($this.options.databaseId == model.get('id')) {
-                    item.addClass('active');
+                    $item.addClass('active');
                 }
             });
 

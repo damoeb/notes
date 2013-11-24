@@ -15,13 +15,13 @@ notes.dialog.folder = {
     settings: function (model) {
         var $this = this;
 
-        var dialog = $('<div/>', {class: 'dialog'});
+        var $dialog = $('<div/>', {class: 'dialog'});
 
-        dialog.append(
+        $dialog.append(
                 $('<div/>').append(
                     $('<a/>', {text: 'New Folder'}).click(
                         function () {
-                            dialog.dialog('close');
+                            $dialog.dialog('close');
                             $this.newFolder(model);
                         })
                 )
@@ -29,7 +29,7 @@ notes.dialog.folder = {
                 $('<div/>').append(
                     $('<a/>', {text: 'Rename'}).click(
                         function () {
-                            dialog.dialog('close');
+                            $dialog.dialog('close');
                             $this.rename(model);
                         })
                 )
@@ -48,11 +48,11 @@ notes.dialog.folder = {
 
     rename: function (model) {
 
-        var input = $('<input/>', {name: 'name', type: 'text', value: model.get('name')});
+        var $input = $('<input/>', {name: 'name', type: 'text', value: model.get('name')});
 
         $('<div/>', {class: 'dialog'}).append(
                 $('<div/>').append(
-                    input
+                    $input
                 )
             ).dialog($.extend({}, notes.dialog.defaults, {
                 title: 'Rename ' + model.get('name'),
@@ -60,7 +60,7 @@ notes.dialog.folder = {
                     {
                         text: 'Rename',
                         click: function () {
-                            model.set('name', input.val());
+                            model.set('name', $input.val());
                             model.save(null, {
                                 success: function () {
                                     model.change();
@@ -81,11 +81,11 @@ notes.dialog.folder = {
 
     newFolder: function (parentModel) {
 
-        var input = $('<input/>', {name: 'name', type: 'text'});
+        var $input = $('<input/>', {name: 'name', type: 'text'});
 
         $('<div/>', {class: 'dialog'}).append(
                 $('<div/>').append(
-                    input
+                    $input
                 )
             ).dialog($.extend({}, notes.dialog.defaults, {
                 title: 'New Folder in ' + parentModel.get('name'),
@@ -94,7 +94,7 @@ notes.dialog.folder = {
                         text: 'Create',
                         click: function () {
                             var model = new notes.model.Folder({
-                                name: input.val(),
+                                name: $input.val(),
                                 parentId: parentModel.get('id'),
                                 databaseId: parentModel.get('databaseId')
                             });
@@ -121,13 +121,13 @@ notes.dialog.database = {
 
     settings: function () {
 
-        var dialog = $('<div/>', {class: 'dialog'});
+        var $dialog = $('<div/>', {class: 'dialog'});
 
-        dialog.append(
+        $dialog.append(
                 $('<div/>').append(
                     $('<a/>', {text: 'New Database'}).click(
                         function () {
-                            dialog.dialog('close');
+                            $dialog.dialog('close');
 
                         })
                 )
@@ -141,9 +141,9 @@ notes.dialog.document = {
 
     import: function () {
 
-        var dialog = $('<div/>', {class: 'dialog'});
+        var $dialog = $('<div/>', {class: 'dialog'});
 
-        dialog.append(
+        $dialog.append(
                 $('<div/>').append(
                     $('<a/>', {text: 'From File'}).click(
                         function () {
@@ -152,7 +152,7 @@ notes.dialog.document = {
 
                             upload.click();
 
-                            dialog.dialog('close');
+                            $dialog.dialog('close');
 
                         })
                 )
@@ -160,7 +160,7 @@ notes.dialog.document = {
                 $('<div/>').append(
                     $('<a/>', {text: 'From Web'}).click(
                         function () {
-                            dialog.dialog('close');
+                            $dialog.dialog('close');
 
                         })
                 )
@@ -175,20 +175,20 @@ notes.dialog.settings = {
 
     general: function () {
 
-        var dialog = $('<div/>', {class: 'dialog'});
+        var $dialog = $('<div/>', {class: 'dialog'});
 
-        dialog.append(
+        $dialog.append(
                 $('<div/>').append(
                     $('<a/>', {text: 'Export'}).click(
                         function () {
-                            dialog.dialog('close');
+                            $dialog.dialog('close');
                         })
                 )
             ).append(
                 $('<div/>').append(
                     $('<a/>', {text: 'Import'}).click(
                         function () {
-                            dialog.dialog('close');
+                            $dialog.dialog('close');
                             notes.dialog.document.import();
                         })
                 )

@@ -92,27 +92,27 @@
         $(document).ready(function () {
 
             // -- Overwrites -----------------------------------------------------------------------------------------------
-            var customParse = function (data) {
+            var fnCustomParse = function (data) {
                 if (_.isObject(data.result)) {
                     return data.result;
                 } else {
                     return data;
                 }
             };
-            Backbone.Model.prototype.parse = customParse;
-            Backbone.Collection.prototype.parse = customParse;
+            Backbone.Model.prototype.parse = fnCustomParse;
+            Backbone.Collection.prototype.parse = fnCustomParse;
 
             // -- Side Navigation ------------------------------------------------------------------------------------------
 
             // todo get settings
-            var settings = {databaseId: 1};
+            var config = {databaseId: 1};
 
             $('#databases').databaseList({
-                databaseId: settings.databaseId
+                databaseId: config.databaseId
             });
 
             $('#directory').directory({
-                databaseId: settings.databaseId
+                databaseId: config.databaseId
             });
 
             $('#document-list-view').documentList();
@@ -150,21 +150,21 @@
 //            var overallProgress = $('#fileupload').fileupload('progress');
 //            var activeUploads = $('#fileupload').fileupload('active');
 
-            var upload = $('#file-upload').
+            var $upload = $('#file-upload').
                     fileupload({
                         url: '/notes/rest/file/upload',
                         dataType: 'json'
                     })
                     .bind('fileuploadsubmit', function (e, data) {
-                        var _folderId = $('#directory').directory('selectedFolder');
-                        data.formData = {folderId: _folderId};
+                        var folderId = $('#directory').directory('selectedFolder');
+                        data.formData = {folderId: folderId};
                     })
                     .bind('fileuploaddone', function (e, xhr) {
                         console.log('done');
 
-                        var _model = new notes.model.Document(xhr.result.result);
+                        var model = new notes.model.Document(xhr.result.result);
 
-                        $('#document-list-view').documentList('updateDocument', _model);
+                        $('#document-list-view').documentList('updateDocument', model);
                     });
 
 

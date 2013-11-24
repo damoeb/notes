@@ -4,13 +4,11 @@ $.widget("notes.editor", {
         syncInterval: 15000 // msec
     },
 
-    kinds: {
+    settings: {
         text: {
-            url: '/notes/rest/document/${documentId}',
             fnLoad: '_loadTextEditor'
         },
         pdf: {
-            url: '/notes/rest/document/${documentId}',
             fnLoad: '_loadPdfEditor'
         }
     },
@@ -21,49 +19,49 @@ $.widget("notes.editor", {
         // -- events
         setInterval(function () {
 
-            // todo $this._syncDocument();
+            // todo $this.syncModel();
 
         }, $this.options.syncInterval);
 
     },
 
-    edit: function (documentId, kindString, onUnload) {
+    edit: function (documentId, unloadCallback) {
 
         var $this = this;
+
+        $this.unloadCallback = unloadCallback;
 
         if (!documentId) {
             throw 'document id is null.'
         }
 
-        var kind = $this.kinds[kindString.toLowerCase()];
-        if (!kind) {
-            throw 'kind is null.'
-        }
-        if (!kind) {
-            throw 'kind ' + kindString + ' is supported.'
-        }
-
-        var url = kind.url;
-
-        notes.util.jsonCall('GET', url, {'${documentId}': documentId}, null, function (document) {
+        notes.util.jsonCall('GET', '/notes/rest/document/${documentId}', {'${documentId}': documentId}, null, function (document) {
             $this.documentId = document.id;
 
-            $this.loadDocument(kind, new notes.model.Document(document), onUnload);
+            var settings = $this.settings[document.kind.toLowerCase()];
+
+            var model = new notes.model.Document(document);
+            model.set('event', 'UPDATE');
+
+            $this.loadDocument(settings, model);
         });
     },
 
-    loadDocument: function (kind, model, onUnload) {
+    loadDocument: function (settings, model) {
         var $this = this;
 
-        $this[kind.fnLoad](model, onUnload);
+        $this.model = model;
+        $this.$progressLayer = $this._newProgressSettings(model);
+
+        $this[settings.fnLoad]();
     },
 
     createDocument: function () {
         var $this = this;
         var kindString = 'text';
 
-        var kind = $this.kinds[kindString.toLowerCase()];
-        $this.loadDocument(kind, new kind.model({
+        var setting = $this.settings[kindString.toLowerCase()];
+        $this.loadDocument(setting, new notes.model.Document({
             folderId: $('#directory').directory('selectedFolder')
         }));
     },
@@ -74,47 +72,47 @@ $.widget("notes.editor", {
 
     _newProgressSettings: function (model) {
 
-        var precentageLabel = $('<span/>', {style: 'font-weight:bold; line-height:25px; margin: 7px'});
+        var $percentageLabel = $('<span/>', {style: 'font-weight:bold; line-height:25px; margin: 7px'});
 
-        var __setPercentageLabel = function (value) {
+        var fnSetPercentageLabel = function (value) {
             if (value == 0) {
-                precentageLabel.text('OFF');
+                $percentageLabel.text('OFF');
             } else {
-                precentageLabel.text(value + ' %');
+                $percentageLabel.text(value + ' %');
             }
         };
 
         var value = model.has('progress') ? model.get('progress') : 0;
-        __setPercentageLabel(value);
+        fnSetPercentageLabel(value);
 
-        var slider = $('<div/>', {style: 'margin:7px 0 7px 0;'}).slider({
+        var $slider = $('<div/>', {style: 'margin:7px 0 7px 0;'}).slider({
             range: "min",
             value: value,
             min: 0,
             max: 100,
             slide: function (event, ui) {
-                __setPercentageLabel(ui.value);
+                fnSetPercentageLabel(ui.value);
                 model.set('progress', ui.value);
             }
         });
 
-        var progress = $('<div/>', {class: 'row settings'}).append(
+        var $progress = $('<div/>', {class: 'row settings'}).append(
                 $('<div/>', {style: 'float:left'}).append(
                         $('<label/>', {text: 'Progress'})
                     ).append(
-                        precentageLabel
+                        $percentageLabel
                     )
             ).append(
                 $('<div/>', {class: 'col-lg-5'}).append(
-                    slider
+                    $slider
                 )
             );
 
         if (value <= 0) {
-            progress.hide();
+            $progress.hide();
         }
 
-        return progress;
+        return $progress;
     },
 
 //    _newReminderSettings: function (model) {
@@ -229,179 +227,201 @@ $.widget("notes.editor", {
 //    },
 
 
-    _getToolbar: function (model, onUpdateModel, progressSettings, onUnload) {
+    _createButton: function (label, icon, onClick) {
+
         var $this = this;
 
-        var target = $this.element;
-
-        return $('<div/>', {class: 'row'}).append(
-                $('<button/>').button({
-                    label: 'Close',
-                    icons: {
-                        primary: 'ui-icon-arrowreturn-1-w'
-                    }
-                }).click(
-                    function () {
-
-                        onUpdateModel();
-
-                        model.save(null, {success: function () {
-                            $('#document-list-view').documentList('updateDocument', model);
-                        }});
-
-                        $this._unloadTextEditor(onUnload);
-                    }
-                )
-            ).append(
-                $('<button/>').button({
-                    label: 'Delete',
-                    icons: {
-                        primary: 'ui-icon-trash'
-                    }
-                }).click(function () {
-                        $('#document-list-view').documentList('deleteDocument', model);
-                        // todo destory does not work
-                        model.destroy();
-                        $this._unloadTextEditor(onUnload);
-                    })
-//            ).append(
-//                $('<button/>').button({
-//                    label: 'Reminder',
-//                    icons: {
-//                        primary: 'ui-icon-clock'
-//                    }
-//                }).click(function () {
-//                        reminderSettings.slideToggle();
-//                    })
-            ).append(
-                $('<button/>').button({
-                    label: 'Progress',
-                    icons: {
-                        primary: 'ui-icon-signal'
-                    }
-                }).click(function () {
-                        progressSettings.slideToggle();
-                    })
-            ).append(
-                $('<button/>', {style: 'float:right'}).button({
-                    label: 'Maximize',
-                    icons: {
-                        primary: 'ui-icon-arrow-4-diag'
-                    }
-                }).click(
-                    function () {
-
-                        if (target.hasClass('maximized')) {
-                            target.
-                                removeClass('maximized').
-                                addClass('row');
-                            $(this).
-                                button('option', 'label', 'Maximize').
-                                button('option', 'icons', { primary: 'ui-icon-arrow-4-diag'});
-
-                        } else {
-                            target.
-                                removeClass('row').
-                                addClass('maximized');
-                            $(this).
-                                button('option', 'label', 'Unmaximize').
-                                button('option', 'icons', { primary: 'ui-icon-arrow-1-se'});
-                        }
-                    }
-                )
-            );
+        return $('<button/>').button({
+            label: label,
+            icons: {
+                primary: icon
+            }
+        }).click(function () {
+                if ($.isFunction(onClick)) {
+                    onClick.call($this, this)
+                }
+            }
+        )
     },
 
+    _getToolbar: function () {
+        var $this = this;
+
+        var $toolbar = $('<div/>', {class: 'row'});
+
+        var $left = $('<div/>', {style: 'float:left'})
+            .append(
+                $this._createButton('Close', 'ui-icon-arrowreturn-1-w', $this.fnClose)
+            ).append(
+                $this._createButton('Delete', 'ui-icon-trash', $this.fnDelete)
+            ).append(
+                $this._createButton('Progress', 'ui-icon-signal', $this.fnProgress)
+            );
+
+        // todo add custom buttons via a config
+
+        var $right = $('<div/>', {style: 'float:right'}).append(
+            $this._createButton('Maximize', 'ui-icon-arrow-4-diag', $this.fnMaximize)
+        );
+
+        return $toolbar.append($left).append($right);
+    },
+
+    getProgressLayer: function () {
+        return this.$progressLayer;
+    },
+
+    fnProgress: function () {
+        this.getProgressLayer().slideToggle()
+    },
+
+    fnDelete: function () {
+        var $this = this;
+        $('#document-list-view').documentList('deleteDocument', $this.getModel());
+        // todo destory does not work
+        $this.getModel().destroy();
+        $this._destroy();
+    },
+
+    fnMaximize: function (el) {
+
+        var $editor = this.element;
+        if ($editor.hasClass('maximized')) {
+            $editor.
+                removeClass('maximized').
+                addClass('row');
+            $(el).
+                button('option', 'label', 'Maximize').
+                button('option', 'icons', { primary: 'ui-icon-arrow-4-diag'});
+
+        } else {
+            $editor.
+                removeClass('row').
+                addClass('maximized');
+            $(el).
+                button('option', 'label', 'Unmaximize').
+                button('option', 'icons', { primary: 'ui-icon-arrow-1-se'});
+        }
+
+    },
+
+    fnClose: function () {
+
+        var $this = this;
+
+        $this.syncModel();
+
+        $this._destroy();
+    },
+
+    getModel: function () {
+        return this.model;
+    },
+
+    syncModel: function () {
+        var $this = this;
+
+        if ($.isFunction($this.fnPreSyncModel)) {
+            $this.fnPreSyncModel();
+        }
+
+        $this.getModel().save(null, {success: function () {
+            $('#document-list-view').documentList('updateDocument', $this.getModel());
+        }});
+
+        console.info('sync');
+    },
 
     // -- TEXT EDITOR --------------------------------------------------------------------------------------------------
 
 
-    _loadTextEditor: function (model, onUnload) {
+    _loadTextEditor: function () {
         var $this = this;
 
-        var fieldTitle = $('<input/>', {class: 'ui-widget-content ui-corner-all title', type: 'text', value: model.get('title')});
-        var fieldText = $('<textarea/>', {class: 'ui-widget-content ui-corner-all', type: 'text', value: model.get('text')});
+        var model = $this.getModel();
 
-        var target = $this.element.empty().show().
+        var $fieldTitle = $('<input/>', {class: 'ui-widget-content ui-corner-all title', type: 'text', value: model.get('title')});
+        var $fieldText = $('<textarea/>', {class: 'ui-widget-content ui-corner-all', type: 'text', value: model.get('text')});
+
+        var $target = $this.element.empty().show().
             addClass('container text-editor').
             // resets from maximized mode
             removeClass('maximized').
             addClass('row');
 
         // todo both should be dialogs?
-        var progressSettings = $this._newProgressSettings(model);
-        //var reminderSettings = $this._newReminderSettings(model);
 
         // todo implement star/pin functionality
 
-        var onUpdateModel = function () {
-            model.set('title', fieldTitle.val());
-            model.set('text', fieldText.val());
+        $this.fnPreSyncModel = function () {
+            console.log('pre sync')
+            model.set('title', $fieldTitle.val());
+            model.set('text', $fieldText.val());
         };
 
-        var toolbar = $this._getToolbar(model, onUpdateModel, progressSettings, onUnload);
+        $this.fnPreDestroy = function () {
+            console.log('pre destory')
+        };
 
-        target.append(
-                toolbar
-//            ).append(
-//                reminderSettings
+        $target.append(
+                $this._getToolbar()
             ).append(
-                progressSettings
+                $this.getProgressLayer()
             ).append(
                 $('<div/>', {class: 'row', style: 'margin-top:5px'}).append(
-                    fieldTitle
+                    $fieldTitle
                 )
             ).append(
                 $('<div/>', {class: 'row', style: 'margin-top:5px'}).append(
-                    fieldText
+                    $fieldText
                 )
             );
     },
 
-    _unloadTextEditor: function (onUnload) {
+    _destroy: function () {
 
-        if ($.isFunction(onUnload)) {
-            onUnload();
+        var $this = this;
+
+        if ($.isFunction($this.unloadCallback)) {
+            $this.unloadCallback();
         }
 
-        // todo implement
-        this.element.hide();
+        if ($.isFunction($this.fnPreDestroy)) {
+            $this.fnPreDestroy();
+        }
+
+        // todo implement destroy/reuse?
+        $this.element.hide();
     },
 
 
     // -- PDF EDITOR .--------------------------------------------------------------------------------------------------
 
-    _loadPdfEditor: function (model, onUnload) {
+    _loadPdfEditor: function () {
 
         var $this = this;
 
-        var target = $this.element.empty().show().
+        var $target = $this.element.empty().show().
             addClass('container text-editor').
             // resets from maximized mode
             removeClass('maximized').
             addClass('row');
 
-        var onUpdateModel = function () {
-            // todo implement annotation stuff
-        }
+        $this.fnPreSyncModel = function () {
+            console.log('pre sync')
+        };
+        $this.fnPreDestroy = function () {
+            console.log('pre destory')
+        };
 
-        var progressSettings = $this._newProgressSettings(model);
-
-        var toolbar = $this._getToolbar(model, onUpdateModel, progressSettings, onUnload);
-
-        target.append(
-                toolbar
+        $target.append(
+                $this._getToolbar()
             ).append(
-                progressSettings
+                $this.getProgressLayer()
             ).append(
                 $('<div/>', {class: 'pdf-container', id: 'pdfContainer'})
             );
 
-        pdfloader.loadPdf(model.get('fileReferenceId'), 2);
-
-    },
-
-    _destroy: function () {
-        // todo implement widget method
+        pdfloader.loadPdf($this.getModel().get('fileReferenceId'), 2);
     }
 })

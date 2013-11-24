@@ -19,14 +19,14 @@ $.widget("notes.folder", {
         var model = $this.options.model;
         var selectedId = $this.options.selectedId;
 
-        var target = $this.element;
+        var $target = $this.element;
 
         // -- Structure ------------------------------------------------------------------------------------------------
 
-        var folder = $('<div/>', {class: 'folder level-' + model.get('level')});
-        var childrenWrapper = $('<div/>', {class: 'children'});
+        var $folder = $('<div/>', {class: 'folder level-' + model.get('level')});
+        var $childrenLayer = $('<div/>', {class: 'children'});
 
-        target.append(folder).append(childrenWrapper);
+        $target.append($folder).append($childrenLayer);
 
         //
         // -- Render ---------------------------------------------------------------------------------------------------
@@ -34,20 +34,20 @@ $.widget("notes.folder", {
 
         var documentCount = model.get('documentCount');
 
-        var elName = $('<div/>', {class: 'name', text: model.get('name') });
-        var elDocCount = $('<div/>', {class: 'doc-count', text: '(' + documentCount + ')'});
+        var $fieldName = $('<div/>', {class: 'name', text: model.get('name') });
+        var $fieldDocCount = $('<div/>', {class: 'doc-count', text: '(' + documentCount + ')'});
 
-        $this.elName = elName;
-        $this.elDocCount = elDocCount;
+        $this.$fieldName = $fieldName;
+        $this.$fieldDocCount = $fieldDocCount;
 
-        folder.append(
-                $this._createExpandChildrenButton(model, childrenWrapper))
+        $folder.append(
+                $this._createExpandChildrenButton(model, $childrenLayer))
             .append(
                 $('<div/>', {class: 'icon ui-icon ui-icon-folder-collapsed' })
             ).append(
-                elName
+                $fieldName
             ).append(
-                elDocCount
+                $fieldDocCount
             ).append(
                 $this._newSettingsMenu(model)
             ).append(
@@ -66,15 +66,15 @@ $.widget("notes.folder", {
             if (children) {
                 for (var i = 0; i < children.length; i++) {
 
-                    var childFolder = $('<div/>')
-                            .appendTo(childrenWrapper)
+                    var $childFolder = $('<div/>')
+                            .appendTo($childrenLayer)
                         ;
 
                     $this.children.push(
-                        childFolder
+                        $childFolder
                     );
 
-                    childFolder.folder({
+                    $childFolder.folder({
                         model: new notes.model.Folder(children[i]),
                         selectedId: selectedId,
                         onRefresh: function () {
@@ -95,7 +95,7 @@ $.widget("notes.folder", {
         });
 
         // load documents
-        folder.dblclick(function () {
+        $folder.dblclick(function () {
             $this.loadDocuments();
 
             // sync model: selected folder in database
@@ -104,18 +104,18 @@ $.widget("notes.folder", {
         });
 
         // highlight
-        folder.click(function () {
-            $this._highlight(folder);
+        $folder.click(function () {
+            $this._highlight($folder);
         });
 
-        folder
+        $folder
             .droppable({hoverClass: 'drop-document', drop: function (event, ui) {
-                var draggable = $(ui.draggable);
+                var $draggable = $(ui.draggable);
 
-                if (draggable.is('tr')) {
+                if ($draggable.is('tr')) {
 
                     new notes.model.Document({
-                        id: draggable.data('documentId'),
+                        id: $draggable.data('documentId'),
                         folderId: model.get('id'),
                         event: 'MOVE'
                     }).save(null, {
@@ -133,7 +133,7 @@ $.widget("notes.folder", {
 
         if (selectedId == model.get('id')) {
             $this.loadDocuments();
-            $this._highlight(folder);
+            $this._highlight($folder);
         }
 
         if (model.get('leaf')) {
@@ -157,7 +157,7 @@ $.widget("notes.folder", {
 
         var model = $this.options.model;
 
-        $this.elName.text(model.get('name'));
+        $this.$fieldName.text(model.get('name'));
 
         var documentCount = model.get('documentCount');
         for (var i = 0; i < $this.children.length; i++) {
@@ -165,14 +165,14 @@ $.widget("notes.folder", {
         }
 
         if (documentCount == 0) {
-            $this.elName.parent().addClass('empty');
+            $this.$fieldName.parent().addClass('empty');
         } else {
-            $this.elName.parent().removeClass('empty');
+            $this.$fieldName.parent().removeClass('empty');
         }
 
         $this.documentCount = documentCount;
 
-        $this.elDocCount.text('(' + documentCount + ')');
+        $this.$fieldDocCount.text('(' + documentCount + ')');
 
         if ($this.options.onRefresh) {
             $this.options.onRefresh();
@@ -195,35 +195,34 @@ $.widget("notes.folder", {
             .click(function () {
                 notes.dialog.folder.settings(model);
             });
-
     },
 
     _createExpandChildrenButton: function (model, children) {
         var $this = this;
 
-        var button = $('<div/>', {class: 'toggle ui-icon'});
+        var $button = $('<div/>', {class: 'toggle ui-icon'});
 
-        var showHideChildren = function () {
+        var fnShowHideChildren = function () {
             if (model.get('leaf')) {
-                button.addClass('ui-icon-radio-off');
+                $button.addClass('ui-icon-radio-off');
             } else {
                 if (model.get('expanded')) {
-                    button.removeClass('ui-icon-triangle-1-e');
-                    button.addClass('ui-icon-triangle-1-s');
+                    $button.removeClass('ui-icon-triangle-1-e');
+                    $button.addClass('ui-icon-triangle-1-s');
                     children.removeClass('hidden');
                 } else {
-                    button.addClass('ui-icon-triangle-1-e');
-                    button.removeClass('ui-icon-triangle-1-s');
+                    $button.addClass('ui-icon-triangle-1-e');
+                    $button.removeClass('ui-icon-triangle-1-s');
                     children.addClass('hidden');
                 }
             }
         };
-        showHideChildren();
+        fnShowHideChildren();
 
-        return button.click(function () {
+        return $button.click(function () {
             $this.options.model.set('expanded', !$this.options.model.get('expanded'));
             // todo sync model
-            showHideChildren();
+            fnShowHideChildren();
         });
     },
     loadDocuments: function () {

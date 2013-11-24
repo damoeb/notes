@@ -24,8 +24,7 @@ notes.model = {
     Document: Backbone.Model.extend({
         defaults: {
             title: '',
-            text: '',
-            event: 'UPDATE'
+            text: ''
         },
         url: '/notes/rest/document/'
     })

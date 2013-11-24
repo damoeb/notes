@@ -9,7 +9,7 @@ $.widget("notes.documentList", {
 
         var $this = this;
 
-        this.table = $('<table></table>')
+        this.$table = $('<table></table>')
             .appendTo(this.element)
             .dataTable({
                 'aaData': {},
@@ -38,17 +38,17 @@ $.widget("notes.documentList", {
                 },
                 'fnRowCallback': function (nRow, aData, iDisplayIndex) {
 
-                    var row = $(nRow);
+                    var $row = $(nRow);
 
                     var documentId = aData[0];
-                    row.children().first().addClass('document-id-' + documentId);
+                    $row.children().first().addClass('document-id-' + documentId);
 
                     // todo destroy this event too
-                    row.data('documentId', documentId);
+                    $row.data('documentId', documentId);
 
-                    row.unbind('click dblclick draggable');
+                    $row.unbind('click dblclick draggable');
 
-                    row.draggable({
+                    $row.draggable({
                         cursor: 'move',
                         cursorAt: { top: 5, left: -5 },
                         helper: function (event) {
@@ -59,26 +59,21 @@ $.widget("notes.documentList", {
 
 
                     // adds origin of document
-                    row.addClass(aData[1]);
+                    $row.addClass(aData[1]);
 
                     // -- Events --
 
-                    row.click(function () {
+                    $row.click(function () {
 
                         var documentId = aData[0];
-                        var kind = $(aData[4]).attr('kind');
 
                         // call editor
-                        $('#editor').editor('edit', documentId, kind, function () {
-                            row.removeClass('highlighted');
+                        $('#editor').editor('edit', documentId, function () {
+                            $row.removeClass('highlighted');
                         });
-                        /*
-                         })
-                         .click(function () {
-                         */
                         // highlight
-                        $this.table.find('tr.highlighted').removeClass('highlighted');
-                        row.addClass('highlighted');
+                        $this.$table.find('tr.highlighted').removeClass('highlighted');
+                        $row.addClass('highlighted');
                     });
 
 
@@ -114,7 +109,7 @@ $.widget("notes.documentList", {
             }
         ];
 
-        $this.table.dataTable().fnClearTable();
+        $this.$table.dataTable().fnClearTable();
 
         $.each(sources, function (index, source) {
 
@@ -133,10 +128,10 @@ $.widget("notes.documentList", {
                     ]);
                 }
 
-                $this.table.find('td').unbind('dblclick');
+                $this.$table.find('td').unbind('dblclick');
 
-                var dataTable = $this.table.dataTable();
-                dataTable.fnAddData(data);
+                var $dataTable = $this.$table.dataTable();
+                $dataTable.fnAddData(data);
             });
         });
     },
@@ -181,9 +176,9 @@ $.widget("notes.documentList", {
 
     updateDocument: function (model) {
         var $this = this;
-        var element = $this.table.find('.document-id-' + model.get('id'));
+        var $element = $this.$table.find('.document-id-' + model.get('id'));
 
-        var dataTable = $this.table.dataTable();
+        var $dataTable = $this.$table.dataTable();
 
         var data = [
             model.get('id'),
@@ -200,28 +195,28 @@ $.widget("notes.documentList", {
             })
         ];
 
-        if (element.length == 0) {
+        if ($element.length == 0) {
             // add line
-            dataTable.fnAddData(data);
+            $dataTable.fnAddData(data);
             var item = $('#directory').directory('folder', model.get('folderId'));
             var model = item.model();
             model.set('documentCount', model.get('documentCount') + 1);
             item.refresh();
 
         } else {
-            var aPos = dataTable.fnGetPosition(element[0]);
-            dataTable.fnUpdate(data, aPos[0])
+            var aPos = $dataTable.fnGetPosition($element[0]);
+            $dataTable.fnUpdate(data, aPos[0])
         }
     },
 
     deleteDocument: function (model) {
         var $this = this;
-        var element = $this.table.find('.document-id-' + model.get('id'));
+        var $element = $this.$table.find('.document-id-' + model.get('id'));
 
-        var dataTable = $this.table.dataTable();
+        var $dataTable = $this.$table.dataTable();
 
-        var aPos = dataTable.fnGetPosition(element[0]);
-        dataTable.fnDeleteRow(aPos[0])
+        var aPos = $dataTable.fnGetPosition($element[0]);
+        $dataTable.fnDeleteRow(aPos[0])
     },
 
     _destroy: function () {
