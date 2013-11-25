@@ -15,6 +15,7 @@
         <module>notes-core</module>
         <module>notes-ui</module>
         <module>notes-search</module>
+        <module>notes-text</module>
     </modules>
 
 </project>

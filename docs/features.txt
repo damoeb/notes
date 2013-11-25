@@ -1,0 +1,23 @@
+1. Connectivity
+- Transclusion
+- External Hyperlinks
+- Internal Hyperlinks
+- Import/Export
+- Share
+
+2. Classification
+- Hyrarchie
+- Tags/Keywords
+- Attributes for documents
+
+3. Text layout and formatting
+
+4. A sense of time
+- Calendar
+- Timer/Reminder
+- Completed
+- Finished
+
+5. Ease of use
+
+6. Visual Appeal

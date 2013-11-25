@@ -1,4 +1,4 @@
-package org.notes.search.text;
+package org.notes.text;
 
 import java.util.List;
 

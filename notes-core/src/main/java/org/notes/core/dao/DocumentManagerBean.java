@@ -16,7 +16,7 @@ import org.notes.core.model.Folder;
 import org.notes.core.model.PdfDocument;
 import org.notes.core.model.TextDocument;
 import org.notes.core.model.User;
-import org.notes.search.scheduler.ExtractionScheduler;
+import org.notes.text.scheduler.ExtractionScheduler;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;

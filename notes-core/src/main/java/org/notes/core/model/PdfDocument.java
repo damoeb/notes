@@ -8,9 +8,9 @@ import org.notes.common.exceptions.NotesException;
 import org.notes.common.model.Document;
 import org.notes.common.model.FileReference;
 import org.notes.common.utils.TextUtils;
-import org.notes.search.interfaces.TextExtractor;
-import org.notes.search.text.ExtractionResult;
-import org.notes.search.text.PdfTextExtractor;
+import org.notes.text.ExtractionResult;
+import org.notes.text.PdfTextExtractor;
+import org.notes.text.interfaces.TextExtractor;
 
 import javax.naming.InitialContext;
 import javax.persistence.*;

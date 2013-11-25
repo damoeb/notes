@@ -1,4 +1,4 @@
-package org.notes.search.scheduler;
+package org.notes.text.scheduler;
 
 import org.apache.log4j.Logger;
 import org.notes.common.configuration.NotesInterceptors;
