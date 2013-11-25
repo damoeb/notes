@@ -257,7 +257,7 @@ public class DocumentManagerBean implements DocumentManager {
             document.setKind(Kind.PDF);
             document.setTitle(title);
             document.setFileReference(reference);
-            document.setTrigger(Trigger.EXTRACT);
+            document.setTrigger(Trigger.EXTRACT_PDF);
 
             return (PdfDocument) _createDocument(document, folderId);
 

@@ -31,7 +31,7 @@ public class ExtractionScheduler {
     public void extract() {
         try {
             Query query = em.createNamedQuery(Document.QUERY_TRIGGER);
-            query.setParameter("TRIGGER", Arrays.asList(Trigger.EXTRACT));
+            query.setParameter("TRIGGER", Arrays.asList(Trigger.EXTRACT_PDF));
             List<Document> list = query.getResultList();
 
             if (!list.isEmpty()) {
@@ -45,7 +45,8 @@ public class ExtractionScheduler {
                         document.setTrigger(Trigger.INDEX);
 
                     } catch (NotesException e) {
-                        document.setTrigger(Trigger.EXTRACT_FAILED);
+                        // it failed
+                        document.setTrigger(Trigger.OCR);
                     }
 
                     em.merge(document);

@@ -12,7 +12,6 @@ import org.notes.common.configuration.ConfigurationProperty;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.model.Document;
 import org.notes.common.model.Trigger;
-import org.notes.search.interfaces.Indexable;
 
 import javax.ejb.*;
 import javax.persistence.EntityManager;
@@ -45,9 +44,7 @@ public class IndexerScheduler {
 
         try {
 
-            SolrServer server = _getSolrServer();
-
-            // todo get documents where Trigger.DELETE
+            SolrServer server = getSolrServer();
 
             Query query = em.createNamedQuery(Document.QUERY_TRIGGER);
             query.setParameter("TRIGGER", Arrays.asList(Trigger.INDEX, Trigger.DELETE));
@@ -59,10 +56,12 @@ public class IndexerScheduler {
 
                     if (Trigger.DELETE == document.getTrigger()) {
                         LOGGER.info("delete " + document.getId());
+                        server.deleteById(String.valueOf(document.getId()));
                     }
 
                     if (Trigger.INDEX == document.getTrigger()) {
                         LOGGER.info("index " + document.getId());
+                        server.add(toSolrDocument(document));
                     }
 
                     document.setTrigger(null);
@@ -72,21 +71,20 @@ public class IndexerScheduler {
                 }
             }
 
-
         } catch (Throwable t) {
             LOGGER.error(t);
         }
-
     }
 
-    private SolrInputDocument _toSolrDocument(Indexable indexable) {
+    private SolrInputDocument toSolrDocument(Document document) {
         // todo update document http://wiki.apache.org/solr/UpdateXmlMessages#Optional_attributes_for_.22field.22
-        SolrInputDocument document = new SolrInputDocument();
-        document.setField("title", indexable.getTitle());
-        return document;
+        SolrInputDocument inputDocument = new SolrInputDocument();
+        inputDocument.setField("id", document.getId());
+        inputDocument.setField("title", document.getTitle());
+        return inputDocument;
     }
 
-    private SolrServer _getSolrServer() {
+    private SolrServer getSolrServer() {
         HttpClient httpClient = new DefaultHttpClient();
         SolrServer solr = new HttpSolrServer(solrUrl, httpClient, new XMLResponseParser());
         return solr;

@@ -91,7 +91,13 @@ public class PdfDocument extends Document {
 
                 TextExtractor extractor = (TextExtractor) ic.lookup("java:comp/env/" + PdfTextExtractor.BEAN_NAME);
                 ExtractionResult result = extractor.extract(reference);
-                reference.setFullText(StringUtils.join(result.getFullTexts(), " "));
+                String fullText = StringUtils.join(result.getFullTexts(), " ");
+                if (StringUtils.isBlank(fullText)) {
+                    // todo check if working
+                    throw new NotesException("FullText not extractable");
+                }
+
+                reference.setFullText(fullText);
                 setNumberOfPages(result.getNumberOfPages());
             }
 

@@ -2,7 +2,8 @@ package org.notes.common.model;
 
 public enum Trigger {
     INDEX,
-    EXTRACT,
+    EXTRACT_PDF,
+    OCR,
     EXTRACT_FAILED,
     DELETE
 }
