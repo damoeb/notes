@@ -25,10 +25,9 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 //@LocalBean
-@Stateless
+@Singleton
 @NotesInterceptors
 @TransactionAttribute(TransactionAttributeType.NEVER)
 public class IndexerScheduler {
@@ -45,7 +44,7 @@ public class IndexerScheduler {
 
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     @Lock(LockType.WRITE)
-    @AccessTimeout(value = 1, unit = TimeUnit.SECONDS)
+    @AccessTimeout(0) // no concurrent access
     @Schedule(second = "*/10", minute = "*", hour = "*", persistent = false)
     public void index() {
 

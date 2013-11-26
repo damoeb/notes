@@ -83,6 +83,7 @@ public class PdfDocument extends Document implements FullTextProvider {
         int len = reference.getFullTexts() == null ? 0 : Math.min(2, reference.getFullTexts().size());
         String[] more = new String[len];
         int index = 0;
+        // todo: fulltexts should be ordered
         for (FullText fullText : reference.getFullTexts()) {
             if (index >= more.length) {
                 break;
