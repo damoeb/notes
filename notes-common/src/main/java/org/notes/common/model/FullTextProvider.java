@@ -11,7 +11,7 @@ public interface FullTextProvider {
 
     Long getFolderId();
 
+    // avoid invokes from json-mapper cause no session context available
     @JsonIgnore
-        // required, jsonmapper will call this method without session context
     Collection<FullText> getFullTexts();
 }
