@@ -27,7 +27,7 @@ public class ExtractionScheduler {
     @Schedule(second = "*/10", minute = "*", hour = "*", persistent = false)
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     @Lock(LockType.WRITE)
-    @AccessTimeout(value = 3, unit = TimeUnit.SECONDS)
+    @AccessTimeout(value = 1, unit = TimeUnit.SECONDS)
     public void extract() {
         try {
             Query query = em.createNamedQuery(Document.QUERY_TRIGGER);

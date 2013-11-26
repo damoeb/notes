@@ -4,6 +4,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServer;
+import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrServer;
 import org.apache.solr.client.solrj.impl.XMLResponseParser;
 import org.apache.solr.common.SolrInputDocument;
@@ -11,14 +12,19 @@ import org.notes.common.configuration.Configuration;
 import org.notes.common.configuration.ConfigurationProperty;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.model.Document;
+import org.notes.common.model.FullText;
+import org.notes.common.model.FullTextProvider;
 import org.notes.common.model.Trigger;
 
 import javax.ejb.*;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 //@LocalBean
@@ -28,6 +34,7 @@ import java.util.concurrent.TimeUnit;
 public class IndexerScheduler {
 
     private static final Logger LOGGER = Logger.getLogger(IndexerScheduler.class);
+    private static final int COMMIT_WITHIN_MS = 3000;
 
     @ConfigurationProperty(value = Configuration.SOLR_SERVER, mandatory = true, defaultValue = "hase")
     private String solrUrl = "http://localhost:8080/solr-4.5.1";
@@ -37,8 +44,8 @@ public class IndexerScheduler {
 
 
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    @Lock(LockType.READ)
-    @AccessTimeout(value = 3, unit = TimeUnit.SECONDS)
+    @Lock(LockType.WRITE)
+    @AccessTimeout(value = 1, unit = TimeUnit.SECONDS)
     @Schedule(second = "*/10", minute = "*", hour = "*", persistent = false)
     public void index() {
 
@@ -61,7 +68,13 @@ public class IndexerScheduler {
 
                     if (Trigger.INDEX == document.getTrigger()) {
                         LOGGER.info("index " + document.getId());
-                        server.add(toSolrDocument(document));
+
+                        // standard
+                        indexDocument(document);
+
+                        if (document instanceof FullTextProvider) {
+                            indexFullTexts((FullTextProvider) document);
+                        }
                     }
 
                     document.setTrigger(null);
@@ -76,12 +89,37 @@ public class IndexerScheduler {
         }
     }
 
-    private SolrInputDocument toSolrDocument(Document document) {
+    private void indexFullTexts(FullTextProvider provider) throws IOException, SolrServerException {
+
+        if (provider.getFullTexts() == null) {
+            return;
+        }
+
+        Set<SolrInputDocument> docs = new HashSet(provider.getFullTexts().size() * 2);
+        for (FullText fullText : provider.getFullTexts()) {
+
+            SolrInputDocument doc = new SolrInputDocument();
+            doc.setField("document", provider.getId());
+            doc.setField("folder", provider.getFolderId());
+            doc.setField("owner", provider.getOwnerId());
+            doc.setField("text", fullText.getText());
+            doc.setField("section", fullText.getSection());
+            docs.add(doc);
+        }
+
+        //getSolrServer().add(docs, COMMIT_WITHIN_MS);
+    }
+
+    private void indexDocument(Document document) throws IOException, SolrServerException {
         // todo update document http://wiki.apache.org/solr/UpdateXmlMessages#Optional_attributes_for_.22field.22
-        SolrInputDocument inputDocument = new SolrInputDocument();
-        inputDocument.setField("id", document.getId());
-        inputDocument.setField("title", document.getTitle());
-        return inputDocument;
+        SolrInputDocument doc = new SolrInputDocument();
+        //doc.setField("id", document.getId()); // todo fix id
+        doc.setField("document", document.getId());
+        doc.setField("folder", document.getFolderId());
+        doc.setField("modified", document.getModified());
+        doc.setField("title", document.getTitle());
+
+        //getSolrServer().add(doc, COMMIT_WITHIN_MS);
     }
 
     private SolrServer getSolrServer() {

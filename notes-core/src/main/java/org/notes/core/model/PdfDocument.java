@@ -8,6 +8,7 @@ import org.notes.common.exceptions.NotesException;
 import org.notes.common.model.Document;
 import org.notes.common.model.FileReference;
 import org.notes.common.model.FullText;
+import org.notes.common.model.FullTextProvider;
 import org.notes.common.utils.TextUtils;
 import org.notes.text.ExtractionResult;
 import org.notes.text.PdfTextExtractor;
@@ -15,6 +16,7 @@ import org.notes.text.interfaces.TextExtractor;
 
 import javax.naming.InitialContext;
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.Set;
 
 @Entity(name = "PdfDocument")
@@ -25,7 +27,7 @@ import java.util.Set;
 //    })
 )
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-public class PdfDocument extends Document {
+public class PdfDocument extends Document implements FullTextProvider {
 
     private static final Logger LOGGER = Logger.getLogger(PdfDocument.class);
 
@@ -82,12 +84,16 @@ public class PdfDocument extends Document {
         String[] more = new String[len];
         int index = 0;
         for (FullText fullText : reference.getFullTexts()) {
+            if (index >= more.length) {
+                break;
+            }
             more[index++] = fullText.getText();
         }
 
         setOutline(TextUtils.toOutline(reference.getSize() + " bytes", more));
     }
 
+    @JsonIgnore
     @Override
     public void extractFullText() throws NotesException {
         try {
@@ -114,5 +120,11 @@ public class PdfDocument extends Document {
         } catch (Throwable e) {
             throw new NotesException("Cannot extract text of " + getId(), e);
         }
+    }
+
+    @JsonIgnore // required, jsonmapper will call this method without session context
+    @Override
+    public Collection<FullText> getFullTexts() {
+        return fileReference.getFullTexts();
     }
 }
