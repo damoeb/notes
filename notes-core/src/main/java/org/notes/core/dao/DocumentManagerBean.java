@@ -183,25 +183,20 @@ public class DocumentManagerBean implements DocumentManager {
 
             if (Event.UPDATE.equals(ref.getEvent())) {
 
-                TextDocument tdoc = (TextDocument) document;
-                TextDocument ndoc = (TextDocument) ref;
+                TextDocument txtDoc = (TextDocument) document;
+                TextDocument txtRef = (TextDocument) ref;
 
-                tdoc.setTitle(ndoc.getTitle());
-                tdoc.setText(ndoc.getText());
+                txtDoc.setTitle(txtRef.getTitle());
+                txtDoc.setText(txtRef.getText());
 
                 document.setProgress(_getProgress(ref));
 
                 Reminder reminder = ref.getReminder();
-                if (document.getReminderId() == null) {
-                    document.setReminder(reminder);
-                } else {
-                    if (reminder == null) {
-                        document.setReminder(null);
+                if (reminder == null) { // remove
+                    document.setReminder(null);
 
-                    } else {
-                        reminder.setId(document.getReminderId());
-                        em.merge(reminder);
-                    }
+                } else { // set or overwrite
+                    document.setReminder(reminder);
                 }
 
                 document.setTrigger(Trigger.INDEX);

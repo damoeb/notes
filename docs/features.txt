@@ -17,8 +17,8 @@
 4. A sense of time
 - Calendar
 - Timer/Reminder
-- Completed
-- Finished
+- % Completed
+- Finished date
 
 5. Ease of use
 

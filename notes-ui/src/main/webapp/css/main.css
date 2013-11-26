@@ -382,7 +382,7 @@ TR.active .progress-of-task {
 }
 
 /* editor */
-.text-editor.maximized {
+.maximized {
     background-color: white;
     position: fixed;
     overflow-y: scroll;
@@ -395,7 +395,7 @@ TR.active .progress-of-task {
 /* todo does not work */
 .pdf-editor .pages {
     text-align: center;
-    min-width: 35px;
+    width: 55px;
     padding: 3px 3px;
 }
 

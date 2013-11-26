@@ -71,20 +71,30 @@ public class Document implements Serializable {
     @Column(insertable = false, updatable = false, name = ForeignKey.FOLDER_ID)
     private Long folderId;
 
-    @Basic
-    private Integer progress;
+//    todo support doc properties
+//    @ElementCollection
+//	  @CollectionTable(name="attribute", joinColumns=@JoinColumn(name="document_id"))
+//    private Map<String,String> attributes = new HashMap<String, String>(3);
 
     @Basic
     private boolean deleted;
 
-//  -- References ------------------------------------------------------------------------------------------------------
-
-    @OneToOne(cascade = CascadeType.ALL, optional = true, orphanRemoval = true)
-    @JoinColumn(name = ForeignKey.REMINDER_ID)
+    @Embedded
     private Reminder reminder;
 
-    @Column(insertable = false, updatable = false, name = ForeignKey.REMINDER_ID)
-    private Long reminderId;
+    /**
+     * % completed
+     */
+    @Basic
+    private Integer progress;
+
+    @Column
+    @JsonDeserialize(using = CustomDateDeserializer.class)
+    @JsonSerialize(using = CustomDateSerializer.class)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date finished;
+
+//  -- References ------------------------------------------------------------------------------------------------------
 
     @JsonIgnore
     @Enumerated(EnumType.STRING)
@@ -108,14 +118,14 @@ public class Document implements Serializable {
         this.kind = kind;
     }
 
-    public Document(Long id, String title, String outline, Kind kind, Integer progress, Long reminderId, Date modified) {
+    public Document(Long id, String title, String outline, Kind kind, Integer progress, Reminder reminder, Date modified) {
         this.id = id;
         this.title = title;
         this.outline = outline;
         this.kind = kind;
         this.progress = progress;
-        this.reminderId = reminderId;
         this.modified = modified;
+        this.reminder = reminder;
     }
 
     @PrePersist
@@ -276,14 +286,6 @@ public class Document implements Serializable {
         this.reminder = reminder;
     }
 
-    public Long getReminderId() {
-        return reminderId;
-    }
-
-    public void setReminderId(Long reminderId) {
-        this.reminderId = reminderId;
-    }
-
     public Event getEvent() {
         return event;
     }
@@ -298,6 +300,14 @@ public class Document implements Serializable {
 
     public void setTrigger(Trigger trigger) {
         this.trigger = trigger;
+    }
+
+    public Date getFinished() {
+        return finished;
+    }
+
+    public void setFinished(Date finished) {
+        this.finished = finished;
     }
 
     public void extractFullText() throws NotesException {

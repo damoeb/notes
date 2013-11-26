@@ -270,7 +270,7 @@ $.widget("notes.editor", {
         }
 
         var $right = $('<div/>', {style: 'float:right'}).append(
-            $this._createButton('Maximize', 'ui-icon-arrow-4-diag', $this.fnMaximize)
+            $this._createButton('Maximize', {primary: 'ui-icon-arrow-4-diag'}, $this.fnMaximize)
         );
 
         return $toolbar.append($left).append($right);
@@ -432,24 +432,26 @@ $.widget("notes.editor", {
         var fnPrevious = function () {
             if ($this.currentPage > 1) {
                 $this.currentPage--;
+                $numberOfPages.val($this.currentPage);
+                pdfloader.loadPdf($this.getModel().get('fileReferenceId'), $this.currentPage);
             }
-
-            $numberOfPages.val($this.currentPage);
-            pdfloader.loadPdf($this.getModel().get('fileReferenceId'), $this.currentPage);
         };
+        var numberOfPages = $this.getModel().get('numberOfPages');
+
         var fnNext = function () {
-            if ($this.currentPage < $this.getModel().get('numberOfPages')) {
+            if ($this.currentPage < numberOfPages) {
                 $this.currentPage++;
+                $numberOfPages.val($this.currentPage);
+                pdfloader.loadPdf($this.getModel().get('fileReferenceId'), $this.currentPage);
             }
-            $numberOfPages.val($this.currentPage);
-            pdfloader.loadPdf($this.getModel().get('fileReferenceId'), $this.currentPage);
         };
 
         var config = {
             left: [
-                $('<span/>', {style: 'margin-left:5px'}),
+                $('<span/>', {style: 'margin-left:15px'}),
                 $this._createButton('Previous', {primary: 'ui-icon-triangle-1-w'}, fnPrevious),
                 $numberOfPages,
+                $('<span/>', {text: 'of ' + numberOfPages, style: 'padding-left:5px; padding-right:5px'}),
                 $this._createButton('Next', {secondary: 'ui-icon-triangle-1-e'}, fnNext)
             ]
         }
