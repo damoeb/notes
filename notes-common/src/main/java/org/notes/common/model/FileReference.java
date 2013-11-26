@@ -3,9 +3,12 @@ package org.notes.common.model;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.hibernate.annotations.Index;
+import org.notes.common.ForeignKey;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity(name = "File")
 @Table(name = "File",
@@ -19,7 +22,6 @@ import java.io.Serializable;
 public class FileReference implements Serializable {
 
     public static final String QUERY_BY_ID = "FileReference.QUERY_BY_ID";
-    public static final String FK_FILE_REFERENCE_ID = "fileref_id";
     public static final String QUERY_BY_CHECKSUM = "FileReference.QUERY_BY_CHECKSUM";
 
     @Id
@@ -42,9 +44,9 @@ public class FileReference implements Serializable {
     private ContentType contentType;
 
     @JsonIgnore
-    @Lob
-    @Column(name = "full_text")
-    private String fullText;
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = ForeignKey.FILE_REFERENCE_ID)
+    private Set<FullText> fullTexts = new HashSet(50);
 
     @Basic
     @Column(name = "size", nullable = false)
@@ -88,12 +90,12 @@ public class FileReference implements Serializable {
         this.size = size;
     }
 
-    public String getFullText() {
-        return fullText;
+    public Set<FullText> getFullTexts() {
+        return fullTexts;
     }
 
-    public void setFullText(String fullText) {
-        this.fullText = fullText;
+    public void setFullTexts(Set<FullText> fullTexts) {
+        this.fullTexts = fullTexts;
     }
 
     public String getChecksum() {

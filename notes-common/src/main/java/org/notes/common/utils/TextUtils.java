@@ -30,17 +30,21 @@ public final class TextUtils {
         }
     }
 
-    public static String toOutline(String... texts) {
+    public static String toOutline(String first, String... more) {
         int outlineSize = Configuration.Constants.OUTLINE_LENGTH;
         StringBuilder outline = new StringBuilder(outlineSize * 2);
-        for (String text : texts) {
+
+        outline.append(norm(first));
+        outline.append(" ");
+
+        for (String text : more) {
             if (StringUtils.isBlank(text)) {
                 continue;
             }
             if (outline.length() > outlineSize) {
                 break;
             }
-            String normalized = trim(text.replaceAll("[\n\t\r ]+", " "));
+            String normalized = norm(text);
             outline.append(normalized);
             outline.append(" ");
         }
@@ -48,7 +52,10 @@ public final class TextUtils {
         Cleaner cleaner = new Cleaner(Whitelist.simpleText());
         Document cleaned = cleaner.clean(Jsoup.parse(outline.toString()));
 
-        // todo check
         return StringUtils.substring(cleaned.body().html(), 0, outlineSize);
+    }
+
+    private static String norm(String text) {
+        return trim(text.replaceAll("[\n\t\r ]+", " "));
     }
 }

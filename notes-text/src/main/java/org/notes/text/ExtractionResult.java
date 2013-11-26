@@ -1,17 +1,20 @@
 package org.notes.text;
 
-import java.util.List;
+import org.notes.common.model.FullText;
+
+import java.util.Set;
 
 public class ExtractionResult {
-    private List<String> fullTexts;
+
+    private Set<FullText> fullTexts;
     private int numberOfPages;
 
-    public ExtractionResult(List<String> fullTexts, int numberOfPages) {
+    public ExtractionResult(Set<FullText> fullTexts, int numberOfPages) {
         this.fullTexts = fullTexts;
         this.numberOfPages = numberOfPages;
     }
 
-    public List<String> getFullTexts() {
+    public Set<FullText> getFullTexts() {
         return fullTexts;
     }
 

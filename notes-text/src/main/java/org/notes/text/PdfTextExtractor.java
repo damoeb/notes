@@ -1,11 +1,13 @@
 package org.notes.text;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.pdfbox.cos.COSDocument;
 import org.apache.pdfbox.pdfparser.PDFParser;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.util.PDFTextStripper;
 import org.notes.common.exceptions.NotesException;
 import org.notes.common.model.FileReference;
+import org.notes.common.model.FullText;
 import org.notes.text.interfaces.TextExtractor;
 
 import javax.ejb.EJB;
@@ -13,8 +15,8 @@ import javax.ejb.Stateless;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Stateless
 @EJB(name = PdfTextExtractor.BEAN_NAME, beanInterface = TextExtractor.class)
@@ -29,7 +31,7 @@ public class PdfTextExtractor implements TextExtractor {
         COSDocument cosDoc = null;
 
         try {
-            List<String> pages = new LinkedList<String>();
+            Set<FullText> fullTexts = new HashSet(50);
 
             PDFParser parser = new PDFParser(new FileInputStream(new File(file.getReference())));
             parser.parse();
@@ -42,11 +44,13 @@ public class PdfTextExtractor implements TextExtractor {
                 stripper.setStartPage(page);
                 stripper.setEndPage(page);
 
-                pages.add(stripper.getText(pdDoc));
+                String fullText = stripper.getText(pdDoc);
+                if (StringUtils.isNotBlank(fullText)) {
+                    fullTexts.add(new FullText(page, fullText));
+                }
             }
 
-            // todo page information should not been lost
-            return new ExtractionResult(pages, pdDoc.getNumberOfPages());
+            return new ExtractionResult(fullTexts, pdDoc.getNumberOfPages());
 
         } catch (IOException e) {
             throw new NotesException("pdf extractor failed", e);
