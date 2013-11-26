@@ -4,7 +4,7 @@
 - annotate audio
 - import/export
 - unit tests!!!
-- search
+- search + in node names
 - related to: find documents, check literature, to find out relatedness
 - authentication + forward security http://www.heise.de/security/artikel/Forward-Secrecy-testen-und-einrichten-1932806.html
 

@@ -10,6 +10,8 @@
 - Tags/Keywords
 - Attributes for documents
 
+- In list: docs with checkbox for group actions
+
 3. Text layout and formatting
 
 4. A sense of time
