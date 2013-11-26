@@ -77,7 +77,15 @@ public class PdfDocument extends Document {
         super.onPersist();
 
         FileReference reference = getFileReference();
-        setOutline(TextUtils.toOutline(reference.getSize() + " bytes")); // todo reference.getFullText()
+
+        int len = reference.getFullTexts() == null ? 0 : Math.min(2, reference.getFullTexts().size());
+        String[] more = new String[len];
+        int index = 0;
+        for (FullText fullText : reference.getFullTexts()) {
+            more[index++] = fullText.getText();
+        }
+
+        setOutline(TextUtils.toOutline(reference.getSize() + " bytes", more));
     }
 
     @Override
