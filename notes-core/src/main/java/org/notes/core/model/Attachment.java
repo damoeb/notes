@@ -3,6 +3,7 @@ package org.notes.core.model;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.hibernate.annotations.Index;
+import org.notes.common.ForeignKey;
 import org.notes.common.model.FileReference;
 
 import javax.persistence.*;
@@ -43,10 +44,10 @@ public class Attachment implements Serializable {
 
     @JsonIgnore
     @ManyToOne(cascade = {}, fetch = FetchType.LAZY)
-    @JoinColumn(name = FileReference.FK_FILE_REFERENCE_ID)
+    @JoinColumn(name = ForeignKey.FILE_REFERENCE_ID)
     private FileReference fileReference;
 
-    @Column(name = FileReference.FK_FILE_REFERENCE_ID, insertable = false, updatable = false)
+    @Column(name = ForeignKey.FILE_REFERENCE_ID, insertable = false, updatable = false)
     private Long fileReferenceId;
 
 //  --------------------------------------------------------------------------------------------------------------------

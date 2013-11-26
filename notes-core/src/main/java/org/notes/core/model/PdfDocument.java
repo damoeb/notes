@@ -1,12 +1,13 @@
 package org.notes.core.model;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.notes.common.ForeignKey;
 import org.notes.common.exceptions.NotesException;
 import org.notes.common.model.Document;
 import org.notes.common.model.FileReference;
+import org.notes.common.model.FullText;
 import org.notes.common.utils.TextUtils;
 import org.notes.text.ExtractionResult;
 import org.notes.text.PdfTextExtractor;
@@ -14,6 +15,7 @@ import org.notes.text.interfaces.TextExtractor;
 
 import javax.naming.InitialContext;
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity(name = "PdfDocument")
 @Table(name = "PdfDocument"
@@ -31,10 +33,10 @@ public class PdfDocument extends Document {
 
     @JsonIgnore
     @ManyToOne(cascade = {}, fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = FileReference.FK_FILE_REFERENCE_ID)
+    @JoinColumn(name = ForeignKey.FILE_REFERENCE_ID)
     private FileReference fileReference;
 
-    @Column(insertable = false, updatable = false, name = FileReference.FK_FILE_REFERENCE_ID)
+    @Column(insertable = false, updatable = false, name = ForeignKey.FILE_REFERENCE_ID)
     private Long fileReferenceId;
 
 //  --------------------------------------------------------------------------------------------------------------------
@@ -75,7 +77,7 @@ public class PdfDocument extends Document {
         super.onPersist();
 
         FileReference reference = getFileReference();
-        setOutline(TextUtils.toOutline(reference.getSize() + " bytes", reference.getFullText()));
+        setOutline(TextUtils.toOutline(reference.getSize() + " bytes")); // todo reference.getFullText()
     }
 
     @Override
@@ -86,18 +88,18 @@ public class PdfDocument extends Document {
 
             FileReference reference = getFileReference();
 
-            if (StringUtils.isBlank(reference.getFullText())) {
+            if (reference.getFullTexts() == null || reference.getFullTexts().isEmpty()) {
                 InitialContext ic = new InitialContext();
 
                 TextExtractor extractor = (TextExtractor) ic.lookup("java:comp/env/" + PdfTextExtractor.BEAN_NAME);
                 ExtractionResult result = extractor.extract(reference);
-                String fullText = StringUtils.join(result.getFullTexts(), " ");
-                if (StringUtils.isBlank(fullText)) {
+                Set<FullText> fullTexts = result.getFullTexts();
+                if (fullTexts.isEmpty()) {
                     // todo check if working
                     throw new NotesException("FullText not extractable");
                 }
 
-                reference.setFullText(fullText);
+                reference.setFullTexts(fullTexts);
                 setNumberOfPages(result.getNumberOfPages());
             }
 

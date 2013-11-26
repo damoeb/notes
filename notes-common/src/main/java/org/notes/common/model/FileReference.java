@@ -44,7 +44,7 @@ public class FileReference implements Serializable {
     private ContentType contentType;
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = ForeignKey.FILE_REFERENCE_ID)
     private Set<FullText> fullTexts = new HashSet(50);
 
