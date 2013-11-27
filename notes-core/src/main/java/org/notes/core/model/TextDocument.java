@@ -1,9 +1,11 @@
 package org.notes.core.model;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.notes.common.exceptions.NotesException;
+import org.notes.common.interfaces.Extractable;
 import org.notes.common.model.Document;
 import org.notes.common.model.FullText;
-import org.notes.common.model.FullTextProvider;
 import org.notes.common.utils.TextUtils;
 
 import javax.persistence.Entity;
@@ -15,7 +17,7 @@ import java.util.Collection;
 @Entity(name = "TextDocument")
 @Table(name = "TextDocument")
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-public class TextDocument extends Document implements FullTextProvider {
+public class TextDocument extends Document implements Extractable {
 
     @Lob
     private String text;
@@ -41,6 +43,12 @@ public class TextDocument extends Document implements FullTextProvider {
     }
 
     @Override
+    public void extract() throws NotesException {
+        // not used
+    }
+
+    @Override
+    @JsonIgnore
     public Collection<FullText> getFullTexts() {
         return Arrays.asList(new FullText(0, text));
     }

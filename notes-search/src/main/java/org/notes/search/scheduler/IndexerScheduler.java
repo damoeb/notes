@@ -11,9 +11,9 @@ import org.apache.solr.common.SolrInputDocument;
 import org.notes.common.configuration.Configuration;
 import org.notes.common.configuration.ConfigurationProperty;
 import org.notes.common.configuration.NotesInterceptors;
+import org.notes.common.interfaces.Extractable;
 import org.notes.common.model.Document;
 import org.notes.common.model.FullText;
-import org.notes.common.model.FullTextProvider;
 import org.notes.common.model.Trigger;
 
 import javax.ejb.*;
@@ -71,8 +71,8 @@ public class IndexerScheduler {
                         // standard
                         indexDocument(document);
 
-                        if (document instanceof FullTextProvider) {
-                            indexFullTexts((FullTextProvider) document);
+                        if (document instanceof Extractable) {
+                            indexFullTexts(document, (Extractable) document);
                         }
                     }
 
@@ -88,7 +88,7 @@ public class IndexerScheduler {
         }
     }
 
-    private void indexFullTexts(FullTextProvider provider) throws IOException, SolrServerException {
+    private void indexFullTexts(Document document, Extractable provider) throws IOException, SolrServerException {
 
         if (provider.getFullTexts() == null) {
             return;
@@ -98,9 +98,9 @@ public class IndexerScheduler {
         for (FullText fullText : provider.getFullTexts()) {
 
             SolrInputDocument doc = new SolrInputDocument();
-            doc.setField("document", provider.getId());
-            doc.setField("folder", provider.getFolderId());
-            doc.setField("owner", provider.getOwnerId());
+            doc.setField("document", document.getId());
+            doc.setField("folder", document.getFolderId());
+            doc.setField("owner", document.getOwnerId());
             doc.setField("text", fullText.getText());
             doc.setField("section", fullText.getSection());
             docs.add(doc);

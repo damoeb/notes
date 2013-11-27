@@ -12,10 +12,7 @@ import org.notes.core.interfaces.DocumentManager;
 import org.notes.core.interfaces.FileReferenceManager;
 import org.notes.core.interfaces.FolderManager;
 import org.notes.core.interfaces.UserManager;
-import org.notes.core.model.Folder;
-import org.notes.core.model.PdfDocument;
-import org.notes.core.model.TextDocument;
-import org.notes.core.model.User;
+import org.notes.core.model.*;
 import org.notes.text.scheduler.ExtractionScheduler;
 
 import javax.ejb.Stateless;
@@ -258,6 +255,38 @@ public class DocumentManagerBean implements DocumentManager {
 
         } catch (Throwable t) {
             throw new NotesException("upload document failed: " + t.getMessage(), t);
+        }
+    }
+
+    @Override
+    public BookmarkDocument bookmark(String url) throws NotesException {
+
+        try {
+
+            if (StringUtils.isBlank(url)) {
+                throw new NotesException("url is empty");
+            }
+
+            BookmarkDocument document = new BookmarkDocument();
+            document.setUrl(url);
+            document.setTitle(url);
+//            document.setTrigger(Trigger.BOOKMARK);
+            em.persist(document);
+/*
+           website to pdf with phantom
+           store pdf
+            */
+
+//            extract text
+//            to pdf -> to tmp storage
+//            annotate/crop on client
+
+            return document;
+
+        } catch (NotesException t) {
+            throw t;
+        } catch (Throwable t) {
+            throw new NotesException("bookmark failed: " + t.getMessage(), t);
         }
     }
 

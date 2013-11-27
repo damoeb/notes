@@ -303,6 +303,10 @@ $.widget("notes.editor", {
                 button('option', 'label', 'Maximize').
                 button('option', 'icons', { primary: 'ui-icon-arrow-4-diag'});
 
+            if ($.isFunction(this.fnPostEmbed)) {
+                this.fnPostEmbed.call(this)
+            }
+
         } else {
             $editor.
                 removeClass('row').
@@ -310,6 +314,10 @@ $.widget("notes.editor", {
             $(el).
                 button('option', 'label', 'Unmaximize').
                 button('option', 'icons', { primary: 'ui-icon-arrow-1-se'});
+
+            if ($.isFunction(this.fnPostMaximize)) {
+                this.fnPostMaximize.call(this)
+            }
         }
 
     },
@@ -430,12 +438,44 @@ $.widget("notes.editor", {
         var $numberOfPages = $('<input/>', {type: 'text', class: 'ui-widget-content ui-corner-all pages', value: '1'});
         var $pdfLayer = $('<div/>', {class: 'pdf-container', id: 'pdfContainer'});
 
+        var embedPos = {
+            top: 385,
+            left: 30
+        };
+
+        var maxPos = {
+            top: 93,
+            left: 20
+        };
+
+        var pdfConfig = {
+            fileId: $this.getModel().get('fileReferenceId'),
+            page: $this.currentPage,
+            position: embedPos
+        };
+
+        var loadPdf = function () {
+            pdfConfig.page = $this.currentPage;
+            pdfloader.loadPdf(pdfConfig);
+        };
+
+        $this.fnPostMaximize = function () {
+            pdfConfig.position = maxPos;
+            loadPdf();
+        };
+
+        $this.fnPostEmbed = function () {
+            pdfConfig.position = embedPos;
+            loadPdf();
+        };
+
         // todo navigation does not work
         var fnPrevious = function () {
             if ($this.currentPage > 1) {
                 $this.currentPage--;
                 $numberOfPages.val($this.currentPage);
-                pdfloader.loadPdf($this.getModel().get('fileReferenceId'), $this.currentPage);
+
+                loadPdf();
             }
         };
         var numberOfPages = $this.getModel().get('numberOfPages');
@@ -444,7 +484,9 @@ $.widget("notes.editor", {
             if ($this.currentPage < numberOfPages) {
                 $this.currentPage++;
                 $numberOfPages.val($this.currentPage);
-                pdfloader.loadPdf($this.getModel().get('fileReferenceId'), $this.currentPage);
+
+                pdfConfig.page = $this.currentPage;
+                pdfloader.loadPdf(pdfConfig);
             }
         };
 
@@ -474,6 +516,6 @@ $.widget("notes.editor", {
                 $pdfLayer
             );
 
-        pdfloader.loadPdf($this.getModel().get('fileReferenceId'), $this.currentPage);
+        pdfloader.loadPdf(pdfConfig);
     }
 })

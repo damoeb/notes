@@ -3,6 +3,7 @@ package org.notes.core.interfaces;
 import org.apache.commons.fileupload.FileItem;
 import org.notes.common.exceptions.NotesException;
 import org.notes.common.model.Document;
+import org.notes.core.model.BookmarkDocument;
 import org.notes.core.model.PdfDocument;
 import org.notes.core.model.TextDocument;
 
@@ -21,4 +22,6 @@ public interface DocumentManager {
     Document updateDocument(Document document) throws NotesException;
 
     PdfDocument uploadDocument(List<FileItem> items) throws NotesException;
+
+    BookmarkDocument bookmark(String url) throws NotesException;
 }

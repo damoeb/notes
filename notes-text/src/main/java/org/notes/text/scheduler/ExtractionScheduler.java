@@ -3,6 +3,7 @@ package org.notes.text.scheduler;
 import org.apache.log4j.Logger;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
+import org.notes.common.interfaces.Extractable;
 import org.notes.common.model.Document;
 import org.notes.common.model.Trigger;
 
@@ -31,6 +32,8 @@ public class ExtractionScheduler {
         try {
             Query query = em.createNamedQuery(Document.QUERY_TRIGGER);
             query.setParameter("TRIGGER", Arrays.asList(Trigger.EXTRACT_PDF));
+
+            // todo get a list of extractables no casts
             List<Document> list = query.getResultList();
 
             if (!list.isEmpty()) {
@@ -40,7 +43,9 @@ public class ExtractionScheduler {
                     LOGGER.info("extract " + document.getId());
 
                     try {
-                        document.extractFullText();
+                        if (document instanceof Extractable) {
+                            ((Extractable) document).extract();
+                        }
                         document.setTrigger(Trigger.INDEX);
 
                     } catch (NotesException e) {

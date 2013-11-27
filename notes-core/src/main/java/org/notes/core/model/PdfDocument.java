@@ -5,10 +5,10 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.notes.common.ForeignKey;
 import org.notes.common.exceptions.NotesException;
+import org.notes.common.interfaces.Extractable;
 import org.notes.common.model.Document;
 import org.notes.common.model.FileReference;
 import org.notes.common.model.FullText;
-import org.notes.common.model.FullTextProvider;
 import org.notes.common.utils.TextUtils;
 import org.notes.text.ExtractionResult;
 import org.notes.text.PdfTextExtractor;
@@ -27,7 +27,7 @@ import java.util.Set;
 //    })
 )
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-public class PdfDocument extends Document implements FullTextProvider {
+public class PdfDocument extends Document implements Extractable {
 
     private static final Logger LOGGER = Logger.getLogger(PdfDocument.class);
 
@@ -96,7 +96,7 @@ public class PdfDocument extends Document implements FullTextProvider {
 
     @JsonIgnore
     @Override
-    public void extractFullText() throws NotesException {
+    public void extract() throws NotesException {
         try {
 
             LOGGER.info("extract pdf " + getId());
@@ -123,8 +123,8 @@ public class PdfDocument extends Document implements FullTextProvider {
         }
     }
 
-    @JsonIgnore // required, jsonmapper will call this method without session context
     @Override
+    @JsonIgnore
     public Collection<FullText> getFullTexts() {
         return fileReference.getFullTexts();
     }
