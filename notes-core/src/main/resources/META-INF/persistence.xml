@@ -25,6 +25,9 @@
             <property name="hibernate.format_sql" value="true"/>
             <property name="hibernate.hbm2ddl.auto" value="create"/>
             <property name="hibernate.connection.autoReconnect" value="true"/>
+
+            <!--<property name="hibernate.ejb.naming_strategy" value="org.notes.common.model.CustomNamingStrategy"/>-->
+
             <!--<property name="min-pool" value=""></property>-->
             <!-- Needed to recreate EntityManagerFactory -->
             <property name="hibernate.transaction.jta.platform"
