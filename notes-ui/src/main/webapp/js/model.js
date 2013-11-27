@@ -27,5 +27,10 @@ notes.model = {
             text: ''
         },
         url: '/notes/rest/document/'
+    }),
+
+    Bookmark: Backbone.Model.extend({
+        url: '/notes/rest/bookmark'
     })
+
 };

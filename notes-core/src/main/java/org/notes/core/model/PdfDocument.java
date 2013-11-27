@@ -9,6 +9,7 @@ import org.notes.common.interfaces.Extractable;
 import org.notes.common.model.Document;
 import org.notes.common.model.FileReference;
 import org.notes.common.model.FullText;
+import org.notes.common.model.Kind;
 import org.notes.common.utils.TextUtils;
 import org.notes.text.ExtractionResult;
 import org.notes.text.PdfTextExtractor;
@@ -48,6 +49,7 @@ public class PdfDocument extends Document implements Extractable {
 
     public PdfDocument() {
         // default
+        setKind(Kind.PDF);
     }
 
     public FileReference getFileReference() {
@@ -99,11 +101,14 @@ public class PdfDocument extends Document implements Extractable {
     public void extract() throws NotesException {
         try {
 
-            LOGGER.info("extract pdf " + getId());
 
             FileReference reference = getFileReference();
 
             if (reference.getFullTexts() == null || reference.getFullTexts().isEmpty()) {
+                LOGGER.trace("extract from pdf " + getId());
+
+                long time = System.currentTimeMillis();
+
                 InitialContext ic = new InitialContext();
 
                 TextExtractor extractor = (TextExtractor) ic.lookup("java:comp/env/" + PdfTextExtractor.BEAN_NAME);
@@ -116,6 +121,10 @@ public class PdfDocument extends Document implements Extractable {
 
                 reference.setFullTexts(fullTexts);
                 setNumberOfPages(result.getNumberOfPages());
+
+                long delta = System.currentTimeMillis() - time;
+
+                LOGGER.info(String.format("pdf %s extracted in %s", getId(), delta / 1000d));
             }
 
         } catch (Throwable e) {

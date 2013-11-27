@@ -52,7 +52,7 @@ public class FileReferenceManagerBean implements FileReferenceManager {
     }
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public FileReference store(FileItem item) throws NotesException {
 
         try {

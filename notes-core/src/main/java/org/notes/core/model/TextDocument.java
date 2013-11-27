@@ -6,6 +6,7 @@ import org.notes.common.exceptions.NotesException;
 import org.notes.common.interfaces.Extractable;
 import org.notes.common.model.Document;
 import org.notes.common.model.FullText;
+import org.notes.common.model.Kind;
 import org.notes.common.utils.TextUtils;
 
 import javax.persistence.Entity;
@@ -26,6 +27,7 @@ public class TextDocument extends Document implements Extractable {
 
     public TextDocument() {
         // default
+        setKind(Kind.TEXT);
     }
 
     public String getText() {

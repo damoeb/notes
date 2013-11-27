@@ -3,37 +3,22 @@ package org.notes.core.model;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.notes.common.ForeignKey;
 import org.notes.common.exceptions.NotesException;
 import org.notes.common.interfaces.Extractable;
-import org.notes.common.model.FileReference;
+import org.notes.common.model.Document;
 import org.notes.common.model.FullText;
+import org.notes.common.model.Kind;
 
 import javax.persistence.*;
 import java.util.Arrays;
 import java.util.Collection;
 
 @Entity(name = "BookmarkDocument")
-@Table(name = "BookmarkDocument"
-//    todo uniqueConstraints = @UniqueConstraint(columnNames = {
-//            FileReference.FK_FILE_REFERENCE_ID,
-//            Folder.FK_FOLDER_ID
-//    })
-)
+@Table(name = "BookmarkDocument")
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-public class BookmarkDocument extends TextDocument implements Extractable {
+public class BookmarkDocument extends Document implements Extractable {
 
     private static final Logger LOGGER = Logger.getLogger(BookmarkDocument.class);
-
-//  -- References ------------------------------------------------------------------------------------------------------
-
-    @JsonIgnore
-    @ManyToOne(cascade = {}, fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = ForeignKey.FILE_REFERENCE_ID)
-    private FileReference fileReference;
-
-    @Column(insertable = false, updatable = false, name = ForeignKey.FILE_REFERENCE_ID)
-    private Long fileReferenceId;
 
 //  --------------------------------------------------------------------------------------------------------------------
 
@@ -41,28 +26,12 @@ public class BookmarkDocument extends TextDocument implements Extractable {
     @Column(nullable = false, length = 1024)
     private String url;
 
-
     @Lob
     private String text;
 
     public BookmarkDocument() {
         // default
-    }
-
-    public FileReference getFileReference() {
-        return fileReference;
-    }
-
-    public void setFileReference(FileReference fileReference) {
-        this.fileReference = fileReference;
-    }
-
-    public Long getFileReferenceId() {
-        return fileReferenceId;
-    }
-
-    public void setFileReferenceId(Long fileReferenceId) {
-        this.fileReferenceId = fileReferenceId;
+        setKind(Kind.BOOKMARK);
     }
 
     public String getUrl() {

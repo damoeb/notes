@@ -58,8 +58,6 @@ public class DocumentManagerBean implements DocumentManager {
                 throw new NotesException("document is null");
             }
 
-            document.setKind(Kind.TEXT);
-
             if (document.getFolderId() == null) {
                 throw new NotesException("folderId is null");
             }
@@ -222,7 +220,7 @@ public class DocumentManagerBean implements DocumentManager {
             String title = null;
 
             Long folderId = NumberUtils.createLong(_getFieldValue("folderId", items));
-
+            // todo validate folderId
             for (FileItem item : items) {
 
                 if (!item.isFormField()) {
@@ -246,7 +244,6 @@ public class DocumentManagerBean implements DocumentManager {
             }
 
             PdfDocument document = new PdfDocument();
-            document.setKind(Kind.PDF);
             document.setTitle(title);
             document.setFileReference(reference);
             document.setTrigger(Trigger.EXTRACT_PDF);
@@ -259,23 +256,29 @@ public class DocumentManagerBean implements DocumentManager {
     }
 
     @Override
-    public BookmarkDocument bookmark(String url) throws NotesException {
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public BookmarkDocument bookmark(BookmarkDocument ref) throws NotesException {
 
         try {
 
-            if (StringUtils.isBlank(url)) {
-                throw new NotesException("url is empty");
+            if (ref == null) {
+                throw new NotesException("bookmark is invalid");
             }
 
+            if (StringUtils.isBlank(ref.getUrl())) {
+                throw new NotesException("url is empty");
+            }
+            // todo validate folderId
+
             BookmarkDocument document = new BookmarkDocument();
-            document.setUrl(url);
-            document.setTitle(url);
-//            document.setTrigger(Trigger.BOOKMARK);
-            em.persist(document);
-/*
-           website to pdf with phantom
-           store pdf
-            */
+            document.setUrl(ref.getUrl());
+            document.setTitle(ref.getUrl());
+            document.setFolderId(ref.getFolderId());
+            document.setOutline("(this may take some time)");
+
+            // todo document.setTrigger(Trigger.HARVEST);
+
+            document = (BookmarkDocument) _createDocument(document, ref.getFolderId());
 
 //            extract text
 //            to pdf -> to tmp storage

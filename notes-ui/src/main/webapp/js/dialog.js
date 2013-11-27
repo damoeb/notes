@@ -162,14 +162,55 @@ notes.dialog.document = {
                         function () {
                             $dialog.dialog('close');
 
+                            notes.dialog.document.bookmark();
                         })
                 )
 
             ).dialog($.extend({}, notes.dialog.defaults, {
                 title: 'Settings'
             }));
-    }
+    },
+
+    bookmark: function () {
+
+        var $input = $('<input/>', {name: 'name', type: 'text', value: 'http://' });
+
+        $('<div/>', {class: 'dialog'}).append(
+                $('<div/>').append(
+                    $input
+                )
+            ).dialog($.extend({}, notes.dialog.defaults, {
+                title: 'From Web',
+                open: function () {
+                    $input.focus().select();
+                },
+                buttons: [
+                    {
+                        text: 'Bookmark',
+                        click: function () {
+
+                            var bookmark = new notes.model.Bookmark({
+                                url: $input.val(),
+                                folderId: $('#directory').directory('selectedFolder')
+                            });
+                            bookmark.save(null, {success: function () {
+                                $('#document-list-view').documentList('updateDocument', bookmark);
+                            }});
+
+                            $(this).dialog("close");
+                        }
+                    },
+                    {
+                        text: 'Cancel',
+                        click: function () {
+                            $(this).dialog("close");
+                        }
+                    }
+                ]
+            }));
+    },
 };
+
 
 notes.dialog.settings = {
 

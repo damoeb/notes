@@ -23,5 +23,5 @@ public interface DocumentManager {
 
     PdfDocument uploadDocument(List<FileItem> items) throws NotesException;
 
-    BookmarkDocument bookmark(String url) throws NotesException;
+    BookmarkDocument bookmark(BookmarkDocument bookmark) throws NotesException;
 }

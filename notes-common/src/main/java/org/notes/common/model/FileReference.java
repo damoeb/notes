@@ -7,6 +7,7 @@ import org.notes.common.ForeignKey;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -52,11 +53,23 @@ public class FileReference implements Serializable {
     @Column(name = "size", nullable = false)
     private long size;
 
+    @JsonIgnore
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date created;
+
 //  --------------------------------------------------------------------------------------------------------------------
 
     public FileReference() {
         //
     }
+
+    @PrePersist
+    public void onPersist() {
+        if (created == null) {
+            created = new Date();
+        }
+    }
+
 
     public long getId() {
         return id;

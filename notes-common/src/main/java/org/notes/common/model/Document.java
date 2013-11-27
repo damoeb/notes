@@ -87,7 +87,6 @@ public class Document implements Serializable {
     @Basic
     private Integer progress;
 
-    @Column
     @JsonDeserialize(using = CustomDateDeserializer.class)
     @JsonSerialize(using = CustomDateSerializer.class)
     @Temporal(TemporalType.TIMESTAMP)
@@ -249,7 +248,7 @@ public class Document implements Serializable {
         return kind;
     }
 
-    public void setKind(Kind kind) {
+    protected void setKind(Kind kind) {
         this.kind = kind;
     }
 
