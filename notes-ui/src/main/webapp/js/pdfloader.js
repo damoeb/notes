@@ -71,7 +71,7 @@ var pdfloader = new function () {
             .css("width", viewport.width + "px")
             .offset({
                 //top: canvasOffset.top,
-                top: 326,
+                top: 385,
                 //left: canvasOffset.left
                 left: 30
             });

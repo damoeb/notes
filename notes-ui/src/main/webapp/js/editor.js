@@ -381,6 +381,8 @@ $.widget("notes.editor", {
                     $fieldTitle
                 )
             ).append(
+                $('<div/>', {class: 'row', style: 'margin-top:5px', text: 'modified ' + notes.util.formatDate(new Date(model.get('modified'))) + ' by ' + model.get('ownerId')})
+            ).append(
                 $('<div/>', {class: 'row', style: 'margin-top:5px'}).append(
                     $fieldText
                 )
@@ -456,10 +458,18 @@ $.widget("notes.editor", {
             ]
         }
 
+        var $fieldTitle = $('<input/>', {class: 'ui-widget-content ui-corner-all title', type: 'text', value: $this.getModel().get('title')});
+
         $target.append(
                 $this._getToolbar(config)
             ).append(
                 $this.getProgressLayer()
+            ).append(
+                $('<div/>', {class: 'row', style: 'margin-top:5px'}).append(
+                    $fieldTitle
+                )
+            ).append(
+                $('<div/>', {class: 'row', style: 'margin-top:5px', text: 'modified ' + notes.util.formatDate(new Date($this.getModel().get('modified'))) + ' by ' + $this.getModel().get('ownerId')})
             ).append(
                 $pdfLayer
             );

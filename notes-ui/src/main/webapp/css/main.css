@@ -399,8 +399,10 @@ TR.active .progress-of-task {
     padding: 3px 3px;
 }
 
-.text-editor .title {
-    width: 100%
+.text-editor .title,
+.pdf-editor .title {
+    width: 100%;
+    font-size: 18px;
 }
 
 .text-editor textarea {
