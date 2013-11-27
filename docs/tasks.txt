@@ -15,6 +15,9 @@
 - attributes for document
   build in: due date, reminder, % complemete, finished date
 
+- monitor hibernate
+  http://docs.jboss.org/hibernate/core/3.5/reference/en/html/performance.html#performance-monitoring
+
 ------
 
 Skills associated with personal knowledge management.

@@ -41,6 +41,8 @@ public class OcrScheduler {
                     try {
                         // todo: do something
 
+                        document.setTrigger(Trigger.INDEX);
+
                     } catch (Throwable e) {
                         // it failed
                         document.setTrigger(Trigger.OCR_FAILED);
