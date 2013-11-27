@@ -20,6 +20,19 @@ public class BookmarkDocument extends Document implements Extractable {
 
     private static final Logger LOGGER = Logger.getLogger(BookmarkDocument.class);
 
+//  -- References ------------------------------------------------------------------------------------------------------
+
+    /**
+     * used for website snapshot
+     */
+//    todo @JsonIgnore
+//    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
+//    @JoinColumn(name = ForeignKey.FILE_REFERENCE_ID)
+//    private FileReference siteSnapshot;
+//
+//    @Column(insertable = false, updatable = false, name = ForeignKey.FILE_REFERENCE_ID)
+//    private Long siteSnapshotId;
+
 //  --------------------------------------------------------------------------------------------------------------------
 
     @Basic
