@@ -6,6 +6,7 @@ var pdfloader = new function () {
 
         $this.page = config.page;
         $this.position = config.position;
+        $this.layer = config.layer;
 
         PDFJS.disableWorker = true; //Not using web workers. Not disabling results in an error. This line is
         //missing in the example code for rendering a pdf.
@@ -28,7 +29,7 @@ var pdfloader = new function () {
         var $this = this;
 
         //Append the canvas to the pdf container div
-        var $pdfContainer = jQuery("#pdfContainer").empty();
+        var $pdfContainer = $this.layer.empty();
 
         var width = $pdfContainer.width();
 

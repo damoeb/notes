@@ -32,6 +32,9 @@ public class Configuration {
 
     public static final String SOLR_SERVER = "notes.solr.server-url";
 
+    public static final String CMD_PHANTOM_JS = "notes.cmd.phantomjs";
+    public static final String CMD_RASTERIZE_JS = "notes.cmd.rasterizejs";
+
     public static final class Constants {
         public static final int OUTLINE_LENGTH = 256;
     }

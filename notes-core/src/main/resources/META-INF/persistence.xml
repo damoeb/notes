@@ -6,7 +6,7 @@
                        http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
 
     <persistence-unit name="primary">
-        <jta-data-source>java:jboss/datasources/notes_mysql</jta-data-source>
+        <jta-data-source>java:jboss/datasources/note_mysql</jta-data-source>
 
         <class>org.notes.core.model.Reminder</class>
         <class>org.notes.common.model.FileReference</class>

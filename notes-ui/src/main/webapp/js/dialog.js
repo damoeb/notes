@@ -193,21 +193,37 @@ notes.dialog.document = {
                                 url: $input.val(),
                                 folderId: $('#directory').directory('selectedFolder')
                             });
-                            bookmark.save(null, {success: function () {
+                            bookmark.save(null, {success: function (newmodel) {
 
                                 // todo test
-                                var fetchModel = function () {
-                                    bookmark.fetch({success: function () {
-                                        if (bookmark.has('siteSnapshotId')) {
-                                            console.info(bookmark.get('siteSnapshotId'))
-                                        } else {
-                                            console.info('"wait');
-                                            setTimeout(fetchModel, 400);
-                                        }
-                                    }})
-                                };
-
-                                setTimeout(fetchModel, 400);
+//                                var $pdfLayer = $('#bookmark-preview').show();
+//
+//                                var fetchModel = function () {
+//                                    bookmark.fetch({success: function () {
+//                                        if (bookmark.has('siteSnapshotId')) {
+//                                            console.info(bookmark.get('siteSnapshotId'));
+//
+//                                            var maxPos = {
+//                                                top: 93,
+//                                                left: 20
+//                                            };
+//
+//                                            var pdfConfig = {
+//                                                fileId: bookmark.get('siteSnapshotId'),
+//                                                page: 1,
+//                                                position: maxPos,
+//                                                layer: $pdfLayer.find('#bookmark-preview-pdf')
+//                                            };
+//
+//                                            pdfloader.loadPdf(pdfConfig);
+//
+//                                        } else {
+//                                            setTimeout(fetchModel, 2000);
+//                                        }
+//                                    }})
+//                                };
+//
+//                                setTimeout(fetchModel, 2000);
 
                                 // mark area
                                 $('#document-list-view').documentList('updateDocument', bookmark);

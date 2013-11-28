@@ -24,6 +24,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.net.URL;
 import java.util.List;
 
 //@LocalBean
@@ -269,6 +270,8 @@ public class DocumentManagerBean implements DocumentManager {
             if (StringUtils.isBlank(ref.getUrl())) {
                 throw new NotesException("url is empty");
             }
+            new URL(ref.getUrl());
+
             // todo validate folderId
 
             BookmarkDocument document = new BookmarkDocument();

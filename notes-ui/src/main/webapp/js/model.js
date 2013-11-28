@@ -1,6 +1,6 @@
 notes.model = {
     Folder: Backbone.Model.extend({
-        url: '/notes/rest/folder',
+        urlRoot: '/notes/rest/folder',
         initialize: function () {
             this.listener = []
         },
@@ -18,7 +18,7 @@ notes.model = {
     }),
 
     Database: Backbone.Model.extend({
-        url: '/notes/rest/database'
+        urlRoot: '/notes/rest/database'
     }),
 
     Document: Backbone.Model.extend({
@@ -26,11 +26,11 @@ notes.model = {
             title: '',
             text: ''
         },
-        url: '/notes/rest/document/'
+        urlRoot: '/notes/rest/document/'
     }),
 
     Bookmark: Backbone.Model.extend({
-        url: '/notes/rest/bookmark'
+        urlRoot: '/notes/rest/bookmark'
     })
 
 };

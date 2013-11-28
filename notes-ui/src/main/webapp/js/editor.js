@@ -440,7 +440,7 @@ $.widget("notes.editor", {
         $this.currentPage = 1;
 
         var $numberOfPages = $('<input/>', {type: 'text', class: 'ui-widget-content ui-corner-all pages', value: '1'});
-        var $pdfLayer = $('<div/>', {class: 'pdf-container', id: 'pdfContainer'});
+        var $pdfLayer = $('<div/>', {class: 'pdf-container'});
 
         var embedPos = {
             top: 385,
@@ -455,7 +455,8 @@ $.widget("notes.editor", {
         var pdfConfig = {
             fileId: $this.getModel().get('fileReferenceId'),
             page: $this.currentPage,
-            position: embedPos
+            position: embedPos,
+            layer: $pdfLayer
         };
 
         var loadPdf = function () {
