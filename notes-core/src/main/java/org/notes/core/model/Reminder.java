@@ -1,4 +1,4 @@
-package org.notes.common.model;
+package org.notes.core.model;
 
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;

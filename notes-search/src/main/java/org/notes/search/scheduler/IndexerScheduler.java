@@ -11,8 +11,8 @@ import org.apache.solr.common.SolrInputDocument;
 import org.notes.common.configuration.Configuration;
 import org.notes.common.configuration.ConfigurationProperty;
 import org.notes.common.configuration.NotesInterceptors;
-import org.notes.common.interfaces.Extractable;
-import org.notes.common.model.Document;
+import org.notes.common.interfaces.Document;
+import org.notes.common.interfaces.Fulltextable;
 import org.notes.common.model.FullText;
 import org.notes.common.model.Trigger;
 
@@ -71,8 +71,8 @@ public class IndexerScheduler {
                         // standard
                         indexDocument(document);
 
-                        if (document instanceof Extractable) {
-                            indexFullTexts(document, (Extractable) document);
+                        if (document instanceof Fulltextable) {
+                            indexFullTexts(document, (Fulltextable) document);
                         }
                     }
 
@@ -88,7 +88,7 @@ public class IndexerScheduler {
         }
     }
 
-    private void indexFullTexts(Document document, Extractable provider) throws IOException, SolrServerException {
+    private void indexFullTexts(Document document, Fulltextable provider) throws IOException, SolrServerException {
 
         if (provider.getFullTexts() == null) {
             return;
@@ -113,10 +113,12 @@ public class IndexerScheduler {
         // todo update document http://wiki.apache.org/solr/UpdateXmlMessages#Optional_attributes_for_.22field.22
         SolrInputDocument doc = new SolrInputDocument();
         //doc.setField("id", document.getId()); // todo fix id
-        doc.setField("document", document.getId());
-        doc.setField("folder", document.getFolderId());
+        doc.setField("documentId", document.getId());
+        doc.setField("folderId", document.getFolderId());
         doc.setField("modified", document.getModified());
         doc.setField("title", document.getTitle());
+        doc.setField("kind", document.getKind());
+        doc.setField("ownerId", document.getOwnerId());
 
         //getSolrServer().add(doc, COMMIT_WITHIN_MS);
     }

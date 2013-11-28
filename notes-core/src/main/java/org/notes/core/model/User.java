@@ -3,7 +3,6 @@ package org.notes.core.model;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.notes.common.ForeignKey;
-import org.notes.common.model.Document;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -38,7 +37,7 @@ public class User implements Serializable {
     @JsonIgnore
     @OneToMany(cascade = {}, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = ForeignKey.OWNER_ID)
-    private Set<Document> documents = new HashSet(100);
+    private Set<BasicDocument> documents = new HashSet(100);
 
     @Column(name = Account.FK_ACCOUNT_ID, insertable = false, updatable = false)
     private Long accountId;
@@ -75,11 +74,11 @@ public class User implements Serializable {
         this.username = username;
     }
 
-    public Set<Document> getDocuments() {
+    public Set<BasicDocument> getDocuments() {
         return documents;
     }
 
-    public void setDocuments(Set<Document> notes) {
+    public void setDocuments(Set<BasicDocument> notes) {
         this.documents = notes;
     }
 

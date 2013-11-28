@@ -2,9 +2,7 @@ package org.notes.core.model;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.notes.common.exceptions.NotesException;
-import org.notes.common.interfaces.Extractable;
-import org.notes.common.model.Document;
+import org.notes.common.interfaces.Fulltextable;
 import org.notes.common.model.FullText;
 import org.notes.common.model.Kind;
 import org.notes.common.utils.TextUtils;
@@ -18,7 +16,7 @@ import java.util.Collection;
 @Entity(name = "TextDocument")
 @Table(name = "TextDocument")
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-public class TextDocument extends Document implements Extractable {
+public class TextDocument extends BasicDocument implements Fulltextable {
 
     @Lob
     private String text;
@@ -42,11 +40,6 @@ public class TextDocument extends Document implements Extractable {
     public void onPersist() {
         super.onPersist();
         setOutline(TextUtils.toOutline(getText()));
-    }
-
-    @Override
-    public void extract() throws NotesException {
-        // not used
     }
 
     @Override

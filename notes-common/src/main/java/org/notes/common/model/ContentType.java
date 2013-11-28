@@ -3,7 +3,7 @@ package org.notes.common.model;
 import org.apache.commons.lang.StringUtils;
 
 public enum ContentType {
-    PDF("application/pdf"), UNKNOWN("");
+    PDF("application/pdf"), UNKNOWN(""), TEMP("");
 
     private final String identifier;
 

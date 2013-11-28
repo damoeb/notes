@@ -1,4 +1,4 @@
-package org.notes.common.model;
+package org.notes.common;
 
 import org.hibernate.cfg.ImprovedNamingStrategy;
 

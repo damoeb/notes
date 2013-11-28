@@ -4,10 +4,10 @@ import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
-import org.notes.common.model.Document;
 import org.notes.core.interfaces.DatabaseManager;
 import org.notes.core.interfaces.FolderManager;
 import org.notes.core.interfaces.UserManager;
+import org.notes.core.model.BasicDocument;
 import org.notes.core.model.Database;
 import org.notes.core.model.Folder;
 import org.notes.core.model.User;
@@ -81,7 +81,7 @@ public class FolderManagerBean implements FolderManager {
     }
 
     @Override
-    public List<Document> getDocuments(Long folderId) throws NotesException {
+    public List<BasicDocument> getDocuments(Long folderId) throws NotesException {
         try {
             if (folderId == null || folderId <= 0) {
                 throw new NotesException(String.format("Invalid folder id '%s'", folderId));
@@ -90,7 +90,7 @@ public class FolderManagerBean implements FolderManager {
             Query query = em.createNamedQuery(Folder.QUERY_DOCUMENTS);
             query.setParameter("ID", folderId);
 
-            return (List<Document>) query.getResultList();
+            return (List<BasicDocument>) query.getResultList();
 
         } catch (NotesException e) {
             throw e;
@@ -100,7 +100,7 @@ public class FolderManagerBean implements FolderManager {
     }
 
     @Override
-    public List<Document> getRelatedDocuments(Long folderId, int offset, int count) throws NotesException {
+    public List<BasicDocument> getRelatedDocuments(Long folderId, int offset, int count) throws NotesException {
         try {
             if (folderId == null || folderId <= 0) {
                 throw new NotesException(String.format("Invalid folder id '%s'", folderId));
@@ -121,7 +121,7 @@ public class FolderManagerBean implements FolderManager {
 
             query.setParameter("ID", folderId);
 
-            return (List<Document>) query.getResultList();
+            return (List<BasicDocument>) query.getResultList();
 
         } catch (NotesException e) {
             throw e;

@@ -1,12 +1,8 @@
 package org.notes.common.interfaces;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.notes.common.exceptions.NotesException;
-import org.notes.common.model.FullText;
 
-import java.util.Collection;
-
-public interface Extractable {
+public interface Extractable extends Document {
 
     /**
      * extract any fulltext required from any descendents
@@ -15,9 +11,4 @@ public interface Extractable {
      *
      */
     void extract() throws NotesException;
-
-    // avoid calls from json mapper - no session context available
-    @JsonIgnore
-    Collection<FullText> getFullTexts();
-
 }

@@ -13,7 +13,7 @@ import java.util.Set;
 
 @Entity(name = "File")
 @Table(name = "File",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"checksum", "size"})
+        uniqueConstraints = @UniqueConstraint(columnNames = {"checksum", "size", "contentType"})
 )
 @NamedQueries({
         @NamedQuery(name = FileReference.QUERY_BY_ID, query = "SELECT a FROM File a where a.id=:ID"),
@@ -55,7 +55,7 @@ public class FileReference implements Serializable {
 
     @JsonIgnore
     @Temporal(TemporalType.TIMESTAMP)
-    private Date created;
+    private Date modified;
 
 //  --------------------------------------------------------------------------------------------------------------------
 
@@ -64,9 +64,10 @@ public class FileReference implements Serializable {
     }
 
     @PrePersist
+    @PreUpdate
     public void onPersist() {
-        if (created == null) {
-            created = new Date();
+        if (modified == null) {
+            modified = new Date();
         }
     }
 

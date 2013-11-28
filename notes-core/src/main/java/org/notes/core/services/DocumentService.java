@@ -2,8 +2,8 @@ package org.notes.core.services;
 
 import org.notes.common.cache.MethodCache;
 import org.notes.common.configuration.NotesInterceptors;
-import org.notes.common.model.Document;
 import org.notes.core.interfaces.DocumentManager;
+import org.notes.core.model.BasicDocument;
 import org.notes.core.model.TextDocument;
 
 import javax.inject.Inject;
@@ -36,7 +36,7 @@ public class DocumentService {
     public NotesResponse updateDocument(
             TextDocument document
     ) throws Exception {
-        Document result = getDocumentManager().updateDocument(document);
+        BasicDocument result = getDocumentManager().updateDocument(document);
         return NotesResponse.ok(result);
     }
 

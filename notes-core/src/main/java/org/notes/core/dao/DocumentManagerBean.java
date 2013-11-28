@@ -7,7 +7,8 @@ import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
-import org.notes.common.model.*;
+import org.notes.common.model.FileReference;
+import org.notes.common.model.Trigger;
 import org.notes.core.interfaces.DocumentManager;
 import org.notes.core.interfaces.FileReferenceManager;
 import org.notes.core.interfaces.FolderManager;
@@ -76,7 +77,7 @@ public class DocumentManagerBean implements DocumentManager {
         }
     }
 
-    private Document _createDocument(Document document, Long folderId) throws NotesException {
+    private BasicDocument _createDocument(BasicDocument document, Long folderId) throws NotesException {
 
         em.persist(document);
 
@@ -94,7 +95,7 @@ public class DocumentManagerBean implements DocumentManager {
         return document;
     }
 
-    private void _addToParentFolders(Document document, Long folderId) throws NotesException {
+    private void _addToParentFolders(BasicDocument document, Long folderId) throws NotesException {
 
         Session session = em.unwrap(Session.class);
 
@@ -117,12 +118,12 @@ public class DocumentManagerBean implements DocumentManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public Document getDocument(long documentId) throws NotesException {
+    public BasicDocument getDocument(long documentId) throws NotesException {
         try {
 
-            Query query = em.createNamedQuery(Document.QUERY_BY_ID);
+            Query query = em.createNamedQuery(BasicDocument.QUERY_BY_ID);
             query.setParameter("ID", documentId);
-            return (Document) query.getSingleResult();
+            return (BasicDocument) query.getSingleResult();
 
         } catch (NoResultException t) {
             throw new NotesException("document '" + documentId + "' does not exist");
@@ -133,9 +134,9 @@ public class DocumentManagerBean implements DocumentManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public Document deleteDocument(Document ref) throws NotesException {
+    public BasicDocument deleteDocument(BasicDocument ref) throws NotesException {
         try {
-            Document document = _get(ref.getId());
+            BasicDocument document = _get(ref.getId());
             document.setDeleted(true);
             document.setTrigger(Trigger.DELETE);
             em.merge(document);
@@ -149,14 +150,14 @@ public class DocumentManagerBean implements DocumentManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public Document updateDocument(Document ref) throws NotesException {
+    public BasicDocument updateDocument(BasicDocument ref) throws NotesException {
         try {
 
             if (ref == null) {
                 throw new IllegalArgumentException("document is null");
             }
 
-            Document document = _get(ref.getId());
+            BasicDocument document = _get(ref.getId());
 
             // decide whether move or update
             if (Event.MOVE.equals(ref.getEvent())) {
@@ -276,7 +277,7 @@ public class DocumentManagerBean implements DocumentManager {
             document.setFolderId(ref.getFolderId());
             document.setOutline("(this may take some time)");
 
-            // todo document.setTrigger(Trigger.HARVEST);
+            document.setTrigger(Trigger.HARVEST);
 
             document = (BookmarkDocument) _createDocument(document, ref.getFolderId());
 
@@ -308,7 +309,7 @@ public class DocumentManagerBean implements DocumentManager {
         return null;
     }
 
-    private Integer _getProgress(Document document) {
+    private Integer _getProgress(BasicDocument document) {
         Integer progress = document.getProgress();
         if (progress == null || progress <= 0 || progress > 100) {
             return null;
@@ -316,9 +317,9 @@ public class DocumentManagerBean implements DocumentManager {
         return progress;
     }
 
-    private Document _get(long documentId) throws NotesException {
-        Query query = em.createNamedQuery(Document.QUERY_BY_ID);
+    private BasicDocument _get(long documentId) throws NotesException {
+        Query query = em.createNamedQuery(BasicDocument.QUERY_BY_ID);
         query.setParameter("ID", documentId);
-        return (Document) query.getSingleResult();
+        return (BasicDocument) query.getSingleResult();
     }
 }

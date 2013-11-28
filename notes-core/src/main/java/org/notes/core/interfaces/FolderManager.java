@@ -1,7 +1,7 @@
 package org.notes.core.interfaces;
 
 import org.notes.common.exceptions.NotesException;
-import org.notes.common.model.Document;
+import org.notes.core.model.BasicDocument;
 import org.notes.core.model.Folder;
 
 import javax.ejb.Local;
@@ -18,7 +18,7 @@ public interface FolderManager {
 
     Folder updateFolder(Folder folder) throws NotesException;
 
-    List<Document> getDocuments(Long folderId) throws NotesException;
+    List<BasicDocument> getDocuments(Long folderId) throws NotesException;
 
-    List<Document> getRelatedDocuments(Long folderId, int offset, int count) throws NotesException;
+    List<BasicDocument> getRelatedDocuments(Long folderId, int offset, int count) throws NotesException;
 }

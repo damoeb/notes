@@ -1,4 +1,4 @@
-package org.notes.common.model;
+package org.notes.core.model;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
@@ -6,31 +6,30 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.hibernate.annotations.Index;
 import org.notes.common.ForeignKey;
 import org.notes.common.configuration.Configuration;
+import org.notes.common.interfaces.Document;
+import org.notes.common.model.Kind;
+import org.notes.common.model.Trigger;
 import org.notes.common.service.CustomDateDeserializer;
 import org.notes.common.service.CustomDateSerializer;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Date;
 
 /**
  * The basic document
  */
 @SuppressWarnings("serial")
-@Entity(name = "Document")
-@Table(name = "Document"
+@Entity(name = "BasicDocument")
+@Table(name = "BasicDocument"
         //uniqueConstraints = @UniqueConstraint(columnNames = {"version", "foreignId"})
 )
 @NamedQueries({
-        @NamedQuery(name = Document.QUERY_BY_ID, query = "SELECT a FROM Document a where a.id=:ID"),
-        @NamedQuery(name = Document.QUERY_TRIGGER, query = "SELECT a FROM Document a where a.trigger in (:TRIGGER)")
+        @NamedQuery(name = Document.QUERY_BY_ID, query = "SELECT a FROM BasicDocument a where a.id=:ID"),
+        @NamedQuery(name = Document.QUERY_TRIGGER, query = "SELECT a FROM BasicDocument a where a.trigger in (:TRIGGER)")
 })
 @Inheritance(strategy = InheritanceType.JOINED)
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-public class Document implements Serializable {
-
-    public static final String QUERY_BY_ID = "Document.QUERY_BY_ID";
-    public static final String QUERY_TRIGGER = "Document.QUERY_TRIGGER";
+public class BasicDocument implements Document {
 
     public static final String FK_DOCUMENT_ID = "document_id";
 
@@ -107,16 +106,16 @@ public class Document implements Serializable {
 
 //  --------------------------------------------------------------------------------------------------------------------
 
-    public Document() {
+    public BasicDocument() {
         // default
     }
 
-    public Document(Long id, Kind kind) {
+    public BasicDocument(Long id, Kind kind) {
         this.id = id;
         this.kind = kind;
     }
 
-    public Document(Long id, String title, String outline, Kind kind, Integer progress, Reminder reminder, Date modified) {
+    public BasicDocument(Long id, String title, String outline, Kind kind, Integer progress, Reminder reminder, Date modified) {
         this.id = id;
         this.title = title;
         this.outline = outline;
@@ -178,7 +177,7 @@ public class Document implements Serializable {
 //        } catch (NotesException e) {
 //            throw e;
 //        } catch (Throwable t) {
-//            throw new NotesException("Document is invalid", t);
+//            throw new NotesException("BasicDocument is invalid", t);
 //        }
 //    }
 //

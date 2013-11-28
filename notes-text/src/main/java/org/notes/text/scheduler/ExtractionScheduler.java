@@ -3,8 +3,8 @@ package org.notes.text.scheduler;
 import org.apache.log4j.Logger;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
+import org.notes.common.interfaces.Document;
 import org.notes.common.interfaces.Extractable;
-import org.notes.common.model.Document;
 import org.notes.common.model.Trigger;
 
 import javax.ejb.*;
@@ -33,27 +33,24 @@ public class ExtractionScheduler {
             Query query = em.createNamedQuery(Document.QUERY_TRIGGER);
             query.setParameter("TRIGGER", Arrays.asList(Trigger.EXTRACT_PDF));
 
-            // todo get a list of extractables no casts
-            List<Document> list = query.getResultList();
+            List<Extractable> list = query.getResultList();
 
             if (!list.isEmpty()) {
 
-                for (Document document : list) {
+                for (Extractable extractable : list) {
 
-                    LOGGER.info("extract " + document.getId());
+                    LOGGER.info("extract " + extractable.getId());
 
                     try {
-                        if (document instanceof Extractable) {
-                            ((Extractable) document).extract();
-                        }
-                        document.setTrigger(Trigger.INDEX);
+                        extractable.extract();
+                        extractable.setTrigger(Trigger.INDEX);
 
                     } catch (NotesException e) {
                         // it failed
-                        document.setTrigger(Trigger.OCR);
+                        extractable.setTrigger(Trigger.EXTRACT_FAILED);
                     }
 
-                    em.merge(document);
+                    em.merge(extractable);
                     em.flush();
                 }
             }

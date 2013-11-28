@@ -6,12 +6,12 @@
                        http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
 
     <persistence-unit name="primary">
-        <jta-data-source>java:jboss/datasources/note_mysql</jta-data-source>
+        <jta-data-source>java:jboss/datasources/notes_mysql</jta-data-source>
 
-        <class>org.notes.common.model.Document</class>
-        <class>org.notes.common.model.Reminder</class>
+        <class>org.notes.core.model.Reminder</class>
         <class>org.notes.common.model.FileReference</class>
         <class>org.notes.common.model.FullText</class>
+        <class>org.notes.core.model.BasicDocument</class>
         <class>org.notes.core.model.TextDocument</class>
         <class>org.notes.core.model.User</class>
         <class>org.notes.core.model.Account</class>
@@ -26,7 +26,7 @@
             <property name="hibernate.hbm2ddl.auto" value="create"/>
             <property name="hibernate.connection.autoReconnect" value="true"/>
 
-            <!--<property name="hibernate.ejb.naming_strategy" value="org.notes.common.model.CustomNamingStrategy"/>-->
+            <!--<property name="hibernate.ejb.naming_strategy" value="org.notes.common.CustomNamingStrategy"/>-->
 
             <!--<property name="min-pool" value=""></property>-->
             <!-- Needed to recreate EntityManagerFactory -->

@@ -2,7 +2,7 @@ package org.notes.core.interfaces;
 
 import org.apache.commons.fileupload.FileItem;
 import org.notes.common.exceptions.NotesException;
-import org.notes.common.model.Document;
+import org.notes.core.model.BasicDocument;
 import org.notes.core.model.BookmarkDocument;
 import org.notes.core.model.PdfDocument;
 import org.notes.core.model.TextDocument;
@@ -15,11 +15,11 @@ public interface DocumentManager {
 
     TextDocument createDocument(TextDocument document) throws NotesException;
 
-    Document getDocument(long documentId) throws NotesException;
+    BasicDocument getDocument(long documentId) throws NotesException;
 
-    Document deleteDocument(Document document) throws NotesException;
+    BasicDocument deleteDocument(BasicDocument document) throws NotesException;
 
-    Document updateDocument(Document document) throws NotesException;
+    BasicDocument updateDocument(BasicDocument document) throws NotesException;
 
     PdfDocument uploadDocument(List<FileItem> items) throws NotesException;
 

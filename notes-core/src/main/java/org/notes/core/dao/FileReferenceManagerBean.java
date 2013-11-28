@@ -2,6 +2,7 @@ package org.notes.core.dao;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.notes.common.configuration.NotesInterceptors;
@@ -18,7 +19,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
@@ -61,7 +64,7 @@ public class FileReferenceManagerBean implements FileReferenceManager {
                 throw new IllegalArgumentException("item is null");
             }
 
-            String checksum = getChecksum(item);
+            String checksum = getChecksum(item.getInputStream());
 
             FileReference reference = find(checksum, item.getSize());
 
@@ -126,17 +129,11 @@ public class FileReferenceManagerBean implements FileReferenceManager {
         }
     }
 
-    @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public FileReference find(String checksum, long size) throws NotesException {
+    private FileReference find(String checksum, long size) throws NotesException {
         try {
 
             if (StringUtils.isBlank(checksum)) {
                 throw new IllegalArgumentException("checksum is null");
-            }
-
-            if (size <= 0) {
-                throw new IllegalArgumentException("invalid size " + size);
             }
 
             Query query = em.createNamedQuery(FileReference.QUERY_BY_CHECKSUM);
@@ -161,7 +158,48 @@ public class FileReferenceManagerBean implements FileReferenceManager {
         return new File(getRepositoryPath() + File.separator + checksum + "." + System.currentTimeMillis() + ".dat");
     }
 
-    private String getChecksum(FileItem item) throws IOException {
-        return DigestUtils.md5Hex(item.getInputStream());
+    private String getChecksum(InputStream stream) throws IOException {
+        return DigestUtils.md5Hex(stream);
+    }
+
+    @Override
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public FileReference storeTemporary(String pathToSnapshot) throws NotesException {
+        try {
+
+            File resource = new File(pathToSnapshot);
+
+            String checksum = getChecksum(new FileInputStream(resource));
+
+            FileReference reference = find(checksum, 0);
+
+            if (reference != null) {
+                em.merge(reference); // update date
+                return reference;
+            }
+
+            reference = new FileReference();
+
+            // store
+            File fileInRepo = getNewPath(checksum);
+            FileUtils.copyFile(resource, fileInRepo);
+
+            ContentType contentType = ContentType.TEMP;
+
+            fileInRepo.setExecutable(false);
+
+            reference.setContentType(contentType);
+            reference.setChecksum(checksum);
+            reference.setSize(0);
+            reference.setReference(fileInRepo.getAbsolutePath());
+
+            em.persist(reference);
+            em.flush();
+
+            return reference;
+
+        } catch (Throwable t) {
+            throw new NotesException("store failed: " + t.getMessage(), t);
+        }
     }
 }

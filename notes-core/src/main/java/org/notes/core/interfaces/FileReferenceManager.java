@@ -2,13 +2,14 @@ package org.notes.core.interfaces;
 
 import org.apache.commons.fileupload.FileItem;
 import org.notes.common.exceptions.NotesException;
+import org.notes.common.interfaces.HarvestManager;
 import org.notes.common.model.FileReference;
 
 import javax.ejb.Local;
 import java.io.File;
 
 @Local
-public interface FileReferenceManager {
+public interface FileReferenceManager extends HarvestManager {
 
     FileReference getFileReference(Long fileId) throws NotesException;
 
@@ -16,5 +17,4 @@ public interface FileReferenceManager {
 
     FileReference store(FileItem item) throws NotesException;
 
-    FileReference find(String checksum, long size) throws NotesException;
 }

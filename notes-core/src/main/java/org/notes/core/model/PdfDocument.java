@@ -6,7 +6,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.notes.common.ForeignKey;
 import org.notes.common.exceptions.NotesException;
 import org.notes.common.interfaces.Extractable;
-import org.notes.common.model.Document;
+import org.notes.common.interfaces.Fulltextable;
 import org.notes.common.model.FileReference;
 import org.notes.common.model.FullText;
 import org.notes.common.model.Kind;
@@ -28,7 +28,7 @@ import java.util.Set;
 //    })
 )
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-public class PdfDocument extends Document implements Extractable {
+public class PdfDocument extends BasicDocument implements Extractable, Fulltextable {
 
     private static final Logger LOGGER = Logger.getLogger(PdfDocument.class);
 

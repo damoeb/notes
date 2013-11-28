@@ -3,9 +3,10 @@ package org.notes.core.model;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.notes.common.exceptions.NotesException;
-import org.notes.common.interfaces.Extractable;
-import org.notes.common.model.Document;
+import org.notes.common.ForeignKey;
+import org.notes.common.interfaces.Fulltextable;
+import org.notes.common.interfaces.Harvestable;
+import org.notes.common.model.FileReference;
 import org.notes.common.model.FullText;
 import org.notes.common.model.Kind;
 
@@ -16,22 +17,19 @@ import java.util.Collection;
 @Entity(name = "BookmarkDocument")
 @Table(name = "BookmarkDocument")
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-public class BookmarkDocument extends Document implements Extractable {
+public class BookmarkDocument extends BasicDocument implements Fulltextable, Harvestable {
 
     private static final Logger LOGGER = Logger.getLogger(BookmarkDocument.class);
 
 //  -- References ------------------------------------------------------------------------------------------------------
 
-    /**
-     * used for website snapshot
-     */
-//    todo @JsonIgnore
-//    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
-//    @JoinColumn(name = ForeignKey.FILE_REFERENCE_ID)
-//    private FileReference siteSnapshot;
-//
-//    @Column(insertable = false, updatable = false, name = ForeignKey.FILE_REFERENCE_ID)
-//    private Long siteSnapshotId;
+    @JsonIgnore
+    @OneToOne(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = ForeignKey.FILE_REFERENCE_ID)
+    private FileReference siteSnapshot;
+
+    @Column(insertable = false, updatable = false, name = ForeignKey.FILE_REFERENCE_ID, nullable = true)
+    private Long siteSnapshotId;
 
 //  --------------------------------------------------------------------------------------------------------------------
 
@@ -63,24 +61,20 @@ public class BookmarkDocument extends Document implements Extractable {
         this.text = fullText;
     }
 
-    @JsonIgnore
-    @Override
-    public void extract() throws NotesException {
-//        try {
-//
-//            LOGGER.info("extract bookmark " + getId());
-//
-//            FileReference reference = getFileReference();
-//
-//            if (reference.getFullTexts() == null || reference.getFullTexts().isEmpty()) {
-//
-//                // todo implement
-//
-//            }
-//
-//        } catch (Throwable e) {
-//            throw new NotesException("Cannot extract text of " + getId(), e);
-//        }
+    public FileReference getSiteSnapshot() {
+        return siteSnapshot;
+    }
+
+    public void setSiteSnapshot(FileReference siteSnapshot) {
+        this.siteSnapshot = siteSnapshot;
+    }
+
+    public Long getSiteSnapshotId() {
+        return siteSnapshotId;
+    }
+
+    public void setSiteSnapshotId(Long siteSnapshotId) {
+        this.siteSnapshotId = siteSnapshotId;
     }
 
     @JsonIgnore

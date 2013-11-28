@@ -194,6 +194,22 @@ notes.dialog.document = {
                                 folderId: $('#directory').directory('selectedFolder')
                             });
                             bookmark.save(null, {success: function () {
+
+                                // todo test
+                                var fetchModel = function () {
+                                    bookmark.fetch({success: function () {
+                                        if (bookmark.has('siteSnapshotId')) {
+                                            console.info(bookmark.get('siteSnapshotId'))
+                                        } else {
+                                            console.info('"wait');
+                                            setTimeout(fetchModel, 400);
+                                        }
+                                    }})
+                                };
+
+                                setTimeout(fetchModel, 400);
+
+                                // mark area
                                 $('#document-list-view').documentList('updateDocument', bookmark);
                             }});
 
@@ -208,7 +224,7 @@ notes.dialog.document = {
                     }
                 ]
             }));
-    },
+    }
 };
 
 

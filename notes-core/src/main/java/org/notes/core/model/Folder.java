@@ -3,7 +3,6 @@ package org.notes.core.model;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.notes.common.ForeignKey;
-import org.notes.common.model.Document;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -18,8 +17,8 @@ import java.util.Set;
 )
 @NamedQueries({
         @NamedQuery(name = Folder.QUERY_BY_ID, query = "SELECT a FROM Folder a where a.id=:ID"),
-        @NamedQuery(name = Folder.QUERY_DOCUMENTS, query = "SELECT new Document(a.id, a.title, a.outline, a.kind, a.progress, a.reminder, a.modified) FROM Document a where a.folderId=:ID AND a.deleted=false"),
-        @NamedQuery(name = Folder.QUERY_RELATED_DOCUMENTS, query = "SELECT new Document(a.id, a.title, a.outline, a.kind, a.progress, a.reminder, a.modified) FROM Folder f JOIN f.inheritedDocuments a WHERE f.id=:ID AND a.deleted=false"),
+        @NamedQuery(name = Folder.QUERY_DOCUMENTS, query = "SELECT new BasicDocument(a.id, a.title, a.outline, a.kind, a.progress, a.reminder, a.modified) FROM BasicDocument a where a.folderId=:ID AND a.deleted=false"),
+        @NamedQuery(name = Folder.QUERY_RELATED_DOCUMENTS, query = "SELECT new BasicDocument(a.id, a.title, a.outline, a.kind, a.progress, a.reminder, a.modified) FROM Folder f JOIN f.inheritedDocuments a WHERE f.id=:ID AND a.deleted=false"),
         @NamedQuery(name = Folder.QUERY_BY_VALUE, query = "SELECT a FROM Folder a where LOWER(a.name)=LOWER(:VAL)"),
         @NamedQuery(name = Folder.QUERY_ALL, query = "SELECT a FROM Folder a"),
         @NamedQuery(name = Folder.QUERY_USERS_NOTEBOOKS, query = "SELECT a FROM Folder a where a.ownerId=:ID and a.parentId IS NULL")
@@ -61,12 +60,12 @@ public class Folder extends Node {
 
     @OneToMany(fetch = FetchType.LAZY, cascade = {})
     @JoinColumn(name = ForeignKey.FOLDER_ID)
-    private Set<Document> documents = new HashSet(100);
+    private Set<BasicDocument> documents = new HashSet(100);
 
     @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY, cascade = {})
-    @JoinTable(name = "folder2document", joinColumns = @JoinColumn(name = ForeignKey.FOLDER_ID), inverseJoinColumns = @JoinColumn(name = Document.FK_DOCUMENT_ID))
-    private Set<Document> inheritedDocuments = new HashSet(100);
+    @JoinTable(name = "folder2document", joinColumns = @JoinColumn(name = ForeignKey.FOLDER_ID), inverseJoinColumns = @JoinColumn(name = BasicDocument.FK_DOCUMENT_ID))
+    private Set<BasicDocument> inheritedDocuments = new HashSet(100);
 
     @Column(updatable = false, insertable = false, nullable = true, name = Database.FK_DATABASE_ID)
     private Long databaseId;
@@ -82,11 +81,11 @@ public class Folder extends Node {
         // default
     }
 
-    public Set<Document> getDocuments() {
+    public Set<BasicDocument> getDocuments() {
         return documents;
     }
 
-    public void setDocuments(Set<Document> documents) {
+    public void setDocuments(Set<BasicDocument> documents) {
         this.documents = documents;
     }
 
@@ -146,11 +145,11 @@ public class Folder extends Node {
         this.expanded = expanded;
     }
 
-    public Set<Document> getInheritedDocuments() {
+    public Set<BasicDocument> getInheritedDocuments() {
         return inheritedDocuments;
     }
 
-    public void setInheritedDocuments(Set<Document> inheritedDocuments) {
+    public void setInheritedDocuments(Set<BasicDocument> inheritedDocuments) {
         this.inheritedDocuments = inheritedDocuments;
     }
 }
