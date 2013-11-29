@@ -20,7 +20,7 @@ public class FullText {
     private Long fileReferenceId;
 
     @JsonIgnore
-    @Column(nullable = false, length = 4096)
+    @Lob
     private String text;
 
 //  --------------------------------------------------------------------------------------------------------------------

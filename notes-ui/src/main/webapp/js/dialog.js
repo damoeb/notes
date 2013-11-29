@@ -195,7 +195,6 @@ notes.dialog.document = {
                             });
                             bookmark.save(null, {success: function (newmodel) {
 
-                                // todo test
 //                                var $pdfLayer = $('#bookmark-preview').show();
 //
 //                                var fetchModel = function () {

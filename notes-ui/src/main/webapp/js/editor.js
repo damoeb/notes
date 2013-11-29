@@ -16,12 +16,14 @@ $.widget("notes.editor", {
     _create: function () {
         var $this = this;
 
-        // -- events
-        setInterval(function () {
+        $this.nav = $('<ul/>').appendTo($this.element);
 
-            // todo $this.syncModel();
-
-        }, $this.options.syncInterval);
+//        // -- events
+//        setInterval(function () {
+//
+//            // todo $this.syncModel();
+//
+//        }, $this.options.syncInterval);
 
     },
 
