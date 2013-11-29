@@ -85,6 +85,7 @@ public class DatabaseService {
 
             database.setFolders(tree);
             return NotesResponse.ok(database);
+
         } catch (Exception e) {
             return NotesResponse.error(e);
         }

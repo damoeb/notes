@@ -98,9 +98,7 @@ public class StartUp {
                                 d0.setFolderId(f1.getId());
                                 documentManager.createDocument(d0);
                             }
-
                         }
-
                     }
 
 
