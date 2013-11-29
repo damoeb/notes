@@ -229,7 +229,7 @@ $.widget("notes.folder", {
         var $this = this;
 
         var folderId = $this.options.model.get('id');
-        $('#document-list-view').documentList({
+        $('#document-list').documentList({
             folderId: folderId
         });
     },

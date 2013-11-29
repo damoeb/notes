@@ -13,9 +13,9 @@ public interface DatabaseManager {
 
     Database getDatabase(long databaseId) throws NotesException;
 
-    Database deleteDatabase(Database database) throws NotesException;
+    Database deleteDatabase(long databaseId) throws NotesException;
 
-    Database updateDatabase(Database database) throws NotesException;
+    Database updateDatabase(long databaseId, Database database) throws NotesException;
 
     List<Database> getDatabases() throws NotesException;
 

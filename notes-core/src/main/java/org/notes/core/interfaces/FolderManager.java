@@ -16,7 +16,7 @@ public interface FolderManager {
 
     Folder deleteFolder(Folder folder) throws NotesException;
 
-    Folder updateFolder(Folder folder) throws NotesException;
+    Folder updateFolder(long folderId, Folder folder) throws NotesException;
 
     List<BasicDocument> getDocuments(Long folderId) throws NotesException;
 

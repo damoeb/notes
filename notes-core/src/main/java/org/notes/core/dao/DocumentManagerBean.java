@@ -135,14 +135,14 @@ public class DocumentManagerBean implements DocumentManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public BasicDocument deleteDocument(BasicDocument ref) throws NotesException {
+    public BasicDocument deleteDocument(long documentId) throws NotesException {
         try {
-            BasicDocument document = _get(ref.getId());
+            BasicDocument document = _get(documentId);
             document.setDeleted(true);
             document.setTrigger(Trigger.DELETE);
             em.merge(document);
 
-            return ref;
+            return document;
 
         } catch (Throwable t) {
             throw new NotesException("delete document failed: " + t.getMessage(), t);

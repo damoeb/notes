@@ -77,10 +77,10 @@ $.widget("notes.pdfeditor", $.notes.basiceditor, {
         var config = {
             left: [
                 $('<span/>', {style: 'margin-left:15px'}),
-                $this._createButton('Previous', {primary: 'ui-icon-triangle-1-w'}, fnPrevious),
+                $this._createButton('Previous', {primary: 'ui-icon-triangle-1-w'}, fnPrevious, false),
                 $numberOfPages,
                 $('<span/>', {text: 'of ' + numberOfPages, style: 'padding-left:5px; padding-right:5px'}),
-                $this._createButton('Next', {secondary: 'ui-icon-triangle-1-e'}, fnNext)
+                $this._createButton('Next', {secondary: 'ui-icon-triangle-1-e'}, fnNext, false)
             ]
         }
 

@@ -34,12 +34,14 @@ public class FolderService {
 
     @PUT
     @MethodCache
+    @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse updateFolder(
-            Folder folder
+            Folder folder,
+            @PathParam("id") long folderId
     ) throws Exception {
         try {
-            Folder result = folderManager.updateFolder(folder);
+            Folder result = folderManager.updateFolder(folderId, folder);
             result.setDocuments(null);
             result.setChildren(null);
             return NotesResponse.ok(result);

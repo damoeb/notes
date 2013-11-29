@@ -65,17 +65,14 @@ public class DatabaseManagerBean implements DatabaseManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public Database deleteDatabase(Database database) throws NotesException {
+    public Database deleteDatabase(long databaseId) throws NotesException {
         try {
-            if (database == null) {
-                throw new NotesException("database is null");
-            }
-            return _delete(database.getId());
+            return _delete(databaseId);
 
         } catch (NotesException e) {
             throw e;
         } catch (Throwable t) {
-            throw new NotesException("delete database " + database, t);
+            throw new NotesException("delete database " + databaseId, t);
         }
     }
 
@@ -95,12 +92,12 @@ public class DatabaseManagerBean implements DatabaseManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public Database updateDatabase(Database database) throws NotesException {
+    public Database updateDatabase(long databaseId, Database database) throws NotesException {
         try {
             if (database == null) {
                 throw new NotesException("database is null");
             }
-            return _update(database.getId(), database);
+            return _update(databaseId, database);
 
         } catch (Throwable t) {
             throw new NotesException("update database " + database.getId(), t);

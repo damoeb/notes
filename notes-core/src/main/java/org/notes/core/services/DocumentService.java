@@ -17,26 +17,24 @@ public class DocumentService {
     @Inject
     private DocumentManager documentManager;
 
-    public DocumentManager getDocumentManager() {
-        return documentManager;
-    }
-
     @POST
     @MethodCache
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse createDocument(
             TextDocument document
     ) throws Exception {
-        return NotesResponse.ok(getDocumentManager().createDocument(document));
+        return NotesResponse.ok(documentManager.createDocument(document));
     }
 
     @PUT
     @MethodCache
+    @Path(value = "/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse updateDocument(
-            TextDocument document
+            TextDocument document,
+            @PathParam("id") long documentId
     ) throws Exception {
-        BasicDocument result = getDocumentManager().updateDocument(document);
+        BasicDocument result = documentManager.updateDocument(document);
         return NotesResponse.ok(result);
     }
 
@@ -48,7 +46,7 @@ public class DocumentService {
             @PathParam("id") long documentId
     ) {
         try {
-            return NotesResponse.ok(getDocumentManager().getDocument(documentId));
+            return NotesResponse.ok(documentManager.getDocument(documentId));
         } catch (Throwable t) {
             t.printStackTrace();
             return NotesResponse.error(t);
@@ -59,8 +57,8 @@ public class DocumentService {
     @MethodCache
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse deleteDocument(
-            TextDocument document
+            @PathParam("id") long documentId
     ) throws Exception {
-        return NotesResponse.ok(getDocumentManager().deleteDocument(document));
+        return NotesResponse.ok(documentManager.deleteDocument(documentId));
     }
 }

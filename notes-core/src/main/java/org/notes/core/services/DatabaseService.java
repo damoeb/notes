@@ -33,12 +33,14 @@ public class DatabaseService {
 
     @PUT
     @MethodCache
+    @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse updateDatabase(
-            Database database
+            Database database,
+            @PathParam("id") long databaseId
     ) throws Exception {
         try {
-            Database result = databaseManager.updateDatabase(database);
+            Database result = databaseManager.updateDatabase(databaseId, database);
             result.setFolders(null);
             return NotesResponse.ok(result);
         } catch (Exception e) {
@@ -92,10 +94,10 @@ public class DatabaseService {
     @MethodCache
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse deleteDatabase(
-            Database database
+            @PathParam("id") long databaseId
     ) throws Exception {
         try {
-            return NotesResponse.ok(databaseManager.deleteDatabase(database));
+            return NotesResponse.ok(databaseManager.deleteDatabase(databaseId));
         } catch (Exception e) {
             return NotesResponse.error(e);
         }

@@ -225,7 +225,7 @@ notes.dialog.document = {
 //                                setTimeout(fetchModel, 2000);
 
                                 // mark area
-                                $('#document-list-view').documentList('updateDocument', bookmark);
+                                $('#document-list').documentList('updateDocument', bookmark);
                             }});
 
                             $(this).dialog("close");

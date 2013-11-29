@@ -163,12 +163,15 @@ $.widget("notes.basiceditor", {
 //    },
 
 
-    _createButton: function (label, icons, onClick) {
+    _createButton: function (label, icons, onClick, showText) {
 
         var $this = this;
 
+        showText = typeof showText !== 'undefined' ? showText : true;
+
         return $('<button/>').button({
             label: label,
+            text: showText,
             icons: {
                 primary: icons.primary,
                 secondary: icons.secondary
@@ -187,9 +190,10 @@ $.widget("notes.basiceditor", {
         var $toolbar = $('<div/>', {class: 'row'});
 
         var $left = $('<div/>', {style: 'float:left'})
+//            .append(
+//                $this._createButton('Close', {primary: 'ui-icon-arrowreturn-1-w'}, $this.fnClose)
+//            )
             .append(
-                $this._createButton('Close', {primary: 'ui-icon-arrowreturn-1-w'}, $this.fnClose)
-            ).append(
                 $this._createButton('Delete', {primary: 'ui-icon-trash'}, $this.fnDelete)
             ).append(
                 $this._createButton('Progress', {primary: 'ui-icon-signal'}, $this.fnProgress)
@@ -226,7 +230,7 @@ $.widget("notes.basiceditor", {
 
     fnDelete: function () {
         var $this = this;
-        $('#document-list-view').documentList('deleteDocument', $this.getModel());
+        $('#document-list').documentList('deleteDocument', $this.getModel());
         // todo destory does not work
         $this.getModel().destroy();
         $this._destroy();
@@ -281,7 +285,7 @@ $.widget("notes.basiceditor", {
         }
 
         $this.getModel().save(null, {success: function () {
-            $('#document-list-view').documentList('updateDocument', $this.getModel());
+            $('#document-list').documentList('updateDocument', $this.getModel());
         }});
 
         console.info('sync');

@@ -17,7 +17,7 @@ public interface DocumentManager {
 
     BasicDocument getDocument(long documentId) throws NotesException;
 
-    BasicDocument deleteDocument(BasicDocument document) throws NotesException;
+    BasicDocument deleteDocument(long documentId) throws NotesException;
 
     BasicDocument updateDocument(BasicDocument document) throws NotesException;
 

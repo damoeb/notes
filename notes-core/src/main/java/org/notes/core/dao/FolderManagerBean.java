@@ -145,9 +145,25 @@ public class FolderManagerBean implements FolderManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public Folder updateFolder(Folder newFolder) throws NotesException {
+    public Folder updateFolder(long folderId, Folder newFolder) throws NotesException {
         try {
-            return _update(newFolder);
+            if (newFolder == null) {
+                throw new NotesException("Folder is null");
+            }
+            /*
+            todo
+            check if parentId changed -> ..
+              */
+
+            Folder folder = _get(folderId);
+            folder.setName(newFolder.getName());
+            folder.setModified(new Date());
+            folder.setExpanded(newFolder.isExpanded());
+            em.merge(folder);
+            em.flush();
+            em.refresh(folder);
+
+            return folder;
 
         } catch (Throwable t) {
             throw new NotesException("update folder: " + t.getMessage(), t);
@@ -202,32 +218,6 @@ public class FolderManagerBean implements FolderManager {
 
         user.getFolders().add(folder);
         em.merge(user);
-
-        return folder;
-
-    }
-
-    private Folder _update(Folder newFolder) throws NotesException {
-
-        if (newFolder == null) {
-            throw new NotesException("Folder is null");
-        }
-        if (newFolder.getId() <= 0) {
-            throw new NotesException("Folder Id is invalid");
-        }
-
-        /*
-        todo
-        check if parentId changed -> ..
-          */
-
-        Folder folder = _get(newFolder.getId());
-        folder.setName(newFolder.getName());
-        folder.setModified(new Date());
-        folder.setExpanded(newFolder.isExpanded());
-        em.merge(folder);
-        em.flush();
-        em.refresh(folder);
 
         return folder;
 

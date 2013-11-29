@@ -24,7 +24,8 @@ $.widget("notes.texteditor", $.notes.basiceditor, {
         };
 
         $this.fnPreDestroy = function () {
-            console.log('pre destory')
+            console.log('pre destory');
+            $this.fnClose();
         };
 
         $target.append(

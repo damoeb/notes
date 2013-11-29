@@ -118,7 +118,7 @@
                 databaseId: config.databaseId
             });
 
-            $('#document-list-view').documentList();
+            $('#document-list').documentList();
             var editor = $('#editors').editors();
 
 
@@ -167,10 +167,20 @@
 
                         var model = new notes.model.Document(xhr.result.result);
 
-                        $('#document-list-view').documentList('updateDocument', model);
+                        $('#document-list').documentList('updateDocument', model);
                     });
 
 
+//            $( window ).resize(function() {
+//                var height = $(window).height() - 50;
+//                $('#directory')
+//                        .css('max-height', height)
+//                        .css('height', height);
+//
+//                $('#document-list')
+//                        .css('max-height', height)
+//                        .css('height', height);
+//            });
         });
 
     </script>
@@ -266,7 +276,7 @@
                 <div class="col-lg-10">
 
                     <div class="container">
-                        <div id="document-list-view" class="row">
+                        <div id="document-list" class="row">
 
                         </div>
                         <div id="editors" class="row" style="border-color:#ccc">

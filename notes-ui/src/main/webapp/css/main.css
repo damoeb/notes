@@ -133,8 +133,8 @@ body {
 }
 
 /* document list */
-#document-list-view {
-    min-height: 300px;
+#document-list {
+    overflow-y: auto;
 }
 
 /* datatable */
@@ -179,8 +179,8 @@ table.dataTable tr.even.doc-origin-related {
     border-bottom: 1px solid #eaeaea;
 }
 
-#document-list-view table.dataTable tr.even td.sorting_1,
-#document-list-view table.dataTable tr.odd td.sorting_1 {
+#document-list table.dataTable tr.even td.sorting_1,
+#document-list table.dataTable tr.odd td.sorting_1 {
     background-color: #ecf2ff;
 }
 
@@ -379,6 +379,10 @@ TR.active .progress-of-task {
 .tree-menu {
     position: absolute;
     z-index: 999;
+}
+
+#directory {
+    overflow-y: auto;
 }
 
 /* editor */
