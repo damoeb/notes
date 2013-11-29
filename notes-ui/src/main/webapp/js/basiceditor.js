@@ -1,76 +1,10 @@
-$.widget("notes.editor", {
+$.widget("notes.basiceditor", {
 
     options: {
-        syncInterval: 15000 // msec
+        model: null
     },
-
-    settings: {
-        text: {
-            fnLoad: '_loadTextEditor'
-        },
-        pdf: {
-            fnLoad: '_loadPdfEditor'
-        }
-    },
-
-    _create: function () {
-        var $this = this;
-
-        $this.nav = $('<ul/>').appendTo($this.element);
-
-//        // -- events
-//        setInterval(function () {
-//
-//            // todo $this.syncModel();
-//
-//        }, $this.options.syncInterval);
-
-    },
-
-    edit: function (documentId, unloadCallback) {
-
-        var $this = this;
-
-        $this.unloadCallback = unloadCallback;
-
-        if (!documentId) {
-            throw 'document id is null.'
-        }
-
-        notes.util.jsonCall('GET', '/notes/rest/document/${documentId}', {'${documentId}': documentId}, null, function (document) {
-            $this.documentId = document.id;
-
-            var settings = $this.settings[document.kind.toLowerCase()];
-
-            var model = new notes.model.Document(document);
-            model.set('event', 'UPDATE');
-
-            $this.loadDocument(settings, model);
-        });
-    },
-
-    loadDocument: function (settings, model) {
-        var $this = this;
-
-        $this.model = model;
-        $this.$progressLayer = $this._newProgressSettings(model);
-
-        $this[settings.fnLoad]();
-    },
-
-    createDocument: function () {
-        var $this = this;
-        var kindString = 'text';
-
-        var setting = $this.settings[kindString.toLowerCase()];
-        $this.loadDocument(setting, new notes.model.Document({
-            folderId: $('#directory').directory('selectedFolder')
-        }));
-    },
-
 
     // -----------------------------------------------------------------------------------------------------------------
-
 
     _newProgressSettings: function (model) {
 
@@ -279,7 +213,11 @@ $.widget("notes.editor", {
     },
 
     getProgressLayer: function () {
-        return this.$progressLayer;
+        var $this = this;
+        if ($this.$progressLayer == null) {
+            $this.$progressLayer = $this._newProgressSettings($this.getModel());
+        }
+        return $this.$progressLayer;
     },
 
     fnProgress: function () {
@@ -299,8 +237,7 @@ $.widget("notes.editor", {
         var $editor = this.element;
         if ($editor.hasClass('maximized')) {
             $editor.
-                removeClass('maximized').
-                addClass('row');
+                removeClass('maximized')
             $(el).
                 button('option', 'label', 'Maximize').
                 button('option', 'icons', { primary: 'ui-icon-arrow-4-diag'});
@@ -311,7 +248,6 @@ $.widget("notes.editor", {
 
         } else {
             $editor.
-                removeClass('row').
                 addClass('maximized');
             $(el).
                 button('option', 'label', 'Unmaximize').
@@ -334,7 +270,7 @@ $.widget("notes.editor", {
     },
 
     getModel: function () {
-        return this.model;
+        return this.options.model;
     },
 
     syncModel: function () {
@@ -351,58 +287,6 @@ $.widget("notes.editor", {
         console.info('sync');
     },
 
-    // -- TEXT EDITOR --------------------------------------------------------------------------------------------------
-
-
-    _loadTextEditor: function () {
-        var $this = this;
-
-        var model = $this.getModel();
-
-        var $fieldTitle = $('<input/>', {class: 'ui-widget-content ui-corner-all title', type: 'text', value: model.get('title')});
-        var $fieldText = $('<textarea/>', {class: 'ui-widget-content ui-corner-all', type: 'text', value: model.get('text')});
-
-        var $target = $this.element.empty().show().
-            addClass('container text-editor').
-            // resets from maximized mode
-            removeClass('maximized').
-            addClass('row');
-
-        // todo both should be dialogs?
-
-        // todo implement star/pin functionality
-
-        $this.fnPreSyncModel = function () {
-            console.log('pre sync')
-            model.set('title', $fieldTitle.val());
-            model.set('text', $fieldText.val());
-        };
-
-        $this.fnPreDestroy = function () {
-            console.log('pre destory')
-        };
-
-        $target.append(
-                $this._getToolbar()
-            ).append(
-                $this.getProgressLayer()
-            ).append(
-                $('<div/>', {class: 'row', style: 'margin-top:5px'}).append(
-                    $fieldTitle
-                )
-            ).append(
-                $('<div/>', {class: 'row', style: 'margin-top:5px', text: 'permalink '}).append(
-                    $('<a/>', {href: '#', text: 'http://notes.org/' + model.get('id')})
-                )
-            ).append(
-                $('<div/>', {class: 'row', style: 'margin-top:5px', text: 'modified ' + notes.util.formatDate(new Date(model.get('modified'))) + ' ago by ' + model.get('ownerId')})
-            ).append(
-                $('<div/>', {class: 'row', style: 'margin-top:5px'}).append(
-                    $fieldText
-                )
-            );
-    },
-
     _destroy: function () {
 
         var $this = this;
@@ -417,112 +301,6 @@ $.widget("notes.editor", {
 
         // todo implement destroy/reuse?
         $this.element.hide();
-    },
-
-
-    // -- PDF EDITOR .--------------------------------------------------------------------------------------------------
-
-    _loadPdfEditor: function () {
-
-        var $this = this;
-
-        var $target = $this.element.empty().show().
-            addClass('container pdf-editor').
-            // resets from maximized mode
-            removeClass('maximized').
-            addClass('row');
-
-        $this.fnPreSyncModel = function () {
-            console.log('pre sync')
-        };
-        $this.fnPreDestroy = function () {
-            console.log('pre destory')
-        };
-
-        $this.currentPage = 1;
-
-        var $numberOfPages = $('<input/>', {type: 'text', class: 'ui-widget-content ui-corner-all pages', value: '1'});
-        var $pdfLayer = $('<div/>', {class: 'pdf-container'});
-
-        var embedPos = {
-            top: 385,
-            left: 30
-        };
-
-        var maxPos = {
-            top: 93,
-            left: 20
-        };
-
-        var pdfConfig = {
-            fileId: $this.getModel().get('fileReferenceId'),
-            page: $this.currentPage,
-            position: embedPos,
-            layer: $pdfLayer
-        };
-
-        var loadPdf = function () {
-            pdfConfig.page = $this.currentPage;
-            pdfloader.loadPdf(pdfConfig);
-        };
-
-        $this.fnPostMaximize = function () {
-            pdfConfig.position = maxPos;
-            loadPdf();
-        };
-
-        $this.fnPostEmbed = function () {
-            pdfConfig.position = embedPos;
-            loadPdf();
-        };
-
-        // todo navigation does not work
-        var fnPrevious = function () {
-            if ($this.currentPage > 1) {
-                $this.currentPage--;
-                $numberOfPages.val($this.currentPage);
-
-                loadPdf();
-            }
-        };
-        var numberOfPages = $this.getModel().get('numberOfPages');
-
-        var fnNext = function () {
-            if ($this.currentPage < numberOfPages) {
-                $this.currentPage++;
-                $numberOfPages.val($this.currentPage);
-
-                pdfConfig.page = $this.currentPage;
-                pdfloader.loadPdf(pdfConfig);
-            }
-        };
-
-        var config = {
-            left: [
-                $('<span/>', {style: 'margin-left:15px'}),
-                $this._createButton('Previous', {primary: 'ui-icon-triangle-1-w'}, fnPrevious),
-                $numberOfPages,
-                $('<span/>', {text: 'of ' + numberOfPages, style: 'padding-left:5px; padding-right:5px'}),
-                $this._createButton('Next', {secondary: 'ui-icon-triangle-1-e'}, fnNext)
-            ]
-        }
-
-        var $fieldTitle = $('<input/>', {class: 'ui-widget-content ui-corner-all title', type: 'text', value: $this.getModel().get('title')});
-
-        $target.append(
-                $this._getToolbar(config)
-            ).append(
-                $this.getProgressLayer()
-            ).append(
-                $('<div/>', {class: 'row', style: 'margin-top:5px'}).append(
-                    $fieldTitle
-                )
-            ).append(
-                $('<div/>', {class: 'row', style: 'margin-top:5px', text: 'modified ' + notes.util.formatDate(new Date($this.getModel().get('modified'))) + ' by ' + $this.getModel().get('ownerId')})
-            ).append(
-                $pdfLayer
-            );
-
-        pdfloader.loadPdf(pdfConfig);
     }
+
 })

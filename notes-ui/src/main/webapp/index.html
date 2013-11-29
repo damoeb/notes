@@ -72,7 +72,10 @@
     </script>
 
     <script src="js/util.js"></script>
-    <script src="js/editor.js"></script>
+    <script src="js/editors.js"></script>
+    <script src="js/basiceditor.js"></script>
+    <script src="js/texteditor.js"></script>
+    <script src="js/pdfeditor.js"></script>
     <script src="js/documentlist.js"></script>
     <script src="js/database.js"></script>
     <script src="js/folder.js"></script>
@@ -116,7 +119,7 @@
             });
 
             $('#document-list-view').documentList();
-            var editor = $('#editor').editor();
+            var editor = $('#editors').editors();
 
 
             // -- Menu -- --------------------------------------------------------------------------------------------------
@@ -135,7 +138,7 @@
                         icons: {primary: 'ui-icon-document'}
                     })
                     .click(function () {
-                        editor.editor('createDocument');
+                        editor.editors('createDocument');
                     });
 
             $('#import-document')
@@ -266,7 +269,7 @@
                         <div id="document-list-view" class="row">
 
                         </div>
-                        <div id="editor" class="row">
+                        <div id="editors" class="row" style="border-color:#ccc">
                             <!-- content generated -->
                         </div>
                     </div>

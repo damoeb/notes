@@ -68,7 +68,7 @@ $.widget("notes.documentList", {
                         var documentId = aData[0];
 
                         // call editor
-                        $('#editor').editor('edit', documentId, function () {
+                        $('#editors').editors('edit', documentId, function () {
                             $row.removeClass('highlighted');
                         });
                         // highlight

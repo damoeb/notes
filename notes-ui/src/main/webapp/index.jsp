@@ -60,7 +60,7 @@
     </script>
 
     <script src="js/util.js"></script>
-    <script src="js/editor.js"></script>
+    <script src="js/editors.js"></script>
     <script src="js/annotate.js"></script>
 
     <script type="text/javascript">

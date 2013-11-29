@@ -392,6 +392,16 @@ TR.active .progress-of-task {
     padding: 10px 20px;
 }
 
+#editors .ui-icon-close {
+    cursor: pointer;
+    float: left;
+    margin: 0.4em 0.2em 0 0;
+}
+
+.ui-tabs-nav li.ui-tabs-active {
+    border-top: 2px solid #6792FF !important;
+}
+
 /* todo does not work */
 .pdf-editor .pages {
     text-align: center;
