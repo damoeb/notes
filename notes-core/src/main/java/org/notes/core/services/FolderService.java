@@ -8,6 +8,7 @@ import org.notes.core.model.Folder;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.util.List;
 
 @NotesInterceptors
 @Path("/folder")
@@ -50,6 +51,7 @@ public class FolderService {
         }
     }
 
+    // todo not used
     @GET
     @MethodCache
     @Path("/{id}")
@@ -58,7 +60,24 @@ public class FolderService {
             @PathParam("id") long folderId
     ) throws Exception {
         try {
-            return NotesResponse.ok(folderManager.getFolder(folderId));
+            Folder folder = folderManager.getFolder(folderId);
+            folder.setDocuments(null);
+            return NotesResponse.ok(folder);
+        } catch (Exception e) {
+            return NotesResponse.error(e);
+        }
+    }
+
+    @GET
+    @MethodCache
+    @Path("/{id}/children")
+    @Produces(MediaType.APPLICATION_JSON)
+    public NotesResponse getChildren(
+            @PathParam("id") long folderId
+    ) throws Exception {
+        try {
+            List<Folder> folders = folderManager.getChildren(folderId);
+            return NotesResponse.ok(folders);
         } catch (Exception e) {
             return NotesResponse.error(e);
         }

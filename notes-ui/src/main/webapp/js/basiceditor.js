@@ -270,7 +270,6 @@ $.widget("notes.basiceditor", {
 
         $this.syncModel();
 
-        $this._destroy();
     },
 
     getModel: function () {
