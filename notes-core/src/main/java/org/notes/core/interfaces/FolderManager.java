@@ -21,4 +21,6 @@ public interface FolderManager {
     List<BasicDocument> getDocuments(Long folderId) throws NotesException;
 
     List<BasicDocument> getRelatedDocuments(Long folderId, int offset, int count) throws NotesException;
+
+    List<Folder> getChildren(long folderId) throws NotesException;
 }

@@ -132,6 +132,21 @@ public class FolderManagerBean implements FolderManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public List<Folder> getChildren(long folderId) throws NotesException {
+        try {
+
+            Query query = em.createNamedQuery(Folder.QUERY_CHILDREN);
+            query.setParameter("ID", folderId);
+
+            return (List<Folder>) query.getResultList();
+
+        } catch (Throwable t) {
+            throw new NotesException("get children " + folderId, t);
+        }
+    }
+
+    @Override
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Folder deleteFolder(Folder folder) throws NotesException {
         try {
             return _delete(folder);

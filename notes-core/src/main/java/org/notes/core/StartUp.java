@@ -11,6 +11,7 @@ import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.util.Date;
 
 @Startup
 @Singleton
@@ -65,7 +66,7 @@ public class StartUp {
                     Database d = new Database();
                     d.setName("work");
                     d = databaseManager.createDatabase(d);
-
+                    /*
                     int folderId = 0;
 
                     for (int i = 0; i < 30; i++) {
@@ -100,9 +101,8 @@ public class StartUp {
                             }
                         }
                     }
+                    */
 
-
-                    /*
 
                     Folder f0 = new Folder();
                     f0.setName("Projekte");
@@ -154,7 +154,6 @@ public class StartUp {
                     td3.setReminder(reminder);
 
                     td3 = documentManager.createDocument(td3);
-                    */
 
 
                     //documentManager.deleteDocument(td1.getId());

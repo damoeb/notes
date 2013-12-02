@@ -5,6 +5,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.notes.common.ForeignKey;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,17 +20,13 @@ import java.util.Set;
         @NamedQuery(name = Folder.QUERY_BY_ID, query = "SELECT a FROM Folder a where a.id=:ID"),
         @NamedQuery(name = Folder.QUERY_DOCUMENTS, query = "SELECT new BasicDocument(a.id, a.title, a.outline, a.kind, a.progress, a.reminder, a.modified) FROM BasicDocument a where a.folderId=:ID AND a.deleted=false"),
         @NamedQuery(name = Folder.QUERY_RELATED_DOCUMENTS, query = "SELECT new BasicDocument(a.id, a.title, a.outline, a.kind, a.progress, a.reminder, a.modified) FROM Folder f JOIN f.inheritedDocuments a WHERE f.id=:ID AND a.deleted=false"),
-        @NamedQuery(name = Folder.QUERY_BY_VALUE, query = "SELECT a FROM Folder a where LOWER(a.name)=LOWER(:VAL)"),
-        @NamedQuery(name = Folder.QUERY_ALL, query = "SELECT a FROM Folder a"),
-        @NamedQuery(name = Folder.QUERY_USERS_NOTEBOOKS, query = "SELECT a FROM Folder a where a.ownerId=:ID and a.parentId IS NULL")
+        @NamedQuery(name = Folder.QUERY_CHILDREN, query = "SELECT new Folder(a.id, a.name, a.leaf, a.documentCount, a.modified, a.level) FROM Folder a WHERE a.parentId = :ID")
 })
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class Folder extends Node {
 
     public static final String QUERY_BY_ID = "Folder.QUERY_BY_ID";
-    public static final String QUERY_BY_VALUE = "Folder.QUERY_BY_VALUE";
-    public static final String QUERY_ALL = "Folder.QUERY_ALL";
-    public static final String QUERY_USERS_NOTEBOOKS = "Folder.QUERY_USERS_NOTEBOOKS";
+    public static final String QUERY_CHILDREN = "Folder.QUERY_CHILDREN";
     public static final String QUERY_DOCUMENTS = "Folder.QUERY_DOCUMENTS";
     public static final String QUERY_RELATED_DOCUMENTS = "Folder.QUERY_RELATED_DOCUMENTS";
 
@@ -45,6 +42,7 @@ public class Folder extends Node {
     /**
      * true, if not leaf and child nodes are shown
      */
+    // todo remove, put in settings
     @Basic
     private boolean expanded = false;
 
@@ -58,6 +56,7 @@ public class Folder extends Node {
     @Column(updatable = false, insertable = false, nullable = true, name = "parent_id")
     private Long parentId;
 
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, cascade = {})
     @JoinColumn(name = ForeignKey.FOLDER_ID)
     private Set<BasicDocument> documents = new HashSet(100);
@@ -79,6 +78,15 @@ public class Folder extends Node {
 
     public Folder() {
         // default
+    }
+
+    public Folder(long id, String name, boolean leaf, int documentCount, Date modified, int level) {
+        setId(id);
+        setLeaf(leaf);
+        setName(name);
+        setDocumentCount(documentCount);
+        setModified(modified);
+        setLevel(level);
     }
 
     public Set<BasicDocument> getDocuments() {

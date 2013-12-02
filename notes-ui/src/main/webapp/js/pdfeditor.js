@@ -17,6 +17,7 @@ $.widget("notes.pdfeditor", $.notes.basiceditor, {
         };
 
         var currentPage = 1;
+        var numberOfPages = $this.getModel().get('numberOfPages');
 
         var $numberOfPages = $('<input/>', {type: 'text', class: 'ui-widget-content ui-corner-all pages', value: '1'});
         var $pdfLayer = $('<div/>', {class: 'pdf-container'});
@@ -39,7 +40,7 @@ $.widget("notes.pdfeditor", $.notes.basiceditor, {
         };
 
         var loadPdf = function () {
-            pdfConfig.page = $this.currentPage;
+            pdfConfig.page = currentPage;
             pdfloader.loadPdf(pdfConfig);
         };
 
@@ -62,7 +63,6 @@ $.widget("notes.pdfeditor", $.notes.basiceditor, {
                 loadPdf();
             }
         };
-        var numberOfPages = $this.getModel().get('numberOfPages');
 
         var fnNext = function () {
             if (currentPage < numberOfPages) {
