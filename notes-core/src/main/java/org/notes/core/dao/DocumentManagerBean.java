@@ -104,6 +104,7 @@ public class DocumentManagerBean implements DocumentManager {
         }
 
         proxy.getDocuments().add(document);
+        // todo check if works, probably not
         proxy.setDocumentCount(proxy.getDocumentCount() + 1);
         em.merge(proxy);
 
