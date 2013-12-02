@@ -9,7 +9,7 @@ import org.notes.core.model.Folder;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import java.util.*;
+import java.util.List;
 
 @NotesInterceptors
 @Path("/database")
@@ -40,9 +40,7 @@ public class DatabaseService {
             @PathParam("id") long databaseId
     ) throws Exception {
         try {
-            Database result = databaseManager.updateDatabase(databaseId, database);
-            result.setFolders(null);
-            return NotesResponse.ok(result);
+            return NotesResponse.ok(databaseManager.updateDatabase(databaseId, database));
         } catch (Exception e) {
             return NotesResponse.error(e);
         }
@@ -56,35 +54,23 @@ public class DatabaseService {
             @PathParam("id") long databaseId
     ) throws Exception {
         try {
-            Database database = databaseManager.getDatabase(databaseId);
-            Map<Long, Folder> folders = new HashMap(100);
-            Comparator<Folder> sortedByName = new Comparator<Folder>() {
-                @Override
-                public int compare(Folder f1, Folder f2) {
-                    return f2.getName().compareTo(f1.getName());
-                }
-            };
-            SortedSet tree = new TreeSet(sortedByName);
-            for (Folder f : database.getFolders()) {
-                f.setDocuments(null);
-                folders.put(f.getId(), f);
-                if (f.getLevel() == 0) {
-                    tree.add(f);
-                }
-            }
-            for (Folder f : database.getFolders()) {
-                if (f.getLevel() != 0) {
-                    Folder parent = folders.get(f.getParentId());
-                    if (parent.getChildren() == null) {
-                        parent.setChildren(new TreeSet(sortedByName));
-                    }
-                    parent.getChildren().add(f);
-                    //parent.setDocumentCount(parent.getDocumentCount() + f.getDocumentCount());
-                }
-            }
+            return NotesResponse.ok(databaseManager.getDatabase(databaseId));
 
-            database.setFolders(tree);
-            return NotesResponse.ok(database);
+        } catch (Exception e) {
+            return NotesResponse.error(e);
+        }
+    }
+
+    @GET
+    @MethodCache
+    @Path("/{id}/roots")
+    @Produces(MediaType.APPLICATION_JSON)
+    public NotesResponse getRootFoldersInDatabase(
+            @PathParam("id") long databaseId
+    ) throws Exception {
+        try {
+            List<Folder> folders = databaseManager.getFolders(databaseId);
+            return NotesResponse.ok(folders);
 
         } catch (Exception e) {
             return NotesResponse.error(e);

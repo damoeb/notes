@@ -2,6 +2,7 @@ package org.notes.core.interfaces;
 
 import org.notes.common.exceptions.NotesException;
 import org.notes.core.model.Database;
+import org.notes.core.model.Folder;
 
 import javax.ejb.Local;
 import java.util.List;
@@ -19,4 +20,5 @@ public interface DatabaseManager {
 
     List<Database> getDatabases() throws NotesException;
 
+    List<Folder> getFolders(long databaseId) throws NotesException;
 }

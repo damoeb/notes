@@ -20,13 +20,15 @@ import java.util.Set;
         @NamedQuery(name = Folder.QUERY_BY_ID, query = "SELECT a FROM Folder a where a.id=:ID"),
         @NamedQuery(name = Folder.QUERY_DOCUMENTS, query = "SELECT new BasicDocument(a.id, a.title, a.outline, a.kind, a.progress, a.reminder, a.modified) FROM BasicDocument a where a.folderId=:ID AND a.deleted=false"),
         @NamedQuery(name = Folder.QUERY_RELATED_DOCUMENTS, query = "SELECT new BasicDocument(a.id, a.title, a.outline, a.kind, a.progress, a.reminder, a.modified) FROM Folder f JOIN f.inheritedDocuments a WHERE f.id=:ID AND a.deleted=false"),
-        @NamedQuery(name = Folder.QUERY_CHILDREN, query = "SELECT new Folder(a.id, a.name, a.leaf, a.documentCount, a.modified, a.level) FROM Folder a WHERE a.parentId = :ID")
+        @NamedQuery(name = Folder.QUERY_CHILDREN, query = "SELECT new Folder(a.id, a.name, a.leaf, a.documentCount, a.modified, a.level) FROM Folder a WHERE a.parentId = :ID"),
+        @NamedQuery(name = Folder.QUERY_ROOT_FOLDERS, query = "SELECT new Folder(a.id, a.name, a.leaf, a.documentCount, a.modified, a.level) FROM Folder a WHERE a.databaseId = :DB_ID and a.ownerId = :OWNER_ID and a.level = 0")
 })
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class Folder extends Node {
 
     public static final String QUERY_BY_ID = "Folder.QUERY_BY_ID";
     public static final String QUERY_CHILDREN = "Folder.QUERY_CHILDREN";
+    public static final String QUERY_ROOT_FOLDERS = "Folder.QUERY_ROOT_FOLDERS";
     public static final String QUERY_DOCUMENTS = "Folder.QUERY_DOCUMENTS";
     public static final String QUERY_RELATED_DOCUMENTS = "Folder.QUERY_RELATED_DOCUMENTS";
 

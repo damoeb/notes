@@ -1,7 +1,6 @@
 $.widget("notes.folder", {
     options: {
         model: null,
-        selectedId: null,
         refresh: null
     },
     _create: function () {
@@ -17,7 +16,6 @@ $.widget("notes.folder", {
         $this._reset();
 
         var model = $this.options.model;
-        var selectedId = $this.options.selectedId;
 
         var $target = $this.element;
 
@@ -54,36 +52,7 @@ $.widget("notes.folder", {
                 $('<div/>', {style: 'clear:both'})
             ).data('folderId', model.get('id'));
 
-        //
-        // -- Children -------------------------------------------------------------------------------------------------
-        //
-
         $this.children = [];
-
-        if (!model.get('leaf')) {
-
-            var children = model.get('children');
-            if (children) {
-                for (var i = 0; i < children.length; i++) {
-
-                    var $childFolder = $('<div/>')
-                            .appendTo($childrenLayer)
-                        ;
-
-                    $this.children.push(
-                        $childFolder
-                    );
-
-                    $childFolder.folder({
-                        model: new notes.model.Folder(children[i]),
-                        selectedId: selectedId,
-                        onRefresh: function () {
-                            $this.refresh();
-                        }
-                    });
-                }
-            }
-        }
 
         //
         // -- Events ---------------------------------------------------------------------------------------------------
@@ -131,10 +100,12 @@ $.widget("notes.folder", {
         // -- Triggers -------------------------------------------------------------------------------------------------
         //
 
-        if (selectedId == model.get('id')) {
-            $this.loadDocuments();
-            $this._highlight($folder);
-        }
+        /*
+         if (selectedId == model.get('id')) {
+         $this.loadDocuments();
+         $this._highlight($folder);
+         }
+         */
 
         if (model.get('leaf')) {
             $this.documentCount = documentCount;
@@ -160,9 +131,6 @@ $.widget("notes.folder", {
         $this.$fieldName.text(model.get('name'));
 
         var documentCount = model.get('documentCount');
-        for (var i = 0; i < $this.children.length; i++) {
-            documentCount += $this.children[i].folder('getDocumentCount');
-        }
 
         if (documentCount == 0) {
             $this.$fieldName.parent().addClass('empty');
@@ -197,10 +165,10 @@ $.widget("notes.folder", {
             });
     },
 
-    _createExpandChildrenButton: function (model, children) {
+    _createExpandChildrenButton: function (model, $childrenLayer) {
         var $this = this;
 
-        var $button = $('<div/>', {class: 'toggle ui-icon'});
+        var $button = $('<div/>', {class: 'toggle ui-icon ui-icon-triangle-1-e'});
 
         var fnShowHideChildren = function () {
             if (model.get('leaf')) {
@@ -209,15 +177,47 @@ $.widget("notes.folder", {
                 if (model.get('expanded')) {
                     $button.removeClass('ui-icon-triangle-1-e');
                     $button.addClass('ui-icon-triangle-1-s');
-                    children.removeClass('hidden');
+                    $childrenLayer.removeClass('hidden');
+
+                    //
+                    // -- Children -------------------------------------------------------------------------------------------------
+                    //
+                    if ($this.children.length == 0) {
+
+                        console.info(model.get('id'));
+
+                        notes.util.jsonCall('GET', '/notes/rest/folder/${folderId}/children', {'${folderId}': model.get('id')}, null, function (folders) {
+
+                            if (folders) {
+                                for (var i = 0; i < folders.length; i++) {
+
+                                    var $childFolder = $('<div/>')
+                                        .appendTo($childrenLayer);
+
+                                    $this.children.push(
+                                        $childFolder
+                                    );
+
+                                    $childFolder.folder({
+                                        model: new notes.model.Folder(folders[i]),
+                                        onRefresh: function () {
+                                            $this.refresh();
+                                        }
+                                    });
+                                }
+                            }
+                        });
+                    }
+
+
                 } else {
                     $button.addClass('ui-icon-triangle-1-e');
                     $button.removeClass('ui-icon-triangle-1-s');
-                    children.addClass('hidden');
+
+                    $childrenLayer.addClass('hidden');
                 }
             }
         };
-        fnShowHideChildren();
 
         return $button.click(function () {
             $this.options.model.set('expanded', !$this.options.model.get('expanded'));

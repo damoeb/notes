@@ -7,7 +7,6 @@ $.widget("notes.directory", {
     _init: function () {
         var $this = this;
         $this.container = {};
-        $this.selectedFolderId = null;
         $this.descendants = {};
     },
 
@@ -36,61 +35,69 @@ $.widget("notes.directory", {
                 id: databaseJson.id,
                 ownerId: databaseJson.ownerId,
                 name: databaseJson.name,
-                selectedFolderId: databaseJson.selectedFolderId
             };
             $this.model = new notes.model.Database(minDatabaseData);
 
 
-            // -- render root ------------------------------------------------------------------------------------------
-            var $root = $('<div/>').appendTo($this.element);
+            notes.util.jsonCall('GET', '/notes/rest/database/${dbId}/roots', {'${dbId}': $this.options.databaseId}, null, function (folders) {
+
+                // -- render root ------------------------------------------------------------------------------------------
+                var $root = $('<div/>').appendTo($this.element);
 
 
-            var $rootSettings = $('<div/>', {class: 'ui-icon ui-icon-gear', style: 'float:right'}).click(function () {
-                notes.dialog.folder.settings(new notes.model.Dolder({
-                    databaseId: databaseJson.id
-                }));
+                var $rootSettings = $('<div/>', {class: 'ui-icon ui-icon-gear', style: 'float:right'}).click(function () {
+                    notes.dialog.folder.settings(new notes.model.Folder({
+                        databaseId: databaseJson.id
+                    }));
+                });
+
+                $('<div/>', {class: 'group-item active'}).append(
+                        $('<div/>', {class: 'group-icon ui-icon ui-icon-clipboard'})
+                    ).append(
+                        $('<div/>', {text: databaseJson.name, class: 'group-label'})
+                    ).append(
+                        $rootSettings
+                    ).append(
+                        $('<div/>', {class: 'clear'})
+                    ).appendTo(
+                        $root
+                    );
+
+
+                // -- render children --------------------------------------------------------------------------------------
+
+                if (folders && folders.length > 0) {
+
+                    $.each(folders, function (index, folderJson) {
+                        $('<div/>')
+                            .appendTo($root)
+                            .folder({
+                                model: new notes.model.Folder(folderJson)
+                            });
+                    });
+                }
             });
 
-            $('<div/>', {class: 'group-item active'}).append(
-                    $('<div/>', {class: 'group-icon ui-icon ui-icon-clipboard'})
-                ).append(
-                    $('<div/>', {text: databaseJson.name, class: 'group-label'})
-                ).append(
-                    $rootSettings
-                ).append(
-                    $('<div/>', {class: 'clear'})
-                ).appendTo(
-                    $root
-                );
 
-
-            // -- render children --------------------------------------------------------------------------------------
-
-            if (databaseJson.folders && databaseJson.folders.length > 0) {
-
-                $.each(databaseJson.folders, function (index, folderJson) {
-                    $('<div/>')
-                        .appendTo($root)
-                        .folder({
-                            model: new notes.model.Folder(folderJson),
-                            selectedId: databaseJson.selectedFolderId
-                        });
-                });
-            }
         });
+
     },
 
     selectedFolder: function (folderId) {
         var $this = this;
-        if (folderId) {
-            $this.model.set('selectedFolderId', folderId);
+        /*
+         if (folderId) {
+         $this.model.set('selectedFolderId', folderId);
 
-            // todo improve
-            $this.model.save();
+         // todo improve
+         $this.model.save();
 
-        } else {
-            return $this.model.get('selectedFolderId');
-        }
+         } else {
+         return $this.model.get('selectedFolderId');
+         }
+         */
+
+        return 1;
     },
 
     pushFolder: function (folder) {

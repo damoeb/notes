@@ -1,5 +1,6 @@
 package org.notes.core.model;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.notes.common.ForeignKey;
 
@@ -27,6 +28,9 @@ public class Database extends Node {
 
 //  -- References ------------------------------------------------------------------------------------------------------
 
+    // todo add settings like open documents, open folders, selected folder...
+
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, cascade = {})
     @JoinColumn(name = Database.FK_DATABASE_ID)
     private Set<Folder> folders = new HashSet(100);

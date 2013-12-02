@@ -1,12 +1,12 @@
 package org.notes.core.dao;
 
 import org.apache.log4j.Logger;
-import org.hibernate.Hibernate;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
 import org.notes.core.interfaces.DatabaseManager;
 import org.notes.core.interfaces.UserManager;
 import org.notes.core.model.Database;
+import org.notes.core.model.Folder;
 import org.notes.core.model.User;
 
 import javax.ejb.Stateless;
@@ -51,10 +51,7 @@ public class DatabaseManagerBean implements DatabaseManager {
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Database getDatabase(long databaseId) throws NotesException {
         try {
-            Database database = _get(databaseId);
-            // todo only folders that are open or direct children of opened folders
-            Hibernate.initialize(database.getFolders());
-            return database;
+            return _get(databaseId);
 
         } catch (NotesException e) {
             throw e;
@@ -87,6 +84,21 @@ public class DatabaseManagerBean implements DatabaseManager {
 
         } catch (Throwable t) {
             throw new NotesException("get databases ", t);
+        }
+    }
+
+    @Override
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public List<Folder> getFolders(long databaseId) throws NotesException {
+        try {
+            Query query = em.createNamedQuery(Folder.QUERY_ROOT_FOLDERS);
+            query.setParameter("OWNER_ID", 1l);  // todo userId
+            query.setParameter("DB_ID", databaseId);
+
+            return query.getResultList();
+
+        } catch (Throwable t) {
+            throw new NotesException("get database " + databaseId, t);
         }
     }
 
