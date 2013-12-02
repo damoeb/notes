@@ -3,6 +3,7 @@ package org.notes.core.services;
 import org.notes.common.cache.MethodCache;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.core.interfaces.FolderManager;
+import org.notes.core.model.Database;
 import org.notes.core.model.Folder;
 
 import javax.inject.Inject;
@@ -24,7 +25,13 @@ public class FolderService {
             Folder folder
     ) throws Exception {
         try {
-            Folder result = folderManager.createFolder(folder);
+            Folder parent;
+            if (folder.getParentId() != null) {
+                parent = new Folder(folder.getParentId());
+            } else {
+                parent = null;
+            }
+            Folder result = folderManager.createFolder(folder, parent, new Database(folder.getDatabaseId()));
             result.setDocuments(null);
             result.setChildren(null);
             return NotesResponse.ok(result);

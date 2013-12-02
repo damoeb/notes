@@ -53,7 +53,7 @@ public abstract class Node implements Serializable {
         return ownerId;
     }
 
-    public void setOwnerId(Long ownerId) {
+    protected void setOwnerId(Long ownerId) {
         this.ownerId = ownerId;
     }
 
@@ -85,7 +85,7 @@ public abstract class Node implements Serializable {
         return id;
     }
 
-    public void setId(long id) {
+    protected void setId(long id) {
         this.id = id;
     }
 

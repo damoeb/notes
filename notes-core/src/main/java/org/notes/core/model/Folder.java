@@ -89,6 +89,10 @@ public class Folder extends Node {
         setLevel(level);
     }
 
+    public Folder(long id) {
+        setId(id);
+    }
+
     public Set<BasicDocument> getDocuments() {
         return documents;
     }
@@ -109,7 +113,7 @@ public class Folder extends Node {
         return parentId;
     }
 
-    public void setParentId(Long parentId) {
+    protected void setParentId(Long parentId) {
         this.parentId = parentId;
     }
 
@@ -117,7 +121,7 @@ public class Folder extends Node {
         return databaseId;
     }
 
-    public void setDatabaseId(Long databaseId) {
+    protected void setDatabaseId(Long databaseId) {
         this.databaseId = databaseId;
     }
 

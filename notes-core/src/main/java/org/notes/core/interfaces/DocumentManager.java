@@ -2,10 +2,7 @@ package org.notes.core.interfaces;
 
 import org.apache.commons.fileupload.FileItem;
 import org.notes.common.exceptions.NotesException;
-import org.notes.core.model.BasicDocument;
-import org.notes.core.model.BookmarkDocument;
-import org.notes.core.model.PdfDocument;
-import org.notes.core.model.TextDocument;
+import org.notes.core.model.*;
 
 import javax.ejb.Local;
 import java.util.List;
@@ -13,7 +10,7 @@ import java.util.List;
 @Local
 public interface DocumentManager {
 
-    TextDocument createDocument(TextDocument document) throws NotesException;
+    TextDocument createDocument(TextDocument document, Folder inFolder) throws NotesException;
 
     BasicDocument getDocument(long documentId) throws NotesException;
 
@@ -23,5 +20,5 @@ public interface DocumentManager {
 
     PdfDocument uploadDocument(List<FileItem> items) throws NotesException;
 
-    BookmarkDocument bookmark(BookmarkDocument bookmark) throws NotesException;
+    BookmarkDocument bookmark(BookmarkDocument bookmark, Folder folder) throws NotesException;
 }

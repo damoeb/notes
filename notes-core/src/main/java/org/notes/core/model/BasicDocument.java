@@ -199,7 +199,7 @@ public class BasicDocument implements Document {
         return id;
     }
 
-    public void setId(long id) {
+    protected void setId(long id) {
         this.id = id;
     }
 
@@ -231,7 +231,7 @@ public class BasicDocument implements Document {
         return folderId;
     }
 
-    public void setFolderId(Long folderId) {
+    protected void setFolderId(Long folderId) {
         this.folderId = folderId;
     }
 
@@ -239,7 +239,7 @@ public class BasicDocument implements Document {
         return ownerId;
     }
 
-    public void setOwnerId(Long ownerId) {
+    protected void setOwnerId(Long ownerId) {
         this.ownerId = ownerId;
     }
 

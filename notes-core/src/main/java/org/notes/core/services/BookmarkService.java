@@ -4,6 +4,7 @@ import org.notes.common.cache.MethodCache;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.core.interfaces.DocumentManager;
 import org.notes.core.model.BookmarkDocument;
+import org.notes.core.model.Folder;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -23,7 +24,12 @@ public class BookmarkService {
     public NotesResponse bookmark(BookmarkDocument bookmark) {
         try {
 
-            return NotesResponse.ok(documentManager.bookmark(bookmark));
+            Folder folder = null;
+            if (bookmark == null && bookmark.getFolderId() != null) {
+                folder = new Folder(bookmark.getFolderId());
+            }
+
+            return NotesResponse.ok(documentManager.bookmark(bookmark, folder));
 
         } catch (Throwable t) {
             return NotesResponse.error(t);

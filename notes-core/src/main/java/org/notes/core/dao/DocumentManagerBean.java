@@ -52,7 +52,7 @@ public class DocumentManagerBean implements DocumentManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public TextDocument createDocument(TextDocument document) throws NotesException {
+    public TextDocument createDocument(TextDocument document, Folder inFolder) throws NotesException {
 
         try {
 
@@ -60,16 +60,14 @@ public class DocumentManagerBean implements DocumentManager {
                 throw new NotesException("document is null");
             }
 
-            if (document.getFolderId() == null) {
-                throw new NotesException("folderId is null");
+            if (inFolder == null) {
+                throw new NotesException("folder is null");
             }
-
-            Long folderId = document.getFolderId();
 
             document.setProgress(_getProgress(document));
             document.setTrigger(Trigger.INDEX);
 
-            return (TextDocument) _createDocument(document, folderId);
+            return (TextDocument) _createDocument(document, inFolder);
 
         } catch (NotesException e) {
             throw e;
@@ -78,7 +76,7 @@ public class DocumentManagerBean implements DocumentManager {
         }
     }
 
-    private BasicDocument _createDocument(BasicDocument document, Long folderId) throws NotesException {
+    private BasicDocument _createDocument(BasicDocument document, Folder inFolder) throws NotesException {
 
         em.persist(document);
 
@@ -86,8 +84,7 @@ public class DocumentManagerBean implements DocumentManager {
         user.getDocuments().add(document);
         em.merge(user);
 
-        _addToParentFolders(document, folderId);
-
+        _addToParentFolders(document, inFolder);
 
         em.flush();
 
@@ -96,24 +93,24 @@ public class DocumentManagerBean implements DocumentManager {
         return document;
     }
 
-    private void _addToParentFolders(BasicDocument document, Long folderId) throws NotesException {
+    private void _addToParentFolders(BasicDocument document, Folder folder) throws NotesException {
 
         Session session = em.unwrap(Session.class);
 
         //Folder folder = folderManager.getFolder(document.getFolderId());
-        Folder folder = (Folder) session.load(Folder.class, folderId);
-        if (folder == null) {
+        Folder proxy = (Folder) session.load(Folder.class, folder.getId());
+        if (proxy == null) {
             throw new NotesException(String.format("folder with id %s is null", document.getFolderId()));
         }
 
-        folder.getDocuments().add(document);
-        folder.setDocumentCount(folder.getDocumentCount() + 1);
-        em.merge(folder);
+        proxy.getDocuments().add(document);
+        proxy.setDocumentCount(proxy.getDocumentCount() + 1);
+        em.merge(proxy);
 
-        while (folder.getParentId() != null) {
-            Folder parent = (Folder) session.load(Folder.class, folder.getParentId());
+        while (proxy.getParentId() != null) {
+            Folder parent = (Folder) session.load(Folder.class, proxy.getParentId());
             parent.getInheritedDocuments().add(document);
-            folder = parent;
+            proxy = parent;
         }
     }
 
@@ -175,7 +172,8 @@ public class DocumentManagerBean implements DocumentManager {
 
                 em.flush();
 
-                _addToParentFolders(document, ref.getFolderId());
+                // todo fix
+                // _addToParentFolders(document, ref.getFolderId());
             }
 
             if (Event.UPDATE.equals(ref.getEvent())) {
@@ -222,6 +220,9 @@ public class DocumentManagerBean implements DocumentManager {
             String title = null;
 
             Long folderId = NumberUtils.createLong(_getFieldValue("folderId", items));
+
+            Folder folder = folderManager.getFolder(folderId);
+
             // todo validate folderId
             for (FileItem item : items) {
 
@@ -250,7 +251,7 @@ public class DocumentManagerBean implements DocumentManager {
             document.setFileReference(reference);
             document.setTrigger(Trigger.EXTRACT_PDF);
 
-            return (PdfDocument) _createDocument(document, folderId);
+            return (PdfDocument) _createDocument(document, folder);
 
         } catch (Throwable t) {
             throw new NotesException("upload document failed: " + t.getMessage(), t);
@@ -259,7 +260,7 @@ public class DocumentManagerBean implements DocumentManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public BookmarkDocument bookmark(BookmarkDocument ref) throws NotesException {
+    public BookmarkDocument bookmark(BookmarkDocument ref, Folder inFolder) throws NotesException {
 
         try {
 
@@ -277,12 +278,10 @@ public class DocumentManagerBean implements DocumentManager {
             BookmarkDocument document = new BookmarkDocument();
             document.setUrl(ref.getUrl());
             document.setTitle(ref.getUrl());
-            document.setFolderId(ref.getFolderId());
-            document.setOutline("(this may take some time)");
 
             document.setTrigger(Trigger.HARVEST);
 
-            document = (BookmarkDocument) _createDocument(document, ref.getFolderId());
+            document = (BookmarkDocument) _createDocument(document, inFolder);
 
 //            extract text
 //            to pdf -> to tmp storage

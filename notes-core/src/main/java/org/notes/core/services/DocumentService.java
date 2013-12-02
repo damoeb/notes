@@ -4,6 +4,7 @@ import org.notes.common.cache.MethodCache;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.core.interfaces.DocumentManager;
 import org.notes.core.model.BasicDocument;
+import org.notes.core.model.Folder;
 import org.notes.core.model.TextDocument;
 
 import javax.inject.Inject;
@@ -23,7 +24,13 @@ public class DocumentService {
     public NotesResponse createDocument(
             TextDocument document
     ) throws Exception {
-        return NotesResponse.ok(documentManager.createDocument(document));
+
+        Folder folder = null;
+        if (document == null && document.getFolderId() != null) {
+            folder = new Folder(document.getFolderId());
+        }
+
+        return NotesResponse.ok(documentManager.createDocument(document, folder));
     }
 
     @PUT

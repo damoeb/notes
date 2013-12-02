@@ -1,7 +1,7 @@
 package org.notes.core.dao;
 
 import org.apache.log4j.Logger;
-import org.hibernate.Hibernate;
+import org.hibernate.Session;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
 import org.notes.core.interfaces.DatabaseManager;
@@ -19,6 +19,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -42,21 +43,23 @@ public class FolderManagerBean implements FolderManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public Folder createFolder(Folder folder) throws NotesException {
+    public Folder createFolder(Folder folder, Folder parent, Database database) throws NotesException {
         try {
-            if (folder.getDatabaseId() == null) {
-                throw new NotesException("databaseId is null");
+            if (folder == null) {
+                throw new NotesException("folder is null");
             }
 
-            Database database = databaseManager.getDatabase(folder.getDatabaseId());
-            Hibernate.initialize(database.getFolders());
+            if (database == null) {
+                throw new NotesException("database is null");
+            }
 
-            folder = _create(folder);
+            folder = _create(folder, parent);
 
-            database.setSelectedFolderId(folder.getId());
+            Database proxy = (Database) _getProxy(Database.class, database.getId());
 
-            database.getFolders().add(folder);
-            em.merge(database);
+            proxy.getFolders().add(folder);
+
+            em.merge(proxy);
 
             return folder;
 
@@ -65,6 +68,15 @@ public class FolderManagerBean implements FolderManager {
         } catch (Throwable t) {
             throw new NotesException("create folder", t);
         }
+    }
+
+    private Object _getProxy(Class<? extends Object> clazz, Serializable id) throws NotesException {
+        Session session = em.unwrap(Session.class);
+        Object proxy = session.load(clazz, id);
+        if (proxy == null) {
+            throw new NotesException(String.format("Proxy object with id %s is null", id));
+        }
+        return proxy;
     }
 
     @Override
@@ -206,24 +218,22 @@ public class FolderManagerBean implements FolderManager {
 
     }
 
-    private Folder _create(Folder folder) throws NotesException {
+    private Folder _create(Folder folder, Folder parent) throws NotesException {
 
         if (folder == null) {
             throw new NotesException("Folder is null");
         }
 
-        Folder parent = null;
-        if (folder.getParentId() == null) {
-            folder.setLevel(0);
+        if (parent != null) {
+            parent.getId();
+            Folder parentProxy = (Folder) _getProxy(Folder.class, parent.getId());
+            parentProxy.setLeaf(false);
+            folder.setLevel(parentProxy.getLevel() + 1);
+            em.merge(parentProxy);
         } else {
-            parent = _get(folder.getParentId());
-            parent.setLeaf(false);
-            parent.setExpanded(true);
-            em.merge(parent);
-            folder.setLevel(parent.getLevel() + 1);
+            folder.setLevel(0);
         }
 
-        User user = userManager.getUser(1l);
         folder.setParent(parent);
         folder.setModified(new Date());
 
@@ -231,6 +241,7 @@ public class FolderManagerBean implements FolderManager {
         em.flush();
         em.refresh(folder);
 
+        User user = (User) _getProxy(User.class, 1l);
         user.getFolders().add(folder);
         em.merge(user);
 

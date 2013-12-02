@@ -31,13 +31,14 @@ public class Database extends Node {
     @JoinColumn(name = Database.FK_DATABASE_ID)
     private Set<Folder> folders = new HashSet(100);
 
-    @Basic
-    private Long selectedFolderId;
-
 //  --------------------------------------------------------------------------------------------------------------------
 
     public Database() {
         // default
+    }
+
+    public Database(long id) {
+        setId(id);
     }
 
     public Set<Folder> getFolders() {
@@ -46,13 +47,5 @@ public class Database extends Node {
 
     public void setFolders(Set<Folder> folders) {
         this.folders = folders;
-    }
-
-    public Long getSelectedFolderId() {
-        return selectedFolderId;
-    }
-
-    public void setSelectedFolderId(Long selectedFolderId) {
-        this.selectedFolderId = selectedFolderId;
     }
 }

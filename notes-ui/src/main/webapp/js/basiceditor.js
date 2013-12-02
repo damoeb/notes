@@ -269,8 +269,6 @@ $.widget("notes.basiceditor", {
         var $this = this;
 
         $this.syncModel();
-
-        $this._destroy();
     },
 
     getModel: function () {

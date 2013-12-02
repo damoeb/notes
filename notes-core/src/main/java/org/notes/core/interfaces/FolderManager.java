@@ -2,6 +2,7 @@ package org.notes.core.interfaces;
 
 import org.notes.common.exceptions.NotesException;
 import org.notes.core.model.BasicDocument;
+import org.notes.core.model.Database;
 import org.notes.core.model.Folder;
 
 import javax.ejb.Local;
@@ -10,7 +11,7 @@ import java.util.List;
 @Local
 public interface FolderManager {
 
-    Folder createFolder(Folder folder) throws NotesException;
+    Folder createFolder(Folder folder, Folder parent, Database database) throws NotesException;
 
     Folder getFolder(long folderId) throws NotesException;
 
