@@ -99,35 +99,4 @@ public class DatabaseService {
             return NotesResponse.error(e);
         }
     }
-
-    @GET
-    @MethodCache
-    @Path("/{id}/document/open")
-    @Produces(MediaType.APPLICATION_JSON)
-    public NotesResponse getOpenDocuments(
-            @PathParam("id") long databaseId
-    ) throws Exception {
-        try {
-            return NotesResponse.ok(databaseManager.getOpenDocuments(databaseId));
-
-        } catch (Exception e) {
-            return NotesResponse.error(e);
-        }
-    }
-
-    @GET
-    @MethodCache
-    @Path("/{id}/folder/open")
-    @Produces(MediaType.APPLICATION_JSON)
-    public NotesResponse getOpenFolders(
-            @PathParam("id") long databaseId
-    ) throws Exception {
-        try {
-            return NotesResponse.ok(databaseManager.getOpenFolders(databaseId));
-
-        } catch (Exception e) {
-            return NotesResponse.error(e);
-        }
-    }
-
 }

@@ -1,65 +1,129 @@
-$.widget("notes.databaseList", {
-
-    url: '/notes/rest/database/list',
+$.widget("notes.database", {
 
     options: {
-        databaseId: null
+        databaseId: 0
+    },
+
+    _init: function () {
+        var $this = this;
+        $this.container = {};
+        $this.descendants = {};
     },
 
     _create: function () {
+
         var $this = this;
 
+        var databaseId = $this.options.databaseId;
+        if (typeof(databaseId) == 'undefined') {
+            throw 'databaseId is null'
+        }
+
         $this.reload();
-        $this.models = {};
     },
 
     reload: function () {
+
         var $this = this;
 
-        var $editButton = $('<div/>', {class: 'ui-icon ui-icon-gear', style: 'float:right'}).click(function () {
-            notes.dialog.database.settings();
-        });
-        var $target = $this.element.empty()
-            .append(
-                $('<div/>', {text: 'Databases', class: 'group-header'}).append(
-                    $editButton
-                )
-            );
+        $this.element.empty();
 
-        notes.util.jsonCall('GET', $this.url, null, null, function (list) {
+        var rootFolders = null;
 
-            $.each(list, function (index, json) {
+        var modelLoaded = false;
+        var rootsLoaded = false;
 
-                var model = new notes.model.Database(json);
+        var fnSetup = function () {
 
-                $this.models[model.get('id')] = model;
+            if (modelLoaded && rootsLoaded) {
 
-                var $item = $('<div/>', {class: 'group-item'}).append(
+                // -- render root ------------------------------------------------------------------------------------------
+
+                var $root = $('<div/>').appendTo($this.element);
+
+                var $rootSettings = $('<div/>', {class: 'ui-icon ui-icon-gear', style: 'float:right'}).click(function () {
+                    notes.dialog.folder.settings(new notes.model.Folder({
+                        databaseId: $this.getModel().get('id')
+                    }));
+                });
+
+                $('<div/>', {class: 'group-item active'}).append(
                         $('<div/>', {class: 'group-icon ui-icon ui-icon-clipboard'})
                     ).append(
-                        $('<div/>', {text: model.get('name'), class: 'group-label'})
-//                    ).append(
-//                        $('<div/>', {text: model.get('documentCount'), class: 'group-doc-count ui-corner-all'})
+                        $('<div/>', {text: $this.getModel().get('name'), class: 'group-label'})
+                    ).append(
+                        $rootSettings
                     ).append(
                         $('<div/>', {class: 'clear'})
                     ).appendTo(
-                        $target
-                    ).click(function () {
+                        $root
+                    );
 
-                        $target.find('.active').removeClass('active');
-                        $(this).addClass('active');
 
-                        $('#directory').directory({databaseId: model.get('id')});
+                // -- render children --------------------------------------------------------------------------------------
+
+                if (rootFolders && rootFolders.length > 0) {
+
+                    $.each(rootFolders, function (index, rootFolder) {
+                        $('<div/>')
+                            .appendTo($root)
+                            .folder({
+                                model: new notes.model.Folder(rootFolder),
+                                opened: $this.getModel().get('openFolders')
+                            });
                     });
-
-                if ($this.options.databaseId == model.get('id')) {
-                    $item.addClass('active');
                 }
-            });
+            }
+        };
 
+        notes.util.jsonCall('GET', '/notes/rest/database/${dbId}', {'${dbId}': $this.options.databaseId}, null, function (databaseJson) {
+
+            $this.model = new notes.model.Database(databaseJson);
+            modelLoaded = true;
+            fnSetup();
         });
+
+        notes.util.jsonCall('GET', '/notes/rest/database/${dbId}/roots', {'${dbId}': $this.options.databaseId}, null, function (folders) {
+
+            rootFolders = folders;
+            rootsLoaded = true;
+            fnSetup();
+        });
+    },
+
+    getModel: function () {
+        return this.model;
+    },
+
+    selectedFolder: function (folderId) {
+        var $this = this;
+        /*
+         if (folderId) {
+         $this.model.set('selectedFolderId', folderId);
+
+         // todo improve
+         $this.model.save();
+
+         } else {
+         return $this.model.get('selectedFolderId');
+         }
+         */
+
+        return 1;
+    },
+
+    pushFolder: function (folder) {
+        var $this = this;
+
+        $this.descendants[folder.model().get('id')] = folder;
+    },
+
+    folder: function (folderId) {
+        var $this = this;
+        return $this.descendants[folderId];
     },
     _destroy: function () {
         // todo implement widget method
     }
+
 });

@@ -381,7 +381,7 @@ TR.active .progress-of-task {
     z-index: 999;
 }
 
-#directory {
+#database {
     overflow-y: auto;
 }
 

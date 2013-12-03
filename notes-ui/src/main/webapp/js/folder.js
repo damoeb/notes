@@ -1,7 +1,8 @@
 $.widget("notes.folder", {
     options: {
         model: null,
-        refresh: null
+        refresh: null,
+        opened: []
     },
     _create: function () {
         this._reset();
@@ -25,6 +26,8 @@ $.widget("notes.folder", {
         var $childrenLayer = $('<div/>', {class: 'children'});
 
         $target.append($folder).append($childrenLayer);
+
+        // todo use opened[] and update openend in databasemodel
 
         //
         // -- Render ---------------------------------------------------------------------------------------------------
@@ -69,7 +72,7 @@ $.widget("notes.folder", {
 
             // sync model: selected folder in database
             var folderId = $this.options.model.get('id');
-            $('#directory').directory('selectedFolder', folderId);
+            $('#database').database('selectedFolder', folderId);
         });
 
         // highlight
@@ -90,7 +93,7 @@ $.widget("notes.folder", {
                     }).save(null, {
                             success: function () {
                                 // refresh ui
-                                $('#directory').directory('reload');
+                                $('#database').database('reload');
                             }
                         });
                 }
@@ -112,7 +115,7 @@ $.widget("notes.folder", {
             $this.refresh();
         }
 
-        $('#directory').directory('pushFolder', $this);
+        $('#database').database('pushFolder', $this);
 
     },
 
@@ -154,7 +157,7 @@ $.widget("notes.folder", {
 
     _highlight: function (item) {
 
-        $('#directory .active').removeClass('active');
+        $('#database .active').removeClass('active');
         item.addClass('active');
     },
 
@@ -184,8 +187,6 @@ $.widget("notes.folder", {
                     //
                     if ($this.children.length == 0) {
 
-                        console.info(model.get('id'));
-
                         notes.util.jsonCall('GET', '/notes/rest/folder/${folderId}/children', {'${folderId}': model.get('id')}, null, function (folders) {
 
                             if (folders) {
@@ -208,7 +209,6 @@ $.widget("notes.folder", {
                             }
                         });
                     }
-
 
                 } else {
                     $button.addClass('ui-icon-triangle-1-e');

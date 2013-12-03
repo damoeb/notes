@@ -198,7 +198,7 @@ $.widget("notes.documentList", {
         if ($element.length == 0) {
             // add line
             $dataTable.fnAddData(data);
-            var item = $('#directory').directory('folder', model.get('folderId'));
+            var item = $('#database').database('folder', model.get('folderId'));
             var model = item.model();
             model.set('documentCount', model.get('documentCount') + 1);
             item.refresh();

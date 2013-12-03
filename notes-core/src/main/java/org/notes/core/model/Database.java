@@ -5,6 +5,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.notes.common.ForeignKey;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,7 +20,7 @@ import java.util.Set;
         @NamedQuery(name = Database.QUERY_BY_ID, query = "SELECT a FROM DDatabase a where a.id=:ID"),
         @NamedQuery(name = Database.QUERY_OPEN_DOCUMENTS, query = "SELECT new BasicDocument(b.id) FROM DDatabase a INNER JOIN a.openDocuments b where a.id=:ID"),
         @NamedQuery(name = Database.QUERY_OPEN_FOLDERS, query = "SELECT new Folder(b.id) FROM DDatabase a INNER JOIN a.openFolders b where a.id=:ID"),
-        @NamedQuery(name = Database.QUERY_ALL, query = "SELECT a FROM DDatabase a where a.ownerId=:USER_ID")
+        @NamedQuery(name = Database.QUERY_ALL, query = "SELECT new DDatabase(a.id, a.name, a.documentCount, a.modified) FROM DDatabase a where a.ownerId=:USER_ID")
 })
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class Database extends Node {
@@ -58,16 +59,23 @@ public class Database extends Node {
         setId(id);
     }
 
+    public Database(long id, String name, int documentCount, Date modified) {
+        setId(id);
+        setName(name);
+        setDocumentCount(documentCount);
+        setModified(modified);
+        openDocuments = null;
+        openFolders = null;
+    }
+
     public Set<Folder> getFolders() {
         return folders;
     }
 
-    @JsonIgnore
     public Set<Folder> getOpenFolders() {
         return openFolders;
     }
 
-    @JsonIgnore
     public Set<BasicDocument> getOpenDocuments() {
         return openDocuments;
     }

@@ -1,11 +1,11 @@
 package org.notes.core.dao;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Hibernate;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
 import org.notes.core.interfaces.DatabaseManager;
 import org.notes.core.interfaces.UserManager;
-import org.notes.core.model.BasicDocument;
 import org.notes.core.model.Database;
 import org.notes.core.model.Folder;
 import org.notes.core.model.User;
@@ -52,7 +52,10 @@ public class DatabaseManagerBean implements DatabaseManager {
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Database getDatabase(long databaseId) throws NotesException {
         try {
-            return _get(databaseId);
+            Database database = _get(databaseId);
+            Hibernate.initialize(database.getOpenDocuments());
+            Hibernate.initialize(database.getOpenFolders());
+            return database;
 
         } catch (NotesException e) {
             throw e;
@@ -116,35 +119,6 @@ public class DatabaseManagerBean implements DatabaseManager {
             throw new NotesException("update database " + database.getId(), t);
         }
     }
-
-    //  -- SETTINGS -- -------------------------------------------------------------------------------------------------
-
-    @Override
-    public List<BasicDocument> getOpenDocuments(long databaseId) throws NotesException {
-        try {
-
-            Query query = em.createNamedQuery(Database.QUERY_OPEN_DOCUMENTS);
-            query.setParameter("ID", databaseId);
-            return query.getResultList();
-
-        } catch (Throwable t) {
-            throw new NotesException("get open documents of " + databaseId, t);
-        }
-    }
-
-    @Override
-    public List<Folder> getOpenFolders(long databaseId) throws NotesException {
-        try {
-
-            Query query = em.createNamedQuery(Database.QUERY_OPEN_FOLDERS);
-            query.setParameter("ID", databaseId);
-            return query.getResultList();
-
-        } catch (Throwable t) {
-            throw new NotesException("get open folders of " + databaseId, t);
-        }
-    }
-
 
     // -- Helper -- ----------------------------------------------------------------------------------------------------
 

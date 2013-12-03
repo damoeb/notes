@@ -100,7 +100,7 @@ notes.dialog.folder = {
                             });
                             model.save(null, {
                                 success: function () {
-                                    $('#directory').directory('reload');
+                                    $('#database').database('reload');
                                 }
                             });
                             $(this).dialog("close");
@@ -191,7 +191,7 @@ notes.dialog.document = {
 
                             var bookmark = new notes.model.Bookmark({
                                 url: $input.val(),
-                                folderId: $('#directory').directory('selectedFolder')
+                                folderId: $('#database').database('selectedFolder')
                             });
                             bookmark.save(null, {success: function (newmodel) {
 
