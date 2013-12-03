@@ -2,6 +2,7 @@ package org.notes.core.services;
 
 import org.notes.common.cache.MethodCache;
 import org.notes.common.configuration.NotesInterceptors;
+import org.notes.core.metric.ServiceMetric;
 import org.notes.search.interfaces.SearchManager;
 
 import javax.inject.Inject;
@@ -20,6 +21,7 @@ public class SearchService {
 
     @GET
     @MethodCache
+    @ServiceMetric
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse search(
             @QueryParam("query") String query,

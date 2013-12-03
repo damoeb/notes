@@ -3,6 +3,7 @@ package org.notes.core.services;
 import org.notes.common.cache.MethodCache;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.core.interfaces.DocumentManager;
+import org.notes.core.metric.ServiceMetric;
 import org.notes.core.model.BasicDocument;
 import org.notes.core.model.Folder;
 import org.notes.core.model.TextDocument;
@@ -20,6 +21,7 @@ public class DocumentService {
 
     @POST
     @MethodCache
+    @ServiceMetric
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse createDocument(
             TextDocument document
@@ -35,6 +37,7 @@ public class DocumentService {
 
     @PUT
     @MethodCache
+    @ServiceMetric
     @Path(value = "/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse updateDocument(
@@ -47,6 +50,7 @@ public class DocumentService {
 
     @GET
     @MethodCache
+    @ServiceMetric
     @Produces(MediaType.APPLICATION_JSON)
     @Path(value = "/{id}")
     public NotesResponse getDocument(
@@ -62,6 +66,7 @@ public class DocumentService {
 
     @DELETE
     @MethodCache
+    @ServiceMetric
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse deleteDocument(
             @PathParam("id") long documentId

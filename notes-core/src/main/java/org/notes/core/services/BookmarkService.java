@@ -3,6 +3,7 @@ package org.notes.core.services;
 import org.notes.common.cache.MethodCache;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.core.interfaces.DocumentManager;
+import org.notes.core.metric.ServiceMetric;
 import org.notes.core.model.BookmarkDocument;
 import org.notes.core.model.Folder;
 
@@ -20,6 +21,7 @@ public class BookmarkService {
     private DocumentManager documentManager;
 
     @POST
+    @ServiceMetric
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse bookmark(BookmarkDocument bookmark) {
         try {
@@ -39,6 +41,7 @@ public class BookmarkService {
 
     @GET
     @MethodCache
+    @ServiceMetric
     @Produces(MediaType.APPLICATION_JSON)
     @Path(value = "/{id}")
     public NotesResponse getDocument(

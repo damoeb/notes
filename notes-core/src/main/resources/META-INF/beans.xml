@@ -7,8 +7,8 @@
     <interceptors>
         <class>org.notes.core.request.RequestPropertyInterceptor</class>
         <class>org.notes.common.configuration.ConfigurationInterceptor</class>
-        <!--<class>MethodCacheInterceptor</class>-->
+        <!--<class>org.notes.common.cache.MethodCacheInterceptor</class>-->
         <class>org.notes.core.request.ErrorHandlingInterceptor</class>
-        <!--<class>org.notes.core.measurements.MeasurementInterceptor</class>-->
+        <class>org.notes.core.metric.MetricInterceptor</class>
     </interceptors>
 </beans>

@@ -21,6 +21,8 @@ public class NotesResponse {
     @JsonSerialize(using = CustomDateSerializer.class)
     private Date timestamp = new Date();
 
+    private Double elapsed;
+
     private String errorMessage;
 
     private NotesResponse() {
@@ -80,5 +82,13 @@ public class NotesResponse {
 
     public static NotesResponse error(Throwable t) {
         return new NotesResponse(t);
+    }
+
+    public Double getElapsed() {
+        return elapsed;
+    }
+
+    public void setElapsed(Double elapsed) {
+        this.elapsed = elapsed;
     }
 }

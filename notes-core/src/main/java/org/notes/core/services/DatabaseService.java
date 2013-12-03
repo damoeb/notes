@@ -3,6 +3,7 @@ package org.notes.core.services;
 import org.notes.common.cache.MethodCache;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.core.interfaces.DatabaseManager;
+import org.notes.core.metric.ServiceMetric;
 import org.notes.core.model.Database;
 
 import javax.inject.Inject;
@@ -18,6 +19,7 @@ public class DatabaseService {
 
     @POST
     @MethodCache
+    @ServiceMetric
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse createDatabase(
             Database database
@@ -31,6 +33,7 @@ public class DatabaseService {
 
     @PUT
     @MethodCache
+    @ServiceMetric
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse updateDatabase(
@@ -46,6 +49,7 @@ public class DatabaseService {
 
     @GET
     @MethodCache
+    @ServiceMetric
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse getDatabase(
@@ -61,6 +65,7 @@ public class DatabaseService {
 
     @GET
     @MethodCache
+    @ServiceMetric
     @Path("/{id}/roots")
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse getRootFoldersInDatabase(
@@ -76,6 +81,7 @@ public class DatabaseService {
 
     @DELETE
     @MethodCache
+    @ServiceMetric
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse deleteDatabase(
             @PathParam("id") long databaseId
@@ -89,6 +95,7 @@ public class DatabaseService {
 
     @GET
     @MethodCache
+    @ServiceMetric
     @Path("/list")
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse getDatabases(

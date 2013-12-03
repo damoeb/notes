@@ -3,6 +3,7 @@ package org.notes.core.services;
 import org.notes.common.cache.MethodCache;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.core.interfaces.FolderManager;
+import org.notes.core.metric.ServiceMetric;
 import org.notes.core.model.Database;
 import org.notes.core.model.Folder;
 
@@ -20,6 +21,7 @@ public class FolderService {
 
     @POST
     @MethodCache
+    @ServiceMetric
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse createFolder(
             Folder folder
@@ -41,6 +43,7 @@ public class FolderService {
 
     @PUT
     @MethodCache
+    @ServiceMetric
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse updateFolder(
@@ -57,6 +60,7 @@ public class FolderService {
     // todo not used
     @GET
     @MethodCache
+    @ServiceMetric
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse getFolder(
@@ -71,6 +75,7 @@ public class FolderService {
 
     @GET
     @MethodCache
+    @ServiceMetric
     @Path("/{id}/children")
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse getChildren(
@@ -86,6 +91,7 @@ public class FolderService {
 
     @GET
     @MethodCache
+    @ServiceMetric
     @Path("/{id}/documents")
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse getDocumentsInFolder(
@@ -100,6 +106,7 @@ public class FolderService {
 
     @GET
     @MethodCache
+    @ServiceMetric
     @Path("/{id}/related-documents")
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse getRelatedDocumentsInFolder(
@@ -117,6 +124,7 @@ public class FolderService {
 
     @DELETE
     @MethodCache
+    @ServiceMetric
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse deleteFolder(
             Folder folder

@@ -8,6 +8,7 @@ import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.model.FileReference;
 import org.notes.core.interfaces.DocumentManager;
 import org.notes.core.interfaces.FileReferenceManager;
+import org.notes.core.metric.ServiceMetric;
 import org.notes.core.model.PdfDocument;
 
 import javax.inject.Inject;
@@ -48,6 +49,7 @@ public class FileService {
     }
 
     @POST
+    @ServiceMetric
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
     @Path(value = "/upload")
@@ -92,6 +94,7 @@ public class FileService {
      */
 
     @HEAD
+    @ServiceMetric
     @Path("/{fileId}")
     public void doHead(@Context HttpServletRequest request, @Context HttpServletResponse response, @Context ServletContext context, @PathParam("fileId") String fileId)
             throws ServletException, IOException {
