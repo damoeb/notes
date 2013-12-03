@@ -8,10 +8,6 @@ import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
 
-/**
- * @author Daniel Scheidle, daniel.scheidle@ucs.at
- *         10:08, 09.03.12
- */
 @Interceptor
 @NotesInterceptors
 public class MetricInterceptor {
@@ -27,8 +23,8 @@ public class MetricInterceptor {
             Object returnObject = invocationContext.proceed();
 
             if (returnObject instanceof NotesResponse) {
-                double duration = (System.nanoTime() - from) / 1000000d;
-                ((NotesResponse) returnObject).setElapsed(duration);
+                double durationMsec = (System.nanoTime() - from) / 1000000d;
+                ((NotesResponse) returnObject).setElapsedMillis(durationMsec);
             }
 
             return returnObject;
