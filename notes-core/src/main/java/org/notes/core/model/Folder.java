@@ -71,11 +71,6 @@ public class Folder extends Node {
     @Column(updatable = false, insertable = false, nullable = true, name = Database.FK_DATABASE_ID)
     private Long databaseId;
 
-//  -- Transient -------------------------------------------------------------------------------------------------------
-
-    @Transient
-    private Set<Folder> children = null;
-
 //  --------------------------------------------------------------------------------------------------------------------
 
     public Folder() {
@@ -133,14 +128,6 @@ public class Folder extends Node {
 
     public void setLevel(Integer level) {
         this.level = level;
-    }
-
-    public Set<Folder> getChildren() {
-        return children;
-    }
-
-    public void setChildren(Set<Folder> children) {
-        this.children = children;
     }
 
     public boolean isLeaf() {

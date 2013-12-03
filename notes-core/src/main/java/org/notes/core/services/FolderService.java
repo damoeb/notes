@@ -33,7 +33,6 @@ public class FolderService {
             }
             Folder result = folderManager.createFolder(folder, parent, new Database(folder.getDatabaseId()));
             result.setDocuments(null);
-            result.setChildren(null);
             return NotesResponse.ok(result);
         } catch (Exception e) {
             return NotesResponse.error(e);
@@ -49,10 +48,7 @@ public class FolderService {
             @PathParam("id") long folderId
     ) throws Exception {
         try {
-            Folder result = folderManager.updateFolder(folderId, folder);
-            result.setDocuments(null);
-            result.setChildren(null);
-            return NotesResponse.ok(result);
+            return NotesResponse.ok(folderManager.updateFolder(folderId, folder));
         } catch (Exception e) {
             return NotesResponse.error(e);
         }
@@ -67,9 +63,7 @@ public class FolderService {
             @PathParam("id") long folderId
     ) throws Exception {
         try {
-            Folder folder = folderManager.getFolder(folderId);
-            folder.setDocuments(null);
-            return NotesResponse.ok(folder);
+            return NotesResponse.ok(folderManager.getFolder(folderId));
         } catch (Exception e) {
             return NotesResponse.error(e);
         }
