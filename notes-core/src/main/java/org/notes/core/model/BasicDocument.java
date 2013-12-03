@@ -51,6 +51,7 @@ public class BasicDocument implements Document {
     @Enumerated(EnumType.STRING)
     private Kind kind;
 
+    @JsonIgnore
     @Column(nullable = false)
     @JsonDeserialize(using = CustomDateDeserializer.class)
     @JsonSerialize(using = CustomDateSerializer.class)

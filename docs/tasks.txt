@@ -1,13 +1,15 @@
 - delete doc
+- unit tests http://stackoverflow.com/questions/6469751/testing-an-ejb-with-junit
+
 - check all queries for permissions
+- authentication + forward security http://www.heise.de/security/artikel/Forward-Secrecy-testen-und-einrichten-1932806.html
+
 - ocr
 - reminder: attached to document vs one for several docs?
 - annotate audio
 - import/export
-- unit tests!!!
 - search + in node names
 - related to: find documents, check literature, to find out relatedness
-- authentication + forward security http://www.heise.de/security/artikel/Forward-Secrecy-testen-und-einrichten-1932806.html
 
 --
 - transklusion
