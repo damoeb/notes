@@ -104,13 +104,13 @@ public class DocumentManagerBean implements DocumentManager {
         }
 
         proxy.getDocuments().add(document);
-        // todo check if works, probably not
         proxy.setDocumentCount(proxy.getDocumentCount() + 1);
         em.merge(proxy);
 
         while (proxy.getParentId() != null) {
             Folder parent = (Folder) session.load(Folder.class, proxy.getParentId());
             parent.getInheritedDocuments().add(document);
+            parent.setDocumentCount(parent.getDocumentCount() + 1);
             proxy = parent;
         }
     }
@@ -138,6 +138,7 @@ public class DocumentManagerBean implements DocumentManager {
             BasicDocument document = _get(documentId);
             document.setDeleted(true);
             document.setTrigger(Trigger.DELETE);
+            // todo update doc count in parent nodes
             em.merge(document);
 
             return document;
