@@ -97,11 +97,7 @@ public class DatabaseService {
     public NotesResponse getDatabases(
     ) throws Exception {
         try {
-            List<Database> databases = databaseManager.getDatabases();
-            for (Database database : databases) {
-                database.setFolders(null);
-            }
-            return NotesResponse.ok(databases);
+            return NotesResponse.ok(databaseManager.getDatabases());
         } catch (Exception e) {
             return NotesResponse.error(e);
         }

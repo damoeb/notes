@@ -1,6 +1,4 @@
-- make daos transparent, no id/model confusion: demand the models required in method call
 - ocr
-- textlayer in pdf js is displaced
 - reminder: attached to document vs one for several docs?
 - annotate audio
 - import/export

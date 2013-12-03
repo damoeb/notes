@@ -28,12 +28,22 @@ public class Database extends Node {
 
 //  -- References ------------------------------------------------------------------------------------------------------
 
-    // todo add settings like open documents, open folders, selected folder...
-
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, cascade = {})
     @JoinColumn(name = Database.FK_DATABASE_ID)
-    private Set<Folder> folders = new HashSet(100);
+    private Set<Folder> folders = new HashSet(10);
+
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, cascade = {})
+    @JoinTable(name = "database2open_folder")
+    private Set<Folder> openFolders = new HashSet(10);
+
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, cascade = {})
+    @JoinTable(name = "database2open_doc")
+    private Set<BasicDocument> openDocuments = new HashSet(10);
+
+    // todo add settings like open documents, open folders, selected folder...
 
 //  --------------------------------------------------------------------------------------------------------------------
 
@@ -49,7 +59,11 @@ public class Database extends Node {
         return folders;
     }
 
-    public void setFolders(Set<Folder> folders) {
-        this.folders = folders;
+    public Set<Folder> getOpenFolders() {
+        return openFolders;
+    }
+
+    public Set<BasicDocument> getOpenDocuments() {
+        return openDocuments;
     }
 }

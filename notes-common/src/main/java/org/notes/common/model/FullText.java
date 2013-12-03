@@ -5,8 +5,8 @@ import org.notes.common.ForeignKey;
 
 import javax.persistence.*;
 
-@Entity(name = "File2FullText")
-@Table(name = "File2FullText")
+@Entity(name = "FullTextOfFile")
+@Table(name = "FullTextOfFile")
 public class FullText {
 
     @Id

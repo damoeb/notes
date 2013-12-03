@@ -65,7 +65,7 @@ public class Folder extends Node {
 
     @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY, cascade = {})
-    @JoinTable(name = "folder2document", joinColumns = @JoinColumn(name = ForeignKey.FOLDER_ID), inverseJoinColumns = @JoinColumn(name = BasicDocument.FK_DOCUMENT_ID))
+    @JoinTable(name = "folder2related_doc", joinColumns = @JoinColumn(name = ForeignKey.FOLDER_ID), inverseJoinColumns = @JoinColumn(name = BasicDocument.FK_DOCUMENT_ID))
     private Set<BasicDocument> inheritedDocuments = new HashSet(100);
 
     @Column(updatable = false, insertable = false, nullable = true, name = Database.FK_DATABASE_ID)
