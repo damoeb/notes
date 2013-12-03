@@ -4,12 +4,10 @@ import org.notes.common.cache.MethodCache;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.core.interfaces.DatabaseManager;
 import org.notes.core.model.Database;
-import org.notes.core.model.Folder;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import java.util.List;
 
 @NotesInterceptors
 @Path("/database")
@@ -69,8 +67,7 @@ public class DatabaseService {
             @PathParam("id") long databaseId
     ) throws Exception {
         try {
-            List<Folder> folders = databaseManager.getFolders(databaseId);
-            return NotesResponse.ok(folders);
+            return NotesResponse.ok(databaseManager.getFolders(databaseId));
 
         } catch (Exception e) {
             return NotesResponse.error(e);
@@ -98,6 +95,36 @@ public class DatabaseService {
     ) throws Exception {
         try {
             return NotesResponse.ok(databaseManager.getDatabases());
+        } catch (Exception e) {
+            return NotesResponse.error(e);
+        }
+    }
+
+    @GET
+    @MethodCache
+    @Path("/{id}/document/open")
+    @Produces(MediaType.APPLICATION_JSON)
+    public NotesResponse getOpenDocuments(
+            @PathParam("id") long databaseId
+    ) throws Exception {
+        try {
+            return NotesResponse.ok(databaseManager.getOpenDocuments(databaseId));
+
+        } catch (Exception e) {
+            return NotesResponse.error(e);
+        }
+    }
+
+    @GET
+    @MethodCache
+    @Path("/{id}/folder/open")
+    @Produces(MediaType.APPLICATION_JSON)
+    public NotesResponse getOpenFolders(
+            @PathParam("id") long databaseId
+    ) throws Exception {
+        try {
+            return NotesResponse.ok(databaseManager.getOpenFolders(databaseId));
+
         } catch (Exception e) {
             return NotesResponse.error(e);
         }

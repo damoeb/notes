@@ -1,3 +1,4 @@
+- check all queries for permissions
 - ocr
 - reminder: attached to document vs one for several docs?
 - annotate audio

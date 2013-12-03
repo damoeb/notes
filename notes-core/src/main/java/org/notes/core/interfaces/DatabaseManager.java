@@ -1,6 +1,7 @@
 package org.notes.core.interfaces;
 
 import org.notes.common.exceptions.NotesException;
+import org.notes.core.model.BasicDocument;
 import org.notes.core.model.Database;
 import org.notes.core.model.Folder;
 
@@ -21,4 +22,8 @@ public interface DatabaseManager {
     List<Database> getDatabases() throws NotesException;
 
     List<Folder> getFolders(long databaseId) throws NotesException;
+
+    List<BasicDocument> getOpenDocuments(long databaseId) throws NotesException;
+
+    List<Folder> getOpenFolders(long databaseId) throws NotesException;
 }

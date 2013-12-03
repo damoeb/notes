@@ -110,6 +110,10 @@ public class BasicDocument implements Document {
         // default
     }
 
+    public BasicDocument(Long id) {
+        this.id = id;
+    }
+
     public BasicDocument(Long id, Kind kind) {
         this.id = id;
         this.kind = kind;
