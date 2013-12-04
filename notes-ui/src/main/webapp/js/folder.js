@@ -72,7 +72,7 @@ $.widget("notes.folder", {
 
             // sync model: selected folder in database
             var folderId = $this.options.model.get('id');
-            $('#databases').databases('activeFolderId', folderId);
+            $('#databases').databases('setActiveFolderId', folderId);
         });
 
         // highlight
@@ -93,7 +93,7 @@ $.widget("notes.folder", {
                     }).save(null, {
                             success: function () {
                                 // refresh ui
-                                $('#databases').databases('reload');
+                                $('#databases').databases('reloadTree');
                             }
                         });
                 }

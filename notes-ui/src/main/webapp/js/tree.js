@@ -1,7 +1,7 @@
 $.widget("notes.tree", {
 
     options: {
-        databaseId: 0
+        databaseId: null
     },
 
     _create: function () {
@@ -9,7 +9,7 @@ $.widget("notes.tree", {
         var $this = this;
 
         var databaseId = $this.options.databaseId;
-        if (typeof(databaseId) == 'undefined') {
+        if (typeof(databaseId) === 'undefined') {
             throw 'databaseId is null'
         }
 
@@ -66,35 +66,8 @@ $.widget("notes.tree", {
         return this.model;
     },
 
-//    selectedFolder: function (folderId) {
-//        var $this = this;
-//        /*
-//         if (folderId) {
-//         $this.model.set('selectedFolderId', folderId);
-//
-//         // todo improve
-//         $this.model.save();
-//
-//         } else {
-//         return $this.model.get('selectedFolderId');
-//         }
-//         */
-//
-//        return 1;
-//    },
-//
-//    pushFolder: function (folder) {
-//        var $this = this;
-//
-//        $this.descendants[folder.model().get('id')] = folder;
-//    },
-//
-//    $folder: function (folderId) {
-//        var $this = this;
-//        return $this.descendants[folderId];
-//    },
-
     _destroy: function () {
+        console.log('destroy tree');
         // todo implement widget method
     }
 

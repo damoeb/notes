@@ -15,33 +15,35 @@ $.widget("notes.databases", {
     _init: function () {
         var $this = this;
         $this.descendants = {};
+        $this.$tree = null;
     },
 
-    current: function () {
-        // todo: return current db model
-        throw 'current not implemented'
+    setActiveFolderId: function (folderId) {
+        this.activeFolderId = folderId;
     },
 
-    activeFolderId: function () {
-        // todo: set and get activeFolderId in current database
-        throw 'activeFolderId not implemented'
+    getActiveFolderId: function () {
+        return this.activeFolderId;
     },
 
     put: function ($folder) {
         this.descendants[$folder.model().get('id')] = $folder;
     },
 
+    get$Folder: function (folderId) {
+        return this.descendants[folderId];
+    },
+
+    reloadTree: function () {
+        this.$tree.tree('reload');
+    },
+
     reload: function () {
         var $this = this;
 
-        var $editButton = $('<div/>', {class: 'ui-icon ui-icon-gear', style: 'float:right'}).click(function () {
-            notes.dialog.database.settings();
-        });
         var $target = $this.element.empty()
             .append(
-                $('<div/>', {text: 'Databases', class: 'group-header'}).append(
-                    $editButton
-                )
+                $('<div/>', {text: 'Databases', class: 'group-header'})
             );
 
         notes.util.jsonCall('GET', $this.url, null, null, function (list) {
@@ -70,10 +72,17 @@ $.widget("notes.databases", {
                     $target.find('.active').removeClass('active');
                     $(this).addClass('active');
 
-                    $tree.tree({databaseId: model.get('id')});
+                    if ($this.$tree != null) {
+                        $this.$tree.tree('destroy');
+                    }
+
+                    $this.$tree = $tree.tree({
+                        databaseId: model.get('id')
+                    });
                 });
 
                 if ($this.options.databaseId == model.get('id')) {
+                    // todo load tree
                     $item.addClass('active');
                 }
             });

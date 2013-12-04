@@ -27,6 +27,7 @@ public class DocumentService {
             TextDocument document
     ) throws Exception {
 
+        // todo fix, does not work
         Folder folder = null;
         if (document == null && document.getFolderId() != null) {
             folder = new Folder(document.getFolderId());

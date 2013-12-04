@@ -49,6 +49,16 @@ public class Database extends Node {
     @JoinTable(name = "database2open_doc")
     private Set<BasicDocument> openDocuments = new HashSet(10);
 
+    // todo check active folder
+
+    @JsonIgnore
+    @OneToOne(cascade = {}, fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = ForeignKey.FOLDER_ID)
+    private Folder activeFolder;
+
+    @Column(insertable = false, updatable = false, name = ForeignKey.FOLDER_ID, nullable = true)
+    private Long activeFolderId;
+
 //  --------------------------------------------------------------------------------------------------------------------
 
     public Database() {
@@ -78,6 +88,22 @@ public class Database extends Node {
 
     public Set<BasicDocument> getOpenDocuments() {
         return openDocuments;
+    }
+
+    public Folder getActiveFolder() {
+        return activeFolder;
+    }
+
+    public void setActiveFolder(Folder activeFolder) {
+        this.activeFolder = activeFolder;
+    }
+
+    public Long getActiveFolderId() {
+        return activeFolderId;
+    }
+
+    public void setActiveFolderId(Long activeFolderId) {
+        this.activeFolderId = activeFolderId;
     }
 
     // todo probably need setters

@@ -225,7 +225,6 @@ public class FolderManagerBean implements FolderManager {
         }
 
         if (parent != null) {
-            parent.getId();
             Folder parentProxy = (Folder) _getProxy(Folder.class, parent.getId());
             parentProxy.setLeaf(false);
             folder.setLevel(parentProxy.getLevel() + 1);

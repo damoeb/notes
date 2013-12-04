@@ -152,8 +152,7 @@
                     })
                     .bind('fileuploadsubmit', function (e, data) {
                         // todo fix
-                        var database = $('#databases').databases('current');
-                        var folderId = database.get('activeFolderId');
+                        var folderId = $('#databases').databases('getActiveFolderId');
                         data.formData = {folderId: folderId};
                     })
                     .bind('fileuploaddone', function (e, xhr) {
@@ -165,16 +164,10 @@
                     });
 
 
-//            $( window ).resize(function() {
-//                var height = $(window).height() - 50;
-//                $('#directory')
-//                        .css('max-height', height)
-//                        .css('height', height);
-//
-//                $('#document-list')
-//                        .css('max-height', height)
-//                        .css('height', height);
-//            });
+            $(window).resize(function () {
+                $('.scroll-pane').height($(window).height());
+            });
+            $('.scroll-pane').height($(window).height());
         });
 
     </script>
@@ -187,10 +180,10 @@
     your browser</a></p>
 <![endif]-->
 
-<div class="container" style="padding: 0;">
+<div class="container" style="padding: 0; over">
 
     <!-- LEFT -->
-    <div class="col-lg-5">
+    <div class="col-lg-5 scroll-pane" style="overflow-y:auto">
 
         <!-- HEADER ................................................................................................ -->
 
@@ -238,13 +231,13 @@
 
     <!-- EDITOR .................................................................................................... -->
 
-    <div class="col-lg-7" style="border-left: 3px solid #ccc">
+    <div class="col-lg-7 scroll-pane" style="border-left: 3px solid #ccc">
 
         <!-- HEADER -->
         <div class="row"
              style="background-color:#F1F1F1; padding-top:6px; padding-bottom:6px; margin-bottom: 5px; height: 40px;">
 
-            <div class="clearfix" style="float: right; margin-right: 10px">
+            <div style="float: right; margin-right: 10px; position:relative; z-index:10">
                 <input id="search-input" class="ui-widget-content ui-corner-all" type="text" name="query"
                        style="width:200px; font-size:14px; padding:3px 4px;"/>
                 <button id="settings">Settings</button>

@@ -198,10 +198,10 @@ $.widget("notes.documentList", {
         if ($element.length == 0) {
             // add line
             $dataTable.fnAddData(data);
-            var item = $('#databases').databases('folder', model.get('folderId'));
-            var model = item.model();
-            model.set('documentCount', model.get('documentCount') + 1);
-            item.refresh();
+            var $folder = $('#databases').databases('get$Folder', model.get('folderId'));
+            var modelOfFolder = $folder.model();
+            modelOfFolder.set('documentCount', modelOfFolder.get('documentCount') + 1);
+            $folder.refresh();
 
         } else {
             var aPos = $dataTable.fnGetPosition($element[0]);

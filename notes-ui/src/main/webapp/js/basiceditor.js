@@ -187,7 +187,7 @@ $.widget("notes.basiceditor", {
     _getToolbar: function (config) {
         var $this = this;
 
-        var $toolbar = $('<div/>', {class: 'row'});
+        var $toolbar = $('<div/>', {class: 'row', style: 'margin-top:5px'});
 
         var $left = $('<div/>', {style: 'float:left'})
 //            .append(

@@ -87,13 +87,13 @@ $.widget("notes.pdfeditor", $.notes.basiceditor, {
         var $fieldTitle = $('<input/>', {class: 'ui-widget-content ui-corner-all title', type: 'text', value: $this.getModel().get('title')});
 
         $target.append(
-                $this._getToolbar(config)
-            ).append(
-                $this.getProgressLayer()
-            ).append(
                 $('<div/>', {class: 'row', style: 'margin-top:5px'}).append(
                     $fieldTitle
                 )
+            ).append(
+                $this._getToolbar(config)
+            ).append(
+                $this.getProgressLayer()
             ).append(
                 $('<div/>', {class: 'row', style: 'margin-top:5px', text: 'modified ' + notes.util.formatDate(new Date($this.getModel().get('modified'))) + ' by ' + $this.getModel().get('ownerId')})
             ).append(

@@ -27,6 +27,7 @@ public class FolderService {
             Folder folder
     ) throws Exception {
         try {
+            // todo fix does not work
             Folder parent;
             if (folder.getParentId() != null) {
                 parent = new Folder(folder.getParentId());

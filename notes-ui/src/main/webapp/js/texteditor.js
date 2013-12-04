@@ -29,13 +29,13 @@ $.widget("notes.texteditor", $.notes.basiceditor, {
         };
 
         $target.append(
-                $this._getToolbar()
-            ).append(
-                $this.getProgressLayer()
-            ).append(
                 $('<div/>', {class: 'row', style: 'margin-top:5px'}).append(
                     $fieldTitle
                 )
+            ).append(
+                $this._getToolbar()
+            ).append(
+                $this.getProgressLayer()
             ).append(
                 $('<div/>', {class: 'row', style: 'margin-top:5px', text: 'permalink '}).append(
                     $('<a/>', {href: '#', text: 'http://notes.org/' + model.get('id')})
