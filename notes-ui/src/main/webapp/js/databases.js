@@ -26,6 +26,10 @@ $.widget("notes.databases", {
         return this.activeFolderId;
     },
 
+    getDatabaseId: function () {
+        return this.databaseId;
+    },
+
     put: function ($folder) {
         this.descendants[$folder.model().get('id')] = $folder;
     },
@@ -41,10 +45,7 @@ $.widget("notes.databases", {
     reload: function () {
         var $this = this;
 
-        var $target = $this.element.empty()
-            .append(
-                $('<div/>', {text: 'Databases', class: 'group-header'})
-            );
+        var $target = $this.element.empty();
 
         notes.util.jsonCall('GET', $this.url, null, null, function (list) {
 
@@ -52,39 +53,47 @@ $.widget("notes.databases", {
 
                 var model = new notes.model.Database(json);
 
-                var $item = $('<div/>', {class: 'group-item'}).append(
-                        $('<div/>', {class: 'group-icon ui-icon ui-icon-clipboard'})
-                    ).append(
-                        $('<div/>', {text: model.get('name'), class: 'group-label'})
-                    ).append(
-                        $('<div/>', {class: 'clear'})
-                    ).appendTo(
-                        $target
-                    );
+                // only one database, currently
+
+//                var $item = $('<div/>'
+//                    ).append(
+//                        $('<div/>', {text: model.get('name'), class:'database'})
+//                    ).append(
+//                        $('<div/>', {class: 'clear'})
+//                    ).appendTo(
+//                        $target
+//                    );
 
                 var $tree = $('<div/>', {class: 'tree'}).appendTo(
                     $target
                 );
 
-                $item.click(function () {
-
-                    // todo set current
-                    $target.find('.active').removeClass('active');
-                    $(this).addClass('active');
-
-                    if ($this.$tree != null) {
-                        $this.$tree.tree('destroy');
-                    }
-
-                    $this.$tree = $tree.tree({
-                        databaseId: model.get('id')
-                    });
+                $this.$tree = $tree.tree({
+                    databaseId: model.get('id')
                 });
+                /*
+                 $item.click(function () {
 
-                if ($this.options.databaseId == model.get('id')) {
-                    // todo load tree
-                    $item.addClass('active');
-                }
+                 // todo set current
+                 $target.find('.active').removeClass('active');
+                 $(this).addClass('active');
+
+                 if ($this.$tree != null) {
+                 $this.$tree.tree('destroy');
+                 }
+
+                 $this.$tree = $tree.tree({
+                 databaseId: model.get('id')
+                 });
+
+                 $this.databaseId = model.get('id');
+                 });
+
+                 if ($this.options.databaseId == model.get('id')) {
+                 // todo load tree
+                 $item.addClass('active');
+                 }
+                 */
             });
 
         });

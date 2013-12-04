@@ -205,36 +205,24 @@ table.dataTable tr.even.doc-origin-related {
     display: none;
 }
 
-/* groups on sidebar */
-.group-header {
-    margin-top: 5px;
-    margin-bottom: 2px;
-    font-weight: bold;
+/* sidebar */
+.sidebar {
+    background-color: #333333;
+    color: #ccc;
+    padding: 0;
 }
 
-.group-icon {
-    float: left;
-}
-
-.group-doc-count {
-    float: right;
-    padding: 1px 3px;
-    background-color: #d9d9d9;
-    font-weight: bold;
-}
-
-.group-label {
-    float: left;
-}
-
-.group-item {
-    padding: 2px 3px;
-    text-transform: uppercase;
+.sidebar dt {
     cursor: pointer;
+    padding: 3px 3px 3px 5px;
+    font-weight: normal;
+    border-left: 5px solid transparent;
 }
 
-.group-item.active DIV {
-    font-weight: bold;
+.sidebar .active {
+    border-left-color: white;
+    color: white;
+    /* todo heller shimmer? */
 }
 
 /* menu */
@@ -256,20 +244,6 @@ TR.highlighted .doc-outline {
 TR.highlighted .progress-of-task {
     background-color: #efefef;
 }
-
-/*
-TR.active TD,
-TR.active TD.sorting_1 {
-    background-color: #efefef !important;
-    color: #333333;
-}
-TR.active .doc-outline {
-    color: #666666;
-}
-TR.active .progress-of-task {
-    background-color:#6792ff;
-}
-*/
 
 .progress-of-task {
     height: 4px;
@@ -297,34 +271,32 @@ TR.active .progress-of-task {
 }
 
 /* treeview */
-.tree-root {
-    font-weight: bold;
-}
-
 .folder {
     clear: both;
     padding-top: 3px;
     padding-bottom: 3px;
-    cursor: default;
+    cursor: pointer;
+    border-left: 5px solid transparent;
+}
+
+.folder:hover {
+    color: white;
+}
+
+.folder .toggle,
+.folder .icon {
+    float: left;
+    margin-right: 5px;
 }
 
 .folder.empty {
     color: #7e7e7e;
 }
 
-.folder.active {
-    background-color: #6792ff;
-    color: white;
-}
-
 .folder.drop-document {
     background-color: #ffffff;
     color: #000000;
     border: 1px solid red;
-}
-
-.folder.active .doc-count {
-    color: #dadada;
 }
 
 /* levels indention */
@@ -343,42 +315,14 @@ TR.active .progress-of-task {
     padding-left: 30px;
 }
 
-/* edit button */
-.folder>.edit {
-    display: none;
-}
-
-.folder:hover>.edit,
-.folder.active>.edit {
-    display: block;
-}
-
-/* elements in folder div */
-.folder .toggle,
-.folder .icon {
-    float: left;
-    margin-right: 5px;
-}
-
 .folder .name {
     float: left;
-    font-weight: bold;
 }
 
 .folder .doc-count {
     float: left;
     color: #7e7e7e;
     padding-left: 3px;
-}
-
-.folder .edit {
-    float: right;
-    margin-left: 5px;
-}
-
-.tree-menu {
-    position: absolute;
-    z-index: 999;
 }
 
 #database {

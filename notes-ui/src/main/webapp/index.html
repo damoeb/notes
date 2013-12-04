@@ -180,14 +180,14 @@
     your browser</a></p>
 <![endif]-->
 
-<div class="container" style="padding: 0; over">
+<div class="container" style="padding: 0;">
 
     <!-- LEFT -->
-    <div class="col-lg-5 scroll-pane" style="overflow-y:auto">
+    <div class="col-lg-5 scroll-pane container" style="overflow-y:auto;">
 
         <!-- HEADER ................................................................................................ -->
 
-        <div class="row container"
+        <div class="row"
              style="background-color:#F1F1F1; padding-top:6px; padding-bottom:6px; margin-bottom: 5px; height: 40px;">
 
             <!-- DATABASES -->
@@ -206,11 +206,21 @@
 
         <!-- CONTENT ............................................................................................... -->
 
-        <div class="row container">
+        <div class="row">
 
             <!-- DATABASES -->
-            <div class="col-lg-5">
-                <div id="databases"></div>
+            <div class="col-lg-5 sidebar">
+
+                <dl>
+                    <dt>Database</dt>
+                    <dd>
+                        <div id="databases"></div>
+                    </dd>
+                    <dt>Favourites</dt>
+                    <dt class="active">Starred</dt>
+                    <dt>Important</dt>
+
+                </dl>
             </div>
 
             <!-- DOCUMENTS -->

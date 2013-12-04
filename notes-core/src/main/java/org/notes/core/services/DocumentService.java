@@ -27,9 +27,8 @@ public class DocumentService {
             TextDocument document
     ) throws Exception {
 
-        // todo fix, does not work
         Folder folder = null;
-        if (document == null && document.getFolderId() != null) {
+        if (document != null && document.getFolderId() != null) {
             folder = new Folder(document.getFolderId());
         }
 
@@ -52,15 +51,14 @@ public class DocumentService {
     @GET
     @MethodCache
     @ServiceMetric
-    @Produces(MediaType.APPLICATION_JSON)
     @Path(value = "/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse getDocument(
             @PathParam("id") long documentId
     ) {
         try {
             return NotesResponse.ok(documentManager.getDocument(documentId));
         } catch (Throwable t) {
-            t.printStackTrace();
             return NotesResponse.error(t);
         }
     }
@@ -68,6 +66,7 @@ public class DocumentService {
     @DELETE
     @MethodCache
     @ServiceMetric
+    @Path(value = "/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse deleteDocument(
             @PathParam("id") long documentId

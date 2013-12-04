@@ -42,15 +42,11 @@ $.widget("notes.folder", {
         $this.$fieldDocCount = $fieldDocCount;
 
         $folder.append(
-                $this._createExpandChildrenButton(model, $childrenLayer))
-            .append(
-                $('<div/>', {class: 'icon ui-icon ui-icon-folder-collapsed' })
+                $this._createExpandChildrenButton(model, $childrenLayer)
             ).append(
                 $fieldName
             ).append(
                 $fieldDocCount
-            ).append(
-                $this._newSettingsMenu(model)
             ).append(
                 $('<div/>', {style: 'clear:both'})
             ).data('folderId', model.get('id'));
@@ -66,18 +62,43 @@ $.widget("notes.folder", {
             $this.refresh();
         });
 
-        // load documents
-        $folder.dblclick(function () {
+        // load documents + highlight
+        $folder.click(function () {
+            $this._highlight($folder);
+
+            // -- Documents --------------------------------------------------------------------------------------------
+
             $this.loadDocuments();
 
             // sync model: selected folder in database
             var folderId = $this.options.model.get('id');
             $('#databases').databases('setActiveFolderId', folderId);
-        });
 
-        // highlight
-        $folder.click(function () {
-            $this._highlight($folder);
+            // -- Children ---------------------------------------------------------------------------------------------
+            if ($this.children.length == 0) {
+
+                notes.util.jsonCall('GET', '/notes/rest/folder/${folderId}/children', {'${folderId}': model.get('id')}, null, function (folders) {
+
+                    if (folders) {
+                        for (var i = 0; i < folders.length; i++) {
+
+                            var $childFolder = $('<div/>')
+                                .appendTo($childrenLayer);
+
+                            $this.children.push(
+                                $childFolder
+                            );
+
+                            $childFolder.folder({
+                                model: new notes.model.Folder(folders[i]),
+                                onRefresh: function () {
+                                    $this.refresh();
+                                }
+                            });
+                        }
+                    }
+                });
+            }
         });
 
         $folder
@@ -102,13 +123,6 @@ $.widget("notes.folder", {
         //
         // -- Triggers -------------------------------------------------------------------------------------------------
         //
-
-        /*
-         if (selectedId == model.get('id')) {
-         $this.loadDocuments();
-         $this._highlight($folder);
-         }
-         */
 
         if (model.get('leaf')) {
             $this.documentCount = documentCount;
@@ -161,13 +175,6 @@ $.widget("notes.folder", {
         item.addClass('active');
     },
 
-    _newSettingsMenu: function (model) {
-        return $('<div/>', {class: 'edit ui-icon ui-icon-gear'})
-            .click(function () {
-                notes.dialog.folder.settings(model);
-            });
-    },
-
     _createExpandChildrenButton: function (model, $childrenLayer) {
         var $this = this;
 
@@ -181,34 +188,6 @@ $.widget("notes.folder", {
                     $button.removeClass('ui-icon-triangle-1-e');
                     $button.addClass('ui-icon-triangle-1-s');
                     $childrenLayer.removeClass('hidden');
-
-                    //
-                    // -- Children -------------------------------------------------------------------------------------------------
-                    //
-                    if ($this.children.length == 0) {
-
-                        notes.util.jsonCall('GET', '/notes/rest/folder/${folderId}/children', {'${folderId}': model.get('id')}, null, function (folders) {
-
-                            if (folders) {
-                                for (var i = 0; i < folders.length; i++) {
-
-                                    var $childFolder = $('<div/>')
-                                        .appendTo($childrenLayer);
-
-                                    $this.children.push(
-                                        $childFolder
-                                    );
-
-                                    $childFolder.folder({
-                                        model: new notes.model.Folder(folders[i]),
-                                        onRefresh: function () {
-                                            $this.refresh();
-                                        }
-                                    });
-                                }
-                            }
-                        });
-                    }
 
                 } else {
                     $button.addClass('ui-icon-triangle-1-e');

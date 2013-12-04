@@ -1,4 +1,4 @@
-- fix flow: new doc/folder, drag drop, delete
+- fix delete: update doc count
 - database settings: open docs/folders
 - scrollbars, min text editor
 - doc count auf die rechte seite

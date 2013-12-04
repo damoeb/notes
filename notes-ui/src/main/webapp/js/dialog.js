@@ -96,7 +96,7 @@ notes.dialog.folder = {
                             var model = new notes.model.Folder({
                                 name: $input.val(),
                                 parentId: parentModel.get('id'),
-                                databaseId: parentModel.get('databaseId')
+                                databaseId: $('#databases').databases('getDatabaseId')
                             });
                             model.save(null, {
                                 success: function () {
