@@ -49,7 +49,7 @@ $.widget("notes.editors", {
 
         var settings = {kind: kindString};
         $this.loadDocument(settings, new notes.model.Document({
-            folderId: $('#database').database('selectedFolder')
+            folderId: $('#databases').databases('activeFolderId')
         }));
     },
 

@@ -72,7 +72,7 @@ $.widget("notes.folder", {
 
             // sync model: selected folder in database
             var folderId = $this.options.model.get('id');
-            $('#database').database('selectedFolder', folderId);
+            $('#databases').databases('activeFolderId', folderId);
         });
 
         // highlight
@@ -93,7 +93,7 @@ $.widget("notes.folder", {
                     }).save(null, {
                             success: function () {
                                 // refresh ui
-                                $('#database').database('reload');
+                                $('#databases').databases('reload');
                             }
                         });
                 }
@@ -115,7 +115,7 @@ $.widget("notes.folder", {
             $this.refresh();
         }
 
-        $('#database').database('pushFolder', $this);
+        $('#databases').databases('put', $this);
 
     },
 
@@ -157,7 +157,7 @@ $.widget("notes.folder", {
 
     _highlight: function (item) {
 
-        $('#database .active').removeClass('active');
+        $('#databases .active').removeClass('active');
         item.addClass('active');
     },
 

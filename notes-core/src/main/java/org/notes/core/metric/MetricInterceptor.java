@@ -12,7 +12,7 @@ import javax.interceptor.InvocationContext;
 @NotesInterceptors
 public class MetricInterceptor {
 
-    private static final Logger _log = Logger.getLogger(MetricInterceptor.class);
+    private static final Logger LOGGER = Logger.getLogger(MetricInterceptor.class);
 
     @AroundInvoke
     public Object injectCaching(InvocationContext invocationContext) throws Exception {
@@ -23,8 +23,9 @@ public class MetricInterceptor {
             Object returnObject = invocationContext.proceed();
 
             if (returnObject instanceof NotesResponse) {
-                double durationMsec = (System.nanoTime() - from) / 1000000d;
-                ((NotesResponse) returnObject).setElapsedMillis(durationMsec);
+                double durationMillis = (System.nanoTime() - from) / 1000000d;
+                LOGGER.info(String.format("call %s in %s", invocationContext.getMethod().getName(), durationMillis));
+                ((NotesResponse) returnObject).setElapsedMillis(durationMillis);
             }
 
             return returnObject;

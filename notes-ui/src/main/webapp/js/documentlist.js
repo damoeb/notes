@@ -15,13 +15,13 @@ $.widget("notes.documentList", {
                 'aaData': {},
                 'bFilter': false,
                 'bInfo': false,
-                'bStateSave': true,
+//                'bStateSave': true,
                 'bPaginate': false,
                 'aaSorting': [
                     [ 4, 'desc' ]
                 ],
                 'aoColumns': [
-                    { 'sTitle': 'Id', sClass: 'column-s' },
+                    { 'sTitle': 'Id', sClass: 'column-s', bVisible: false },
                     { 'sTitle': 'Origin', sClass: 'column-s', bVisible: false },
                     { 'sTitle': 'Name', sClass: 'column-text'},
                     { 'sTitle': 'Date', sClass: 'column-l' },
@@ -198,7 +198,7 @@ $.widget("notes.documentList", {
         if ($element.length == 0) {
             // add line
             $dataTable.fnAddData(data);
-            var item = $('#database').database('folder', model.get('folderId'));
+            var item = $('#databases').databases('folder', model.get('folderId'));
             var model = item.model();
             model.set('documentCount', model.get('documentCount') + 1);
             item.refresh();
