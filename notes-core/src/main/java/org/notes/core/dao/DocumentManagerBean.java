@@ -97,7 +97,6 @@ public class DocumentManagerBean implements DocumentManager {
 
         Session session = em.unwrap(Session.class);
 
-        //Folder folder = folderManager.getFolder(document.getFolderId());
         Folder proxy = (Folder) session.load(Folder.class, folder.getId());
         if (proxy == null) {
             throw new NotesException(String.format("folder with id %s is null", document.getFolderId()));
@@ -138,7 +137,20 @@ public class DocumentManagerBean implements DocumentManager {
             BasicDocument document = _get(documentId);
             document.setDeleted(true);
             document.setTrigger(Trigger.DELETE);
-            // todo update doc count in parent nodes
+
+            Session session = em.unwrap(Session.class);
+
+            // update document count
+            Folder proxy = (Folder) session.load(Folder.class, document.getFolderId());
+            proxy.setDocumentCount(proxy.getDocumentCount() - 1);
+            em.merge(proxy);
+
+            while (proxy.getParentId() != null) {
+                Folder parent = (Folder) session.load(Folder.class, proxy.getParentId());
+                parent.setDocumentCount(parent.getDocumentCount() - 1);
+                proxy = parent;
+            }
+
             em.merge(document);
 
             return document;

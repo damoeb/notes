@@ -271,58 +271,46 @@ TR.highlighted .progress-of-task {
 }
 
 /* treeview */
-.folder {
+.fldr {
     clear: both;
-    padding-top: 3px;
-    padding-bottom: 3px;
+    padding: 3px 3px 3px 10px;
     cursor: pointer;
     border-left: 5px solid transparent;
 }
 
-.folder:hover {
+.fldr:hover,
+dt:hover {
     color: white;
 }
 
-.folder .toggle,
-.folder .icon {
+.fldr .toggle,
+.fldr .icon {
     float: left;
     margin-right: 5px;
 }
 
-.folder.empty {
-    color: #7e7e7e;
+.fldr-dc-cnt {
+    float: right;
+    padding-right: 4px;
 }
 
-.folder.drop-document {
+.fldr.drop-document {
     background-color: #ffffff;
     color: #000000;
     border: 1px solid red;
 }
 
 /* levels indention */
-.folder.level-0 {
-}
-
-.folder.level-1 {
+.fldr.fldr-lvl-0 {
     padding-left: 10px;
 }
 
-.folder.level-2 {
+.fldr.fldr-lvl-1 {
     padding-left: 20px;
 }
 
-.folder.level-3 {
+.fldr.fldr-lvl-2 {
     padding-left: 30px;
-}
-
-.folder .name {
-    float: left;
-}
-
-.folder .doc-count {
-    float: left;
-    color: #7e7e7e;
-    padding-left: 3px;
 }
 
 #database {

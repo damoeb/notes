@@ -22,7 +22,7 @@ $.widget("notes.folder", {
 
         // -- Structure ------------------------------------------------------------------------------------------------
 
-        var $folder = $('<div/>', {class: 'folder level-' + model.get('level')});
+        var $folder = $('<div/>', {class: 'fldr fldr-lvl-' + model.get('level')});
         var $childrenLayer = $('<div/>', {class: 'children'});
 
         $target.append($folder).append($childrenLayer);
@@ -35,14 +35,16 @@ $.widget("notes.folder", {
 
         var documentCount = model.get('documentCount');
 
-        var $fieldName = $('<div/>', {class: 'name', text: model.get('name') });
-        var $fieldDocCount = $('<div/>', {class: 'doc-count', text: '(' + documentCount + ')'});
+        var $fieldName = $('<span/>', {class: 'fldr-name', text: model.get('name') });
+        var $fieldDocCount = $('<span/>', {class: 'fldr-dc-cnt', text: documentCount});
 
         $this.$fieldName = $fieldName;
         $this.$fieldDocCount = $fieldDocCount;
 
         $folder.append(
-                $this._createExpandChildrenButton(model, $childrenLayer)
+                $('<i/>', {class: 'fa fa-caret-right fa-fw fa-lg'}).click(function (e) {
+                    $childrenLayer.hide();
+                })
             ).append(
                 $fieldName
             ).append(
@@ -64,6 +66,11 @@ $.widget("notes.folder", {
 
         // load documents + highlight
         $folder.click(function () {
+
+            console.log('click');
+
+            $childrenLayer.show();
+
             $this._highlight($folder);
 
             // -- Documents --------------------------------------------------------------------------------------------
@@ -147,18 +154,6 @@ $.widget("notes.folder", {
 
         $this.$fieldName.text(model.get('name'));
 
-        var documentCount = model.get('documentCount');
-
-        if (documentCount == 0) {
-            $this.$fieldName.parent().addClass('empty');
-        } else {
-            $this.$fieldName.parent().removeClass('empty');
-        }
-
-        $this.documentCount = documentCount;
-
-        $this.$fieldDocCount.text('(' + documentCount + ')');
-
         if ($this.options.onRefresh) {
             $this.options.onRefresh();
         }
@@ -175,35 +170,36 @@ $.widget("notes.folder", {
         item.addClass('active');
     },
 
-    _createExpandChildrenButton: function (model, $childrenLayer) {
-        var $this = this;
+//    _createExpandChildrenButton: function (model, $childrenLayer) {
+//        var $this = this;
+//
+//        var $button = $('<div/>', {class: 'toggle ui-icon ui-icon-triangle-1-e'});
+//
+//        var fnShowHideChildren = function () {
+//            if (model.get('leaf')) {
+//                $button.addClass('ui-icon-radio-off');
+//            } else {
+//                if (model.get('expanded')) {
+//                    $button.removeClass('ui-icon-triangle-1-e');
+//                    $button.addClass('ui-icon-triangle-1-s');
+//                    $childrenLayer.removeClass('hidden');
+//
+//                } else {
+//                    $button.addClass('ui-icon-triangle-1-e');
+//                    $button.removeClass('ui-icon-triangle-1-s');
+//
+//                    $childrenLayer.addClass('hidden');
+//                }
+//            }
+//        };
+//
+//        return $button.click(function () {
+//            $this.options.model.set('expanded', !$this.options.model.get('expanded'));
+//            // todo sync model
+//            fnShowHideChildren();
+//        });
+//    },
 
-        var $button = $('<div/>', {class: 'toggle ui-icon ui-icon-triangle-1-e'});
-
-        var fnShowHideChildren = function () {
-            if (model.get('leaf')) {
-                $button.addClass('ui-icon-radio-off');
-            } else {
-                if (model.get('expanded')) {
-                    $button.removeClass('ui-icon-triangle-1-e');
-                    $button.addClass('ui-icon-triangle-1-s');
-                    $childrenLayer.removeClass('hidden');
-
-                } else {
-                    $button.addClass('ui-icon-triangle-1-e');
-                    $button.removeClass('ui-icon-triangle-1-s');
-
-                    $childrenLayer.addClass('hidden');
-                }
-            }
-        };
-
-        return $button.click(function () {
-            $this.options.model.set('expanded', !$this.options.model.get('expanded'));
-            // todo sync model
-            fnShowHideChildren();
-        });
-    },
     loadDocuments: function () {
         var $this = this;
 

@@ -224,6 +224,8 @@ public class FolderManagerBean implements FolderManager {
             throw new NotesException("Folder is null");
         }
 
+        // todo check: max level is 3
+
         if (parent != null) {
             Folder parentProxy = (Folder) _getProxy(Folder.class, parent.getId());
             parentProxy.setLeaf(false);

@@ -1,5 +1,4 @@
-- fix delete: update doc count
-- database settings: open docs/folders
+- model database - settings: open docs/folders
 - scrollbars, min text editor
 - doc count auf die rechte seite
 - unit tests http://stackoverflow.com/questions/6469751/testing-an-ejb-with-junit
