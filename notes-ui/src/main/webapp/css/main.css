@@ -156,32 +156,18 @@ span[kind] {
     font-size: 10px;
 }
 
-table.dataTable tr.odd.doc-origin-native,
-table.dataTable tr.even.doc-origin-native {
+#document-list .doc {
     cursor: default;
-    background-color: transparent !important;
-    border-bottom: 1px solid #eaeaea;
+    color: #242424;
+    border-bottom: 1px solid #e7e7e7;
+    margin-bottom: 3px;
+    padding-bottom: 3px;
 }
 
-table.dataTable tr.doc-origin-native td:first-child {
-    border-left: 3px solid #6792ff;
-}
-
-table.dataTable tr.doc-origin-related td:first-child {
-    border-left: 3px solid transparent;
-}
-
-/* row of related doc */
-table.dataTable tr.odd.doc-origin-related,
-table.dataTable tr.even.doc-origin-related {
+#document-list .doc:hover {
     cursor: default;
-    background-color: transparent !important;
-    border-bottom: 1px solid #eaeaea;
-}
-
-#document-list table.dataTable tr.even td.sorting_1,
-#document-list table.dataTable tr.odd td.sorting_1 {
-    background-color: #ecf2ff;
+    color: black;
+    border-bottom-color: #dddddd;
 }
 
 /* dialog */

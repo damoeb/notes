@@ -52,7 +52,6 @@
     </script>
 
     <script src="js/vendor/jquery.paginate.js"></script>
-    <script src="js/vendor/jquery.raty.js"></script>
     <script src="js/vendor/underscore-min.js"></script>
     <script src="js/vendor/backbone.js"></script>
 
@@ -117,9 +116,9 @@
                 databaseId: config.databaseId
             });
 
-            $('#document-list').documentList();
-            var editor = $('#editors').editors();
+//            $('#document-list').documentList();
 
+            var editors = $('#editors').editors();
 
             // -- Menu -- --------------------------------------------------------------------------------------------------
 
@@ -133,7 +132,7 @@
                         icons: {primary: 'ui-icon-document'}
                     })
                     .click(function () {
-                        editor.editors('createDocument');
+                        editors.editors('createDocument');
                     });
 
             $('#import-document')
@@ -222,6 +221,7 @@
                     <dt><i class="fa fa-star fa-fw fa-lg"></i> Starred</dt>
                     <dt><i class="fa fa-calendar fa-fw fa-lg"></i> Calendar</dt>
                     <dt><i class="fa fa-flag fa-fw fa-lg"></i> Important</dt>
+                    <dt><i class="fa fa-tags fa-fw fa-lg"></i> Tags</dt>
 
                 </dl>
             </div>

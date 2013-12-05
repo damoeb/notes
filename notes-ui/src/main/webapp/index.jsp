@@ -28,7 +28,6 @@
     <script src="js/vendor/modernizr-2.6.2.min.js"></script>
 
     <script src="js/vendor/jquery-1.8.2.min.js"></script>
-    <script src="js/vendor/jquery.raty.js"></script>
     <script src="js/vendor/jquery-ui-1.9.2.custom.js"></script>
     <script src="js/vendor/jquery.dataTables.js"></script>
     <script src="js/vendor/jquery.timeago.js"></script>
