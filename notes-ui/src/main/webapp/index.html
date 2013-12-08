@@ -175,97 +175,81 @@
     </script>
 
 </head>
-<body>
+<body style="background-color: #C5C5C5">
 
 <!--[if lt IE 7]>
 <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade
     your browser</a></p>
 <![endif]-->
 
-<div class="container" style="padding: 0;">
 
-    <!-- LEFT -->
-    <div class="col-lg-5 scroll-pane container" style="overflow-y:auto;">
+<div class="container">
 
-        <!-- HEADER ................................................................................................ -->
+    <!-- HEADER -->
+    <div class="row">
+        <ul class="list-inline">
+            <li>Contact</li>
+            <li>Social Media</li>
+        </ul>
+    </div>
+</div>
 
-        <div class="row"
-             style="background-color:#F1F1F1; padding-top:6px; padding-bottom:6px; margin-bottom: 5px; height: 40px;">
+<div class="container" style="background-color: white; padding-top: 10px; padding-bottom: 10px;">
 
-            <!-- DATABASES -->
-            <div class="col-lg-4">
-                <!--Databases-->
-            </div>
+    <!-- CONTENT TOP -->
+    <div class="row" style="padding-top: 20px; padding-bottom: 20px">
 
-            <!-- DOCUMENTS -->
-            <div class="col-lg-8">
-                <div>
-                    <button id="create-document">Create</button>
-                    <button id="import-document">Import</button>
-                </div>
-            </div>
+        <!-- LEFT -->
+        <div class="col-lg-2">
+            Logo
         </div>
 
-        <!-- CONTENT ............................................................................................... -->
+        <!-- CONTENT -->
+        <div class="col-lg-7">
+            <input id="search-input" class="ui-widget-content ui-corner-all" type="text" name="query"
+                   style="width:300px; font-size:14px; padding:3px 4px;"/>
+        </div>
 
-        <div class="row">
-
-            <!-- DATABASES -->
-            <div class="col-lg-4 sidebar">
-
-                <dl>
-                    <dt><i class="fa fa-inbox fa-fw fa-lg"></i> Database</dt>
-                    <dd>
-                        <div id="databases"></div>
-                    </dd>
-                    <dt><i class="fa fa-star fa-fw fa-lg"></i> Starred</dt>
-                    <dt><i class="fa fa-calendar fa-fw fa-lg"></i> Calendar</dt>
-                    <dt><i class="fa fa-flag fa-fw fa-lg"></i> Important</dt>
-                    <dt><i class="fa fa-tags fa-fw fa-lg"></i> Tags</dt>
-
-                </dl>
-            </div>
-
-            <!-- DOCUMENTS -->
-            <div class="col-lg-8">
-
-                <div id="document-list" class="row">
-
-                </div>
-
-            </div>
-
+        <!-- RIGHT -->
+        <div class="col-lg-3">
+            <button id="settings">Settings</button>
         </div>
 
     </div>
 
+    <!-- CONTENT MAIN -->
+    <div class="row">
 
-    <!-- RIGHT -->
+        <!-- LEFT -->
+        <div class="col-lg-2 sidebar">
+            <!--Sidebar-->
+            <dl>
+                <dt><i class="fa fa-inbox fa-fw fa-lg"></i> Database</dt>
+                <dd>
+                    <div id="databases"></div>
+                </dd>
+                <dt><i class="fa fa-star fa-fw fa-lg"></i> Starred</dt>
+                <dt><i class="fa fa-calendar fa-fw fa-lg"></i> Calendar</dt>
+                <dt><i class="fa fa-flag fa-fw fa-lg"></i> Important</dt>
+                <dt><i class="fa fa-tags fa-fw fa-lg"></i> Tags</dt>
 
-    <!-- EDITOR .................................................................................................... -->
-
-    <div class="col-lg-7 scroll-pane" style="border-left: 3px solid #ccc">
-
-        <!-- HEADER -->
-        <div class="row"
-             style="background-color:#F1F1F1; padding-top:6px; padding-bottom:6px; margin-bottom: 5px; height: 40px;">
-
-            <div style="float: right; margin-right: 10px; position:relative; z-index:10">
-                <input id="search-input" class="ui-widget-content ui-corner-all" type="text" name="query"
-                       style="width:200px; font-size:14px; padding:3px 4px;"/>
-                <button id="settings">Settings</button>
-            </div>
+            </dl>
 
         </div>
 
         <!-- CONTENT -->
-        <div class="row container">
+        <div class="col-lg-7">
+            <div id="document-list" class="row">
 
-            <div id="editors" class="row"
-                 style="border-color:#ccc; margin-top:-39px; background: none; border-top: none; border-left: none; border-right:none">
-                <!-- content generated -->
             </div>
+            <div id="editors" class="row">
 
+            </div>
+        </div>
+
+        <!-- RIGHT -->
+        <div class="col-lg-3" style="border-left: 3px solid #CCCCCC;">
+            vorschläge
         </div>
 
     </div>

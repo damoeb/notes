@@ -1,10 +1,16 @@
+- suche, tags
+- document thumbnail?
+- routes backbone
+- doc list wie in youtube
+
 - model database - settings: open docs/folders
 - scrollbars, min text editor
-- doc count auf die rechte seite
 - unit tests http://stackoverflow.com/questions/6469751/testing-an-ejb-with-junit
 
 - authentication + forward security http://www.heise.de/security/artikel/Forward-Secrecy-testen-und-einrichten-1932806.html
 - check all queries for permissions
+
+- attachments for document
 
 - ocr
 - reminder: attached to document vs one for several docs?

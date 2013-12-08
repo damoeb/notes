@@ -24,6 +24,9 @@ $.widget("notes.editors", {
             throw 'document id is null.'
         }
 
+        $this.element.empty();
+        $('#document-list').hide();
+
         notes.util.jsonCall('GET', '/notes/rest/document/${documentId}', {'${documentId}': documentId}, null, function (document) {
 
             var settings = {
@@ -62,7 +65,7 @@ $.widget("notes.editors", {
                 break;
         }
 
-        $this.element.empty().append($content);
+        $this.element.append($content);
 
     }
 })

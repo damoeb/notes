@@ -24,7 +24,8 @@ $.widget("notes.documentList", {
         var sources = [
             {
                 url: '/notes/rest/folder/${folderId}/documents',
-                params: {'${folderId}': folderId}
+                params: {'${folderId}': folderId},
+                type: 'native'
             },
             {
                 url: '/notes/rest/folder/${folderId}/related-documents?offset=${offset}&count=${count}',
@@ -36,9 +37,19 @@ $.widget("notes.documentList", {
             }
         ];
 
-        var $target = $this.element.empty();
+        $this.element.empty();
+
+        var $native = $('<div/>').appendTo($this.element);
+        var $descendants = $('<div/>').append('<div>Some descendants</div>').appendTo($this.element);
 
         $.each(sources, function (index, source) {
+
+            var $target;
+            if (source.type == 'native') {
+                $target = $native;
+            } else {
+                $target = $descendants;
+            }
 
             notes.util.jsonCall('GET', source.url, source.params, null, function (documents) {
 
