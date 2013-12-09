@@ -106,7 +106,7 @@ public class IndexerScheduler {
             docs.add(doc);
         }
 
-        //getSolrServer().add(docs, COMMIT_WITHIN_MS);
+        getSolrServer().add(docs, COMMIT_WITHIN_MS);
     }
 
     private void indexDocument(Document document) throws IOException, SolrServerException {
@@ -120,7 +120,7 @@ public class IndexerScheduler {
         doc.setField("kind", document.getKind());
         doc.setField("ownerId", document.getOwnerId());
 
-        //getSolrServer().add(doc, COMMIT_WITHIN_MS);
+        getSolrServer().add(doc, COMMIT_WITHIN_MS);
     }
 
     private SolrServer getSolrServer() {
