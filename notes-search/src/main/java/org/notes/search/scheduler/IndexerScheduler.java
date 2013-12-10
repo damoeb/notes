@@ -112,13 +112,12 @@ public class IndexerScheduler {
     private void indexDocument(Document document) throws IOException, SolrServerException {
         // todo update document http://wiki.apache.org/solr/UpdateXmlMessages#Optional_attributes_for_.22field.22
         SolrInputDocument doc = new SolrInputDocument();
-        //doc.setField("id", document.getId()); // todo fix id
-        doc.setField("documentId", document.getId());
-        doc.setField("folderId", document.getFolderId());
+        doc.setField("document", document.getId());
+        doc.setField("folder", document.getFolderId());
         doc.setField("modified", document.getModified());
         doc.setField("title", document.getTitle());
         doc.setField("kind", document.getKind());
-        doc.setField("ownerId", document.getOwnerId());
+        doc.setField("owner", document.getOwnerId());
 
         getSolrServer().add(doc, COMMIT_WITHIN_MS);
     }
