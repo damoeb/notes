@@ -3,29 +3,7 @@ $.widget("notes.documentList", {
     _init: function () {
         var $this = this;
 
-        this.template = _.template('<div class="doc doc-id-<%=id %> container ui-draggable">' +
-            '<div class="col-lg-2">' +
-            '<img src="https://cdn1.iconfinder.com/data/icons/FileTypesIcons/80/readme.png">' +
-            '</div>' +
-            '<div class="col-lg-9">' +
-            '<div class="row" style="font-weight:bold">' +
-            '<%=title %>' +
-            '<i class="fa fa-star" style="color:red"></i>' +
-            '</div>' +
-            '<div class="row">' +
-            '<%=date %> ago - by <span style="font-weight:bold">damoeb</span> - 1,321 views' +
-            '</div>' +
-            '<div class="row">' +
-            '<%=text %>' +
-            '</div>' +
-            '</div>' +
-            '<div class="col-lg-1">' +
-            '<div class="row" title="visibility: public">' +
-            '<i class="fa fa-circle" style="color:green"></i>' +
-            '</div>' +
-            '<div class="row" title="in 82 days">' +
-            '<i class="fa fa-bell-o"></i>' +
-            '</div></div></div>')
+        this.template = _.template($('#document-in-list').html());
 
         var folderId = $this.options.folderId;
         if (folderId && parseInt(folderId) > 0) {
@@ -53,8 +31,10 @@ $.widget("notes.documentList", {
 
         $this.element.empty();
 
+        var $header = $('<div/>', {text: 'In ' + $this._resolveFolderName(folderId), style: 'padding:10px; margin-bottom:10px; background-color:#efefef'}).appendTo($this.element);
+
         var $native = $('<div/>').appendTo($this.element);
-        var $descendants = $('<div/>').append('<div>Some descendants</div>').appendTo($this.element);
+        var $descendants = $('<div/>', {style: 'border-top: 3px solid #efefef; padding-top:5px'}).appendTo($this.element);
 
         $.each(sources, function (index, source) {
 
@@ -74,6 +54,12 @@ $.widget("notes.documentList", {
         });
     },
 
+    _resolveFolderName: function (folderId) {
+        var $folder = $('#databases').databases('get$Folder', folderId);
+        return $folder.model().get('name');
+
+    },
+
     _render: function (model) {
 
         var values = {
@@ -81,6 +67,11 @@ $.widget("notes.documentList", {
             title: model.get('title'),
             text: model.get('outline'),
             kind: model.get('kind'),
+            views: model.get('views'),
+            privacy: model.get('privacy'),
+            star: model.get('star'),
+            reminder: model.get('reminder'),
+            thumbnail: 'https://cdn1.iconfinder.com/data/icons/FileTypesIcons/80/readme.png',
             date: notes.util.formatDate(new Date(model.get('modified')))
         };
 

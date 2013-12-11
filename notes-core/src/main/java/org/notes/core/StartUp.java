@@ -141,7 +141,7 @@ public class StartUp {
 
                     Reminder reminder = new Reminder();
                     reminder.setReferenceDate(new Date());
-                    reminder.setRepetition(Repetition.WEEKLY);
+                    reminder.setFrequency(Frequency.WEEKLY);
                     td3.setReminder(reminder);
 
                     td3 = documentManager.createDocument(td3, f3);

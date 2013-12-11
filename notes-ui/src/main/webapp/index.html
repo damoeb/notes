@@ -266,5 +266,59 @@
 <!--</div>-->
 <div style="display: none"><input id="file-upload" type="file" name="files[]" multiple></div>
 
+<script type="text/html" id="document-in-list">
+
+    <div class="doc doc-id-<%=id %> container">
+        <div class="col-lg-2">
+            <img src="<%= thumbnail %>">
+        </div>
+        <div class="col-lg-9">
+            <div class="row" style="font-weight:bold">
+                <%=title %>
+                <%
+                if (star) {
+                %>
+                <i class="fa fa-star" style="color:red"></i>
+                <%
+                }
+                %>
+            </div>
+            <div class="row">
+                <%=date %> - <%=views %> views
+            </div>
+            <div class="row">
+                <%=text %>
+            </div>
+        </div>
+        <div class="col-lg-1" style="text-align:right">
+            <div class="row" title="<%= privacy.toLowerCase() %>">
+                <%
+                if(privacy.toLowerCase() == 'public') {
+                %>
+                <i class="fa fa-circle" style="color:green"></i>
+                <%
+                }
+
+                if(privacy.toLowerCase() == 'private') {
+                %>
+                <i class="fa fa-circle" style="color:#efefef"></i>
+                <%
+                }
+                %>
+            </div>
+            <%
+
+            if(reminder != null && typeof(reminder) !== 'undefined') {
+            %>
+            <div class="row" title="repeat <%= reminder.frequency.toLowerCase() %>">
+                <i class="fa fa-bell-o"></i>
+            </div>
+            <%
+            }
+            %>
+        </div>
+    </div>
+</script>
+
 </body>
 </html>

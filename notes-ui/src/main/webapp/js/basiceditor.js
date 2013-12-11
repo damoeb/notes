@@ -187,14 +187,13 @@ $.widget("notes.basiceditor", {
     _getToolbar: function (config) {
         var $this = this;
 
-        var $toolbar = $('<div/>', {class: 'row', style: 'margin-top:5px'});
+        var $toolbar = $('<div/>', {class: 'row', style: 'padding: 5px; background-color:#efefef'});
 
         var $left = $('<div/>', {style: 'float:left'})
-//            .append(
-//                $this._createButton('Close', {primary: 'ui-icon-arrowreturn-1-w'}, $this.fnClose)
-//            )
             .append(
-                $this._createButton('Delete', {primary: 'ui-icon-trash'}, $this.fnDelete)
+                $this._createButton('Close', {primary: 'ui-icon-arrowreturn-1-w'}, $this.fnClose, false)
+            ).append(
+                $this._createButton('Delete', {primary: 'ui-icon-trash'}, $this.fnDelete, false)
             ).append(
                 $this._createButton('Progress', {primary: 'ui-icon-signal'}, $this.fnProgress)
             );
@@ -210,7 +209,7 @@ $.widget("notes.basiceditor", {
         }
 
         var $right = $('<div/>', {style: 'float:right'}).append(
-            $this._createButton('Maximize', {primary: 'ui-icon-arrow-4-diag'}, $this.fnMaximize)
+            $this._createButton('Maximize', {primary: 'ui-icon-arrow-4-diag'}, $this.fnMaximize, false)
         );
 
         return $toolbar.append($left).append($right);
@@ -267,6 +266,8 @@ $.widget("notes.basiceditor", {
     fnClose: function () {
 
         var $this = this;
+        $this.element.hide();
+        $('#document-list').show();
 
         $this.syncModel();
     },

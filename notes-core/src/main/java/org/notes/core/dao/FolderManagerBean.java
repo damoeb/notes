@@ -99,7 +99,7 @@ public class FolderManagerBean implements FolderManager {
                 throw new NotesException(String.format("Invalid folder id '%s'", folderId));
             }
 
-            Query query = em.createNamedQuery(Folder.QUERY_DOCUMENTS);
+            Query query = em.createNamedQuery(BasicDocument.QUERY_IN_FOLDER);
             query.setParameter("ID", folderId);
 
             return (List<BasicDocument>) query.getResultList();
@@ -127,7 +127,7 @@ public class FolderManagerBean implements FolderManager {
             if (count > 100) {
                 count = 100;
             }
-            Query query = em.createNamedQuery(Folder.QUERY_RELATED_DOCUMENTS);
+            Query query = em.createNamedQuery(BasicDocument.QUERY_DESCENDANTS_OF_FOLDER);
             query.setFirstResult(offset);
             query.setMaxResults(count);
 

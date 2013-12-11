@@ -25,13 +25,18 @@ import java.util.Date;
 )
 @NamedQueries({
         @NamedQuery(name = Document.QUERY_BY_ID, query = "SELECT a FROM BasicDocument a where a.id=:ID"),
-        @NamedQuery(name = Document.QUERY_TRIGGER, query = "SELECT a FROM BasicDocument a where a.trigger in (:TRIGGER)")
+        @NamedQuery(name = Document.QUERY_TRIGGER, query = "SELECT a FROM BasicDocument a where a.trigger in (:TRIGGER)"),
+        @NamedQuery(name = BasicDocument.QUERY_IN_FOLDER, query = "SELECT new BasicDocument(a.id, a.title, a.outline, a.kind, a.progress, a.reminder, a.modified, a.privacy, a.finished, a.views, a.star) FROM BasicDocument a where a.folderId=:ID AND a.deleted=false"),
+        @NamedQuery(name = BasicDocument.QUERY_DESCENDANTS_OF_FOLDER, query = "SELECT new BasicDocument(a.id, a.title, a.outline, a.kind, a.progress, a.reminder, a.modified, a.privacy, a.finished, a.views, a.star) FROM Folder f JOIN f.inheritedDocuments a WHERE f.id=:ID AND a.deleted=false"),
 })
 @Inheritance(strategy = InheritanceType.JOINED)
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class BasicDocument implements Document {
 
     public static final String FK_DOCUMENT_ID = "document_id";
+
+    public static final String QUERY_IN_FOLDER = "BasicDocument.QUERY_IN_FOLDER";
+    public static final String QUERY_DESCENDANTS_OF_FOLDER = "BasicDocument.QUERY_DESCS_OF_FOLDER";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -75,6 +80,7 @@ public class BasicDocument implements Document {
 //	  @CollectionTable(name="attribute", joinColumns=@JoinColumn(name="document_id"))
 //    private Map<String,String> attributes = new HashMap<String, String>(3);
 
+    @JsonIgnore
     @Basic
     private boolean deleted;
 
@@ -86,6 +92,16 @@ public class BasicDocument implements Document {
      */
     @Basic
     private Integer progress;
+
+    @Basic
+    private boolean star;
+
+    @Basic
+    private int views;
+
+    @Basic
+    @Enumerated(EnumType.STRING)
+    private Privacy privacy = Privacy.PRIVATE;
 
     @JsonDeserialize(using = CustomDateDeserializer.class)
     @JsonSerialize(using = CustomDateSerializer.class)
@@ -120,7 +136,7 @@ public class BasicDocument implements Document {
         this.kind = kind;
     }
 
-    public BasicDocument(Long id, String title, String outline, Kind kind, Integer progress, Reminder reminder, Date modified) {
+    public BasicDocument(Long id, String title, String outline, Kind kind, Integer progress, Reminder reminder, Date modified, Privacy privacy, Date finished, int views, boolean star) {
         this.id = id;
         this.title = title;
         this.outline = outline;
@@ -128,6 +144,10 @@ public class BasicDocument implements Document {
         this.progress = progress;
         this.modified = modified;
         this.reminder = reminder;
+        this.privacy = privacy;
+        this.finished = finished;
+        this.views = views;
+        this.star = star;
     }
 
     @PrePersist
@@ -312,4 +332,27 @@ public class BasicDocument implements Document {
         this.finished = finished;
     }
 
+    public int getViews() {
+        return views;
+    }
+
+    public void setViews(int views) {
+        this.views = views;
+    }
+
+    public Privacy getPrivacy() {
+        return privacy;
+    }
+
+    public void setPrivacy(Privacy privacy) {
+        this.privacy = privacy;
+    }
+
+    public boolean isStar() {
+        return star;
+    }
+
+    public void setStar(boolean star) {
+        this.star = star;
+    }
 }

@@ -20,7 +20,7 @@ public class Reminder implements Serializable {
 
     @Basic
     @Enumerated(EnumType.STRING)
-    private Repetition repetition;
+    private Frequency frequency;
 
 //  --------------------------------------------------------------------------------------------------------------------
 
@@ -28,12 +28,12 @@ public class Reminder implements Serializable {
         //
     }
 
-    public Repetition getRepetition() {
-        return repetition;
+    public Frequency getFrequency() {
+        return frequency;
     }
 
-    public void setRepetition(Repetition repetition) {
-        this.repetition = repetition;
+    public void setFrequency(Frequency frequency) {
+        this.frequency = frequency;
     }
 
     public Date getReferenceDate() {

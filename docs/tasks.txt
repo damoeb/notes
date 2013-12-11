@@ -1,8 +1,8 @@
-- views for document
+- replace all jquery ui icons by awesome
+- triggers for document in separate table
 - suche, tags
 - document thumbnail?
 - routes backbone
-- doc list wie in youtube
 
 - model database - settings: open docs/folders
 - scrollbars, min text editor
