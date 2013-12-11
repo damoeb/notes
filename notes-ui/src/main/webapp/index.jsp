@@ -32,7 +32,6 @@
     <script src="js/vendor/jquery.dataTables.js"></script>
     <script src="js/vendor/jquery.timeago.js"></script>
     <script src="js/vendor/jquery.paginate.js"></script>
-    <script src="js/vendor/jquery.jstree.js"></script>
 
     <!-- notifications -->
     <!-- see http://needim.github.com/noty/-->

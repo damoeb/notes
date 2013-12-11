@@ -3,15 +3,29 @@ $.widget("notes.documentList", {
     _init: function () {
         var $this = this;
 
-        this.template = _.template('<div class="doc doc-id-<%=id %> container">' +
-            '<div class="col-lg-1">' +
-            '<div class="row"><input type="checkbox"></div>' +
-            '<div class="row"><i class="fa fa-flag fa-fw"></i></div>' +
-            '<div class="row"><i class="fa fa-star-o fa-fw"></i></div>' +
+        this.template = _.template('<div class="doc doc-id-<%=id %> container ui-draggable">' +
+            '<div class="col-lg-2">' +
+            '<img src="https://cdn1.iconfinder.com/data/icons/FileTypesIcons/80/readme.png">' +
             '</div>' +
-            '<div class="col-lg-11"><div class="row"><%=title %> <span style="float:right"><%=kind %></span></div>' +
-            '<div class="row"><%=text %></div>' +
-            '<div class="row"><%=date %></div></div></div>')
+            '<div class="col-lg-9">' +
+            '<div class="row" style="font-weight:bold">' +
+            '<%=title %>' +
+            '<i class="fa fa-star" style="color:red"></i>' +
+            '</div>' +
+            '<div class="row">' +
+            '<%=date %> ago - by <span style="font-weight:bold">damoeb</span> - 1,321 views' +
+            '</div>' +
+            '<div class="row">' +
+            '<%=text %>' +
+            '</div>' +
+            '</div>' +
+            '<div class="col-lg-1">' +
+            '<div class="row" title="visibility: public">' +
+            '<i class="fa fa-circle" style="color:green"></i>' +
+            '</div>' +
+            '<div class="row" title="in 82 days">' +
+            '<i class="fa fa-bell-o"></i>' +
+            '</div></div></div>')
 
         var folderId = $this.options.folderId;
         if (folderId && parseInt(folderId) > 0) {

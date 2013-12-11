@@ -1,3 +1,4 @@
+- views for document
 - suche, tags
 - document thumbnail?
 - routes backbone

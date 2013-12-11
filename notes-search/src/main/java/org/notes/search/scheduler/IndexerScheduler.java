@@ -68,12 +68,12 @@ public class IndexerScheduler {
                     if (Trigger.INDEX == document.getTrigger()) {
                         LOGGER.info("index " + document.getId());
 
-                        // standard
-                        indexDocument(document);
-
-                        if (document instanceof Fulltextable) {
-                            indexFullTexts(document, (Fulltextable) document);
-                        }
+//                        // todo activate again
+//                        indexDocument(document);
+//
+//                        if (document instanceof Fulltextable) {
+//                            indexFullTexts(document, (Fulltextable) document);
+//                        }
                     }
 
                     document.setTrigger(null);
