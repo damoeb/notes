@@ -60,6 +60,18 @@ $.widget("notes.documentList", {
 
     },
 
+    _getThumbnail: function (kind) {
+        switch (kind.toLowerCase()) {
+            case 'pdf':
+                return 'img/kind/pdf.png';
+            case 'bookmark':
+                return 'img/kind/url.png';
+            default:
+            case 'text':
+                return 'img/kind/text.png';
+        }
+    },
+
     _render: function (model) {
 
         var values = {
@@ -71,7 +83,7 @@ $.widget("notes.documentList", {
             privacy: model.get('privacy'),
             star: model.get('star'),
             reminder: model.get('reminder'),
-            thumbnail: 'https://cdn1.iconfinder.com/data/icons/FileTypesIcons/80/readme.png',
+            thumbnail: this._getThumbnail(model.get('kind')),
             date: notes.util.formatDate(new Date(model.get('modified')))
         };
 

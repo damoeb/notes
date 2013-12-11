@@ -163,19 +163,12 @@ $.widget("notes.basiceditor", {
 //    },
 
 
-    _createButton: function (label, icons, onClick, showText) {
+    _createButton: function (label, tooltip, onClick) {
 
         var $this = this;
 
-        showText = typeof showText !== 'undefined' ? showText : true;
-
-        return $('<button/>').button({
-            label: label,
-            text: showText,
-            icons: {
-                primary: icons.primary,
-                secondary: icons.secondary
-            }
+        return $('<button/>', {title: tooltip}).button({
+            label: label
         }).click(function () {
                 if ($.isFunction(onClick)) {
                     onClick.call($this, this)
@@ -191,11 +184,17 @@ $.widget("notes.basiceditor", {
 
         var $left = $('<div/>', {style: 'float:left'})
             .append(
-                $this._createButton('Close', {primary: 'ui-icon-arrowreturn-1-w'}, $this.fnClose, false)
+                $this._createButton('<i class="fa fa-reply"></i>', 'Back', $this.fnClose)
             ).append(
-                $this._createButton('Delete', {primary: 'ui-icon-trash'}, $this.fnDelete, false)
+                $this._createButton('<i class="fa fa-star-o"></i>', 'Star', $this.fnStar)
             ).append(
-                $this._createButton('Progress', {primary: 'ui-icon-signal'}, $this.fnProgress)
+                $this._createButton('<i class="fa fa-clock-o"></i>', 'Reminder', $this.fnReminder)
+            ).append(
+                $this._createButton('<i class="fa fa-check"></i>', 'Finish', $this.fnFinished)
+            ).append(
+                $this._createButton('%', 'Progress', $this.fnProgress)
+            ).append(
+                $this._createButton('<i class="fa fa-trash-o"></i>', 'Delete', $this.fnDelete)
             );
 
         // todo add custom buttons via a config
@@ -209,7 +208,7 @@ $.widget("notes.basiceditor", {
         }
 
         var $right = $('<div/>', {style: 'float:right'}).append(
-            $this._createButton('Maximize', {primary: 'ui-icon-arrow-4-diag'}, $this.fnMaximize, false)
+            $this._createButton('<i class="fa fa-arrows-alt"></i>', 'Maximize', $this.fnMaximize)
         );
 
         return $toolbar.append($left).append($right);

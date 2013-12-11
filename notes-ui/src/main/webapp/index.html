@@ -128,17 +128,13 @@
             }).click(notes.dialog.settings.general);
 
             $('#create-document')
-                    .button({
-                        icons: {primary: 'ui-icon-document'}
-                    })
+                    .button()
                     .click(function () {
                         editors.editors('createDocument');
                     });
 
             $('#import-document')
-                    .button({
-                        icons: {primary: 'ui-icon-clipboard'}
-                    })
+                    .button()
                     .click(notes.dialog.document.import)
                     .parent().buttonset();
 
@@ -205,13 +201,18 @@
         </div>
 
         <!-- CONTENT -->
-        <div class="col-lg-7">
+        <div class="col-lg-8">
+            <div style="float: left;">
+                <button id="create-document" title="New Document"><i class="fa fa-file-o"></i></button>
+                <button id="import-document" title="Import Document"><i class="fa fa-chain"></i></button>
+            </div>
             <input id="search-input" class="ui-widget-content ui-corner-all" type="text" name="query"
+                   placeholder="Search"
                    style="width:300px; font-size:14px; padding:3px 4px;"/>
         </div>
 
         <!-- RIGHT -->
-        <div class="col-lg-3">
+        <div class="col-lg-2">
             <button id="settings">Settings</button>
         </div>
 
@@ -238,17 +239,18 @@
         </div>
 
         <!-- CONTENT -->
-        <div class="col-lg-7">
+        <div class="col-lg-8">
             <div id="document-list" class="row">
 
             </div>
-            <div id="editors" class="row">
+            <div id="editors" class="row"
+                 style="padding-left: 5px; padding-right: 5px; border-right: 1px solid rgb(204, 204, 204); border-left: 1px solid rgb(204, 204, 204)">
 
             </div>
         </div>
 
         <!-- RIGHT -->
-        <div class="col-lg-3" style="border-left: 3px solid #CCCCCC;">
+        <div class="col-lg-2">
             vorschläge
         </div>
 
