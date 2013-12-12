@@ -1,4 +1,4 @@
-Font Awesome 4.0
+Font Awesome 4.0.3
 jquery noty 2.0.3
 jquery 1.8.2
 jquery ui 1.9.2

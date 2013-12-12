@@ -31,7 +31,7 @@ $.widget("notes.documentList", {
 
         $this.element.empty();
 
-        var $header = $('<div/>', {text: 'In ' + $this._resolveFolderName(folderId), style: 'padding:10px; margin-bottom:10px; background-color:#efefef'}).appendTo($this.element);
+        var $path = $this._getBreadcrumbs(folderId).appendTo($this.element);
 
         var $native = $('<div/>').appendTo($this.element);
         var $descendants = $('<div/>', {style: 'border-top: 3px solid #efefef; padding-top:5px'}).appendTo($this.element);
@@ -54,21 +54,38 @@ $.widget("notes.documentList", {
         });
     },
 
-    _resolveFolderName: function (folderId) {
-        var $folder = $('#databases').databases('get$Folder', folderId);
-        return $folder.model().get('name');
+    _getBreadcrumbs: function (folderId) {
+        var $this = this;
 
+        var $crumbs = $('<div/>', {style: 'padding:10px; margin-bottom:10px; background-color:#efefef'});
+
+        var $folder = $('#databases').databases('get$Folder', folderId);
+        while ($folder) {
+
+            $crumbs.prepend(
+                $('<span/>').append(
+                        $('<span/>', {text: $folder.getModel().get('name') })
+                    ).append(
+                        '<i class="fa fa-angle-right" style="margin-left:4px; margin-right:4px"></i>'
+                    )
+            );
+
+            $folder = $folder.getParent();
+        }
+
+
+        return $crumbs;
     },
 
     _getThumbnail: function (kind) {
         switch (kind.toLowerCase()) {
             case 'pdf':
-                return 'img/kind/pdf.png';
+                return 'img/pdf.png';
             case 'bookmark':
-                return 'img/kind/url.png';
+                return 'img/url.png';
             default:
             case 'text':
-                return 'img/kind/text.png';
+                return 'img/text.png';
         }
     },
 

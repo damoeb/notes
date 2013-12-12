@@ -195,7 +195,7 @@ $.widget("notes.documentTable", {
             // add line
             $dataTable.fnAddData(data);
             var $folder = $('#databases').databases('get$Folder', model.get('folderId'));
-            var modelOfFolder = $folder.model();
+            var modelOfFolder = $folder.getModel();
             modelOfFolder.set('documentCount', modelOfFolder.get('documentCount') + 1);
             $folder.refresh();
 

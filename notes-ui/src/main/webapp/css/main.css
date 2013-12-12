@@ -300,8 +300,8 @@ dt:hover {
 }
 
 .settings {
-    margin-top: 10px;
-    height: 30px;
+    background-color: #efefef;
+    padding: 10px;
 }
 
 .ui-slider-range {

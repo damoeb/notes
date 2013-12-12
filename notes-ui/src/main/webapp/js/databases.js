@@ -31,7 +31,7 @@ $.widget("notes.databases", {
     },
 
     put: function ($folder) {
-        this.descendants[$folder.model().get('id')] = $folder;
+        this.descendants[$folder.getModel().get('id')] = $folder;
     },
 
     get$Folder: function (folderId) {
@@ -53,17 +53,6 @@ $.widget("notes.databases", {
 
                 var model = new notes.model.Database(json);
 
-                // only one database, currently
-
-//                var $item = $('<div/>'
-//                    ).append(
-//                        $('<div/>', {text: model.get('name'), class:'database'})
-//                    ).append(
-//                        $('<div/>', {class: 'clear'})
-//                    ).appendTo(
-//                        $target
-//                    );
-
                 var $tree = $('<div/>', {class: 'tree'}).appendTo(
                     $target
                 );
@@ -71,29 +60,6 @@ $.widget("notes.databases", {
                 $this.$tree = $tree.tree({
                     databaseId: model.get('id')
                 });
-                /*
-                 $item.click(function () {
-
-                 // todo set current
-                 $target.find('.active').removeClass('active');
-                 $(this).addClass('active');
-
-                 if ($this.$tree != null) {
-                 $this.$tree.tree('destroy');
-                 }
-
-                 $this.$tree = $tree.tree({
-                 databaseId: model.get('id')
-                 });
-
-                 $this.databaseId = model.get('id');
-                 });
-
-                 if ($this.options.databaseId == model.get('id')) {
-                 // todo load tree
-                 $item.addClass('active');
-                 }
-                 */
             });
 
         });

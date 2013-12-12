@@ -8,13 +8,13 @@ $.widget("notes.basiceditor", {
 
     _newProgressSettings: function (model) {
 
-        var $percentageLabel = $('<span/>', {style: 'font-weight:bold; line-height:25px; margin: 7px'});
+        var $percentageLabel = $('<span/>', {style: 'line-height:25px; margin: 7px'});
 
         var fnSetPercentageLabel = function (value) {
             if (value == 0) {
                 $percentageLabel.text('OFF');
             } else {
-                $percentageLabel.text(value + ' %');
+                $percentageLabel.text(value + ' % done');
             }
         };
 
@@ -34,10 +34,8 @@ $.widget("notes.basiceditor", {
 
         var $progress = $('<div/>', {class: 'row settings'}).append(
                 $('<div/>', {style: 'float:left'}).append(
-                        $('<label/>', {text: 'Progress'})
-                    ).append(
-                        $percentageLabel
-                    )
+                    $percentageLabel
+                )
             ).append(
                 $('<div/>', {class: 'col-lg-5'}).append(
                     $slider
