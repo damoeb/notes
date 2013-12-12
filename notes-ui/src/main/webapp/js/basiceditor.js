@@ -283,8 +283,6 @@ $.widget("notes.basiceditor", {
         $this.getModel().save(null, {success: function () {
             $('#document-list').documentList('updateDocument', $this.getModel());
         }});
-
-        console.info('sync');
     },
 
     _destroy: function () {

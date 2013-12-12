@@ -53,7 +53,6 @@ public class DatabaseManagerBean implements DatabaseManager {
     public Database getDatabase(long databaseId) throws NotesException {
         try {
             Database database = _get(databaseId);
-            Hibernate.initialize(database.getOpenDocuments());
             Hibernate.initialize(database.getOpenFolders());
             return database;
 
@@ -169,9 +168,11 @@ public class DatabaseManagerBean implements DatabaseManager {
         Database database = _get(databaseId);
         database.setName(newDatabase.getName());
         database.setModified(new Date());
+        // todo save open folders
         em.merge(database);
         em.flush();
         em.refresh(database);
+        Hibernate.initialize(database.getOpenFolders());
 
         return database;
 

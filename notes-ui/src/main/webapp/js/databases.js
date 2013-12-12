@@ -7,15 +7,38 @@ $.widget("notes.databases", {
     },
 
     _create: function () {
-        var $this = this;
+        var $self = this;
 
-        $this.reload();
+        $self.reload();
     },
 
     _init: function () {
-        var $this = this;
-        $this.descendants = {};
-        $this.$tree = null;
+        var $self = this;
+        $self.descendants = {};
+        $self.$tree = null;
+    },
+
+    addOpenFolder: function (folderId) {
+        var $self = this;
+        $self._getModel().get('openFolders').push({id: folderId});
+        $self._getModel().save();
+    },
+
+    removeOpenFolder: function (folderId) {
+        var $self = this;
+        var filteredFolders = [];
+        var unfilteredFolders = $self._getModel().get('openFolders');
+        for (var i = 0; i < unfilteredFolders.length; i++) {
+            if (unfilteredFolders[i]['id'] !== folderId) {
+                filteredFolders.push(unfilteredFolders[i]);
+            }
+        }
+        $self._getModel().set('openFolders', filteredFolders);
+        $self._getModel().save();
+    },
+
+    _getModel: function () {
+        return this.$tree.tree('getModel');
     },
 
     setActiveFolderId: function (folderId) {
@@ -43,11 +66,11 @@ $.widget("notes.databases", {
     },
 
     reload: function () {
-        var $this = this;
+        var $self = this;
 
-        var $target = $this.element.empty();
+        var $target = $self.element.empty();
 
-        notes.util.jsonCall('GET', $this.url, null, null, function (list) {
+        notes.util.jsonCall('GET', $self.url, null, null, function (list) {
 
             $.each(list, function (index, json) {
 
@@ -57,7 +80,7 @@ $.widget("notes.databases", {
                     $target
                 );
 
-                $this.$tree = $tree.tree({
+                $self.$tree = $tree.tree({
                     databaseId: model.get('id')
                 });
             });

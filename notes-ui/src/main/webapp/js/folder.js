@@ -111,6 +111,7 @@ $.widget("notes.folder", {
         var $self = this;
 
         $self.expanded = expand;
+        var folderId = $self.options.model.get('id');
 
         if (expand) {
 
@@ -119,8 +120,9 @@ $.widget("notes.folder", {
             $self.$childrenLayer.show();
             $self._highlight();
 
-            var folderId = $self.options.model.get('id');
-            $('#databases').databases('setActiveFolderId', folderId);
+            $('#databases')
+                .databases('setActiveFolderId', folderId)
+                .databases('addOpenFolder', folderId);
 
             // -- Documents --
 
@@ -153,6 +155,8 @@ $.widget("notes.folder", {
                 });
             }
         } else {
+
+            $('#databases').databases('removeOpenFolder', folderId);
 
             $self.$openClosedIcon.addClass('fa-caret-right').removeClass('fa-caret-down');
             $self.$childrenLayer.hide();
