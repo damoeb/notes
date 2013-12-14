@@ -162,11 +162,44 @@
                     });
 
 
-            $(window).resize(function () {
-                $('.scroll-pane').height($(window).height());
-            });
-            $('.scroll-pane').height($(window).height());
+            Backbone.history.start();
+
         });
+
+
+        var Router = Backbone.Router.extend({
+
+            routes: {
+                "help": "help",    // #help
+                "folder/:id": "folder",
+                "document/:id": "document",
+                "search/:query": "search"   // #search/kiwis/p7
+            },
+
+            initialize: function () {
+                //
+                // todo update urls Router.navigate('help/me')
+            },
+
+            help: function () {
+                console.log('help')
+            },
+
+            search: function (query) {
+                console.log('search ' + query);
+            },
+
+            folder: function (id) {
+                console.log('open folder ' + id);
+            },
+
+            document: function (id) {
+                console.log('open doc ' + id);
+            }
+
+        });
+
+        var router = new Router();
 
     </script>
 

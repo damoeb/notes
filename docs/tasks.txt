@@ -1,23 +1,19 @@
-- replace all jquery ui icons by awesome
-- triggers for document in separate table
-- suche, tags
-- document thumbnail?
 - routes backbone
+- triggers for document in separate table
+- suche + in node names, tags
+- document thumbnail?
 
-- model database - settings: open docs/folders
+- import/export
 - scrollbars, min text editor
+- attachments for document
 - unit tests http://stackoverflow.com/questions/6469751/testing-an-ejb-with-junit
 
 - authentication + forward security http://www.heise.de/security/artikel/Forward-Secrecy-testen-und-einrichten-1932806.html
 - check all queries for permissions
 
-- attachments for document
-
 - ocr
 - reminder: attached to document vs one for several docs?
 - annotate audio
-- import/export
-- search + in node names
 - related to: find documents, check literature, to find out relatedness
 
 --
