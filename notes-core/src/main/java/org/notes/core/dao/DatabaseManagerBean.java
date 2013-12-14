@@ -1,7 +1,7 @@
 package org.notes.core.dao;
 
 import org.apache.log4j.Logger;
-import org.hibernate.Hibernate;
+import org.hibernate.Session;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
 import org.notes.core.interfaces.DatabaseManager;
@@ -18,7 +18,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 //@LocalBean
 @Stateless
@@ -53,7 +55,7 @@ public class DatabaseManagerBean implements DatabaseManager {
     public Database getDatabase(long databaseId) throws NotesException {
         try {
             Database database = _get(databaseId);
-            Hibernate.initialize(database.getOpenFolders());
+
             return database;
 
         } catch (NotesException e) {
@@ -95,6 +97,21 @@ public class DatabaseManagerBean implements DatabaseManager {
     public List<Folder> getFolders(long databaseId) throws NotesException {
         try {
             Query query = em.createNamedQuery(Folder.QUERY_ROOT_FOLDERS);
+            query.setParameter("OWNER_ID", 1l);  // todo userId
+            query.setParameter("DB_ID", databaseId);
+
+            return query.getResultList();
+
+        } catch (Throwable t) {
+            throw new NotesException("get database " + databaseId, t);
+        }
+    }
+
+    @Override
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public List<Folder> getOpenFolders(long databaseId) throws NotesException {
+        try {
+            Query query = em.createNamedQuery(Folder.QUERY_OPEN_FOLDERS);
             query.setParameter("OWNER_ID", 1l);  // todo userId
             query.setParameter("DB_ID", databaseId);
 
@@ -168,11 +185,22 @@ public class DatabaseManagerBean implements DatabaseManager {
         Database database = _get(databaseId);
         database.setName(newDatabase.getName());
         database.setModified(new Date());
-        // todo save open folders
+
+        Set<Folder> folders = new HashSet(newDatabase.getOpenFolders().size());
+        folders.clear();
+
+        Session session = em.unwrap(Session.class);
+
+        for (Folder unresolved : newDatabase.getOpenFolders()) {
+            // todo check permissions
+            Folder folder = (Folder) session.load(Folder.class, unresolved.getId());
+            folders.add(folder);
+        }
+        database.setOpenFolders(folders);
+
         em.merge(database);
         em.flush();
         em.refresh(database);
-        Hibernate.initialize(database.getOpenFolders());
 
         return database;
 

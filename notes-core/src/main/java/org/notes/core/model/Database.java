@@ -93,4 +93,7 @@ public class Database extends Node {
         this.activeFolderId = activeFolderId;
     }
 
+    public void setOpenFolders(Set<Folder> openFolders) {
+        this.openFolders = openFolders;
+    }
 }

@@ -21,4 +21,6 @@ public interface DatabaseManager {
     List<Database> getDatabases() throws NotesException;
 
     List<Folder> getFolders(long databaseId) throws NotesException;
+
+    List<Folder> getOpenFolders(long databaseId) throws NotesException;
 }

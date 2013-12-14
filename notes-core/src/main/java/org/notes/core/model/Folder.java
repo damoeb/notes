@@ -19,7 +19,8 @@ import java.util.Set;
 @NamedQueries({
         @NamedQuery(name = Folder.QUERY_BY_ID, query = "SELECT a FROM Folder a where a.id=:ID"),
         @NamedQuery(name = Folder.QUERY_CHILDREN, query = "SELECT new Folder(a.id, a.name, a.leaf, a.documentCount, a.modified, a.level) FROM Folder a WHERE a.parentId = :ID"),
-        @NamedQuery(name = Folder.QUERY_ROOT_FOLDERS, query = "SELECT new Folder(a.id, a.name, a.leaf, a.documentCount, a.modified, a.level) FROM Folder a WHERE a.databaseId = :DB_ID and a.ownerId = :OWNER_ID and a.level = 0")
+        @NamedQuery(name = Folder.QUERY_ROOT_FOLDERS, query = "SELECT new Folder(a.id, a.name, a.leaf, a.documentCount, a.modified, a.level) FROM Folder a WHERE a.databaseId = :DB_ID and a.ownerId = :OWNER_ID and a.level = 0"),
+        @NamedQuery(name = Folder.QUERY_OPEN_FOLDERS, query = "SELECT new Folder(o.id) FROM DDatabase a INNER JOIN a.openFolders o WHERE a.id = :DB_ID and a.ownerId = :OWNER_ID")
 })
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class Folder extends Node {
@@ -27,6 +28,7 @@ public class Folder extends Node {
     public static final String QUERY_BY_ID = "Folder.QUERY_BY_ID";
     public static final String QUERY_CHILDREN = "Folder.QUERY_CHILDREN";
     public static final String QUERY_ROOT_FOLDERS = "Folder.QUERY_ROOT_FOLDERS";
+    public static final String QUERY_OPEN_FOLDERS = "Folder.QUERY_OPEN_FOLDERS";
 
     @Basic
     private Integer level = 0;
@@ -35,14 +37,14 @@ public class Folder extends Node {
      * true, if has no children folders
      */
     @Basic
-    private boolean leaf = true;
+    private Boolean leaf = true;
 
     /**
      * true, if not leaf and child nodes are shown
      */
     // todo remove, put in settings
     @Basic
-    private boolean expanded = false;
+    private Boolean expanded = false;
 
 //  -- References ------------------------------------------------------------------------------------------------------
 
@@ -84,6 +86,10 @@ public class Folder extends Node {
 
     public Folder(long id) {
         setId(id);
+        expanded = null;
+        leaf = null;
+        level = null;
+        documentCount = null;
     }
 
     public Set<BasicDocument> getDocuments() {
@@ -126,19 +132,19 @@ public class Folder extends Node {
         this.level = level;
     }
 
-    public boolean isLeaf() {
+    public Boolean isLeaf() {
         return leaf;
     }
 
-    public void setLeaf(boolean leaf) {
+    public void setLeaf(Boolean leaf) {
         this.leaf = leaf;
     }
 
-    public boolean isExpanded() {
+    public Boolean isExpanded() {
         return expanded;
     }
 
-    public void setExpanded(boolean expanded) {
+    public void setExpanded(Boolean expanded) {
         this.expanded = expanded;
     }
 

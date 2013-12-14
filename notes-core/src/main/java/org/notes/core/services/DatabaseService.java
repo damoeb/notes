@@ -41,7 +41,9 @@ public class DatabaseService {
             @PathParam("id") long databaseId
     ) throws Exception {
         try {
-            return NotesResponse.ok(databaseManager.updateDatabase(databaseId, database));
+            Database result = databaseManager.updateDatabase(databaseId, database);
+            result.setOpenFolders(null);
+            return NotesResponse.ok(result);
         } catch (Exception e) {
             return NotesResponse.error(e);
         }
@@ -56,7 +58,9 @@ public class DatabaseService {
             @PathParam("id") long databaseId
     ) throws Exception {
         try {
-            return NotesResponse.ok(databaseManager.getDatabase(databaseId));
+            Database database = databaseManager.getDatabase(databaseId);
+            database.setOpenFolders(null);
+            return NotesResponse.ok(database);
 
         } catch (Exception e) {
             return NotesResponse.error(e);
@@ -73,6 +77,22 @@ public class DatabaseService {
     ) throws Exception {
         try {
             return NotesResponse.ok(databaseManager.getFolders(databaseId));
+
+        } catch (Exception e) {
+            return NotesResponse.error(e);
+        }
+    }
+
+    @GET
+    @MethodCache
+    @ServiceMetric
+    @Path("/{id}/open")
+    @Produces(MediaType.APPLICATION_JSON)
+    public NotesResponse getOpenFoldersInDatabase(
+            @PathParam("id") long databaseId
+    ) throws Exception {
+        try {
+            return NotesResponse.ok(databaseManager.getOpenFolders(databaseId));
 
         } catch (Exception e) {
             return NotesResponse.error(e);

@@ -23,13 +23,17 @@ $.widget("notes.tree", {
         $this.element.empty();
 
         var rootFolders = null;
+        var openFolders = null;
 
         var modelLoaded = false;
         var rootsLoaded = false;
+        var openLoaded = false;
 
         var fnSetup = function () {
 
-            if (modelLoaded && rootsLoaded) {
+            if (modelLoaded && rootsLoaded && openFolders) {
+
+                $this.model.set('openFolders', openFolders);
 
                 var $root = $('<div/>').appendTo($this.element);
 
@@ -40,7 +44,7 @@ $.widget("notes.tree", {
                             .appendTo($root)
                             .folder({
                                 model: new notes.model.Folder(rootFolder),
-                                opened: $this.getModel().get('openFolders')
+                                opened: openFolders
                             });
                     });
                 }
@@ -58,6 +62,13 @@ $.widget("notes.tree", {
 
             rootFolders = folders;
             rootsLoaded = true;
+            fnSetup();
+        });
+
+        notes.util.jsonCall('GET', '/notes/rest/database/${dbId}/open', {'${dbId}': $this.options.databaseId}, null, function (folders) {
+
+            openFolders = folders;
+            openLoaded = true;
             fnSetup();
         });
     },

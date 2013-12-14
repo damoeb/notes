@@ -29,8 +29,6 @@ $.widget("notes.folder", {
 
         $target.append($self.$folderLayer).append($self.$childrenLayer);
 
-        // todo use opened[] and update opened in databasemodel
-
         //
         // -- Render ---------------------------------------------------------------------------------------------------
         //
@@ -61,17 +59,21 @@ $.widget("notes.folder", {
         // -- Events ---------------------------------------------------------------------------------------------------
         //
 
+        if ($self._isExpanded()) {
+            $self.setExpanded(true, false);
+        }
+
         // model change listener
         model.onChange(function () {
             $self.refresh();
         });
 
         $self.$openClosedIcon.click(function () {
-            $self.setExpanded(!$self.expanded);
+            $self.setExpanded(!$self.expanded, true);
         });
 
         $self.$fieldName.click(function () {
-            $self.setExpanded(true);
+            $self.setExpanded(true, true);
         });
 
         $self.$folderLayer
@@ -106,7 +108,19 @@ $.widget("notes.folder", {
 
     },
 
-    setExpanded: function (expand) {
+    _isExpanded: function () {
+        var $self = this;
+        var opened = $self.options.opened;
+        var id = $self.options.model.get('id');
+        for (var i = 0; i < opened.length; i++) {
+            if (opened[i].id == id) {
+                return true;
+            }
+        }
+        return false;
+    },
+
+    setExpanded: function (expand, callTriggers) {
 
         var $self = this;
 
@@ -120,13 +134,15 @@ $.widget("notes.folder", {
             $self.$childrenLayer.show();
             $self._highlight();
 
-            $('#databases')
-                .databases('setActiveFolderId', folderId)
-                .databases('addOpenFolder', folderId);
+            if (callTriggers) {
+                $('#databases')
+                    .databases('setActiveFolderId', folderId)
+                    .databases('addOpenFolder', folderId);
+                // -- Documents --
 
-            // -- Documents --
+                $self.loadDocuments();
+            }
 
-            $self.loadDocuments();
 
             // -- Children --
             if ($self.children.length == 0) {
@@ -146,6 +162,7 @@ $.widget("notes.folder", {
                             $childFolder.folder({
                                 parent: $self,
                                 model: new notes.model.Folder(folders[i]),
+                                opened: $self.options.opened,
                                 onRefresh: function () {
                                     $self.refresh();
                                 }
