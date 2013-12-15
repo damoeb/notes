@@ -73,6 +73,7 @@ $.widget("notes.folder", {
         });
 
         $self.$fieldName.click(function () {
+            notes.router.navigate('folder/' + model.get('id'));
             $self.setExpanded(true, true);
         });
 
