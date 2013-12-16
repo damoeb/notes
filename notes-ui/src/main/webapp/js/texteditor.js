@@ -37,11 +37,7 @@ $.widget("notes.texteditor", $.notes.basiceditor, {
                     $fieldTitle
                 )
             ).append(
-                $('<div/>', {class: 'row', style: 'margin-top:5px', text: 'permalink '}).append(
-                    $('<a/>', {href: '#', text: 'http://notes.org/' + model.get('id')})
-                )
-            ).append(
-                $('<div/>', {class: 'row', style: 'margin-top:5px', text: 'modified ' + notes.util.formatDate(new Date(model.get('modified'))) + ' ago by ' + model.get('ownerId')})
+                $('<div/>', {class: 'row', style: 'margin-top:5px', text: 'modified ' + notes.util.formatDate(new Date(model.get('modified'))) + ' Tags: ' /* todo impl tags */ })
             ).append(
                 $('<div/>', {class: 'row', style: 'margin-top:5px'}).append(
                     $fieldText

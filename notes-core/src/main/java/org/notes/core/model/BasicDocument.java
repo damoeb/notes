@@ -14,6 +14,8 @@ import org.notes.common.service.CustomDateSerializer;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * The basic document
@@ -115,6 +117,11 @@ public class BasicDocument implements Document {
     @Column(name = "event_trigger", nullable = true)
     @Index(name = "event_trigger_idx")
     private Trigger trigger;
+
+    @JsonIgnore
+    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @JoinTable(name = "document2tag")
+    private Set<Tag> tags = new HashSet(100);
 
 //  -- Transient -------------------------------------------------------------------------------------------------------
 
@@ -354,5 +361,13 @@ public class BasicDocument implements Document {
 
     public void setStar(boolean star) {
         this.star = star;
+    }
+
+    public Set<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
     }
 }

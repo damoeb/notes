@@ -120,6 +120,7 @@ public class StartUp {
                     td1.setTitle("Wende im Fall Taboga");
                     td1.setText("Der SV Grödig hat den Vertrag mit Dominique Taboga aufgelöst. Dies gab der Salzburger Verein im Rahmen einer Pressekonferenz am Donnerstag bekannt. Manager Christian Haas");
                     td1.setProgress(24);
+                    td1.getTags().add(new Tag("hamster"));
 
                     td1 = documentManager.createDocument(td1, f2);
 
