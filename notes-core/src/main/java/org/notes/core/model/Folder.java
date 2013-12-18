@@ -14,7 +14,7 @@ import java.util.Set;
  */
 @Entity(name = "Folder")
 @Table(name = "Folder",
-        uniqueConstraints = @UniqueConstraint(columnNames = {ForeignKey.OWNER, "level", "name"})
+        uniqueConstraints = @UniqueConstraint(columnNames = {ForeignKey.USER, "level", "name"})
 )
 @NamedQueries({
         @NamedQuery(name = Folder.QUERY_BY_ID, query = "SELECT a FROM Folder a where a.id=:ID"),

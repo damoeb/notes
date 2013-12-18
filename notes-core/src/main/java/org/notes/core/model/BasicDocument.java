@@ -28,8 +28,8 @@ import java.util.Set;
 @NamedQueries({
         @NamedQuery(name = Document.QUERY_BY_ID, query = "SELECT a FROM BasicDocument a where a.id=:ID"),
         @NamedQuery(name = Document.QUERY_TRIGGER, query = "SELECT a FROM BasicDocument a where a.trigger in (:TRIGGER)"),
-        @NamedQuery(name = BasicDocument.QUERY_IN_FOLDER, query = "SELECT new BasicDocument(a.id, a.title, a.outline, a.kind, a.modified, a.privacy, a.views, a.star) FROM BasicDocument a where a.folderId=:ID AND a.deleted=false"),
-        @NamedQuery(name = BasicDocument.QUERY_DESCENDANTS_OF_FOLDER, query = "SELECT new BasicDocument(a.id, a.title, a.outline, a.kind, a.modified, a.privacy, a.views, a.star) FROM Folder f JOIN f.inheritedDocuments a WHERE f.id=:ID AND a.deleted=false"),
+        @NamedQuery(name = BasicDocument.QUERY_IN_FOLDER, query = "SELECT new BasicDocument(a.id, a.title, a.outline, a.kind, a.modified, a.views, a.star) FROM BasicDocument a where a.folderId=:ID AND a.deleted=false"),
+        @NamedQuery(name = BasicDocument.QUERY_DESCENDANTS_OF_FOLDER, query = "SELECT new BasicDocument(a.id, a.title, a.outline, a.kind, a.modified, a.views, a.star) FROM Folder f JOIN f.inheritedDocuments a WHERE f.id=:ID AND a.deleted=false"),
 })
 @Inheritance(strategy = InheritanceType.JOINED)
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
@@ -71,7 +71,7 @@ public class BasicDocument implements Document {
     @Temporal(TemporalType.TIMESTAMP)
     private Date modified;
 
-    @Column(insertable = false, updatable = false, name = ForeignKey.OWNER)
+    @Column(insertable = false, updatable = false, name = ForeignKey.USER)
     private String owner;
 
     @Column(insertable = false, updatable = false, name = ForeignKey.FOLDER_ID)
@@ -91,10 +91,6 @@ public class BasicDocument implements Document {
 
     @Basic
     private int views;
-
-    @Basic
-    @Enumerated(EnumType.STRING)
-    private Privacy privacy = Privacy.PRIVATE;
 
 //  -- References ------------------------------------------------------------------------------------------------------
 
@@ -128,13 +124,12 @@ public class BasicDocument implements Document {
         this.kind = kind;
     }
 
-    public BasicDocument(Long id, String title, String outline, Kind kind, Date modified, Privacy privacy, int views, boolean star) {
+    public BasicDocument(Long id, String title, String outline, Kind kind, Date modified, int views, boolean star) {
         this.id = id;
         this.title = title;
         this.outline = outline;
         this.kind = kind;
         this.modified = modified;
-        this.privacy = privacy;
         this.views = views;
         this.star = star;
     }
@@ -303,14 +298,6 @@ public class BasicDocument implements Document {
 
     public void setViews(int views) {
         this.views = views;
-    }
-
-    public Privacy getPrivacy() {
-        return privacy;
-    }
-
-    public void setPrivacy(Privacy privacy) {
-        this.privacy = privacy;
     }
 
     public boolean isStar() {

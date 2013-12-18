@@ -64,6 +64,7 @@
     <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpmime:4.2.3" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.codehaus.woodstox:wstx-asl:3.2.7" level="project" />
     <orderEntry type="module" module-name="notes-text" />
+    <orderEntry type="library" name="Maven: com.googlecode.java-diff-utils:diffutils:1.2.1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: javax.enterprise:cdi-api:1.0-SP4" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.jboss.spec.javax.interceptor:jboss-interceptors-api_1.1_spec:1.0.1.Final" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: javax.inject:javax.inject:1" level="project" />

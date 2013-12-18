@@ -8,7 +8,6 @@
     <persistence-unit name="primary">
         <jta-data-source>java:jboss/datasources/notes_mysql</jta-data-source>
 
-        <class>org.notes.core.model.Reminder</class>
         <class>org.notes.common.model.FileReference</class>
         <class>org.notes.common.model.FullText</class>
         <class>org.notes.core.model.BasicDocument</class>

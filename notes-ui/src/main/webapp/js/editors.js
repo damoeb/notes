@@ -46,6 +46,10 @@ $.widget("notes.editors", {
         var kindString = 'text';
 
         var settings = {kind: kindString};
+
+        $this.element.empty();
+        $('#document-list').hide();
+
         $this.loadDocument(settings, new notes.model.Document({
             folderId: $('#databases').databases('getActiveFolderId')
         }));

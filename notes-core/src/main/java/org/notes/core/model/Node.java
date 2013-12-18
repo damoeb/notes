@@ -21,7 +21,7 @@ public abstract class Node implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(updatable = false, insertable = false, name = ForeignKey.OWNER)
+    @Column(updatable = false, insertable = false, name = ForeignKey.USER)
     protected String owner;
 
     @Basic

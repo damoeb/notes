@@ -44,6 +44,7 @@ $.widget("notes.databases", {
     },
 
     setActiveFolderId: function (folderId) {
+        console.log('active folder is ' + folderId);
         this.activeFolderId = folderId;
     },
 

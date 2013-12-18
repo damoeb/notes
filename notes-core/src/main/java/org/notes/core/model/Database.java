@@ -14,7 +14,7 @@ import java.util.Set;
  */
 @Entity(name = "DDatabase")
 @Table(name = "DDatabase",
-        uniqueConstraints = @UniqueConstraint(columnNames = {ForeignKey.OWNER, "name"})
+        uniqueConstraints = @UniqueConstraint(columnNames = {ForeignKey.USER, "name"})
 )
 @NamedQueries({
         @NamedQuery(name = Database.QUERY_BY_ID, query = "SELECT a FROM DDatabase a where a.id=:ID"),
@@ -45,10 +45,10 @@ public class Database extends Node {
 
     @JsonIgnore
     @OneToOne(cascade = {}, fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name = ForeignKey.FOLDER_ID)
+    @JoinColumn(name = ForeignKey.ACTIVE_FOLDER_ID)
     private Folder activeFolder;
 
-    @Column(insertable = false, updatable = false, name = ForeignKey.FOLDER_ID, nullable = true)
+    @Column(insertable = false, updatable = false, name = ForeignKey.ACTIVE_FOLDER_ID, nullable = true)
     private Long activeFolderId;
 
 //  --------------------------------------------------------------------------------------------------------------------

@@ -3,7 +3,9 @@ package org.notes.core;
 import org.apache.log4j.Logger;
 import org.notes.common.configuration.Configuration;
 import org.notes.core.interfaces.*;
-import org.notes.core.model.*;
+import org.notes.core.model.Account;
+import org.notes.core.model.Database;
+import org.notes.core.model.User;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -59,50 +61,15 @@ public class StartUp {
 
 
                     User u = new User();
-                    u.setUsername("TestUser");
+                    u.setUsername("testuser");
                     userManager.createUser(u, a);
+
 
                     Database d = new Database();
                     d.setName("work");
-                    d = databaseManager.createDatabase(d);
+                    d = databaseManager.createDatabase(d, u);
+
                     /*
-                    int folderId = 0;
-
-                    for (int i = 0; i < 30; i++) {
-
-                        Folder f0 = new Folder();
-                        f0.setName(String.valueOf(folderId++));
-                        f0.setDatabaseId(d.getId());
-                        folderManager.createFolder(f0);
-
-                        for (int k = 0; k < 10; k++) {
-                            TextDocument d0 = new TextDocument();
-                            d0.setTitle("Kosmische Atomschleuder");
-                            d0.setText("Rätsel rund um Schwarze Löcher gelöst: Die Schwerkraftmonster schleudern große Mengen verschiedener Atome mit rund 200.000 Kilometern pro Sekunde ins All hinaus");
-                            d0.setFolderId(f0.getId());
-                            documentManager.createDocument(d0);
-                        }
-
-                        for (int j = 0; j < 30; j++) {
-
-                            Folder f1 = new Folder();
-                            f1.setName(String.valueOf(folderId++));
-                            f1.setDatabaseId(d.getId());
-                            f1.setParentId(f0.getId());
-                            folderManager.createFolder(f1);
-
-                            for (int k = 0; k < 10; k++) {
-                                TextDocument d0 = new TextDocument();
-                                d0.setTitle("Kosmische Atomschleuder");
-                                d0.setText("Rätsel rund um Schwarze Löcher gelöst: Die Schwerkraftmonster schleudern große Mengen verschiedener Atome mit rund 200.000 Kilometern pro Sekunde ins All hinaus");
-                                d0.setFolderId(f1.getId());
-                                documentManager.createDocument(d0);
-                            }
-                        }
-                    }
-                    */
-
-
                     Folder f0 = new Folder();
                     f0.setName("Projekte");
                     folderManager.createFolder(f0, null, d);
@@ -143,6 +110,7 @@ public class StartUp {
                     //documentManager.deleteDocument(td1.getId());
 
                     //documentManager.getDocument(td2.getId());
+                    */
 
                 } catch (Exception e) {
                     e.printStackTrace();

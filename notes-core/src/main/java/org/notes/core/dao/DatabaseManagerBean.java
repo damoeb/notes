@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
+import org.notes.core.SessionBean;
 import org.notes.core.interfaces.DatabaseManager;
 import org.notes.core.interfaces.UserManager;
 import org.notes.core.model.Database;
@@ -36,12 +37,15 @@ public class DatabaseManagerBean implements DatabaseManager {
     @Inject
     private UserManager userManager;
 
+    @Inject
+    private SessionBean sessionBean;
+
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public Database createDatabase(Database database) throws NotesException {
+    public Database createDatabase(Database database, User user) throws NotesException {
         try {
-            return _create(database);
+            return _create(database, user);
 
         } catch (NotesException e) {
             throw e;
@@ -83,7 +87,7 @@ public class DatabaseManagerBean implements DatabaseManager {
     public List<Database> getDatabases() throws NotesException {
         try {
             Query query = em.createNamedQuery(Database.QUERY_ALL);
-            query.setParameter("USER", "testuser");  // todo userId
+            query.setParameter("USER", sessionBean.getUsername());
 
             return query.getResultList();
 
@@ -97,7 +101,7 @@ public class DatabaseManagerBean implements DatabaseManager {
     public List<Folder> getFolders(long databaseId) throws NotesException {
         try {
             Query query = em.createNamedQuery(Folder.QUERY_ROOT_FOLDERS);
-            query.setParameter("OWNER", "testuser");  // todo userId
+            query.setParameter("OWNER", sessionBean.getUsername());
             query.setParameter("DB_ID", databaseId);
 
             return query.getResultList();
@@ -112,7 +116,7 @@ public class DatabaseManagerBean implements DatabaseManager {
     public List<Folder> getOpenFolders(long databaseId) throws NotesException {
         try {
             Query query = em.createNamedQuery(Folder.QUERY_OPEN_FOLDERS);
-            query.setParameter("OWNER", "testuser");  // todo userId
+            query.setParameter("OWNER", sessionBean.getUsername());
             query.setParameter("DB_ID", databaseId);
 
             return query.getResultList();
@@ -156,7 +160,7 @@ public class DatabaseManagerBean implements DatabaseManager {
 
     }
 
-    private Database _create(Database database) throws NotesException {
+    private Database _create(Database database, User userRef) throws NotesException {
 
         if (database == null) {
             throw new NotesException("Database is null");
@@ -165,7 +169,7 @@ public class DatabaseManagerBean implements DatabaseManager {
         database.setDocumentCount(0);
         database.setModified(new Date());
 
-        User user = userManager.getUser("testuser");
+        User user = userManager.getUser(userRef.getUsername());
         em.persist(database);
         em.flush();
         em.refresh(database);

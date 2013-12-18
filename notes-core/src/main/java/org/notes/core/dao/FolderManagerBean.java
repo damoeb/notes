@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
+import org.notes.core.SessionBean;
 import org.notes.core.interfaces.DatabaseManager;
 import org.notes.core.interfaces.FolderManager;
 import org.notes.core.interfaces.UserManager;
@@ -39,6 +40,9 @@ public class FolderManagerBean implements FolderManager {
 
     @Inject
     private DatabaseManager databaseManager;
+
+    @Inject
+    private SessionBean sessionBean;
 
 
     @Override
@@ -242,7 +246,7 @@ public class FolderManagerBean implements FolderManager {
         em.flush();
         em.refresh(folder);
 
-        User user = (User) _getProxy(User.class, "testuser"); // todo userId
+        User user = (User) _getProxy(User.class, sessionBean.getUsername());
         user.getFolders().add(folder);
         em.merge(user);
 

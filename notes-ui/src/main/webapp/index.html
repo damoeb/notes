@@ -318,31 +318,9 @@
             </div>
         </div>
         <div class="col-lg-1" style="text-align:right">
-            <div class="row" title="<%= privacy.toLowerCase() %>">
-                <%
-                if(privacy.toLowerCase() == 'public') {
-                %>
+            <div class="row">
                 <i class="fa fa-circle" style="color:green"></i>
-                <%
-                }
-
-                if(privacy.toLowerCase() == 'private') {
-                %>
-                <i class="fa fa-circle" style="color:#efefef"></i>
-                <%
-                }
-                %>
             </div>
-            <%
-
-            if(reminder != null && typeof(reminder) !== 'undefined') {
-            %>
-            <div class="row" title="repeat <%= reminder.frequency.toLowerCase() %>">
-                <i class="fa fa-bell-o"></i>
-            </div>
-            <%
-            }
-            %>
         </div>
     </div>
 </script>

@@ -28,17 +28,21 @@ $.widget("notes.texteditor", $.notes.basiceditor, {
             $this.fnClose();
         };
 
-        var $tagsLayer = $('<span/>', {text: ' in '});
+        var $tagsLayer = $('<span/>');
+        if (model.has('tags') && model.get('tags').length > 0) {
+            $tagsLayer.text(' in ');
 
-        $.each(model.get('tags'), function (index, tag) {
-            $tagsLayer.append(
-                $('<a/>', {
-                    text: tag.name,
-                    href: '#tag:' + tag.name
-                })
-            );
-        });
+            $.each(model.get('tags'), function (index, tag) {
+                $tagsLayer.append(
+                    $('<a/>', {
+                        text: tag.name,
+                        href: '#tag:' + tag.name
+                    })
+                );
+            });
+        }
 
+        var $ownerLayer = $('<span/>', {text: ' by ' + model.get('owner')});
 
         $target.append(
                 $this._getToolbar()
@@ -47,9 +51,13 @@ $.widget("notes.texteditor", $.notes.basiceditor, {
                     $fieldTitle
                 )
             ).append(
-                $('<div/>', {class: 'row', style: 'margin-top:5px', text: notes.util.formatDate(new Date(model.get('modified')))}).append(
-                    $tagsLayer
-                )
+                $('<div/>', {class: 'row', style: 'margin-top:5px', text: 'changed ' + notes.util.formatDate(new Date(model.get('modified')))})
+                    .append(
+                        $ownerLayer
+                    )
+                    .append(
+                        $tagsLayer
+                    )
             ).append(
                 $('<div/>', {class: 'row', style: 'margin-top:5px'}).append(
                     $fieldText

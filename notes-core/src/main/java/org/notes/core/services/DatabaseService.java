@@ -17,19 +17,19 @@ public class DatabaseService {
     @Inject
     private DatabaseManager databaseManager;
 
-    @POST
-    @MethodCache
-    @ServiceMetric
-    @Produces(MediaType.APPLICATION_JSON)
-    public NotesResponse createDatabase(
-            Database database
-    ) throws Exception {
-        try {
-            return NotesResponse.ok(databaseManager.createDatabase(database));
-        } catch (Exception e) {
-            return NotesResponse.error(e);
-        }
-    }
+//    @POST
+//    @MethodCache
+//    @ServiceMetric
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public NotesResponse createDatabase(
+//            Database database
+//    ) throws Exception {
+//        try {
+//            return NotesResponse.ok(databaseManager.createDatabase(database));
+//        } catch (Exception e) {
+//            return NotesResponse.error(e);
+//        }
+//    }
 
     @PUT
     @MethodCache

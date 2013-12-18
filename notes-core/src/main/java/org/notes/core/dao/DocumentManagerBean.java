@@ -1,5 +1,7 @@
 package org.notes.core.dao;
 
+import difflib.DiffUtils;
+import difflib.Patch;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
@@ -10,6 +12,7 @@ import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
 import org.notes.common.model.FileReference;
 import org.notes.common.model.Trigger;
+import org.notes.core.SessionBean;
 import org.notes.core.interfaces.DocumentManager;
 import org.notes.core.interfaces.FileReferenceManager;
 import org.notes.core.interfaces.FolderManager;
@@ -26,6 +29,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 
 //@LocalBean
@@ -51,6 +55,9 @@ public class DocumentManagerBean implements DocumentManager {
     @Inject
     private UserManager userManager;
 
+    @Inject
+    private SessionBean sessionBean;
+
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public TextDocument createDocument(TextDocument document, Folder inFolder) throws NotesException {
@@ -67,7 +74,9 @@ public class DocumentManagerBean implements DocumentManager {
 
             document.setTrigger(Trigger.INDEX);
 
-            return (TextDocument) _createDocument(document, inFolder);
+            BasicDocument basicDocument = _createDocument(document, inFolder);
+            Hibernate.initialize(basicDocument.getTags());
+            return (TextDocument) basicDocument;
 
         } catch (NotesException e) {
             throw e;
@@ -80,7 +89,7 @@ public class DocumentManagerBean implements DocumentManager {
 
         em.persist(document);
 
-        User user = userManager.getUser("testuser"); // todo userId
+        User user = userManager.getUser(sessionBean.getUsername());
         user.getDocuments().add(document);
         em.merge(user);
 
@@ -155,6 +164,8 @@ public class DocumentManagerBean implements DocumentManager {
 
             em.merge(document);
 
+            Hibernate.initialize(document.getTags());
+
             return document;
 
         } catch (Throwable t) {
@@ -202,11 +213,16 @@ public class DocumentManagerBean implements DocumentManager {
 
                 document.setTrigger(Trigger.INDEX);
 
+                // todo changes
+                Patch patch = DiffUtils.diff(Arrays.asList(txtDoc.getTitle(), txtDoc.getText()), Arrays.asList(txtRef.getTitle(), txtRef.getText()));
+
                 em.merge(document);
                 em.flush();
                 em.refresh(document);
 
             }
+
+            Hibernate.initialize(document.getTags());
 
             return document;
 

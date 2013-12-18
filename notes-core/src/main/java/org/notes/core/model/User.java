@@ -30,7 +30,7 @@ public class User implements Serializable {
 
     @JsonIgnore
     @OneToMany(cascade = {}, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = ForeignKey.OWNER)
+    @JoinColumn(name = ForeignKey.USER)
     private Set<BasicDocument> documents = new HashSet(100);
 
     @Column(name = Account.FK_ACCOUNT_ID, insertable = false, updatable = false)
@@ -38,12 +38,12 @@ public class User implements Serializable {
 
     @JsonIgnore
     @OneToMany(cascade = {}, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = ForeignKey.OWNER)
+    @JoinColumn(name = ForeignKey.USER)
     private Set<Database> databases = new HashSet(100);
 
     @JsonIgnore
     @OneToMany(cascade = {}, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = ForeignKey.OWNER)
+    @JoinColumn(name = ForeignKey.USER)
     private Set<Folder> folders = new HashSet(100);
 
 //  --------------------------------------------------------------------------------------------------------------------
