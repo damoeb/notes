@@ -100,7 +100,7 @@ public class IndexerScheduler {
             SolrInputDocument doc = new SolrInputDocument();
             doc.setField("document", document.getId());
             doc.setField("folder", document.getFolderId());
-            doc.setField("owner", document.getOwnerId());
+            doc.setField("owner", document.getOwner());
             doc.setField("text", fullText.getText());
             doc.setField("section", fullText.getSection());
             docs.add(doc);
@@ -117,7 +117,7 @@ public class IndexerScheduler {
         doc.setField("modified", document.getModified());
         doc.setField("title", document.getTitle());
         doc.setField("kind", document.getKind());
-        doc.setField("owner", document.getOwnerId());
+        doc.setField("owner", document.getOwner());
 
         getSolrServer().add(doc, COMMIT_WITHIN_MS);
     }

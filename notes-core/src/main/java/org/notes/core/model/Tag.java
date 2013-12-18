@@ -33,7 +33,7 @@ public class Tag implements Serializable {
 
 //    @JsonIgnore
 //    @OneToMany(cascade = {}, fetch = FetchType.LAZY, orphanRemoval = true)
-//    @JoinColumn(name = ForeignKey.OWNER_ID)
+//    @JoinColumn(name = ForeignKey.OWNER)
 //    private Set<User> users = new HashSet(100);
 //
 //    @Column(name = Account.FK_ACCOUNT_ID, insertable = false, updatable = false)

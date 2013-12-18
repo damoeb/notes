@@ -180,17 +180,11 @@ $.widget("notes.basiceditor", {
 
         var $toolbar = $('<div/>', {class: 'row', style: 'padding: 5px; background-color:#efefef'});
 
-        var $left = $('<div/>', {style: 'float:left'})
-            .append(
+        var $left = $('<div/>', {style: 'float:left'}
+        ).append(
                 $this._createButton('<i class="fa fa-reply"></i>', 'Back', $this.fnClose)
             ).append(
-                $this._createButton('<i class="fa fa-star-o"></i>', 'Star', $this.fnStar)
-            ).append(
-                $this._createButton('<i class="fa fa-clock-o"></i>', 'Reminder', $this.fnReminder)
-            ).append(
-                $this._createButton('<i class="fa fa-check"></i>', 'Finish', $this.fnFinished)
-            ).append(
-                $this._createButton('%', 'Progress', $this.fnProgress)
+                $this._createButton('<i class="fa fa-tags"></i>', 'Tags', $this.fnTags)
             ).append(
                 $this._createButton('<i class="fa fa-trash-o"></i>', 'Delete', $this.fnDelete)
             );
@@ -210,18 +204,6 @@ $.widget("notes.basiceditor", {
         );
 
         return $toolbar.append($left).append($right);
-    },
-
-    getProgressLayer: function () {
-        var $this = this;
-        if ($this.$progressLayer == null) {
-            $this.$progressLayer = $this._newProgressSettings($this.getModel());
-        }
-        return $this.$progressLayer;
-    },
-
-    fnProgress: function () {
-        this.getProgressLayer().slideToggle()
     },
 
     fnDelete: function () {

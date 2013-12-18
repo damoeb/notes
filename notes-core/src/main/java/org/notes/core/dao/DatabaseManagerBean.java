@@ -83,7 +83,7 @@ public class DatabaseManagerBean implements DatabaseManager {
     public List<Database> getDatabases() throws NotesException {
         try {
             Query query = em.createNamedQuery(Database.QUERY_ALL);
-            query.setParameter("USER_ID", 1l);  // todo userId
+            query.setParameter("USER", "testuser");  // todo userId
 
             return query.getResultList();
 
@@ -97,7 +97,7 @@ public class DatabaseManagerBean implements DatabaseManager {
     public List<Folder> getFolders(long databaseId) throws NotesException {
         try {
             Query query = em.createNamedQuery(Folder.QUERY_ROOT_FOLDERS);
-            query.setParameter("OWNER_ID", 1l);  // todo userId
+            query.setParameter("OWNER", "testuser");  // todo userId
             query.setParameter("DB_ID", databaseId);
 
             return query.getResultList();
@@ -112,7 +112,7 @@ public class DatabaseManagerBean implements DatabaseManager {
     public List<Folder> getOpenFolders(long databaseId) throws NotesException {
         try {
             Query query = em.createNamedQuery(Folder.QUERY_OPEN_FOLDERS);
-            query.setParameter("OWNER_ID", 1l);  // todo userId
+            query.setParameter("OWNER", "testuser");  // todo userId
             query.setParameter("DB_ID", databaseId);
 
             return query.getResultList();
@@ -165,7 +165,7 @@ public class DatabaseManagerBean implements DatabaseManager {
         database.setDocumentCount(0);
         database.setModified(new Date());
 
-        User user = userManager.getUser(1l);
+        User user = userManager.getUser("testuser");
         em.persist(database);
         em.flush();
         em.refresh(database);

@@ -28,8 +28,8 @@ import java.util.Set;
 @NamedQueries({
         @NamedQuery(name = Document.QUERY_BY_ID, query = "SELECT a FROM BasicDocument a where a.id=:ID"),
         @NamedQuery(name = Document.QUERY_TRIGGER, query = "SELECT a FROM BasicDocument a where a.trigger in (:TRIGGER)"),
-        @NamedQuery(name = BasicDocument.QUERY_IN_FOLDER, query = "SELECT new BasicDocument(a.id, a.title, a.outline, a.kind, a.progress, a.reminder, a.modified, a.privacy, a.finished, a.views, a.star) FROM BasicDocument a where a.folderId=:ID AND a.deleted=false"),
-        @NamedQuery(name = BasicDocument.QUERY_DESCENDANTS_OF_FOLDER, query = "SELECT new BasicDocument(a.id, a.title, a.outline, a.kind, a.progress, a.reminder, a.modified, a.privacy, a.finished, a.views, a.star) FROM Folder f JOIN f.inheritedDocuments a WHERE f.id=:ID AND a.deleted=false"),
+        @NamedQuery(name = BasicDocument.QUERY_IN_FOLDER, query = "SELECT new BasicDocument(a.id, a.title, a.outline, a.kind, a.modified, a.privacy, a.views, a.star) FROM BasicDocument a where a.folderId=:ID AND a.deleted=false"),
+        @NamedQuery(name = BasicDocument.QUERY_DESCENDANTS_OF_FOLDER, query = "SELECT new BasicDocument(a.id, a.title, a.outline, a.kind, a.modified, a.privacy, a.views, a.star) FROM Folder f JOIN f.inheritedDocuments a WHERE f.id=:ID AND a.deleted=false"),
 })
 @Inheritance(strategy = InheritanceType.JOINED)
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
@@ -71,8 +71,8 @@ public class BasicDocument implements Document {
     @Temporal(TemporalType.TIMESTAMP)
     private Date modified;
 
-    @Column(insertable = false, updatable = false, name = ForeignKey.OWNER_ID)
-    private Long ownerId;
+    @Column(insertable = false, updatable = false, name = ForeignKey.OWNER)
+    private String owner;
 
     @Column(insertable = false, updatable = false, name = ForeignKey.FOLDER_ID)
     private Long folderId;
@@ -86,15 +86,6 @@ public class BasicDocument implements Document {
     @Basic
     private boolean deleted;
 
-    @Embedded
-    private Reminder reminder;
-
-    /**
-     * % completed
-     */
-    @Basic
-    private Integer progress;
-
     @Basic
     private boolean star;
 
@@ -105,11 +96,6 @@ public class BasicDocument implements Document {
     @Enumerated(EnumType.STRING)
     private Privacy privacy = Privacy.PRIVATE;
 
-    @JsonDeserialize(using = CustomDateDeserializer.class)
-    @JsonSerialize(using = CustomDateSerializer.class)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date finished;
-
 //  -- References ------------------------------------------------------------------------------------------------------
 
     @JsonIgnore
@@ -118,7 +104,6 @@ public class BasicDocument implements Document {
     @Index(name = "event_trigger_idx")
     private Trigger trigger;
 
-    @JsonIgnore
     @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinTable(name = "document2tag")
     private Set<Tag> tags = new HashSet(100);
@@ -143,16 +128,13 @@ public class BasicDocument implements Document {
         this.kind = kind;
     }
 
-    public BasicDocument(Long id, String title, String outline, Kind kind, Integer progress, Reminder reminder, Date modified, Privacy privacy, Date finished, int views, boolean star) {
+    public BasicDocument(Long id, String title, String outline, Kind kind, Date modified, Privacy privacy, int views, boolean star) {
         this.id = id;
         this.title = title;
         this.outline = outline;
         this.kind = kind;
-        this.progress = progress;
         this.modified = modified;
-        this.reminder = reminder;
         this.privacy = privacy;
-        this.finished = finished;
         this.views = views;
         this.star = star;
     }
@@ -267,12 +249,12 @@ public class BasicDocument implements Document {
         this.folderId = folderId;
     }
 
-    public Long getOwnerId() {
-        return ownerId;
+    public String getOwner() {
+        return owner;
     }
 
-    protected void setOwnerId(Long ownerId) {
-        this.ownerId = ownerId;
+    protected void setOwner(String owner) {
+        this.owner = owner;
     }
 
     public Kind getKind() {
@@ -299,22 +281,6 @@ public class BasicDocument implements Document {
         this.deleted = deleted;
     }
 
-    public Integer getProgress() {
-        return progress;
-    }
-
-    public void setProgress(Integer progress) {
-        this.progress = progress;
-    }
-
-    public Reminder getReminder() {
-        return reminder;
-    }
-
-    public void setReminder(Reminder reminder) {
-        this.reminder = reminder;
-    }
-
     public Event getEvent() {
         return event;
     }
@@ -329,14 +295,6 @@ public class BasicDocument implements Document {
 
     public void setTrigger(Trigger trigger) {
         this.trigger = trigger;
-    }
-
-    public Date getFinished() {
-        return finished;
-    }
-
-    public void setFinished(Date finished) {
-        this.finished = finished;
     }
 
     public int getViews() {

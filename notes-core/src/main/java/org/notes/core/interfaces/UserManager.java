@@ -9,9 +9,9 @@ import javax.ejb.Local;
 @Local
 public interface UserManager {
 
-    User getUser(Long userId) throws NotesException;
+    User getUser(String username) throws NotesException;
 
-    User deleteUser(Long userId) throws NotesException;
+    User deleteUser(String username) throws NotesException;
 
     User createUser(User user, Account account) throws NotesException;
 

@@ -12,8 +12,7 @@ import java.util.Set;
 @Entity(name = "User")
 @Table(name = "User")
 @NamedQueries({
-        @NamedQuery(name = User.QUERY_BY_ID, query = "SELECT a FROM User a where a.id=:ID"),
-        @NamedQuery(name = User.QUERY_BY_USERNAME, query = "SELECT a FROM User a where LOWER(a.username)=LOWER(:USERNAME)"),
+        @NamedQuery(name = User.QUERY_BY_ID, query = "SELECT a FROM User a where a.username=:USERNAME"),
         @NamedQuery(name = User.QUERY_ALL, query = "SELECT a FROM User a")
 })
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
@@ -21,22 +20,17 @@ import java.util.Set;
 public class User implements Serializable {
 
     public static final String QUERY_BY_ID = "User.QUERY_BY_ID";
-    public static final String QUERY_BY_USERNAME = "User.QUERY_BY_USERNAME";
     public static final String QUERY_ALL = "User.QUERY_ALL";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-
-    @Basic
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 30)
     private String username;
 
 //  -- References ------------------------------------------------------------------------------------------------------
 
     @JsonIgnore
     @OneToMany(cascade = {}, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = ForeignKey.OWNER_ID)
+    @JoinColumn(name = ForeignKey.OWNER)
     private Set<BasicDocument> documents = new HashSet(100);
 
     @Column(name = Account.FK_ACCOUNT_ID, insertable = false, updatable = false)
@@ -44,26 +38,18 @@ public class User implements Serializable {
 
     @JsonIgnore
     @OneToMany(cascade = {}, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = ForeignKey.OWNER_ID)
+    @JoinColumn(name = ForeignKey.OWNER)
     private Set<Database> databases = new HashSet(100);
 
     @JsonIgnore
     @OneToMany(cascade = {}, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = ForeignKey.OWNER_ID)
+    @JoinColumn(name = ForeignKey.OWNER)
     private Set<Folder> folders = new HashSet(100);
 
 //  --------------------------------------------------------------------------------------------------------------------
 
     public User() {
         // default
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    protected void setId(long id) {
-        this.id = id;
     }
 
     public String getUsername() {

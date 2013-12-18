@@ -28,16 +28,28 @@ $.widget("notes.texteditor", $.notes.basiceditor, {
             $this.fnClose();
         };
 
+        var $tagsLayer = $('<span/>', {text: ' in '});
+
+        $.each(model.get('tags'), function (index, tag) {
+            $tagsLayer.append(
+                $('<a/>', {
+                    text: tag.name,
+                    href: '#tag:' + tag.name
+                })
+            );
+        });
+
+
         $target.append(
                 $this._getToolbar()
-            ).append(
-                $this.getProgressLayer()
             ).append(
                 $('<div/>', {class: 'row', style: 'margin-top:5px'}).append(
                     $fieldTitle
                 )
             ).append(
-                $('<div/>', {class: 'row', style: 'margin-top:5px', text: 'modified ' + notes.util.formatDate(new Date(model.get('modified'))) + ' Tags: ' /* todo impl tags */ })
+                $('<div/>', {class: 'row', style: 'margin-top:5px', text: notes.util.formatDate(new Date(model.get('modified')))}).append(
+                    $tagsLayer
+                )
             ).append(
                 $('<div/>', {class: 'row', style: 'margin-top:5px'}).append(
                     $fieldText

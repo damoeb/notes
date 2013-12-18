@@ -21,8 +21,8 @@ public abstract class Node implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(updatable = false, insertable = false, name = ForeignKey.OWNER_ID)
-    protected Long ownerId;
+    @Column(updatable = false, insertable = false, name = ForeignKey.OWNER)
+    protected String owner;
 
     @Basic
     protected Integer documentCount = 0;
@@ -49,12 +49,12 @@ public abstract class Node implements Serializable {
         // default
     }
 
-    public Long getOwnerId() {
-        return ownerId;
+    public String getOwner() {
+        return owner;
     }
 
-    protected void setOwnerId(Long ownerId) {
-        this.ownerId = ownerId;
+    protected void setOwner(String owner) {
+        this.owner = owner;
     }
 
     public Integer getDocumentCount() {

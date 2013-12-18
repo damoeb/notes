@@ -1,5 +1,6 @@
 package org.notes.core.dao;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
@@ -33,19 +34,19 @@ public class UserManagerBean implements UserManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public User getUser(Long userId) throws NotesException {
+    public User getUser(String username) throws NotesException {
         try {
 
-            if (userId == null || userId <= 0) {
-                throw new NotesException(String.format("Invalid user id '%s'", userId));
+            if (StringUtils.isBlank(username)) {
+                throw new NotesException(String.format("Invalid username '%s'", username));
             }
 
             Query query = em.createNamedQuery(User.QUERY_BY_ID);
-            query.setParameter("ID", userId);
+            query.setParameter("USERNAME", username);
 
             List<User> userList = query.getResultList();
             if (userList.isEmpty()) {
-                throw new NotesException(String.format("No user with id '%s' found", userId));
+                throw new NotesException(String.format("No user '%s' found", username));
             }
 
             return userList.get(0);
@@ -53,16 +54,16 @@ public class UserManagerBean implements UserManager {
         } catch (NotesException t) {
             throw t;
         } catch (Throwable t) {
-            throw new NotesException(String.format("get user %s", userId), t);
+            throw new NotesException(String.format("get user %s", username), t);
         }
     }
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public User deleteUser(Long userId) throws NotesException {
+    public User deleteUser(String username) throws NotesException {
         try {
 
-            User user = getUser(userId);
+            User user = getUser(username);
             em.remove(user);
 
             return user;
@@ -70,7 +71,7 @@ public class UserManagerBean implements UserManager {
         } catch (NotesException t) {
             throw t;
         } catch (Throwable t) {
-            throw new NotesException(String.format("get user %s", userId), t);
+            throw new NotesException(String.format("get user %s", username), t);
         }
     }
 

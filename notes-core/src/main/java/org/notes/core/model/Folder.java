@@ -14,13 +14,13 @@ import java.util.Set;
  */
 @Entity(name = "Folder")
 @Table(name = "Folder",
-        uniqueConstraints = @UniqueConstraint(columnNames = {ForeignKey.OWNER_ID, "level", "name"})
+        uniqueConstraints = @UniqueConstraint(columnNames = {ForeignKey.OWNER, "level", "name"})
 )
 @NamedQueries({
         @NamedQuery(name = Folder.QUERY_BY_ID, query = "SELECT a FROM Folder a where a.id=:ID"),
         @NamedQuery(name = Folder.QUERY_CHILDREN, query = "SELECT new Folder(a.id, a.name, a.leaf, a.documentCount, a.modified, a.level) FROM Folder a WHERE a.parentId = :ID"),
-        @NamedQuery(name = Folder.QUERY_ROOT_FOLDERS, query = "SELECT new Folder(a.id, a.name, a.leaf, a.documentCount, a.modified, a.level) FROM Folder a WHERE a.databaseId = :DB_ID and a.ownerId = :OWNER_ID and a.level = 0"),
-        @NamedQuery(name = Folder.QUERY_OPEN_FOLDERS, query = "SELECT new Folder(o.id) FROM DDatabase a INNER JOIN a.openFolders o WHERE a.id = :DB_ID and a.ownerId = :OWNER_ID")
+        @NamedQuery(name = Folder.QUERY_ROOT_FOLDERS, query = "SELECT new Folder(a.id, a.name, a.leaf, a.documentCount, a.modified, a.level) FROM Folder a WHERE a.databaseId = :DB_ID and a.owner = :OWNER and a.level = 0"),
+        @NamedQuery(name = Folder.QUERY_OPEN_FOLDERS, query = "SELECT new Folder(o.id) FROM DDatabase a INNER JOIN a.openFolders o WHERE a.id = :DB_ID and a.owner = :OWNER")
 })
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class Folder extends Node {

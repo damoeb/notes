@@ -242,7 +242,7 @@ public class FolderManagerBean implements FolderManager {
         em.flush();
         em.refresh(folder);
 
-        User user = (User) _getProxy(User.class, 1l);
+        User user = (User) _getProxy(User.class, "testuser"); // todo userId
         user.getFolders().add(folder);
         em.merge(user);
 

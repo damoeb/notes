@@ -11,7 +11,6 @@ import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.util.Date;
 
 @Startup
 @Singleton
@@ -119,7 +118,6 @@ public class StartUp {
                     TextDocument td1 = new TextDocument();
                     td1.setTitle("Wende im Fall Taboga");
                     td1.setText("Der SV Grödig hat den Vertrag mit Dominique Taboga aufgelöst. Dies gab der Salzburger Verein im Rahmen einer Pressekonferenz am Donnerstag bekannt. Manager Christian Haas");
-                    td1.setProgress(24);
                     td1.getTags().add(new Tag("hamster"));
 
                     td1 = documentManager.createDocument(td1, f2);
@@ -140,13 +138,7 @@ public class StartUp {
                     td3.setTitle("Es ist wieder Zeit, pseudowissenschaftliche \"Leistungen\" zu nominieren");
                     td3.setText("Der gleichnamige Preis wird von der Gesellschaft für kritisches Denken (GkD), der Wiener Regionalgruppe der internationalen Skeptikervereinigung GWUP (Gesellschaft zur Wissenschaftlichen Untersuchung von Parawissenschaften), bereits zum dritten Mal vergeben. Er soll zum einen auf unwissenschaftliches Vorgehen an sich aufmerksam machen, zum anderen aber auch auf die oft blühenden Geschäfte, die auf dieser Grundlage gedeihen.");
 
-                    Reminder reminder = new Reminder();
-                    reminder.setReferenceDate(new Date());
-                    reminder.setFrequency(Frequency.WEEKLY);
-                    td3.setReminder(reminder);
-
                     td3 = documentManager.createDocument(td3, f3);
-
 
                     //documentManager.deleteDocument(td1.getId());
 

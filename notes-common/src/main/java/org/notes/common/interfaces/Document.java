@@ -21,7 +21,7 @@ public interface Document extends Serializable {
 
     Long getFolderId();
 
-    Long getOwnerId();
+    String getOwner();
 
     Kind getKind();
 
@@ -30,6 +30,4 @@ public interface Document extends Serializable {
     Trigger getTrigger();
 
     void setTrigger(Trigger trigger);
-
-    Date getFinished();
 }

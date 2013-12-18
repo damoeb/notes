@@ -4,6 +4,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
@@ -64,7 +65,6 @@ public class DocumentManagerBean implements DocumentManager {
                 throw new NotesException("folder is null");
             }
 
-            document.setProgress(_getProgress(document));
             document.setTrigger(Trigger.INDEX);
 
             return (TextDocument) _createDocument(document, inFolder);
@@ -80,7 +80,7 @@ public class DocumentManagerBean implements DocumentManager {
 
         em.persist(document);
 
-        User user = userManager.getUser(1l); // todo userId
+        User user = userManager.getUser("testuser"); // todo userId
         user.getDocuments().add(document);
         em.merge(user);
 
@@ -121,7 +121,9 @@ public class DocumentManagerBean implements DocumentManager {
 
             Query query = em.createNamedQuery(BasicDocument.QUERY_BY_ID);
             query.setParameter("ID", documentId);
-            return (BasicDocument) query.getSingleResult();
+            BasicDocument document = (BasicDocument) query.getSingleResult();
+            Hibernate.initialize(document.getTags());
+            return document;
 
         } catch (NoResultException t) {
             throw new NotesException("document '" + documentId + "' does not exist");
@@ -197,16 +199,6 @@ public class DocumentManagerBean implements DocumentManager {
 
                 txtDoc.setTitle(txtRef.getTitle());
                 txtDoc.setText(txtRef.getText());
-
-                document.setProgress(_getProgress(ref));
-
-                Reminder reminder = ref.getReminder();
-                if (reminder == null) { // remove
-                    document.setReminder(null);
-
-                } else { // set or overwrite
-                    document.setReminder(reminder);
-                }
 
                 document.setTrigger(Trigger.INDEX);
 
@@ -323,14 +315,6 @@ public class DocumentManagerBean implements DocumentManager {
         }
 
         return null;
-    }
-
-    private Integer _getProgress(BasicDocument document) {
-        Integer progress = document.getProgress();
-        if (progress == null || progress <= 0 || progress > 100) {
-            return null;
-        }
-        return progress;
     }
 
     private BasicDocument _get(long documentId) throws NotesException {
