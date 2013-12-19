@@ -63,18 +63,34 @@ $.widget("notes.documentList", {
         while ($folder) {
 
             $crumbs.prepend(
-                $('<span/>').append(
-                        $('<span/>', {text: $folder.getModel().get('name') })
-                    ).append(
-                        '<i class="fa fa-angle-right" style="margin-left:4px; margin-right:4px"></i>'
-                    )
+                $this._getBreadcrumbItem($folder)
             );
 
             $folder = $folder.getParent();
         }
 
+        // database crumb
+        $crumbs.prepend(
+            $('<a/>', {href: '#'}).append(
+                    $('<span/>', {text: 'Database' })
+                ).append(
+                    '<i class="fa fa-angle-right" style="margin-left:4px; margin-right:4px"></i>'
+                ).click(function () {
+                    notes.dialog.database.settings();
+                })
+        );
 
         return $crumbs;
+    },
+
+    _getBreadcrumbItem: function ($folder) {
+        return $('<a/>', {href: '#'}).append(
+                $('<span/>', {text: $folder.getModel().get('name') })
+            ).append(
+                '<i class="fa fa-angle-right" style="margin-left:4px; margin-right:4px"></i>'
+            ).click(function () {
+                notes.dialog.folder.settings($folder.getModel());
+            })
     },
 
     _getThumbnail: function (kind) {

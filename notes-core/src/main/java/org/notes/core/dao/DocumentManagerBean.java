@@ -12,7 +12,6 @@ import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
 import org.notes.common.model.FileReference;
 import org.notes.common.model.Trigger;
-import org.notes.core.SessionBean;
 import org.notes.core.interfaces.DocumentManager;
 import org.notes.core.interfaces.FileReferenceManager;
 import org.notes.core.interfaces.FolderManager;
@@ -55,9 +54,6 @@ public class DocumentManagerBean implements DocumentManager {
     @Inject
     private UserManager userManager;
 
-    @Inject
-    private SessionBean sessionBean;
-
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public TextDocument createDocument(TextDocument document, Folder inFolder) throws NotesException {
@@ -89,7 +85,7 @@ public class DocumentManagerBean implements DocumentManager {
 
         em.persist(document);
 
-        User user = userManager.getUser(sessionBean.getUsername());
+        User user = userManager.getUser(inFolder.getOwner());
         user.getDocuments().add(document);
         em.merge(user);
 
@@ -208,13 +204,14 @@ public class DocumentManagerBean implements DocumentManager {
                 TextDocument txtDoc = (TextDocument) document;
                 TextDocument txtRef = (TextDocument) ref;
 
+                // todo calc diff
+                Patch patch = DiffUtils.diff(Arrays.asList(txtDoc.getTitle(), txtDoc.getText()), Arrays.asList(txtRef.getTitle(), txtRef.getText()));
+
+                // update
                 txtDoc.setTitle(txtRef.getTitle());
                 txtDoc.setText(txtRef.getText());
 
                 document.setTrigger(Trigger.INDEX);
-
-                // todo changes
-                Patch patch = DiffUtils.diff(Arrays.asList(txtDoc.getTitle(), txtDoc.getText()), Arrays.asList(txtRef.getTitle(), txtRef.getText()));
 
                 em.merge(document);
                 em.flush();

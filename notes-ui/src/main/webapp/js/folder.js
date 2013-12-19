@@ -135,11 +135,13 @@ $.widget("notes.folder", {
             $self.$childrenLayer.show();
             $self._highlight();
 
+            $('#databases')
+                .databases('setActiveFolderId', folderId);
+
             if (callTriggers) {
+
                 $('#databases')
-                    .databases('setActiveFolderId', folderId)
                     .databases('addOpenFolder', folderId);
-                // -- Documents --
 
                 $self.loadDocuments();
             }

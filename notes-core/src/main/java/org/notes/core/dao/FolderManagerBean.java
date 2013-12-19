@@ -4,7 +4,6 @@ import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
-import org.notes.core.SessionBean;
 import org.notes.core.interfaces.DatabaseManager;
 import org.notes.core.interfaces.FolderManager;
 import org.notes.core.interfaces.UserManager;
@@ -41,10 +40,6 @@ public class FolderManagerBean implements FolderManager {
     @Inject
     private DatabaseManager databaseManager;
 
-    @Inject
-    private SessionBean sessionBean;
-
-
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Folder createFolder(Folder folder, Folder parent, Database database) throws NotesException {
@@ -57,13 +52,16 @@ public class FolderManagerBean implements FolderManager {
                 throw new NotesException("database is null");
             }
 
-            folder = _create(folder, parent);
+            // todo load database by id
+            folder = _create(folder, parent, database.getOwner());
 
             Database proxy = (Database) _getProxy(Database.class, database.getId());
 
             proxy.getFolders().add(folder);
 
             em.merge(proxy);
+            em.flush();
+            em.refresh(folder);
 
             return folder;
 
@@ -222,7 +220,7 @@ public class FolderManagerBean implements FolderManager {
 
     }
 
-    private Folder _create(Folder folder, Folder parent) throws NotesException {
+    private Folder _create(Folder folder, Folder parent, String username) throws NotesException {
 
         if (folder == null) {
             throw new NotesException("Folder is null");
@@ -246,7 +244,7 @@ public class FolderManagerBean implements FolderManager {
         em.flush();
         em.refresh(folder);
 
-        User user = (User) _getProxy(User.class, sessionBean.getUsername());
+        User user = (User) _getProxy(User.class, username);
         user.getFolders().add(folder);
         em.merge(user);
 

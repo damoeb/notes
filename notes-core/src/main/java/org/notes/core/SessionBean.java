@@ -14,16 +14,16 @@ public class SessionBean implements Serializable {
 
     private String username = "testuser";
 
-    //@Resource
-    //javax.ejb.SessionContext sessionContext;
+//    @Resource
+//    private javax.ejb.SessionContext sessionContext;
 
     public SessionBean() {
-        // todo does not work
-        LOGGER.info("create");
+        //
     }
 
     @PostConstruct
     public void onCreate() {
+        LOGGER.info("create");
         //HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
         //LOGGER.info("id "+session.getId());
     }

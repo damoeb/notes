@@ -42,7 +42,16 @@ $.widget("notes.texteditor", $.notes.basiceditor, {
             });
         }
 
-        var $ownerLayer = $('<span/>', {text: ' by ' + model.get('owner')});
+        var $ownerLayer = $('<span/>');
+        if (model.has('owner')) {
+            $dateLayer.text(' by ' + model.get('owner'));
+        }
+
+        var $dateLayer = $('<span/>');
+
+        if (model.has('modified')) {
+            $dateLayer.text('changed ' + notes.util.formatDate(new Date(model.get('modified'))));
+        }
 
         $target.append(
                 $this._getToolbar()
@@ -51,7 +60,10 @@ $.widget("notes.texteditor", $.notes.basiceditor, {
                     $fieldTitle
                 )
             ).append(
-                $('<div/>', {class: 'row', style: 'margin-top:5px', text: 'changed ' + notes.util.formatDate(new Date(model.get('modified')))})
+                $('<div/>', {class: 'row', style: 'margin-top:5px'})
+                    .append(
+                        $dateLayer
+                    )
                     .append(
                         $ownerLayer
                     )

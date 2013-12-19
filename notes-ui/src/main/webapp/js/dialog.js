@@ -125,8 +125,9 @@ notes.dialog.database = {
 
         $dialog.append(
                 $('<div/>').append(
-                    $('<a/>', {text: 'New Database'}).click(
+                    $('<a/>', {text: 'Create Folder'}).click(
                         function () {
+                            // todo implement
                             $dialog.dialog('close');
 
                         })

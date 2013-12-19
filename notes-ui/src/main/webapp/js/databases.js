@@ -53,7 +53,7 @@ $.widget("notes.databases", {
     },
 
     getDatabaseId: function () {
-        return this.databaseId;
+        return this.options.databaseId;
     },
 
     put: function ($folder) {

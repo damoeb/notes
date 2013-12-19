@@ -171,10 +171,11 @@ public class DatabaseManagerBean implements DatabaseManager {
 
         User user = userManager.getUser(userRef.getUsername());
         em.persist(database);
-        em.flush();
-        em.refresh(database);
         user.getDatabases().add(database);
         em.merge(user);
+
+        em.flush();
+        em.refresh(database);
 
         return database;
 
