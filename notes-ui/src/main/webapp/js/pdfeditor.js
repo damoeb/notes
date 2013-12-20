@@ -54,7 +54,6 @@ $.widget("notes.pdfeditor", $.notes.basiceditor, {
             loadPdf();
         };
 
-        // todo navigation does not work
         var fnPrevious = function () {
             if (currentPage > 1) {
                 currentPage--;

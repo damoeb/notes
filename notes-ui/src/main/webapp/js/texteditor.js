@@ -44,7 +44,7 @@ $.widget("notes.texteditor", $.notes.basiceditor, {
 
         var $ownerLayer = $('<span/>');
         if (model.has('owner')) {
-            $dateLayer.text(' by ' + model.get('owner'));
+            $ownerLayer.text(' by ' + model.get('owner'));
         }
 
         var $dateLayer = $('<span/>');

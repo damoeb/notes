@@ -83,20 +83,23 @@ notes.dialog.folder = {
 
         var $input = $('<input/>', {name: 'name', type: 'text'});
 
+        var parentId = parentModel != null ? parentModel.get('id') : null;
+
         $('<div/>', {class: 'dialog'}).append(
                 $('<div/>').append(
                     $input
                 )
             ).dialog($.extend({}, notes.dialog.defaults, {
-                title: 'New Folder in ' + parentModel.get('name'),
+                title: 'Create Folder',
                 buttons: [
                     {
                         text: 'Create',
                         click: function () {
+
                             var model = new notes.model.Folder({
                                 name: $input.val(),
-                                parentId: parentModel.get('id'),
-                                databaseId: $('#databases').databases('getDatabaseId')
+                                parentId: parentId,
+                                databaseId: notes.app.databaseId()
                             });
                             model.save(null, {
                                 success: function () {
@@ -127,8 +130,7 @@ notes.dialog.database = {
                 $('<div/>').append(
                     $('<a/>', {text: 'Create Folder'}).click(
                         function () {
-                            // todo implement
-                            $dialog.dialog('close');
+                            notes.dialog.folder.newFolder(null);
 
                         })
                 )
@@ -192,7 +194,7 @@ notes.dialog.document = {
 
                             var bookmark = new notes.model.Bookmark({
                                 url: $input.val(),
-                                folderId: $('#databases').databases('getActiveFolderId')
+                                folderId: notes.app.activeFolderId()
                             });
                             bookmark.save(null, {success: function (newmodel) {
 

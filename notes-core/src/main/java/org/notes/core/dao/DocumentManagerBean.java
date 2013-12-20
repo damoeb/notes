@@ -1,7 +1,5 @@
 package org.notes.core.dao;
 
-import difflib.DiffUtils;
-import difflib.Patch;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
@@ -28,7 +26,6 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.List;
 
 //@LocalBean
@@ -66,6 +63,10 @@ public class DocumentManagerBean implements DocumentManager {
 
             if (inFolder == null) {
                 throw new NotesException("folder is null");
+            }
+
+            if (!em.contains(inFolder)) {
+                inFolder = folderManager.getFolder(inFolder.getId());
             }
 
             document.setTrigger(Trigger.INDEX);
@@ -204,18 +205,25 @@ public class DocumentManagerBean implements DocumentManager {
                 TextDocument txtDoc = (TextDocument) document;
                 TextDocument txtRef = (TextDocument) ref;
 
-                // todo calc diff
-                Patch patch = DiffUtils.diff(Arrays.asList(txtDoc.getTitle(), txtDoc.getText()), Arrays.asList(txtRef.getTitle(), txtRef.getText()));
+                boolean similarTitle = StringUtils.equals(txtDoc.getTitle(), txtRef.getTitle());
+                boolean similarText = StringUtils.equals(txtDoc.getText(), txtRef.getText());
 
-                // update
-                txtDoc.setTitle(txtRef.getTitle());
-                txtDoc.setText(txtRef.getText());
+                boolean hasChanged = !(similarTitle && similarText);
 
-                document.setTrigger(Trigger.INDEX);
+                if (hasChanged) {
+                    // todo calc diff
+                    //                Patch patch = DiffUtils.diff(Arrays.asList(txtDoc.getTitle(), txtDoc.getText()), Arrays.asList(txtRef.getTitle(), txtRef.getText()));
 
-                em.merge(document);
-                em.flush();
-                em.refresh(document);
+                    // update
+                    txtDoc.setTitle(txtRef.getTitle());
+                    txtDoc.setText(txtRef.getText());
+
+                    document.setTrigger(Trigger.INDEX);
+
+                    em.merge(document);
+                    em.flush();
+                    em.refresh(document);
+                }
 
             }
 
@@ -240,7 +248,7 @@ public class DocumentManagerBean implements DocumentManager {
 
             Long folderId = NumberUtils.createLong(_getFieldValue("folderId", items));
 
-            Folder folder = folderManager.getFolder(folderId);
+            Folder inFolder = folderManager.getFolder(folderId);
 
             // todo validate folderId
             for (FileItem item : items) {
@@ -261,7 +269,7 @@ public class DocumentManagerBean implements DocumentManager {
             // todo uploaded file may be zip to create structure from
             // reference.getContentType()
 
-            if (reference == null || folderId == null) {
+            if (reference == null) {
                 throw new IllegalArgumentException("No valid files found");
             }
 
@@ -270,7 +278,7 @@ public class DocumentManagerBean implements DocumentManager {
             document.setFileReference(reference);
             document.setTrigger(Trigger.EXTRACT_PDF);
 
-            return (PdfDocument) _createDocument(document, folder);
+            return (PdfDocument) _createDocument(document, inFolder);
 
         } catch (Throwable t) {
             throw new NotesException("upload document failed: " + t.getMessage(), t);
@@ -292,7 +300,18 @@ public class DocumentManagerBean implements DocumentManager {
             }
             new URL(ref.getUrl());
 
-            // todo validate folderId
+
+            if (ref == null) {
+                throw new NotesException("bookmark is invalid");
+            }
+
+            if (inFolder == null) {
+                throw new NotesException("folder is null");
+            }
+
+            if (!em.contains(inFolder)) {
+                inFolder = folderManager.getFolder(inFolder.getId());
+            }
 
             BookmarkDocument document = new BookmarkDocument();
             document.setUrl(ref.getUrl());

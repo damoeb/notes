@@ -105,8 +105,7 @@ $.widget("notes.folder", {
             $self.refresh();
         }
 
-        $('#databases').databases('put', $self);
-
+        notes.app.add$Folder($self);
     },
 
     _isExpanded: function () {
@@ -135,8 +134,7 @@ $.widget("notes.folder", {
             $self.$childrenLayer.show();
             $self._highlight();
 
-            $('#databases')
-                .databases('setActiveFolderId', folderId);
+            notes.app.activeFolderId(folderId);
 
             if (callTriggers) {
 
@@ -224,8 +222,5 @@ $.widget("notes.folder", {
         $('#document-list').documentList({
             folderId: folderId
         });
-    },
-    _destroy: function () {
-        // todo implement widget method
     }
 });

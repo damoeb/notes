@@ -1,11 +1,11 @@
-- routes backbone
-- triggers for document in separate table
+- attachments for docs, valid docs from file only for pdfs, websites
+- js: application object, that manages all data (active folder, open doc, folders)
 - suche + in node names, tags
 - document thumbnail?
+- triggers for document in separate table
 
 - import/export
 - scrollbars, min text editor
-- attachments for document
 - unit tests http://stackoverflow.com/questions/6469751/testing-an-ejb-with-junit
 
 - authentication + forward security http://www.heise.de/security/artikel/Forward-Secrecy-testen-und-einrichten-1932806.html

@@ -77,24 +77,29 @@ public class UserManagerBean implements UserManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public User createUser(User user, Account account) throws NotesException {
+    public User createUser(User newUser, Account account) throws NotesException {
         try {
 
-            if (user == null) {
+            if (newUser == null) {
                 throw new NotesException("user is null");
             }
+
             if (account == null) {
                 throw new NotesException("account is null");
             }
 
-            em.persist(user);
-            em.flush();
-            em.refresh(user);
+            if (!em.contains(account)) {
+                account = accountManager.getAccount(account.getId());
+            }
 
-            account.getUsers().add(user);
+            em.persist(newUser);
+            em.flush();
+            em.refresh(newUser);
+
+            account.getUsers().add(newUser);
             em.merge(account);
 
-            return user;
+            return newUser;
 
         } catch (NotesException t) {
             throw t;

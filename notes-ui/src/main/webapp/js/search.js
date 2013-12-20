@@ -29,9 +29,5 @@ $.widget("notes.search", {
         notes.util.jsonCall('GET', '/notes/rest/search/${query}', {'${query}': $this.options.query}, null, function (documents) {
             // todo implement
         });
-    },
-
-    _destroy: function () {
-        // todo implement widget method
     }
 });

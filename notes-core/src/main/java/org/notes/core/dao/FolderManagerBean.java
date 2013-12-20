@@ -85,6 +85,8 @@ public class FolderManagerBean implements FolderManager {
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Folder getFolder(long folderId) throws NotesException {
         try {
+
+            // todo validate req
             return _get(folderId);
 
         } catch (NotesException e) {
@@ -161,14 +163,15 @@ public class FolderManagerBean implements FolderManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public Folder deleteFolder(Folder folder) throws NotesException {
+    public Folder deleteFolder(long folderId) throws NotesException {
         try {
-            return _delete(folder);
+
+            return _delete(_get(folderId));
 
         } catch (NotesException e) {
             throw e;
         } catch (Throwable t) {
-            throw new NotesException("delete folder " + folder, t);
+            throw new NotesException("delete folder " + folderId, t);
         }
     }
 

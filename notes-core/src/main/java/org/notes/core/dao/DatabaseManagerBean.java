@@ -160,16 +160,22 @@ public class DatabaseManagerBean implements DatabaseManager {
 
     }
 
-    private Database _create(Database database, User userRef) throws NotesException {
+    private Database _create(Database database, User user) throws NotesException {
 
         if (database == null) {
             throw new NotesException("Database is null");
         }
 
+        if (user == null) {
+            throw new NotesException("user is null");
+        }
+        if (!em.contains(user)) {
+            user = userManager.getUser(user.getUsername());
+        }
+
         database.setDocumentCount(0);
         database.setModified(new Date());
 
-        User user = userManager.getUser(userRef.getUsername());
         em.persist(database);
         user.getDatabases().add(database);
         em.merge(user);

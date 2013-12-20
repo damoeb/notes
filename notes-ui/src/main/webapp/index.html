@@ -9,191 +9,229 @@
 <html class="no-js" xmlns="http://www.w3.org/1999/html"> <!--<![endif]-->
 <head>
 
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title></title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title></title>
+<meta name="description" content="">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+<!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
-    <link rel="stylesheet" href="css/bootstrap.css">
-    <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/vendor/jquery-ui-1.9.2.custom.css">
-    <link rel="stylesheet" href="css/vendor/jquery.dataTables.css">
-    <!-- Icon Font -->
-    <link rel="stylesheet" href="css/font-awesome.min.css">
+<link rel="stylesheet" href="css/bootstrap.css">
+<link rel="stylesheet" href="css/main.css">
+<link rel="stylesheet" href="css/vendor/jquery-ui-1.9.2.custom.css">
+<link rel="stylesheet" href="css/vendor/jquery.dataTables.css">
+<!-- Icon Font -->
+<link rel="stylesheet" href="css/font-awesome.min.css">
 
 
-    <script src="js/vendor/modernizr-2.6.2.min.js"></script>
+<script src="js/vendor/modernizr-2.6.2.min.js"></script>
 
-    <script src="js/vendor/jquery-1.8.2.min.js"></script>
-    <script src="js/vendor/jquery-ui-1.9.2.custom.js"></script>
-    <script src="js/vendor/jquery.dataTables.js"></script>
-    <script src="js/vendor/jquery.timeago.js"></script>
-    <script type="text/javascript">
-        jQuery.timeago.settings.strings = {
-            prefixAgo: '',
-            prefixFromNow: 'in',
-            suffixAgo: '',
-            suffixFromNow: '',
-            seconds: 'now',
-            minute: 'a minute',
-            minutes: '%d minutes',
-            hour: 'an hour',
-            hours: '%d hours',
-            day: 'a day',
-            days: '%d days',
-            month: 'a month',
-            months: '%d month',
-            year: 'a year',
-            years: '%d years'
+<script src="js/vendor/jquery-1.8.2.min.js"></script>
+<script src="js/vendor/jquery-ui-1.9.2.custom.js"></script>
+<script src="js/vendor/jquery.dataTables.js"></script>
+<script src="js/vendor/jquery.timeago.js"></script>
+<script type="text/javascript">
+    jQuery.timeago.settings.strings = {
+        prefixAgo: '',
+        prefixFromNow: 'in',
+        suffixAgo: '',
+        suffixFromNow: '',
+        seconds: 'now',
+        minute: 'a minute',
+        minutes: '%d minutes',
+        hour: 'an hour',
+        hours: '%d hours',
+        day: 'a day',
+        days: '%d days',
+        month: 'a month',
+        months: '%d month',
+        year: 'a year',
+        years: '%d years'
+    };
+</script>
+
+<script src="js/vendor/jquery.paginate.js"></script>
+<script src="js/vendor/underscore-min.js"></script>
+<script src="js/vendor/backbone.js"></script>
+
+<!-- notifications -->
+<!-- see http://needim.github.com/noty/-->
+<script src="js/vendor/jquery.noty.js"></script>
+<script src="js/vendor/noty/layouts/top.js"></script>
+<script src="js/vendor/noty/themes/default.js"></script>
+
+<!-- file upload -->
+<script src="js/fileupload/jquery.iframe-transport.js"></script>
+<script src="js/fileupload/jquery.fileupload.js"></script>
+<link rel="stylesheet" href="js/fileupload/jquery.fileupload-ui.css">
+
+
+<script src="js/plugins.js"></script>
+
+<script type="text/javascript">
+    var notes = {};
+</script>
+
+<script src="js/util.js"></script>
+<script src="js/editors.js"></script>
+<script src="js/basiceditor.js"></script>
+<script src="js/texteditor.js"></script>
+<script src="js/pdfeditor.js"></script>
+<script src="js/documentlist.js"></script>
+<script src="js/databases.js"></script>
+<script src="js/folder.js"></script>
+<script src="js/tree.js"></script>
+<script src="js/dialog.js"></script>
+<script src="js/model.js"></script>
+
+
+<script src="js/pdf/pdf.js"></script>
+<script src="js/pdf/textlayerbuilder.js"></script>
+<script src="js/pdfloader.js"></script>
+<link rel="stylesheet" href="js/pdf/pdf.css">
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        // -- Overwrites -----------------------------------------------------------------------------------------------
+        var fnCustomParse = function (data) {
+            if (_.isObject(data.result)) {
+                return data.result;
+            } else {
+                return data;
+            }
         };
-    </script>
+        Backbone.Model.prototype.parse = fnCustomParse;
+        Backbone.Collection.prototype.parse = fnCustomParse;
 
-    <script src="js/vendor/jquery.paginate.js"></script>
-    <script src="js/vendor/underscore-min.js"></script>
-    <script src="js/vendor/backbone.js"></script>
+        // -- Side Navigation ------------------------------------------------------------------------------------------
 
-    <!-- notifications -->
-    <!-- see http://needim.github.com/noty/-->
-    <script src="js/vendor/jquery.noty.js"></script>
-    <script src="js/vendor/noty/layouts/top.js"></script>
-    <script src="js/vendor/noty/themes/default.js"></script>
+        // todo get settings
 
-    <!-- file upload -->
-    <script src="js/fileupload/jquery.iframe-transport.js"></script>
-    <script src="js/fileupload/jquery.fileupload.js"></script>
-    <link rel="stylesheet" href="js/fileupload/jquery.fileupload-ui.css">
+        notes.app.databaseId(1);
 
+        $('#databases').databases({
+            databaseId: notes.app.databaseId()
+        });
 
-    <script src="js/plugins.js"></script>
+        var editors = $('#editors').editors();
 
-    <script type="text/javascript">
-        var notes = {};
-    </script>
+        // -- Menu -- --------------------------------------------------------------------------------------------------
 
-    <script src="js/util.js"></script>
-    <script src="js/editors.js"></script>
-    <script src="js/basiceditor.js"></script>
-    <script src="js/texteditor.js"></script>
-    <script src="js/pdfeditor.js"></script>
-    <script src="js/documentlist.js"></script>
-    <script src="js/databases.js"></script>
-    <script src="js/folder.js"></script>
-    <script src="js/tree.js"></script>
-    <script src="js/dialog.js"></script>
-    <script src="js/model.js"></script>
+        $('#settings').button({
+            icons: {primary: 'ui-icon-gear'},
+            text: false
+        }).click(notes.dialog.settings.general);
 
+        $('#create-document')
+                .button()
+                .click(function () {
+                    editors.editors('createDocument');
+                });
 
-    <script src="js/pdf/pdf.js"></script>
-    <script src="js/pdf/textlayerbuilder.js"></script>
-    <script src="js/pdfloader.js"></script>
-    <link rel="stylesheet" href="js/pdf/pdf.css">
+        $('#import-document')
+                .button()
+                .click(notes.dialog.document.import)
+                .parent().buttonset();
 
-
-    <script type="text/javascript">
-
-        $(document).ready(function () {
-
-            // -- Overwrites -----------------------------------------------------------------------------------------------
-            var fnCustomParse = function (data) {
-                if (_.isObject(data.result)) {
-                    return data.result;
-                } else {
-                    return data;
-                }
-            };
-            Backbone.Model.prototype.parse = fnCustomParse;
-            Backbone.Collection.prototype.parse = fnCustomParse;
-
-            // -- Side Navigation ------------------------------------------------------------------------------------------
-
-            // todo get settings
-            var config = {databaseId: 1};
-
-            $('#databases').databases({
-                databaseId: config.databaseId
-            });
-
-//            $('#document-list').documentList();
-
-            var editors = $('#editors').editors();
-
-            // -- Menu -- --------------------------------------------------------------------------------------------------
-
-            $('#settings').button({
-                icons: {primary: 'ui-icon-gear'},
-                text: false
-            }).click(notes.dialog.settings.general);
-
-            $('#create-document')
-                    .button()
-                    .click(function () {
-                        editors.editors('createDocument');
-                    });
-
-            $('#import-document')
-                    .button()
-                    .click(notes.dialog.document.import)
-                    .parent().buttonset();
-
-
-            // todo if file is dropped to document and upload started -> block screen or other indicator
+        // todo if file is dropped to document and upload started -> block screen or other indicator
 //            var overallProgress = $('#fileupload').fileupload('progress');
 //            var activeUploads = $('#fileupload').fileupload('active');
 
-            var $upload = $('#file-upload').
-                    fileupload({
-                        url: '/notes/rest/file/upload',
-                        dataType: 'json'
-                    })
-                    .bind('fileuploadsubmit', function (e, data) {
-                        // todo fix
-                        var folderId = $('#databases').databases('getActiveFolderId');
-                        data.formData = {folderId: folderId};
-                    })
-                    .bind('fileuploaddone', function (e, xhr) {
-                        console.log('done');
+        var $upload = $('#file-upload').
+                fileupload({
+                    url: '/notes/rest/file/upload',
+                    dataType: 'json'
+                })
+                .bind('fileuploadsubmit', function (e, data) {
 
-                        var model = new notes.model.Document(xhr.result.result);
+                    data.formData = {
+                        folderId: notes.app.activeFolderId(),
+                        documentId: notes.app.documentId()
+                    };
+                })
+                .bind('fileuploaddone', function (e, xhr) {
+                    console.log('done');
 
-                        $('#document-list').documentList('updateDocument', model);
-                    });
+                    var model = new notes.model.Document(xhr.result.result);
 
-
-            $('#search-input').keypress(function (e) {
-                if (e.which == 13) {
-                    notes.router.navigate('search/' + $(this).val());
-                }
-            });
+                    $('#document-list').documentList('updateDocument', model);
+                });
 
 
-            var Router = Backbone.Router.extend({
-
-                routes: {
-                    "folder/:id": "folder",
-                    "search/:query": "search"   // #search/kiwis/p7
-                },
-
-                search: function (query) {
-                    console.log('search ' + query);
-                },
-
-                folder: function (id) {
-                    console.log('open folder ' + id);
-                }
-            });
-
-            notes.router = new Router();
-
-            // start routing
-            Backbone.history.start();
-
+        $('#search-input').keypress(function (e) {
+            if (e.which == 13) {
+                notes.router.navigate('search/' + $(this).val());
+            }
         });
 
 
-    </script>
+        var Router = Backbone.Router.extend({
+
+            routes: {
+                "folder/:id": "folder",
+                "search/:query": "search"   // #search/kiwis/p7
+            },
+
+            search: function (query) {
+                console.log('search ' + query);
+            },
+
+            folder: function (id) {
+                console.log('open folder ' + id);
+            }
+        });
+
+        notes.router = new Router();
+
+        // start routing
+        Backbone.history.start();
+
+    });
+
+    notes.app = new function () {
+
+        var _activeFolderId = 0;
+        var _documentId = 0;
+        var _databaseId = 0;
+        var _descendants = {};
+
+        this.activeFolderId = function (id) {
+            if (typeof id != 'undefined') {
+                _activeFolderId = id;
+            } else {
+                return _activeFolderId;
+            }
+        }
+        this.documentId = function (id) {
+            if (typeof id != 'undefined') {
+                _documentId = id;
+            } else {
+                return _documentId;
+            }
+        }
+        this.databaseId = function (id) {
+            if (typeof id != 'undefined') {
+                _databaseId = id;
+            } else {
+                return _databaseId;
+            }
+        }
+
+        this.add$Folder = function ($folder) {
+            _descendants[$folder.getModel().get('id')] = $folder;
+        }
+
+        this.get$Folder = function (folderId) {
+            return _descendants[folderId];
+        }
+    };
+
+
+</script>
 
 </head>
 <body style="background-color: #C5C5C5">

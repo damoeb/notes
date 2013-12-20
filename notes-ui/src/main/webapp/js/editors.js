@@ -27,6 +27,8 @@ $.widget("notes.editors", {
         $this.element.empty();
         $('#document-list').hide();
 
+        notes.app.documentId(documentId);
+
         notes.util.jsonCall('GET', '/notes/rest/document/${documentId}', {'${documentId}': documentId}, null, function (document) {
 
             var settings = {
@@ -51,7 +53,7 @@ $.widget("notes.editors", {
         $('#document-list').hide();
 
         $this.loadDocument(settings, new notes.model.Document({
-            folderId: $('#databases').databases('getActiveFolderId')
+            folderId: notes.app.activeFolderId()
         }));
     },
 

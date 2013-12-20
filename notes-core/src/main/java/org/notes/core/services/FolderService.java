@@ -27,7 +27,7 @@ public class FolderService {
             Folder folder
     ) throws Exception {
         try {
-            // todo fix does not work
+            // todo fix does not work for folder without parent
             Folder parent;
             if (folder.getParentId() != null) {
                 parent = new Folder(folder.getParentId());
@@ -126,12 +126,13 @@ public class FolderService {
     @DELETE
     @MethodCache
     @ServiceMetric
+    @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse deleteFolder(
-            Folder folder
+            @PathParam("id") long folderId
     ) throws Exception {
         try {
-            return NotesResponse.ok(folderManager.deleteFolder(folder));
+            return NotesResponse.ok(folderManager.deleteFolder(folderId));
         } catch (Exception e) {
             return NotesResponse.error(e);
         }

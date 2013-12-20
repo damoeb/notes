@@ -59,7 +59,7 @@ $.widget("notes.documentList", {
 
         var $crumbs = $('<div/>', {style: 'padding:10px; margin-bottom:10px; background-color:#efefef'});
 
-        var $folder = $('#databases').databases('get$Folder', folderId);
+        var $folder = notes.app.get$Folder(folderId);
         while ($folder) {
 
             $crumbs.prepend(
@@ -158,10 +158,6 @@ $.widget("notes.documentList", {
     deleteDocument: function (model) {
         var $this = this;
         $this.element.find('.doc-id-' + model.get('id')).remove()
-    },
-
-    _destroy: function () {
-        // todo implement widget method
     }
 
 });

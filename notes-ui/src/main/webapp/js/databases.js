@@ -14,7 +14,6 @@ $.widget("notes.databases", {
 
     _init: function () {
         var $self = this;
-        $self.descendants = {};
         $self.$tree = null;
     },
 
@@ -41,27 +40,6 @@ $.widget("notes.databases", {
 
     _getModel: function () {
         return this.$tree.tree('getModel');
-    },
-
-    setActiveFolderId: function (folderId) {
-        console.log('active folder is ' + folderId);
-        this.activeFolderId = folderId;
-    },
-
-    getActiveFolderId: function () {
-        return this.activeFolderId;
-    },
-
-    getDatabaseId: function () {
-        return this.options.databaseId;
-    },
-
-    put: function ($folder) {
-        this.descendants[$folder.getModel().get('id')] = $folder;
-    },
-
-    get$Folder: function (folderId) {
-        return this.descendants[folderId];
     },
 
     reloadTree: function () {
