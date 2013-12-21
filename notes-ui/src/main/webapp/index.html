@@ -75,6 +75,7 @@
 
 <script src="js/util.js"></script>
 <script src="js/editors.js"></script>
+<script src="js/breadcrumbs.js"></script>
 <script src="js/basiceditor.js"></script>
 <script src="js/texteditor.js"></script>
 <script src="js/pdfeditor.js"></script>
@@ -169,6 +170,10 @@
         });
 
 
+        $('#breadcrumbs').breadcrumbs();
+
+        // -- Routing --------------------------------------------------------------------------------------------------
+
         var Router = Backbone.Router.extend({
 
             routes: {
@@ -189,7 +194,6 @@
 
         // start routing
         Backbone.history.start();
-
     });
 
     notes.app = new function () {
@@ -303,6 +307,9 @@
 
         <!-- CONTENT -->
         <div class="col-lg-8">
+            <div id="breadcrumbs" class="row">
+
+            </div>
             <div id="document-list" class="row">
 
             </div>
