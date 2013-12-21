@@ -42,7 +42,7 @@ notes.dialog.folder = {
                     $('<a/>', {text: 'Delete'})
                 )
             ).dialog($.extend({}, notes.dialog.defaults, {
-                title: 'Settings'
+                title: 'Folder'
             }));
     },
 
@@ -131,11 +131,11 @@ notes.dialog.database = {
                     $('<a/>', {text: 'Create Folder'}).click(
                         function () {
                             notes.dialog.folder.newFolder(null);
-
+                            $(this).dialog("close");
                         })
                 )
             ).dialog($.extend({}, notes.dialog.defaults, {
-                title: 'Settings'
+                title: 'Database'
             }));
     }
 };
@@ -170,7 +170,7 @@ notes.dialog.document = {
                 )
 
             ).dialog($.extend({}, notes.dialog.defaults, {
-                title: 'Settings'
+                title: 'Document'
             }));
     },
 

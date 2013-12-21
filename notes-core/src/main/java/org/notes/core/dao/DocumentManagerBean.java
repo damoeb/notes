@@ -250,7 +250,6 @@ public class DocumentManagerBean implements DocumentManager {
 
             Folder inFolder = folderManager.getFolder(folderId);
 
-            // todo validate folderId
             for (FileItem item : items) {
 
                 if (!item.isFormField()) {

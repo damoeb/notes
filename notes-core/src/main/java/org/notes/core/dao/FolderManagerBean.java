@@ -52,11 +52,18 @@ public class FolderManagerBean implements FolderManager {
                 throw new NotesException("database is null");
             }
 
-            // todo load database by id
-            folder = _create(folder, parent, database.getOwner());
+            if (!em.contains(database)) {
+                database = databaseManager.getDatabase(database.getId());
+            }
 
+            if (parent != null && !em.contains(parent)) {
+                parent = _get(parent.getId());
+            }
+
+            folder = _create(folder, parent, database);
+
+            // use database as proxy
             Database proxy = (Database) _getProxy(Database.class, database.getId());
-
             proxy.getFolders().add(folder);
 
             em.merge(proxy);
@@ -223,19 +230,21 @@ public class FolderManagerBean implements FolderManager {
 
     }
 
-    private Folder _create(Folder folder, Folder parent, String username) throws NotesException {
+    private Folder _create(Folder folder, Folder parent, Database database) throws NotesException {
 
         if (folder == null) {
             throw new NotesException("Folder is null");
         }
 
-        // todo check: max level is 3
-
         if (parent != null) {
-            Folder parentProxy = (Folder) _getProxy(Folder.class, parent.getId());
-            parentProxy.setLeaf(false);
-            folder.setLevel(parentProxy.getLevel() + 1);
-            em.merge(parentProxy);
+
+            if (parent.getLevel() >= 2) {
+                throw new NotesException("Max folder depth reached.");
+            }
+
+            parent.setLeaf(false);
+            folder.setLevel(parent.getLevel() + 1);
+            em.merge(parent);
         } else {
             folder.setLevel(0);
         }
@@ -247,7 +256,7 @@ public class FolderManagerBean implements FolderManager {
         em.flush();
         em.refresh(folder);
 
-        User user = (User) _getProxy(User.class, username);
+        User user = (User) _getProxy(User.class, database.getOwner());
         user.getFolders().add(folder);
         em.merge(user);
 
