@@ -46,9 +46,9 @@ public class StartUp {
         LOGGER.info("Notes Version " + Configuration.getStringValue(Configuration.VERSION, "UNKNOWN"));
 
         synchronized (Startup.class) {
+
             if (!initialized) {
                 initialized = false;
-
 
                 try {
 

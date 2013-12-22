@@ -7,19 +7,21 @@ import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.impl.HttpSolrServer;
 import org.apache.solr.client.solrj.impl.XMLResponseParser;
+import org.apache.solr.client.solrj.response.QueryResponse;
+import org.apache.solr.common.SolrDocument;
+import org.apache.solr.common.SolrDocumentList;
 import org.notes.common.configuration.Configuration;
 import org.notes.common.configuration.ConfigurationProperty;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
-import org.notes.common.model.Kind;
+import org.notes.common.model.IndexFields;
 import org.notes.search.interfaces.SearchManager;
 import org.notes.search.model.DocumentHit;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
-import java.util.Arrays;
-import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 //@LocalBean
@@ -41,8 +43,8 @@ public class SearchManagerBean implements SearchManager {
 
             SolrQuery query = new SolrQuery();
             query.setQuery(queryString);
-            query.addFilterQuery("userId:1", "store:amazon.com");
-            query.setFields("id", "title", "outline", "modified", "kind");
+            //query.addFilterQuery("owner:1", "store:amazon.com");
+            query.setFields(IndexFields.DOCUMENT, IndexFields.TITLE, IndexFields.FOLDER, IndexFields.OUTLINE, IndexFields.SECTION, IndexFields.MODIFIED, IndexFields.KIND);
             query.setStart(0);
             query.setRows(100);
 
@@ -50,7 +52,16 @@ public class SearchManagerBean implements SearchManager {
 
             // todo facets
 
-            return Arrays.asList(new DocumentHit(1d, 1l, new Date(), "Example query result a", "matching highlights", Kind.TEXT));
+
+            List<DocumentHit> hits = new LinkedList<>();
+            QueryResponse response = server.query(query);
+            SolrDocumentList results = response.getResults();
+            for (SolrDocument solrDocument : results) {
+                // todo set highlights, score
+                hits.add(new DocumentHit(solrDocument));
+            }
+
+            return hits;
 
         } catch (Throwable t) {
             throw new NotesException("query: " + t.getMessage(), t);

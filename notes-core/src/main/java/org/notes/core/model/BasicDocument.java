@@ -15,6 +15,7 @@ import org.notes.common.service.CustomDateSerializer;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -292,6 +293,11 @@ public class BasicDocument implements Document {
         this.trigger = trigger;
     }
 
+    @Override
+    public Map<String, Object> getAdditionalFields() {
+        return null;
+    }
+
     public int getViews() {
         return views;
     }
@@ -309,6 +315,7 @@ public class BasicDocument implements Document {
     }
 
     public Set<Tag> getTags() {
+        // todo tags should be indexed
         return tags;
     }
 

@@ -1,5 +1,7 @@
 package org.notes.search.model;
 
+import org.apache.solr.common.SolrDocument;
+import org.notes.common.model.IndexFields;
 import org.notes.common.model.Kind;
 
 import java.util.Date;
@@ -20,6 +22,13 @@ public class DocumentHit {
         this.title = title;
         this.highlights = highlights;
         this.kind = kind;
+    }
+
+    public DocumentHit(SolrDocument solrDocument) {
+        this.documentId = (Long) solrDocument.getFirstValue(IndexFields.DOCUMENT);
+        this.modified = (Date) solrDocument.getFirstValue(IndexFields.MODIFIED);
+        this.title = (String) solrDocument.getFirstValue(IndexFields.TITLE);
+        this.kind = Kind.valueOf((String) solrDocument.getFirstValue(IndexFields.KIND));
     }
 
     public Double getScore() {

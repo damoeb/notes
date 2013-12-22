@@ -14,6 +14,7 @@ import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.interfaces.Document;
 import org.notes.common.interfaces.Fulltextable;
 import org.notes.common.model.FullText;
+import org.notes.common.model.IndexFields;
 import org.notes.common.model.Trigger;
 
 import javax.ejb.*;
@@ -21,10 +22,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 //@LocalBean
 @Singleton
@@ -68,9 +66,9 @@ public class IndexerScheduler {
                     if (Trigger.INDEX == document.getTrigger()) {
                         LOGGER.info("index " + document.getId());
 
-//                        // todo activate again
-//                        indexDocument(document);
-//
+                        indexDocument(document);
+
+                        // todo support fulltext of attachement/pdf
 //                        if (document instanceof Fulltextable) {
 //                            indexFullTexts(document, (Fulltextable) document);
 //                        }
@@ -98,11 +96,11 @@ public class IndexerScheduler {
         for (FullText fullText : provider.getFullTexts()) {
 
             SolrInputDocument doc = new SolrInputDocument();
-            doc.setField("document", document.getId());
-            doc.setField("folder", document.getFolderId());
-            doc.setField("owner", document.getOwner());
-            doc.setField("text", fullText.getText());
-            doc.setField("section", fullText.getSection());
+            doc.setField(IndexFields.DOCUMENT, document.getId());
+            doc.setField(IndexFields.FOLDER, document.getFolderId());
+            doc.setField(IndexFields.OWNER, document.getOwner());
+            doc.setField(IndexFields.TEXT, fullText.getText());
+            doc.setField(IndexFields.SECTION, fullText.getSection());
             docs.add(doc);
         }
 
@@ -111,14 +109,24 @@ public class IndexerScheduler {
 
     private void indexDocument(Document document) throws IOException, SolrServerException {
         // todo update document http://wiki.apache.org/solr/UpdateXmlMessages#Optional_attributes_for_.22field.22
-        SolrInputDocument doc = new SolrInputDocument();
-        doc.setField("document", document.getId());
-        doc.setField("folder", document.getFolderId());
-        doc.setField("modified", document.getModified());
-        doc.setField("title", document.getTitle());
-        doc.setField("kind", document.getKind());
-        doc.setField("owner", document.getOwner());
 
+        SolrInputDocument doc = new SolrInputDocument();
+        doc.setField(IndexFields.DOCUMENT, document.getId());
+        doc.setField(IndexFields.FOLDER, document.getFolderId());
+        doc.setField(IndexFields.MODIFIED, document.getModified());
+        doc.setField(IndexFields.TITLE, document.getTitle());
+        doc.setField(IndexFields.KIND, document.getKind());
+        doc.setField(IndexFields.OWNER, document.getOwner());
+        // todo index tags
+
+        Map<String, Object> fields = document.getAdditionalFields();
+        if (fields != null) {
+            for (String field : fields.keySet()) {
+                doc.setField(field, fields.get(field));
+            }
+        }
+
+        // todo remove all with this doc id
         getSolrServer().add(doc, COMMIT_WITHIN_MS);
     }
 

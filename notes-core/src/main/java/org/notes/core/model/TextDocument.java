@@ -5,14 +5,12 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.notes.common.ForeignKey;
 import org.notes.common.interfaces.Fulltextable;
 import org.notes.common.model.FullText;
+import org.notes.common.model.IndexFields;
 import org.notes.common.model.Kind;
 import org.notes.common.utils.TextUtils;
 
 import javax.persistence.*;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity(name = "TextDocument")
 @Table(name = "TextDocument")
@@ -60,5 +58,12 @@ public class TextDocument extends BasicDocument implements Fulltextable {
 
     public void setHistory(Set<Change> history) {
         this.history = history;
+    }
+
+    @Override
+    public Map<String, Object> getAdditionalFields() {
+        Map<String, Object> fields = new HashMap<>(10);
+        fields.put(IndexFields.TEXT, getText());
+        return fields;
     }
 }

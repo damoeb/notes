@@ -5,6 +5,7 @@ import org.notes.common.model.Trigger;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Map;
 
 public interface Document extends Serializable {
 
@@ -30,4 +31,6 @@ public interface Document extends Serializable {
     Trigger getTrigger();
 
     void setTrigger(Trigger trigger);
+
+    Map<String, Object> getAdditionalFields();
 }

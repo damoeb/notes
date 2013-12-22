@@ -112,14 +112,15 @@
         <!--<field name="_root_" type="string" indexed="true" stored="false"/>-->
 
 
-        <field name="document"  type="long"     indexed="true" stored="true" />
-        <field name="folder"    type="long"     indexed="true" stored="true" />
-        <field name="modified"  type="date"     indexed="true" stored="true" />
-        <field name="title"     type="text"     indexed="true" stored="true" />
-        <field name="kind"      type="string"   indexed="true" stored="true" />
-        <field name="owner"     type="long"     indexed="true" stored="true" />
-        <field name="text"      type="text"     indexed="true" stored="true" />
-        <field name="section"   type="long"     indexed="true" stored="true" />
+        <field name="document" type="long" indexed="true" stored="true"/>
+        <field name="folder" type="long" indexed="true" stored="true"/>
+        <field name="modified" type="date" indexed="true" stored="true"/>
+        <field name="title" type="text_general" indexed="true" stored="true"/>
+        <field name="kind" type="string" indexed="true" stored="true"/>
+        <field name="owner" type="string" indexed="true" stored="true"/>
+        <field name="text" type="text_general" indexed="true" stored="true"/>
+        <field name="outline" type="text_general" indexed="true" stored="true"/>
+        <field name="section" type="long" indexed="true" stored="true"/>
 
 
         <!--<field name="sku" type="text_en_splitting_tight" indexed="true" stored="true" omitNorms="true"/>-->
@@ -128,7 +129,7 @@
         <!--<field name="cat" type="string" indexed="true" stored="true" multiValued="true"/>-->
         <!--<field name="features" type="text_general" indexed="true" stored="true" multiValued="true"/>-->
         <!--<field name="includes" type="text_general" indexed="true" stored="true" termVectors="true" termPositions="true"-->
-               <!--termOffsets="true"/>-->
+        <!--termOffsets="true"/>-->
 
         <!--<field name="weight" type="float" indexed="true" stored="true"/>-->
         <!--<field name="price" type="float" indexed="true" stored="true"/>-->
@@ -159,46 +160,46 @@
         <!--<field name="links" type="string" indexed="true" stored="true" multiValued="true"/>-->
 
         <!--&lt;!&ndash; Main body of document extracted by SolrCell.-->
-             <!--NOTE: This field is not indexed by default, since it is also copied to "text"-->
-             <!--using copyField below. This is to save space. Use this field for returning and-->
-             <!--highlighting document content. Use the "text" field to search the content. &ndash;&gt;-->
+        <!--NOTE: This field is not indexed by default, since it is also copied to "text"-->
+        <!--using copyField below. This is to save space. Use this field for returning and-->
+        <!--highlighting document content. Use the "text" field to search the content. &ndash;&gt;-->
         <!--<field name="content" type="text_general" indexed="false" stored="true" multiValued="true"/>-->
 
 
         <!--&lt;!&ndash; catchall field, containing all other searchable text fields (implemented-->
-             <!--via copyField further on in this schema  &ndash;&gt;-->
+        <!--via copyField further on in this schema  &ndash;&gt;-->
         <!--<field name="text" type="text_general" indexed="true" stored="false" multiValued="true"/>-->
 
         <!--&lt;!&ndash; catchall text field that indexes tokens both normally and in reverse for efficient-->
-             <!--leading wildcard queries. &ndash;&gt;-->
+        <!--leading wildcard queries. &ndash;&gt;-->
         <!--<field name="text_rev" type="text_general_rev" indexed="true" stored="false" multiValued="true"/>-->
 
         <!--&lt;!&ndash; non-tokenized version of manufacturer to make it easier to sort or group-->
-             <!--results by manufacturer.  copied from "manu" via copyField &ndash;&gt;-->
+        <!--results by manufacturer.  copied from "manu" via copyField &ndash;&gt;-->
         <!--<field name="manu_exact" type="string" indexed="true" stored="false"/>-->
 
         <!--<field name="payloads" type="payloads" indexed="true" stored="true"/>-->
 
-        <!--<field name="_version_" type="long" indexed="true" stored="true"/>-->
+        <field name="_version_" type="long" indexed="true" stored="true"/>
 
         <!--&lt;!&ndash;-->
-          <!--Some fields such as popularity and manu_exact could be modified to-->
-          <!--leverage doc values:-->
-          <!--<field name="popularity" type="int" indexed="true" stored="true" docValues="true" />-->
-          <!--<field name="manu_exact" type="string" indexed="false" stored="false" docValues="true" />-->
-          <!--<field name="cat" type="string" indexed="true" stored="true" docValues="true" multiValued="true"/>-->
+        <!--Some fields such as popularity and manu_exact could be modified to-->
+        <!--leverage doc values:-->
+        <!--<field name="popularity" type="int" indexed="true" stored="true" docValues="true" />-->
+        <!--<field name="manu_exact" type="string" indexed="false" stored="false" docValues="true" />-->
+        <!--<field name="cat" type="string" indexed="true" stored="true" docValues="true" multiValued="true"/>-->
 
 
-          <!--Although it would make indexing slightly slower and the index bigger, it-->
-          <!--would also make the index faster to load, more memory-efficient and more-->
-          <!--NRT-friendly.-->
-          <!--&ndash;&gt;-->
+        <!--Although it would make indexing slightly slower and the index bigger, it-->
+        <!--would also make the index faster to load, more memory-efficient and more-->
+        <!--NRT-friendly.-->
+        <!--&ndash;&gt;-->
 
         <!--&lt;!&ndash; Dynamic field definitions allow using convention over configuration-->
-            <!--for fields via the specification of patterns to match field names.-->
-            <!--EXAMPLE:  name="*_i" will match any field ending in _i (like myid_i, z_i)-->
-            <!--RESTRICTION: the glob-like pattern in the name attribute must have-->
-            <!--a "*" only at the start or the end.  &ndash;&gt;-->
+        <!--for fields via the specification of patterns to match field names.-->
+        <!--EXAMPLE:  name="*_i" will match any field ending in _i (like myid_i, z_i)-->
+        <!--RESTRICTION: the glob-like pattern in the name attribute must have-->
+        <!--a "*" only at the start or the end.  &ndash;&gt;-->
 
         <!--<dynamicField name="*_i" type="int" indexed="true" stored="true"/>-->
         <!--<dynamicField name="*_is" type="int" indexed="true" stored="true" multiValued="true"/>-->
@@ -271,28 +272,28 @@
           is added to the index.  It's used either to index the same field differently,
           or to add multiple fields to the same field for easier/faster searching.  -->
 
-    <copyField source="cat" dest="text"/>
-    <copyField source="name" dest="text"/>
-    <copyField source="manu" dest="text"/>
-    <copyField source="features" dest="text"/>
-    <copyField source="includes" dest="text"/>
-    <copyField source="manu" dest="manu_exact"/>
+    <!--<copyField source="cat" dest="text"/>-->
+    <!--<copyField source="name" dest="text"/>-->
+    <!--<copyField source="manu" dest="text"/>-->
+    <!--<copyField source="features" dest="text"/>-->
+    <!--<copyField source="includes" dest="text"/>-->
+    <!--<copyField source="manu" dest="manu_exact"/>-->
 
-    <!-- Copy the price into a currency enabled field (default USD) -->
-    <copyField source="price" dest="price_c"/>
+    <!--&lt;!&ndash; Copy the price into a currency enabled field (default USD) &ndash;&gt;-->
+    <!--<copyField source="price" dest="price_c"/>-->
 
     <!-- Text fields from SolrCell to search by default in our catch-all field -->
-    <copyField source="title" dest="text"/>
-    <copyField source="author" dest="text"/>
-    <copyField source="description" dest="text"/>
-    <copyField source="keywords" dest="text"/>
-    <copyField source="content" dest="text"/>
-    <copyField source="content_type" dest="text"/>
-    <copyField source="resourcename" dest="text"/>
-    <copyField source="url" dest="text"/>
+    <!--<copyField source="title" dest="text"/>-->
+    <!--<copyField source="author" dest="text"/>-->
+    <!--<copyField source="description" dest="text"/>-->
+    <!--<copyField source="keywords" dest="text"/>-->
+    <!--<copyField source="content" dest="text"/>-->
+    <!--<copyField source="content_type" dest="text"/>-->
+    <!--<copyField source="resourcename" dest="text"/>-->
+    <!--<copyField source="url" dest="text"/>-->
 
-    <!-- Create a string version of author for faceting -->
-    <copyField source="author" dest="author_s"/>
+    <!--&lt;!&ndash; Create a string version of author for faceting &ndash;&gt;-->
+    <!--<copyField source="author" dest="author_s"/>-->
 
     <!-- Above, multiple source fields are copied to the [text] field.
        Another way to map multiple source fields to the same
