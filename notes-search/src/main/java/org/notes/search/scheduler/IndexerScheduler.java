@@ -39,6 +39,8 @@ public class IndexerScheduler {
     @PersistenceContext(unitName = "primary")
     private EntityManager em;
 
+    private HttpSolrServer solr;
+
 
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     @Lock(LockType.WRITE)
@@ -127,12 +129,15 @@ public class IndexerScheduler {
         }
 
         // todo remove all with this doc id
+        getSolrServer().deleteByQuery(String.format("%s:%s", IndexFields.DOCUMENT, document.getId()));
         getSolrServer().add(doc, COMMIT_WITHIN_MS);
     }
 
     private SolrServer getSolrServer() {
-        HttpClient httpClient = new DefaultHttpClient();
-        SolrServer solr = new HttpSolrServer(solrUrl, httpClient, new XMLResponseParser());
+        if (solr == null) {
+            HttpClient httpClient = new DefaultHttpClient();
+            solr = new HttpSolrServer(solrUrl, httpClient, new XMLResponseParser());
+        }
         return solr;
     }
 }

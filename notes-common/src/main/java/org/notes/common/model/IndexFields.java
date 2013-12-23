@@ -10,4 +10,5 @@ public class IndexFields {
     public static final String TITLE = "title";
     public static final String KIND = "kind";
     public static final String OUTLINE = "outline";
+    public static final String ID = "id";
 }

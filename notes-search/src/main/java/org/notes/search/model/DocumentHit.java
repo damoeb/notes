@@ -5,33 +5,35 @@ import org.notes.common.model.IndexFields;
 import org.notes.common.model.Kind;
 
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public class DocumentHit {
 
-    private Double score;
+    private Float score;
     private Long documentId;
     private Date modified;
     private String title;
-    private String highlights;
+    private List<String> highlights;
     private Kind kind;
 
-    public DocumentHit(Double score, Long documentId, Date modified, String title, String highlights, Kind kind) {
-        this.score = score;
-        this.documentId = documentId;
-        this.modified = modified;
-        this.title = title;
-        this.highlights = highlights;
-        this.kind = kind;
-    }
+    public DocumentHit(SolrDocument solrDocument, Map<String, List<String>> highlights) {
 
-    public DocumentHit(SolrDocument solrDocument) {
         this.documentId = (Long) solrDocument.getFirstValue(IndexFields.DOCUMENT);
         this.modified = (Date) solrDocument.getFirstValue(IndexFields.MODIFIED);
         this.title = (String) solrDocument.getFirstValue(IndexFields.TITLE);
         this.kind = Kind.valueOf((String) solrDocument.getFirstValue(IndexFields.KIND));
+        this.score = (Float) solrDocument.getFirstValue("score");
+        this.highlights = new LinkedList<>();
+        if (highlights != null) {
+            for (List<String> highlight : highlights.values()) {
+                this.highlights.addAll(highlight);
+            }
+        }
     }
 
-    public Double getScore() {
+    public Float getScore() {
         return score;
     }
 
@@ -47,7 +49,7 @@ public class DocumentHit {
         return title;
     }
 
-    public String getHighlights() {
+    public List<String> getHighlights() {
         return highlights;
     }
 

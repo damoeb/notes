@@ -23,6 +23,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 //@LocalBean
 @Stateless
@@ -38,27 +39,45 @@ public class SearchManagerBean implements SearchManager {
     @Override
     public List<DocumentHit> query(String queryString, int start, int rows) throws NotesException {
         try {
+            if (start < 0) {
+                start = 0;
+            }
+            if (rows <= 0 || rows > 100) {
+                rows = 100;
+            }
 
             SolrServer server = getSolrServer();
 
             SolrQuery query = new SolrQuery();
             query.setQuery(queryString);
             //query.addFilterQuery("owner:1", "store:amazon.com");
-            query.setFields(IndexFields.DOCUMENT, IndexFields.TITLE, IndexFields.FOLDER, IndexFields.OUTLINE, IndexFields.SECTION, IndexFields.MODIFIED, IndexFields.KIND);
-            query.setStart(0);
-            query.setRows(100);
+            query.setFields(IndexFields.ID, IndexFields.DOCUMENT, IndexFields.TITLE, IndexFields.FOLDER, IndexFields.OUTLINE, IndexFields.SECTION, IndexFields.MODIFIED, IndexFields.KIND);
+            query.setStart(start);
+            query.setRows(rows);
+
+            // see http://wiki.apache.org/solr/HighlightingParameters
+            query.setHighlightSnippets(1);
+
+            query.addHighlightField(IndexFields.TITLE);
+            query.addHighlightField(IndexFields.OUTLINE);
+            query.addHighlightField(IndexFields.TEXT);
+            query.setIncludeScore(true);
 
             // todo join http://wiki.apache.org/solr/Join
 
             // todo facets
 
+            // a hits can be an attachment or folder too
 
             List<DocumentHit> hits = new LinkedList<>();
             QueryResponse response = server.query(query);
             SolrDocumentList results = response.getResults();
+            Map<String, Map<String, List<String>>> highlighting = response.getHighlighting();
+
             for (SolrDocument solrDocument : results) {
-                // todo set highlights, score
-                hits.add(new DocumentHit(solrDocument));
+                String id = (String) solrDocument.get(IndexFields.ID);
+
+                hits.add(new DocumentHit(solrDocument, highlighting.get(id)));
             }
 
             return hits;

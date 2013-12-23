@@ -107,19 +107,12 @@ $.widget("notes.documentList", {
         var $this = this;
         var $element = $this.element.find('.doc-id-' + model.get('id'));
 
-        if ($element.length == 0) {
-            // append
-            $this._render(model).appendTo($this.element);
-
-        } else {
-            // replace
-            $element.replaceWith($this._render(model));
-        }
+        $element.replaceWith($this._render(model));
     },
 
     deleteDocument: function (model) {
         var $this = this;
-        $this.element.find('.doc-id-' + model.get('id')).remove()
+        $this.element.find('.doc-id-' + model.get('id')).remove();
     }
 
 });
