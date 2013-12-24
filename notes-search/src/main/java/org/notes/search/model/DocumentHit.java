@@ -1,8 +1,8 @@
 package org.notes.search.model;
 
 import org.apache.solr.common.SolrDocument;
-import org.notes.common.model.IndexFields;
 import org.notes.common.model.Kind;
+import org.notes.common.model.SolrFields;
 
 import java.util.Date;
 import java.util.LinkedList;
@@ -15,15 +15,17 @@ public class DocumentHit {
     private Long documentId;
     private Date modified;
     private String title;
+    private String owner;
     private List<String> highlights;
     private Kind kind;
 
     public DocumentHit(SolrDocument solrDocument, Map<String, List<String>> highlights) {
 
-        this.documentId = (Long) solrDocument.getFirstValue(IndexFields.DOCUMENT);
-        this.modified = (Date) solrDocument.getFirstValue(IndexFields.MODIFIED);
-        this.title = (String) solrDocument.getFirstValue(IndexFields.TITLE);
-        this.kind = Kind.valueOf((String) solrDocument.getFirstValue(IndexFields.KIND));
+        this.documentId = (Long) solrDocument.getFirstValue(SolrFields.DOCUMENT);
+        this.modified = (Date) solrDocument.getFirstValue(SolrFields.MODIFIED);
+        this.title = (String) solrDocument.getFirstValue(SolrFields.TITLE);
+        this.owner = (String) solrDocument.getFirstValue(SolrFields.OWNER);
+        this.kind = Kind.valueOf((String) solrDocument.getFirstValue(SolrFields.KIND));
         this.score = (Float) solrDocument.getFirstValue("score");
         this.highlights = new LinkedList<>();
         if (highlights != null) {
@@ -47,6 +49,10 @@ public class DocumentHit {
 
     public String getTitle() {
         return title;
+    }
+
+    public String getOwner() {
+        return owner;
     }
 
     public List<String> getHighlights() {

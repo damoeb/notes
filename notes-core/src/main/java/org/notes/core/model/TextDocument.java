@@ -5,8 +5,8 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.notes.common.ForeignKey;
 import org.notes.common.interfaces.Fulltextable;
 import org.notes.common.model.FullText;
-import org.notes.common.model.IndexFields;
 import org.notes.common.model.Kind;
+import org.notes.common.model.SolrFields;
 import org.notes.common.utils.TextUtils;
 
 import javax.persistence.*;
@@ -63,7 +63,7 @@ public class TextDocument extends BasicDocument implements Fulltextable {
     @Override
     public Map<String, Object> getAdditionalFields() {
         Map<String, Object> fields = new HashMap<>(10);
-        fields.put(IndexFields.TEXT, getText());
+        fields.put(SolrFields.TEXT, getText());
         return fields;
     }
 }

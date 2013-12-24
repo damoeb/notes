@@ -25,8 +25,6 @@ public class SearchService {
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse search(
             @QueryParam("query") String query,
-            @QueryParam("databaseId") Long databaseId,
-            @QueryParam("folderId") Long folderId,
             @QueryParam("start") int start,
             @QueryParam("rows") int rows
 

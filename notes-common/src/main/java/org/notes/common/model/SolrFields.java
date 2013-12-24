@@ -1,6 +1,6 @@
 package org.notes.common.model;
 
-public class IndexFields {
+public class SolrFields {
     public static final String DOCUMENT = "document";
     public static final String FOLDER = "folder";
     public static final String OWNER = "owner";

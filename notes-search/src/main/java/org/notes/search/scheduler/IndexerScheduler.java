@@ -14,7 +14,7 @@ import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.interfaces.Document;
 import org.notes.common.interfaces.Fulltextable;
 import org.notes.common.model.FullText;
-import org.notes.common.model.IndexFields;
+import org.notes.common.model.SolrFields;
 import org.notes.common.model.Trigger;
 
 import javax.ejb.*;
@@ -98,11 +98,11 @@ public class IndexerScheduler {
         for (FullText fullText : provider.getFullTexts()) {
 
             SolrInputDocument doc = new SolrInputDocument();
-            doc.setField(IndexFields.DOCUMENT, document.getId());
-            doc.setField(IndexFields.FOLDER, document.getFolderId());
-            doc.setField(IndexFields.OWNER, document.getOwner());
-            doc.setField(IndexFields.TEXT, fullText.getText());
-            doc.setField(IndexFields.SECTION, fullText.getSection());
+            doc.setField(SolrFields.DOCUMENT, document.getId());
+            doc.setField(SolrFields.FOLDER, document.getFolderId());
+            doc.setField(SolrFields.OWNER, document.getOwner());
+            doc.setField(SolrFields.TEXT, fullText.getText());
+            doc.setField(SolrFields.SECTION, fullText.getSection());
             docs.add(doc);
         }
 
@@ -113,12 +113,12 @@ public class IndexerScheduler {
         // todo update document http://wiki.apache.org/solr/UpdateXmlMessages#Optional_attributes_for_.22field.22
 
         SolrInputDocument doc = new SolrInputDocument();
-        doc.setField(IndexFields.DOCUMENT, document.getId());
-        doc.setField(IndexFields.FOLDER, document.getFolderId());
-        doc.setField(IndexFields.MODIFIED, document.getModified());
-        doc.setField(IndexFields.TITLE, document.getTitle());
-        doc.setField(IndexFields.KIND, document.getKind());
-        doc.setField(IndexFields.OWNER, document.getOwner());
+        doc.setField(SolrFields.DOCUMENT, document.getId());
+        doc.setField(SolrFields.FOLDER, document.getFolderId());
+        doc.setField(SolrFields.MODIFIED, document.getModified());
+        doc.setField(SolrFields.TITLE, document.getTitle());
+        doc.setField(SolrFields.KIND, document.getKind());
+        doc.setField(SolrFields.OWNER, document.getOwner());
         // todo index tags
 
         Map<String, Object> fields = document.getAdditionalFields();
@@ -129,7 +129,7 @@ public class IndexerScheduler {
         }
 
         // todo remove all with this doc id
-        getSolrServer().deleteByQuery(String.format("%s:%s", IndexFields.DOCUMENT, document.getId()));
+        getSolrServer().deleteByQuery(String.format("%s:%s", SolrFields.DOCUMENT, document.getId()));
         getSolrServer().add(doc, COMMIT_WITHIN_MS);
     }
 

@@ -1,4 +1,4 @@
-package org.notes.core;
+package org.notes.common;
 
 
 import org.apache.log4j.Logger;
@@ -8,16 +8,16 @@ import javax.ejb.Stateful;
 import java.io.Serializable;
 
 @Stateful
-public class SessionBean implements Serializable {
+public class UserSessionBean implements Serializable {
 
-    private static final Logger LOGGER = Logger.getLogger(SessionBean.class);
+    private static final Logger LOGGER = Logger.getLogger(UserSessionBean.class);
 
     private String username = "testuser";
 
 //    @Resource
 //    private javax.ejb.SessionContext sessionContext;
 
-    public SessionBean() {
+    public UserSessionBean() {
         //
     }
 

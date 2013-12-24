@@ -10,17 +10,19 @@ import org.apache.solr.client.solrj.impl.XMLResponseParser;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
+import org.notes.common.UserSessionBean;
 import org.notes.common.configuration.Configuration;
 import org.notes.common.configuration.ConfigurationProperty;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
-import org.notes.common.model.IndexFields;
+import org.notes.common.model.SolrFields;
 import org.notes.search.interfaces.SearchManager;
 import org.notes.search.model.DocumentHit;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.inject.Inject;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -33,8 +35,11 @@ public class SearchManagerBean implements SearchManager {
 
     private static final Logger LOGGER = Logger.getLogger(SearchManagerBean.class);
 
-    @ConfigurationProperty(value = Configuration.SOLR_SERVER, mandatory = true, defaultValue = "hase")
+    @ConfigurationProperty(value = Configuration.SOLR_SERVER, mandatory = true)
     private String solrUrl = "http://localhost:8080/solr-4.5.1";
+
+    @Inject
+    private UserSessionBean userSessionBean;
 
     @Override
     public List<DocumentHit> query(String queryString, int start, int rows) throws NotesException {
@@ -49,18 +54,20 @@ public class SearchManagerBean implements SearchManager {
             SolrServer server = getSolrServer();
 
             SolrQuery query = new SolrQuery();
-            query.setQuery(queryString);
+
+            query.setQuery(String.format("+owner:%1$s +(title:%2$%s text:%2$s)", userSessionBean.getUsername(), queryString));
+
             //query.addFilterQuery("owner:1", "store:amazon.com");
-            query.setFields(IndexFields.ID, IndexFields.DOCUMENT, IndexFields.TITLE, IndexFields.FOLDER, IndexFields.OUTLINE, IndexFields.SECTION, IndexFields.MODIFIED, IndexFields.KIND);
+            query.setFields(SolrFields.ID, SolrFields.DOCUMENT, SolrFields.TITLE, SolrFields.FOLDER, SolrFields.OUTLINE, SolrFields.SECTION, SolrFields.MODIFIED, SolrFields.KIND, SolrFields.OWNER);
             query.setStart(start);
             query.setRows(rows);
 
             // see http://wiki.apache.org/solr/HighlightingParameters
             query.setHighlightSnippets(1);
 
-            query.addHighlightField(IndexFields.TITLE);
-            query.addHighlightField(IndexFields.OUTLINE);
-            query.addHighlightField(IndexFields.TEXT);
+            query.addHighlightField(SolrFields.TITLE);
+            query.addHighlightField(SolrFields.OUTLINE);
+            query.addHighlightField(SolrFields.TEXT);
             query.setIncludeScore(true);
 
             // todo join http://wiki.apache.org/solr/Join
@@ -75,7 +82,7 @@ public class SearchManagerBean implements SearchManager {
             Map<String, Map<String, List<String>>> highlighting = response.getHighlighting();
 
             for (SolrDocument solrDocument : results) {
-                String id = (String) solrDocument.get(IndexFields.ID);
+                String id = (String) solrDocument.get(SolrFields.ID);
 
                 hits.add(new DocumentHit(solrDocument, highlighting.get(id)));
             }
