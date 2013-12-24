@@ -1,32 +1,24 @@
 $.widget("notes.search", {
 
     options: {
-        query: null
-    },
-
-    _init: function () {
-        var $this = this;
+        query: null,
+        folderId: null,
+        databaseId: null,
+        start: 0,
+        rows: 100
     },
 
     _create: function () {
 
         var $this = this;
 
-        var query = $this.options.query;
-        if (typeof(query) == 'undefined') {
-            throw 'query is null'
-        }
+        var params = {
+            '${query}': $this.options.query,
+            '${start}': $this.options.start,
+            '${rows}': $this.options.rows
+        };
 
-        $this.reload();
-    },
-
-    reload: function () {
-
-        var $this = this;
-
-        $this.element.empty();
-
-        notes.util.jsonCall('GET', '/notes/rest/search/${query}', {'${query}': $this.options.query}, null, function (documents) {
+        notes.util.jsonCall('GET', '/notes/rest/search/?query=${query}&database=${database}&start=${start}&rows=${rows}', params, null, function (documents) {
             // todo implement
         });
     }

@@ -57,8 +57,8 @@ public class SearchManagerBean implements SearchManager {
 
             query.setQuery(String.format("+owner:%1$s +(title:%2$%s text:%2$s)", userSessionBean.getUsername(), queryString));
 
-            //query.addFilterQuery("owner:1", "store:amazon.com");
-            query.setFields(SolrFields.ID, SolrFields.DOCUMENT, SolrFields.TITLE, SolrFields.FOLDER, SolrFields.OUTLINE, SolrFields.SECTION, SolrFields.MODIFIED, SolrFields.KIND, SolrFields.OWNER);
+            query.setFields(SolrFields.ID, SolrFields.DOCUMENT, SolrFields.TITLE, SolrFields.FOLDER, SolrFields.OUTLINE,
+                    SolrFields.SECTION, SolrFields.MODIFIED, SolrFields.KIND, SolrFields.OWNER);
             query.setStart(start);
             query.setRows(rows);
 

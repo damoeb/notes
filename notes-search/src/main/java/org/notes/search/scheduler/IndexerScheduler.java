@@ -117,6 +117,7 @@ public class IndexerScheduler {
         doc.setField(SolrFields.FOLDER, document.getFolderId());
         doc.setField(SolrFields.MODIFIED, document.getModified());
         doc.setField(SolrFields.TITLE, document.getTitle());
+        doc.setField(SolrFields.OUTLINE, document.getOutline());
         doc.setField(SolrFields.KIND, document.getKind());
         doc.setField(SolrFields.OWNER, document.getOwner());
         // todo index tags

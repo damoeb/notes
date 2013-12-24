@@ -33,4 +33,6 @@ public interface Document extends Serializable {
     void setTrigger(Trigger trigger);
 
     Map<String, Object> getAdditionalFields();
+
+    String getOutline();
 }

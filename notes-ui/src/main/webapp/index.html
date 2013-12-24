@@ -183,6 +183,11 @@
 
             search: function (query) {
                 console.log('search ' + query);
+                notes.search({
+                    query: query,
+                    databaseId: notes.app.databaseId()
+                })
+
             },
 
             folder: function (id) {
@@ -368,6 +373,10 @@
             </div>
         </div>
     </div>
+</script>
+
+<script type="text/html" id="search-result">
+
 </script>
 
 </body>

@@ -11,13 +11,14 @@ import java.util.Map;
 
 public class DocumentHit {
 
-    private Float score;
-    private Long documentId;
-    private Date modified;
-    private String title;
-    private String owner;
-    private List<String> highlights;
-    private Kind kind;
+    private final String outline;
+    private final Float score;
+    private final Long documentId;
+    private final Date modified;
+    private final String title;
+    private final String owner;
+    private final List<String> highlights;
+    private final Kind kind;
 
     public DocumentHit(SolrDocument solrDocument, Map<String, List<String>> highlights) {
 
@@ -25,6 +26,7 @@ public class DocumentHit {
         this.modified = (Date) solrDocument.getFirstValue(SolrFields.MODIFIED);
         this.title = (String) solrDocument.getFirstValue(SolrFields.TITLE);
         this.owner = (String) solrDocument.getFirstValue(SolrFields.OWNER);
+        this.outline = (String) solrDocument.getFirstValue(SolrFields.OUTLINE);
         this.kind = Kind.valueOf((String) solrDocument.getFirstValue(SolrFields.KIND));
         this.score = (Float) solrDocument.getFirstValue("score");
         this.highlights = new LinkedList<>();
@@ -33,6 +35,10 @@ public class DocumentHit {
                 this.highlights.addAll(highlight);
             }
         }
+    }
+
+    public String getOutline() {
+        return outline;
     }
 
     public Float getScore() {
