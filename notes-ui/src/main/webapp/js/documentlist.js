@@ -1,5 +1,9 @@
 $.widget("notes.documentList", {
 
+    options: {
+        folderId: null
+    },
+
     _init: function () {
         var $this = this;
 
@@ -31,7 +35,6 @@ $.widget("notes.documentList", {
 
         $this.element.empty();
 
-        //var $path = $this._getBreadcrumbs(folderId).appendTo($this.element);
         $('#breadcrumbs').breadcrumbs('generate', folderId);
 
         var $native = $('<div/>').appendTo($this.element);

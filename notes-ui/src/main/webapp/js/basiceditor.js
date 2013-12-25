@@ -27,8 +27,6 @@ $.widget("notes.basiceditor", {
         ).append(
                 $this._createButton('<i class="fa fa-reply"></i>', 'Back', $this.fnClose)
             ).append(
-                $this._createButton('<i class="fa fa-tags"></i>', 'Tags', $this.fnTags)
-            ).append(
                 $this._createButton('<i class="fa fa-trash-o"></i>', 'Delete', $this.fnDelete)
             );
 
@@ -86,10 +84,11 @@ $.widget("notes.basiceditor", {
     fnClose: function () {
 
         var $this = this;
-        $this.element.hide();
-        $('#document-list').show();
 
         $this.syncModel();
+
+        $this.element.hide();
+        $('#document-list').show();
     },
 
     getModel: function () {
@@ -119,6 +118,7 @@ $.widget("notes.basiceditor", {
 
         var $this = this;
 
+        console.log('unload callback');
         if ($.isFunction($this.unloadCallback)) {
             $this.unloadCallback();
         }

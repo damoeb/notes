@@ -25,12 +25,15 @@ $.widget("notes.texteditor", $.notes.basiceditor, {
 
         $this.fnPreDestroy = function () {
             console.log('pre destory');
-            $this.fnClose();
         };
+
+        var $addTag = $('<a/>', {href: '#', text: 'Tags'}).click(function () {
+            notes.dialog.tags.overview(model);
+        });
 
         var $tagsLayer = $('<span/>');
         if (model.has('tags') && model.get('tags').length > 0) {
-            $tagsLayer.text(' in ');
+            $tagsLayer.append('<i class="fa fa-tags"></i>');
 
             $.each(model.get('tags'), function (index, tag) {
                 $tagsLayer.append(
@@ -39,7 +42,17 @@ $.widget("notes.texteditor", $.notes.basiceditor, {
                         href: '#tag:' + tag.name
                     })
                 );
+
+                if (index >= model.get('tags').length - 1) {
+                    $tagsLayer.append(
+                        $addTag
+                    );
+                }
             });
+        } else {
+            $tagsLayer.append(
+                $addTag
+            );
         }
 
         var $ownerLayer = $('<span/>');
@@ -67,6 +80,8 @@ $.widget("notes.texteditor", $.notes.basiceditor, {
                     .append(
                         $ownerLayer
                     )
+            ).append(
+                $('<div/>', {class: 'row', style: 'margin-top:5px'})
                     .append(
                         $tagsLayer
                     )

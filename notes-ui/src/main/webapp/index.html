@@ -192,6 +192,9 @@
 
             folder: function (id) {
                 console.log('open folder ' + id);
+                $('#document-list').documentList({
+                    folderId: id
+                });
             }
         });
 

@@ -10,10 +10,7 @@ import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
 import org.notes.common.model.FileReference;
 import org.notes.common.model.Trigger;
-import org.notes.core.interfaces.DocumentManager;
-import org.notes.core.interfaces.FileReferenceManager;
-import org.notes.core.interfaces.FolderManager;
-import org.notes.core.interfaces.UserManager;
+import org.notes.core.interfaces.*;
 import org.notes.core.model.*;
 import org.notes.text.scheduler.ExtractionScheduler;
 
@@ -26,7 +23,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.net.URL;
-import java.util.List;
+import java.util.*;
 
 //@LocalBean
 @Stateless
@@ -50,6 +47,9 @@ public class DocumentManagerBean implements DocumentManager {
 
     @Inject
     private UserManager userManager;
+
+    @Inject
+    private TagManager tagManager;
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
@@ -208,11 +208,16 @@ public class DocumentManagerBean implements DocumentManager {
                 boolean similarTitle = StringUtils.equals(txtDoc.getTitle(), txtRef.getTitle());
                 boolean similarText = StringUtils.equals(txtDoc.getText(), txtRef.getText());
 
-                boolean hasChanged = !(similarTitle && similarText);
+                Set<Tag> tagsDoc = txtDoc.getTags();
+                Set<Tag> tagsRef = txtRef.getTags();
+
+                boolean hasChanged = !(similarTitle && similarText && equalsTags(tagsDoc, tagsRef));
 
                 if (hasChanged) {
                     // todo calc diff
-                    //                Patch patch = DiffUtils.diff(Arrays.asList(txtDoc.getTitle(), txtDoc.getText()), Arrays.asList(txtRef.getTitle(), txtRef.getText()));
+                    // Patch patch = DiffUtils.diff(Arrays.asList(txtDoc.getTitle(), txtDoc.getText()), Arrays.asList(txtRef.getTitle(), txtRef.getText()));
+
+                    txtDoc.setTags(resolveTags(tagsDoc, tagsRef));
 
                     // update
                     txtDoc.setTitle(txtRef.getTitle());
@@ -236,6 +241,45 @@ public class DocumentManagerBean implements DocumentManager {
         } catch (Throwable t) {
             throw new NotesException("update document failed: " + t.getMessage(), t);
         }
+    }
+
+    private boolean equalsTags(Set<Tag> a, Set<Tag> b) {
+        if (a == null && b == null) {
+            return true;
+        }
+        if (a.isEmpty() && b.isEmpty()) {
+            return true;
+        }
+        if (a.size() != b.size()) {
+            return false;
+        }
+
+        for (Tag t : a) {
+            if (!b.contains(t)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private Set<Tag> resolveTags(Set<Tag> cached, Set<Tag> tags) throws NotesException {
+        Set<Tag> resolved = new HashSet<>(tags.size());
+
+        Map<String, Tag> cache = new HashMap<>();
+        for (Tag c : cached) {
+            cache.put(c.getName(), c);
+        }
+
+        for (Tag t : tags) {
+            if (cache.containsKey(t.getName())) {
+                resolved.add(cache.get(t.getName()));
+            } else {
+                resolved.add(tagManager.findOrCreate(t.getName()));
+            }
+        }
+
+        return resolved;
     }
 
     @Override
