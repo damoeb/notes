@@ -276,7 +276,7 @@ notes.dialog.settings = {
 
 notes.dialog.tags = {
 
-    overview: function (documentModel) {
+    overview: function (documentModel, callback) {
 
         var $input = $('<input/>', {name: 'name', type: 'text'});
 
@@ -331,11 +331,15 @@ notes.dialog.tags = {
                     {
                         text: 'Close',
                         click: function () {
-                            // todo reload doc
                             $(this).dialog("close");
                         }
                     }
-                ]
+                ],
+                close: function () {
+                    if ($.isFunction(callback)) {
+                        callback();
+                    }
+                }
             }));
     }
 }

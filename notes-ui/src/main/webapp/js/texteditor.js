@@ -27,33 +27,48 @@ $.widget("notes.texteditor", $.notes.basiceditor, {
             console.log('pre destory');
         };
 
-        var $addTag = $('<a/>', {href: '#', text: 'Tags'}).click(function () {
-            notes.dialog.tags.overview(model);
+        var $tagsLayer = $('<span/>');
+        var $addTag = $('<a/>', {href: '#'});
+
+        var fnRenderTags = function () {
+
+            $tagsLayer.empty();
+
+            if (model.has('tags') && model.get('tags').length > 0) {
+                // todo sort tags
+                $.each(model.get('tags'), function (index, tag) {
+                    $tagsLayer.append(
+                        $('<a/>', {
+                            text: tag.name,
+                            href: '#tag:' + tag.name
+                        })
+                    );
+
+                    if (index < model.get('tags').length - 1) {
+                        $tagsLayer.append(', ')
+                    }
+
+                    if (index >= model.get('tags').length - 1) {
+                        $tagsLayer.append(' ').append(
+                            $addTag.text('add')
+                        );
+                    }
+                });
+            } else {
+                $tagsLayer.append(
+                    $addTag.text('add tag')
+                );
+            }
+        };
+
+        fnRenderTags();
+
+        $addTag.click(function () {
+            notes.dialog.tags.overview(model, function () {
+                fnRenderTags();
+            });
         });
 
-        var $tagsLayer = $('<span/>');
-        if (model.has('tags') && model.get('tags').length > 0) {
-            $tagsLayer.append('<i class="fa fa-tags"></i>');
-
-            $.each(model.get('tags'), function (index, tag) {
-                $tagsLayer.append(
-                    $('<a/>', {
-                        text: tag.name,
-                        href: '#tag:' + tag.name
-                    })
-                );
-
-                if (index >= model.get('tags').length - 1) {
-                    $tagsLayer.append(
-                        $addTag
-                    );
-                }
-            });
-        } else {
-            $tagsLayer.append(
-                $addTag
-            );
-        }
 
         var $ownerLayer = $('<span/>');
         if (model.has('owner')) {
