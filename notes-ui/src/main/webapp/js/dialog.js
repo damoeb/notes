@@ -35,10 +35,6 @@ notes.dialog.folder = {
                 )
             ).append(
                 $('<div/>').append(
-                    $('<a/>', {text: 'Add to favourites'})
-                )
-            ).append(
-                $('<div/>').append(
                     $('<a/>', {text: 'Delete'})
                 )
             ).dialog($.extend({}, notes.dialog.defaults, {
@@ -141,6 +137,40 @@ notes.dialog.database = {
 };
 
 notes.dialog.document = {
+
+    create: function () {
+
+        var $title = $('<input/>', {name: 'name', type: 'text', placeholder: 'title of document'});
+
+        var folderId = notes.app.activeFolderId();
+        if (typeof folderId != 'undefined') {
+            throw 'Choose folder first';
+        }
+        var folderName = notes.app.get$Folder(folderId).getModel().get('name');
+
+        $('<div/>', {class: 'dialog'}).append(
+                $('<div/>').append(
+                    'in ' + folderName
+                )
+            ).append(
+                $('<div/>').append(
+                    $title
+                )
+            )
+            .dialog($.extend({}, notes.dialog.defaults, {
+                title: 'New',
+                buttons: [
+                    {
+                        text: 'Create',
+                        click: function () {
+                            $('#editors').editors('createDocument', $title.val());
+                            $(this).dialog("close");
+                        }
+                    }
+                ]
+            }));
+    },
+
 
     import: function () {
 

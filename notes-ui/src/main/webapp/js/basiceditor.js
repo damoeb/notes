@@ -50,6 +50,10 @@ $.widget("notes.basiceditor", {
         var $this = this;
         $('#document-list').documentList('deleteDocument', $this.getModel());
         $this.getModel().destroy();
+
+        $this.element.hide();
+        $('#document-list').show();
+
         $this._destroy();
     },
 

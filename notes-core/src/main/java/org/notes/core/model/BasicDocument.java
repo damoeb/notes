@@ -1,11 +1,13 @@
 package org.notes.core.model;
 
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.hibernate.annotations.Index;
 import org.notes.common.ForeignKey;
 import org.notes.common.configuration.Configuration;
+import org.notes.common.exceptions.NotesException;
 import org.notes.common.interfaces.Document;
 import org.notes.common.model.Kind;
 import org.notes.common.model.Trigger;
@@ -321,5 +323,11 @@ public class BasicDocument implements Document {
 
     public void setTags(Set<Tag> tags) {
         this.tags = tags;
+    }
+
+    public void validate() throws NotesException {
+        if (StringUtils.isBlank(getTitle())) {
+            throw new NotesException("Title is empty");
+        }
     }
 }

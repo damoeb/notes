@@ -5,6 +5,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.notes.common.ForeignKey;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -25,6 +26,23 @@ public class User implements Serializable {
     @Id
     @Column(nullable = false, unique = true, length = 30)
     private String username;
+
+    @JsonIgnore
+    @Basic
+    @NotNull
+    private String email;
+
+    @JsonIgnore
+    @Column(length = 256)
+    private String password;
+
+    @JsonIgnore
+    @Column(length = 25)
+    private String salt;
+
+    @JsonIgnore
+    @Basic
+    private int failedLoginCount = 0;
 
 //  -- References ------------------------------------------------------------------------------------------------------
 

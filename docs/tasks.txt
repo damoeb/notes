@@ -1,5 +1,7 @@
+- login stuff
+- breadcrumbs mit hover menü nach unten, grauer Hintergrund
+- new doc. popup with <choose folder>
 - attachments for docs, valid docs from file only for pdfs, websites
-- js: application object, that manages all data (active folder, open doc, folders)
 - suche + in node names, tags
 - document thumbnail?
 - triggers for document in separate table

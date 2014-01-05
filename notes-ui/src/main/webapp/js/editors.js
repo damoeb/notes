@@ -43,7 +43,7 @@ $.widget("notes.editors", {
         });
     },
 
-    createDocument: function () {
+    createDocument: function (title) {
         var $this = this;
         var kindString = 'text';
 
@@ -53,7 +53,8 @@ $.widget("notes.editors", {
         $('#document-list').hide();
 
         $this.loadDocument(settings, new notes.model.Document({
-            folderId: notes.app.activeFolderId()
+            folderId: notes.app.activeFolderId(),
+            title: title
         }));
     },
 

@@ -76,4 +76,9 @@ public class Tag implements Serializable {
         }
         return super.equals(obj);
     }
+
+    @Override
+    public int hashCode() {
+        return getName() != null ? getName().hashCode() : super.hashCode();
+    }
 }

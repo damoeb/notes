@@ -84,6 +84,8 @@ public class DocumentManagerBean implements DocumentManager {
 
     private BasicDocument _createDocument(BasicDocument document, Folder inFolder) throws NotesException {
 
+        document.validate();
+
         em.persist(document);
 
         User user = userManager.getUser(inFolder.getOwner());

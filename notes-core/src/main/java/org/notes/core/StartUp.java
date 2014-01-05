@@ -3,7 +3,9 @@ package org.notes.core;
 import org.apache.log4j.Logger;
 import org.notes.common.configuration.Configuration;
 import org.notes.core.interfaces.*;
-import org.notes.core.model.*;
+import org.notes.core.model.Account;
+import org.notes.core.model.Database;
+import org.notes.core.model.User;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -67,6 +69,7 @@ public class StartUp {
                     d.setName("work");
                     d = databaseManager.createDatabase(d, u);
 
+                    /*
                     Folder f0 = new Folder();
                     f0.setName("Projekte");
                     folderManager.createFolder(f0, null, d);
@@ -107,6 +110,7 @@ public class StartUp {
                     //documentManager.deleteDocument(td1.getId());
 
                     //documentManager.getDocument(td2.getId());
+                    */
 
                 } catch (Exception e) {
                     e.printStackTrace();

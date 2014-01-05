@@ -1,7 +1,7 @@
 $.widget("notes.breadcrumbs", {
 
     _init: function () {
-        this.element.attr('style', 'padding:10px; margin-bottom:10px; background-color:#efefef');
+        this.element.attr('style', 'padding:5px; margin-bottom:5px;');
         this.generate();
     },
 
@@ -14,12 +14,16 @@ $.widget("notes.breadcrumbs", {
 
         if (typeof folderId !== 'undefined') {
             var $folder = notes.app.get$Folder(folderId);
+
+            var isLeaf = true;
+
             while ($folder) {
 
                 $crumbs.prepend(
-                    $this._getBreadcrumbItem($folder)
+                    $this._getBreadcrumbItem($folder, isLeaf)
                 );
 
+                isLeaf = false;
                 $folder = $folder.getParent();
             }
         }
@@ -38,14 +42,20 @@ $.widget("notes.breadcrumbs", {
         return $crumbs;
     },
 
-    _getBreadcrumbItem: function ($folder) {
-        return $('<a/>', {href: '#'}).append(
+    _getBreadcrumbItem: function ($folder, isLeaf) {
+        var $item = $('<a/>', {href: '#'}).append(
                 $('<span/>', {text: $folder.getModel().get('name') })
-            ).append(
-                '<i class="fa fa-angle-right" style="margin-left:4px; margin-right:4px"></i>'
             ).click(function () {
                 notes.dialog.folder.settings($folder.getModel());
-            })
+            });
+
+        if (!isLeaf) {
+            $item.append(
+                '<i class="fa fa-angle-right" style="margin-left:4px; margin-right:4px"></i>'
+            )
+        }
+
+        return $item;
     }
 
 });
