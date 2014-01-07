@@ -1,4 +1,7 @@
 - login stuff
+- only use needed js stuff
+- let grunt run
+- notifications with jquery noty
 - breadcrumbs mit hover menü nach unten, grauer Hintergrund
 - new doc. popup with <choose folder>
 - attachments for docs, valid docs from file only for pdfs, websites

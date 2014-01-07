@@ -5,7 +5,6 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.notes.common.ForeignKey;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -29,7 +28,6 @@ public class User implements Serializable {
 
     @JsonIgnore
     @Basic
-    @NotNull
     private String email;
 
     @JsonIgnore

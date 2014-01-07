@@ -10,7 +10,6 @@
         <relativePath>../</relativePath>
     </parent>
 
-    <groupId>org.notes</groupId>
     <artifactId>notes-common</artifactId>
     <version>0.1</version>
     <!--packaging>ejb</packaging-->

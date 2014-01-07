@@ -17,20 +17,19 @@
 
 <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
-<link rel="stylesheet" href="css/bootstrap.css">
+<link rel="stylesheet" href="components/bootstrap/dist/css/bootstrap.css">
 <link rel="stylesheet" href="css/main.css">
-<link rel="stylesheet" href="css/vendor/jquery-ui-1.9.2.custom.css">
-<link rel="stylesheet" href="css/vendor/jquery.dataTables.css">
+<link rel="stylesheet" href="components/jquery-ui/themes/base/jquery.ui.all.css">
 <!-- Icon Font -->
-<link rel="stylesheet" href="css/font-awesome.min.css">
+<link rel="stylesheet" href="components/font-awesome/css/font-awesome.min.css">
 
 
-<script src="js/vendor/modernizr-2.6.2.min.js"></script>
+<script src="components/modernizr/modernizr.js"></script>
 
-<script src="js/vendor/jquery-1.8.2.min.js"></script>
-<script src="js/vendor/jquery-ui-1.9.2.custom.js"></script>
-<script src="js/vendor/jquery.dataTables.js"></script>
-<script src="js/vendor/jquery.timeago.js"></script>
+<script src="components/jquery/jquery.js"></script>
+<script src="components/jquery-ui/ui/jquery-ui.js"></script>
+
+<script src="components/jquery-timeago/jquery.timeago.js"></script>
 <script type="text/javascript">
     jQuery.timeago.settings.strings = {
         prefixAgo: '',
@@ -51,46 +50,46 @@
     };
 </script>
 
-<script src="js/vendor/jquery.paginate.js"></script>
-<script src="js/vendor/underscore-min.js"></script>
-<script src="js/vendor/backbone.js"></script>
+<script src="components/underscore/underscore-min.js"></script>
+<script src="components/backbone/backbone-min.js"></script>
 
 <!-- notifications -->
 <!-- see http://needim.github.com/noty/-->
-<script src="js/vendor/jquery.noty.js"></script>
-<script src="js/vendor/noty/layouts/top.js"></script>
-<script src="js/vendor/noty/themes/default.js"></script>
+<script src="components/noty/js/noty/jquery.noty.js"></script>
+
+<script src="components/noty/js/noty/layouts/top.js"></script>
+<script src="components/noty/js/noty/themes/default.js"></script>
 
 <!-- file upload -->
-<script src="js/fileupload/jquery.iframe-transport.js"></script>
-<script src="js/fileupload/jquery.fileupload.js"></script>
-<link rel="stylesheet" href="js/fileupload/jquery.fileupload-ui.css">
+<script src="scripts/fileupload/jquery.iframe-transport.js"></script>
+<script src="scripts/fileupload/jquery.fileupload.js"></script>
+<link rel="stylesheet" href="scripts/fileupload/jquery.fileupload-ui.css">
 
-
-<script src="js/plugins.js"></script>
+<script src="scripts/plugins.js"></script>
 
 <script type="text/javascript">
     var notes = {};
 </script>
 
-<script src="js/util.js"></script>
-<script src="js/editors.js"></script>
-<script src="js/breadcrumbs.js"></script>
-<script src="js/basiceditor.js"></script>
-<script src="js/texteditor.js"></script>
-<script src="js/pdfeditor.js"></script>
-<script src="js/documentlist.js"></script>
-<script src="js/databases.js"></script>
-<script src="js/folder.js"></script>
-<script src="js/tree.js"></script>
-<script src="js/dialog.js"></script>
-<script src="js/model.js"></script>
+<script src="scripts/util.js"></script>
+<script src="scripts/editors.js"></script>
+<script src="scripts/breadcrumbs.js"></script>
+<script src="scripts/basiceditor.js"></script>
+<script src="scripts/texteditor.js"></script>
+<script src="scripts/pdfeditor.js"></script>
+<script src="scripts/documentlist.js"></script>
+<script src="scripts/databases.js"></script>
+<script src="scripts/folder.js"></script>
+<script src="scripts/tree.js"></script>
+<script src="scripts/dialog.js"></script>
+<script src="scripts/model.js"></script>
 
+<script src="components/noty/js/noty/layouts/top.js"></script>
 
-<script src="js/pdf/pdf.js"></script>
-<script src="js/pdf/textlayerbuilder.js"></script>
-<script src="js/pdfloader.js"></script>
-<link rel="stylesheet" href="js/pdf/pdf.css">
+<script src="scripts/pdf/pdf.js"></script>
+<script src="scripts/pdf/textlayerbuilder.js"></script>
+<script src="scripts/pdfloader.js"></script>
+<link rel="stylesheet" href="scripts/pdf/pdf.css">
 
 
 <script type="text/javascript">
@@ -348,7 +347,7 @@
 
 <script type="text/html" id="document-in-list">
 
-    <div class="doc doc-id-<%=id %> container">
+    <div class="doc doc-id-<%=id %>">
         <div class="col-lg-2">
             <img src="<%= thumbnail %>">
         </div>

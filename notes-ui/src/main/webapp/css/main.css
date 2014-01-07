@@ -143,6 +143,15 @@ body {
     overflow: hidden;
 }
 
+.doc:before, .doc:after {
+    content: " ";
+    display: table;
+}
+
+.doc:after {
+    clear: both;
+}
+
 .doc-title {
     margin-right: 5px;
 }

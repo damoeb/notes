@@ -10,7 +10,6 @@
         <relativePath>../</relativePath>
     </parent>
 
-    <groupId>org.notes</groupId>
     <artifactId>notes-ui</artifactId>
     <version>0.1</version>
     <packaging>war</packaging>
@@ -32,51 +31,12 @@
         </dependencies>
     </dependencyManagement>
 
-    <dependencies>
-        <!--<dependency>-->
-            <!--<groupId>org.notes</groupId>-->
-            <!--<artifactId>notes-common</artifactId>-->
-            <!--<version>0.1</version>-->
-            <!--<scope>compile</scope>-->
-        <!--</dependency>-->
-
-        <!--<dependency>-->
-            <!--<groupId>javax.enterprise</groupId>-->
-            <!--<artifactId>cdi-api</artifactId>-->
-            <!--<scope>provided</scope>-->
-        <!--</dependency>-->
-
-        <!--<dependency>-->
-            <!--<groupId>org.jboss.spec.javax.annotation</groupId>-->
-            <!--<artifactId>jboss-annotations-api_1.1_spec</artifactId>-->
-            <!--<scope>provided</scope>-->
-        <!--</dependency>-->
-
-        <!--<dependency>-->
-            <!--<groupId>org.jboss.spec.javax.ws.rs</groupId>-->
-            <!--<artifactId>jboss-jaxrs-api_1.1_spec</artifactId>-->
-            <!--<scope>provided</scope>-->
-        <!--</dependency>-->
-
-        <!--<dependency>-->
-            <!--<groupId>org.hibernate.javax.persistence</groupId>-->
-            <!--<artifactId>hibernate-jpa-2.0-api</artifactId>-->
-            <!--<scope>provided</scope>-->
-        <!--</dependency>-->
-
-        <!--<dependency>-->
-            <!--<groupId>org.jboss.spec.javax.ejb</groupId>-->
-            <!--<artifactId>jboss-ejb-api_3.1_spec</artifactId>-->
-            <!--<scope>provided</scope>-->
-        <!--</dependency>-->
-    </dependencies>
-
     <build>
         <finalName>notes-ui.war</finalName>
         <plugins>
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>2.1.1</version>
+                <version>2.3</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
@@ -97,6 +57,93 @@
                     <target>1.7</target>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.7</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <configuration>
+                            <target name="building">
+
+                                <!--  NPM INSTALL  -->
+                                <echo>
+                                    npm install
+                                </echo>
+                                <exec executable="cmd" dir="${project.basedir}"
+                                      osfamily="windows" failonerror="true">
+                                    <arg line="/c npm config set color false"/>
+                                </exec>
+                                <exec executable="bash" dir="${project.basedir}"
+                                      osfamily="unix" failonerror="true">
+                                    <arg value="-c"/>
+                                    <arg line='"npm config set color false"'/>
+                                </exec>
+                                <exec executable="cmd" dir="${project.basedir}"
+                                      osfamily="windows" failonerror="true">
+                                    <arg line="/c npm install"/>
+                                </exec>
+                                <exec executable="bash" dir="${project.basedir}"
+                                      osfamily="unix" failonerror="true">
+                                    <arg value="-c"/>
+                                    <arg line='"npm install"'/>
+                                </exec>
+
+                                <!--  BOWER INSTALL  -->
+                                <echo>
+                                    bower install
+                                </echo>
+                                <exec executable="cmd" dir="${project.basedir}"
+                                      osfamily="windows" failonerror="true">
+                                    <arg line="/c bower install"/>
+                                </exec>
+                                <exec executable="bash" dir="${project.basedir}"
+                                      osfamily="unix" failonerror="true">
+                                    <arg value="-c"/>
+                                    <arg line='"bower install"'/>
+                                </exec>
+
+                                <!--  todo GRUNT  -->
+                                <!--<echo>-->
+                                <!--grunt-->
+                                <!--</echo>-->
+                                <!--<exec executable="cmd" dir="${project.basedir}"-->
+                                <!--osfamily="windows" failonerror="true">-->
+                                <!--<arg line="/c bower install"/>-->
+                                <!--</exec>-->
+                                <!--<exec executable="bash" dir="${project.basedir}"-->
+                                <!--osfamily="unix" failonerror="true">-->
+                                <!--<arg value="-c"/>-->
+                                <!--<arg line='"bower install"'/>-->
+                                <!--</exec>-->
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>2.5</version>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>src/main/webapp/components</directory>
+                        </fileset>
+                        <fileset>
+                            <directory>node_modules</directory>
+                        </fileset>
+                        <fileset>
+                            <directory>.sass-cache</directory>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 </project>

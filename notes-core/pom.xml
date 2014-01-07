@@ -10,7 +10,6 @@
         <relativePath>../</relativePath>
     </parent>
 
-    <groupId>org.notes</groupId>
     <artifactId>notes-core</artifactId>
     <version>0.1</version>
     <packaging>war</packaging>
@@ -180,11 +179,6 @@
             <version>20090211</version>
         </dependency>
         <!-- Logging -->
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.17</version>
-        </dependency>
         <dependency>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
