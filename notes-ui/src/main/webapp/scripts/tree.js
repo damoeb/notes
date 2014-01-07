@@ -1,3 +1,7 @@
+/*global notes:false */
+
+'use strict';
+
 $.widget('notes.tree', {
 
     options: {
@@ -10,7 +14,7 @@ $.widget('notes.tree', {
 
         var databaseId = $this.options.databaseId;
         if (typeof(databaseId) === 'undefined') {
-            throw 'databaseId is null'
+            throw 'databaseId is null';
         }
 
         $this.reload();

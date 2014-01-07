@@ -26,7 +26,7 @@
 - clone document
 - calendar
 - attributes for document
-  build in: due date, reminder, % complemete, finished date
+  build in: due date, reminder, % complete, finished date
 
 - monitor hibernate
   http://docs.jboss.org/hibernate/core/3.5/reference/en/html/performance.html#performance-monitoring

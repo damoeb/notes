@@ -1,3 +1,7 @@
+/*global notes:false */
+
+'use strict';
+
 (function (notes) {
 
     notes.util = new function () {
@@ -23,14 +27,14 @@
                                 }
                                 break;
                             default:
-                                alert('Error: ' + data.errorMessage);
+                                console.error(data.errorMessage);
                                 if (typeof(onError) === 'function') {
                                     onError.call(this, data);
                                 }
                                 break;
                         }
                     },
-                    error: function (data) {
+                    error: function () {
                         if (typeof(onError) === 'function') {
                             onError.call(this);
                         }
@@ -44,12 +48,13 @@
         };
 
         this.replaceInUrl = function (url, urlReplacements) {
-            if (urlReplacements == null)
+            if (urlReplacements === null) {
                 return url;
+            }
             for (var key in urlReplacements) {
                 var value = urlReplacements[key];
-                if (value == null || value == "") {
-                    url = url.replace(key, " ");
+                if (value === null || value === '') {
+                    url = url.replace(key, ' ');
                 }
                 else {
                     //noinspection JSPotentiallyInvalidConstructorUsages
@@ -109,20 +114,32 @@
 
         this.equal = function (x, y) {
             for (var p in y) {
-                if (typeof(y[p]) !== typeof(x[p])) return false;
-                if ((y[p] === null) !== (x[p] === null)) return false;
+                if (typeof(y[p]) !== typeof(x[p])) {
+                    return false;
+                }
+                if ((y[p] === null) !== (x[p] === null)) {
+                    return false;
+                }
                 switch (typeof(y[p])) {
                     case 'undefined':
-                        if (typeof(x[p]) != 'undefined') return false;
+                        if (typeof(x[p]) !== 'undefined') {
+                            return false;
+                        }
                         break;
                     case 'object':
-                        if (y[p] !== null && x[p] !== null && (y[p].constructor.toString() !== x[p].constructor.toString() || !y[p].equals(x[p]))) return false;
+                        if (y[p] !== null && x[p] !== null && (y[p].constructor.toString() !== x[p].constructor.toString() || !y[p].equals(x[p]))) {
+                            return false;
+                        }
                         break;
                     case 'function':
-                        if (p != 'equals' && y[p].toString() != x[p].toString()) return false;
+                        if (p !== 'equals' && y[p].toString() !== x[p].toString()) {
+                            return false;
+                        }
                         break;
                     default:
-                        if (y[p] !== x[p]) return false;
+                        if (y[p] !== x[p]) {
+                            return false;
+                        }
                 }
             }
             return true;
@@ -133,15 +150,15 @@
             var millis = date.getTime();
             var now = new Date().getTime();
 
-            var offset_day = 1000 * 60 * 60 * 24;
+            var offsetDay = 1000 * 60 * 60 * 24;
 
-            var aDayAgoOrLess = millis + offset_day > now;
+            var aDayAgoOrLess = millis + offsetDay > now;
             if (aDayAgoOrLess) {
                 return $.timeago(date);
             }
 
-            var offset_week = offset_day * 7;
-            var aWeekAgoOrLess = millis + offset_week > now;
+            var offsetWeek = offsetDay * 7;
+            var aWeekAgoOrLess = millis + offsetWeek > now;
             var hours = date.getHours() + ':' + (date.getMinutes() < 10 ? '0' : '') + date.getMinutes();
             if (aWeekAgoOrLess) {
                 return $.timeago(date) + ', ' + hours;
@@ -168,7 +185,6 @@
         this.toTimestamp = function (str) {
             var d = str.match(/\d+/g); // extract date parts
             return new Date(d[0], d[1] - 1, d[2], d[3], d[4], d[5]); // build Date object
-        }
-    }
-
+        };
+    }();
 })(notes);

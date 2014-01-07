@@ -1,3 +1,7 @@
+/*global notes:false */
+
+'use strict';
+
 $.widget('notes.texteditor', $.notes.basiceditor, {
 
     _create: function () {
@@ -9,7 +13,7 @@ $.widget('notes.texteditor', $.notes.basiceditor, {
         var $fieldText = $('<textarea/>', {class: 'ui-widget-content ui-corner-all', type: 'text', value: model.get('text')});
 
         var $target = $this.element.empty().show().
-            addClass('container text-editor').
+            addClass('editor text-editor clearfix').
             // resets from maximized mode
             removeClass('maximized');
 
@@ -18,7 +22,7 @@ $.widget('notes.texteditor', $.notes.basiceditor, {
         // todo implement star/pin functionality
 
         $this.fnPreSyncModel = function () {
-            console.log('pre sync')
+            console.log('pre sync');
             model.set('title', $fieldTitle.val());
             model.set('text', $fieldText.val());
         };
@@ -45,7 +49,7 @@ $.widget('notes.texteditor', $.notes.basiceditor, {
                     );
 
                     if (index < model.get('tags').length - 1) {
-                        $tagsLayer.append(', ')
+                        $tagsLayer.append(', ');
                     }
 
                     if (index >= model.get('tags').length - 1) {
@@ -106,4 +110,4 @@ $.widget('notes.texteditor', $.notes.basiceditor, {
                 )
             );
     }
-})
+});

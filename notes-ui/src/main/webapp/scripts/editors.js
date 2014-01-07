@@ -1,3 +1,7 @@
+/*global notes:false */
+
+'use strict';
+
 $.widget('notes.editors', {
 
     options: {
@@ -5,8 +9,6 @@ $.widget('notes.editors', {
     },
 
     _create: function () {
-        var $this = this;
-
 //        // -- events
 //        setInterval(function () {
 //
@@ -21,7 +23,7 @@ $.widget('notes.editors', {
         var $this = this;
 
         if (!documentId) {
-            throw 'document id is null.'
+            throw 'document id is null.';
         }
 
         $this.element.empty();
@@ -75,4 +77,4 @@ $.widget('notes.editors', {
         $this.element.append($content);
 
     }
-})
+});

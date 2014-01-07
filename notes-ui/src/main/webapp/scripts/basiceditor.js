@@ -1,3 +1,5 @@
+'use strict';
+
 $.widget('notes.basiceditor', {
 
     options: {
@@ -5,17 +7,16 @@ $.widget('notes.basiceditor', {
     },
 
     _createButton: function (label, tooltip, onClick) {
-
         var $this = this;
 
         return $('<button/>', {title: tooltip}).button({
             label: label
         }).click(function () {
                 if ($.isFunction(onClick)) {
-                    onClick.call($this, this)
+                    onClick.call($this, this);
                 }
             }
-        )
+        );
     },
 
     _getToolbar: function (config) {
@@ -58,17 +59,16 @@ $.widget('notes.basiceditor', {
     },
 
     fnMaximize: function (el) {
-
         var $editor = this.element;
         if ($editor.hasClass('maximized')) {
             $editor.
-                removeClass('maximized')
+                removeClass('maximized');
             $(el).
                 button('option', 'label', 'Maximize').
                 button('option', 'icons', { primary: 'ui-icon-arrow-4-diag'});
 
             if ($.isFunction(this.fnPostEmbed)) {
-                this.fnPostEmbed.call(this)
+                this.fnPostEmbed.call(this);
             }
 
         } else {
@@ -79,14 +79,12 @@ $.widget('notes.basiceditor', {
                 button('option', 'icons', { primary: 'ui-icon-arrow-1-se'});
 
             if ($.isFunction(this.fnPostMaximize)) {
-                this.fnPostMaximize.call(this)
+                this.fnPostMaximize.call(this);
             }
         }
-
     },
 
     fnClose: function () {
-
         var $this = this;
 
         $this.syncModel();
@@ -102,7 +100,7 @@ $.widget('notes.basiceditor', {
     syncModel: function () {
         var $this = this;
 
-        var original = $this.getModel().clone();
+        //var original = $this.getModel().clone();
 
         if ($.isFunction($this.fnPreSyncModel)) {
             $this.fnPreSyncModel();
@@ -119,7 +117,6 @@ $.widget('notes.basiceditor', {
     },
 
     _destroy: function () {
-
         var $this = this;
 
         console.log('unload callback');
@@ -135,4 +132,4 @@ $.widget('notes.basiceditor', {
         $this.element.hide();
     }
 
-})
+});

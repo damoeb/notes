@@ -1,8 +1,13 @@
+/*global notes:false */
+/*global Backbone:false */
+
+'use strict';
+
 notes.model = {
     Folder: Backbone.Model.extend({
         urlRoot: '/notes/rest/folder',
         initialize: function () {
-            this.listener = []
+            this.listener = [];
         },
         onChange: function (callback) {
             this.listener.push(callback);

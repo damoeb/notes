@@ -1,3 +1,8 @@
+/*global notes:false */
+/*global _:false */
+
+'use strict';
+
 $.widget('notes.documentList', {
 
     options: {
@@ -43,7 +48,7 @@ $.widget('notes.documentList', {
         $.each(sources, function (index, source) {
 
             var $target;
-            if (source.type == 'native') {
+            if (source.type === 'native') {
                 $target = $native;
             } else {
                 $target = $descendants;
@@ -103,7 +108,7 @@ $.widget('notes.documentList', {
                     return $('<i class="fa fa-file-o fa-lg"></i>');
                 },
                 opacity: 0.6
-            })
+            });
     },
 
     updateDocument: function (model) {

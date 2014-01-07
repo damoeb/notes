@@ -1,3 +1,9 @@
+/*global PDFJS:false */
+/*global TextLayerBuilder:false */
+/*global CustomStyle:false */
+
+'use strict';
+
 var pdfloader = new function () {
 
     this.loadPdf = function (config) {
@@ -15,14 +21,14 @@ var pdfloader = new function () {
         pdf.then(function (pdf) {
             $this.renderPdf(pdf);
         });
-    }
+    };
 
     this.renderPdf = function (pdf) {
         var $this = this;
         pdf.getPage($this.page).then(function (page) {
-            $this.renderPage(page)
+            $this.renderPage(page);
         });
-    }
+    };
 
     this.renderPage = function (page) {
 
@@ -34,15 +40,15 @@ var pdfloader = new function () {
         var width = $pdfContainer.width();
 
         var viewport = page.getViewport(width / page.getViewport(1.0).width);
-        var $canvas = jQuery("<canvas></canvas>");
+        var $canvas = jQuery('<canvas></canvas>');
 
         //Set the canvas height and width to the height and width of the viewport
         var canvas = $canvas.get(0);
-        var context = canvas.getContext("2d");
+        var context = canvas.getContext('2d');
         canvas.height = viewport.height;
         canvas.width = viewport.width;
 
-        $pdfContainer.css("height", canvas.height + "px").css("width", canvas.width + "px");
+        $pdfContainer.css('height', canvas.height + 'px').css('width', canvas.width + 'px');
         $pdfContainer.append($canvas);
 
         //The following few lines of code set up scaling on the context if we are on a HiDPI display
@@ -65,15 +71,12 @@ var pdfloader = new function () {
             context.scale(outputScale.sx, outputScale.sy);
         }
 
-        var canvasOffset = $canvas.offset();
-        var $textLayerDiv = jQuery("<div />")
-            .addClass("textLayer")
-            .css("height", viewport.height + "px")
-            .css("width", viewport.width + "px")
+        var $textLayerDiv = jQuery('<div />')
+            .addClass('textLayer')
+            .css('height', viewport.height + 'px')
+            .css('width', viewport.width + 'px')
             .offset({
-                //top: canvasOffset.top,
                 top: $this.position.top,
-                //left: canvasOffset.left
                 left: $this.position.left
             });
 
@@ -92,6 +95,5 @@ var pdfloader = new function () {
 
             page.render(renderContext);
         });
-    }
-
+    };
 };

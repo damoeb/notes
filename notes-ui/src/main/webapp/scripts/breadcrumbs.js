@@ -1,3 +1,7 @@
+/*global notes:false */
+
+'use strict';
+
 $.widget('notes.breadcrumbs', {
 
     _init: function () {
@@ -52,7 +56,7 @@ $.widget('notes.breadcrumbs', {
         if (!isLeaf) {
             $item.append(
                 '<i class="fa fa-angle-right" style="margin-left:4px; margin-right:4px"></i>'
-            )
+            );
         }
 
         return $item;

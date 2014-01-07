@@ -1,3 +1,8 @@
+/*global notes:false */
+/*global pdfloader:false */
+
+'use strict';
+
 $.widget('notes.pdfeditor', $.notes.basiceditor, {
 
     _create: function () {
@@ -10,10 +15,10 @@ $.widget('notes.pdfeditor', $.notes.basiceditor, {
             removeClass('maximized');
 
         $this.fnPreSyncModel = function () {
-            console.log('pre sync')
+            console.log('pre sync');
         };
         $this.fnPreDestroy = function () {
-            console.log('pre destory')
+            console.log('pre destory');
         };
 
         var currentPage = 1;
@@ -81,7 +86,7 @@ $.widget('notes.pdfeditor', $.notes.basiceditor, {
                 $('<span/>', {text: 'of ' + numberOfPages, style: 'padding-left:5px; padding-right:5px'}),
                 $this._createButton('<i class="fa fa-angle-right"></i>', 'Next Page', fnNext)
             ]
-        }
+        };
 
         var $fieldTitle = $('<input/>', {class: 'ui-widget-content ui-corner-all title', type: 'text', value: $this.getModel().get('title')});
 
@@ -99,4 +104,4 @@ $.widget('notes.pdfeditor', $.notes.basiceditor, {
 
         pdfloader.loadPdf(pdfConfig);
     }
-})
+});

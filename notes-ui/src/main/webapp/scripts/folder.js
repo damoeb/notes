@@ -1,3 +1,7 @@
+/*global notes:false */
+
+'use strict';
+
 $.widget('notes.folder', {
     options: {
         parent: null,
@@ -113,7 +117,7 @@ $.widget('notes.folder', {
         var opened = $self.options.opened;
         var id = $self.options.model.get('id');
         for (var i = 0; i < opened.length; i++) {
-            if (opened[i].id == id) {
+            if (opened[i].id === id) {
                 return true;
             }
         }
@@ -146,7 +150,7 @@ $.widget('notes.folder', {
 
 
             // -- Children --
-            if ($self.children.length == 0) {
+            if ($self.children.length === 0) {
 
                 notes.util.jsonCall('GET', '/notes/rest/folder/${folderId}/children', {'${folderId}': $self.getModel().get('id')}, null, function (folders) {
 

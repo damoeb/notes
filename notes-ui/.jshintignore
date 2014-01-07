@@ -1,0 +1,4 @@
+src/main/webapp/scripts/fileupload/jquery.fileupload-ui.js
+src/main/webapp/scripts/fileupload/jquery.fileupload.js
+src/main/webapp/scripts/pdf/pdf.js
+src/main/webapp/scripts/pdf/textlayerbuilder.js

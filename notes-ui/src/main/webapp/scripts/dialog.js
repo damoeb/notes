@@ -1,3 +1,7 @@
+/*global notes:false */
+
+'use strict';
+
 notes.dialog = {
     defaults: {
         appendTo: '#dialog',
@@ -62,13 +66,13 @@ notes.dialog.folder = {
                                     model.change();
                                 }
                             });
-                            $(this).dialog("close");
+                            $(this).dialog('close');
                         }
                     },
                     {
                         text: 'Cancel',
                         click: function () {
-                            $(this).dialog("close");
+                            $(this).dialog('close');
                         }
                     }
                 ]
@@ -79,7 +83,7 @@ notes.dialog.folder = {
 
         var $input = $('<input/>', {name: 'name', type: 'text'});
 
-        var parentId = parentModel != null ? parentModel.get('id') : null;
+        var parentId = parentModel !== null ? parentModel.get('id') : null;
 
         $('<div/>', {class: 'dialog'}).append(
                 $('<div/>').append(
@@ -102,13 +106,13 @@ notes.dialog.folder = {
                                     $('#databases').databases('reloadTree');
                                 }
                             });
-                            $(this).dialog("close");
+                            $(this).dialog('close');
                         }
                     },
                     {
                         text: 'Cancel',
                         click: function () {
-                            $(this).dialog("close");
+                            $(this).dialog('close');
                         }
                     }
                 ]
@@ -127,7 +131,7 @@ notes.dialog.database = {
                     $('<a/>', {text: 'Create Folder'}).click(
                         function () {
                             notes.dialog.folder.newFolder(null);
-                            $(this).dialog("close");
+                            $(this).dialog('close');
                         })
                 )
             ).dialog($.extend({}, notes.dialog.defaults, {
@@ -143,7 +147,7 @@ notes.dialog.document = {
         var $title = $('<input/>', {name: 'name', type: 'text', placeholder: 'title of document'});
 
         var folderId = notes.app.activeFolderId();
-        if (typeof folderId == 'undefined') {
+        if (typeof folderId === 'undefined') {
             throw 'Choose folder first';
         }
         var folderName = notes.app.get$Folder(folderId).getModel().get('name');
@@ -164,7 +168,7 @@ notes.dialog.document = {
                         text: 'Create',
                         click: function () {
                             $('#editors').editors('createDocument', $title.val());
-                            $(this).dialog("close");
+                            $(this).dialog('close');
                         }
                     }
                 ]
@@ -226,8 +230,8 @@ notes.dialog.document = {
                                 url: $input.val(),
                                 folderId: notes.app.activeFolderId()
                             });
-                            bookmark.save(null, {success: function (newmodel) {
-
+                            bookmark.save(null, {success: function () {
+//                            bookmark.save(null, {success: function (newmodel) {
 //                                var $pdfLayer = $('#bookmark-preview').show();
 //
 //                                var fetchModel = function () {
@@ -261,13 +265,13 @@ notes.dialog.document = {
                                 $('#document-list').documentList('updateDocument', bookmark);
                             }});
 
-                            $(this).dialog("close");
+                            $(this).dialog('close');
                         }
                     },
                     {
                         text: 'Cancel',
                         click: function () {
-                            $(this).dialog("close");
+                            $(this).dialog('close');
                         }
                     }
                 ]
@@ -302,7 +306,7 @@ notes.dialog.settings = {
                 title: 'Settings'
             }));
     }
-}
+};
 
 notes.dialog.tags = {
 
@@ -325,7 +329,7 @@ notes.dialog.tags = {
                                 var newTags = [];
                                 for (var i = 0; i < documentModel.get('tags').length; i++) {
                                     var t = documentModel.get('tags')[i];
-                                    if (t.name != tag.name) {
+                                    if (t.name !== tag.name) {
                                         newTags.push(t);
                                     }
                                 }
@@ -361,7 +365,7 @@ notes.dialog.tags = {
                     {
                         text: 'Close',
                         click: function () {
-                            $(this).dialog("close");
+                            $(this).dialog('close');
                         }
                     }
                 ],
@@ -372,4 +376,4 @@ notes.dialog.tags = {
                 }
             }));
     }
-}
+};

@@ -1,3 +1,7 @@
+/*global notes:false */
+
+'use strict';
+
 $.widget('notes.databases', {
 
     url: '/notes/rest/database/list',
@@ -30,7 +34,7 @@ $.widget('notes.databases', {
         var filteredFolders = [];
         var unfilteredFolders = $self._getModel().get('openFolders');
         for (var i = 0; i < unfilteredFolders.length; i++) {
-            if (unfilteredFolders[i]['id'] !== folderId) {
+            if (unfilteredFolders[i].id !== folderId) {
                 filteredFolders.push(unfilteredFolders[i]);
             }
         }
