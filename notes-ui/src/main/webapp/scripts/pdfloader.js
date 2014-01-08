@@ -4,9 +4,11 @@
 
 'use strict';
 
-var pdfloader = new function () {
+var pdfloader = {};
 
-    this.loadPdf = function (config) {
+(function (pdfloader) {
+
+    pdfloader.loadPdf = function (config) {
 
         var $this = this;
 
@@ -23,14 +25,14 @@ var pdfloader = new function () {
         });
     };
 
-    this.renderPdf = function (pdf) {
+    pdfloader.renderPdf = function (pdf) {
         var $this = this;
         pdf.getPage($this.page).then(function (page) {
             $this.renderPage(page);
         });
     };
 
-    this.renderPage = function (page) {
+    pdfloader.renderPage = function (page) {
 
         var $this = this;
 
@@ -51,8 +53,19 @@ var pdfloader = new function () {
         $pdfContainer.css('height', canvas.height + 'px').css('width', canvas.width + 'px');
         $pdfContainer.append($canvas);
 
+        var $textLayerDiv = jQuery('<div />')
+            .addClass('textLayer')
+            .css('height', viewport.height + 'px')
+            .css('width', viewport.width + 'px')
+            .offset({
+                top: $this.position.top,
+                left: $this.position.left
+            });
+
+        $pdfContainer.append($textLayerDiv);
+
         //The following few lines of code set up scaling on the context if we are on a HiDPI display
-        var outputScale = getOutputScale();
+        var outputScale = {};
         if (outputScale.scaled) {
             var cssScale = 'scale(' + (1 / outputScale.sx) + ', ' +
                 (1 / outputScale.sy) + ')';
@@ -71,17 +84,6 @@ var pdfloader = new function () {
             context.scale(outputScale.sx, outputScale.sy);
         }
 
-        var $textLayerDiv = jQuery('<div />')
-            .addClass('textLayer')
-            .css('height', viewport.height + 'px')
-            .css('width', viewport.width + 'px')
-            .offset({
-                top: $this.position.top,
-                left: $this.position.left
-            });
-
-        $pdfContainer.append($textLayerDiv);
-
         page.getTextContent().then(function (textContent) {
             var textLayer = new TextLayerBuilder($textLayerDiv.get(0), 0); //The second zero is an index identifying
             //the page. It is set to page.number - 1.
@@ -96,4 +98,5 @@ var pdfloader = new function () {
             page.render(renderContext);
         });
     };
-};
+
+}(pdfloader));

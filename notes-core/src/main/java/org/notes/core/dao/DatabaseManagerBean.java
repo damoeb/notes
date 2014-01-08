@@ -6,10 +6,8 @@ import org.notes.common.UserSessionBean;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
 import org.notes.core.interfaces.DatabaseManager;
-import org.notes.core.interfaces.UserManager;
 import org.notes.core.model.Database;
 import org.notes.core.model.Folder;
-import org.notes.core.model.User;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -35,17 +33,25 @@ public class DatabaseManagerBean implements DatabaseManager {
     private EntityManager em;
 
     @Inject
-    private UserManager userManager;
-
-    @Inject
     private UserSessionBean userSessionBean;
 
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public Database createDatabase(Database database, User user) throws NotesException {
+    public Database createDatabase(Database database) throws NotesException {
         try {
-            return _create(database, user);
+            if (database == null) {
+                throw new NotesException("Database is null");
+            }
+
+            database.setDocumentCount(0);
+            database.setModified(new Date());
+
+            em.persist(database);
+            em.flush();
+            em.refresh(database);
+
+            return database;
 
         } catch (NotesException e) {
             throw e;
@@ -157,33 +163,6 @@ public class DatabaseManagerBean implements DatabaseManager {
         }
 
         return databaseList.get(0);
-
-    }
-
-    private Database _create(Database database, User user) throws NotesException {
-
-        if (database == null) {
-            throw new NotesException("Database is null");
-        }
-
-        if (user == null) {
-            throw new NotesException("user is null");
-        }
-        if (!em.contains(user)) {
-            user = userManager.getUser(user.getUsername());
-        }
-
-        database.setDocumentCount(0);
-        database.setModified(new Date());
-
-        em.persist(database);
-        user.getDatabases().add(database);
-        em.merge(user);
-
-        em.flush();
-        em.refresh(database);
-
-        return database;
 
     }
 

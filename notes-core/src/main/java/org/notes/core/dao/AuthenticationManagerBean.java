@@ -7,6 +7,8 @@ import org.notes.common.exceptions.NotesException;
 import org.notes.core.interfaces.AuthenticationManager;
 import org.notes.core.interfaces.UserManager;
 import org.notes.core.model.User;
+import org.notes.core.model.UserSettings;
+import org.notes.core.util.PasswordHash;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -14,6 +16,8 @@ import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import java.util.List;
 
 //@LocalBean
 @Stateless
@@ -31,25 +35,36 @@ public class AuthenticationManagerBean implements AuthenticationManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public User authenticate(String username, String password) throws NotesException {
+    public UserSettings authenticate(String username, String password) throws NotesException {
         try {
 
-            if (StringUtils.isBlank(username)) {
-                throw new NotesException(String.format("Invalid username '%s'", username));
+            NotesException ex = new NotesException("User or password is invalid");
+
+            if (StringUtils.isBlank(username) || StringUtils.isBlank(password)) {
+                throw ex;
             }
 
-            // todo implement
-            /*
             Query query = em.createNamedQuery(User.QUERY_BY_ID);
             query.setParameter("USERNAME", username);
 
             List<User> userList = query.getResultList();
             if (userList.isEmpty()) {
-                throw new NotesException(String.format("No user '%s' found", username));
+                throw ex;
             }
 
-            return userList.get(0);
-            */
+            User user = userList.get(0);
+
+            boolean authorized = PasswordHash.validatePassword(password, user.getPasswordHash());
+
+            if (!authorized) {
+                throw ex;
+            }
+
+            UserSettings settings = new UserSettings();
+
+            settings.setUser(user);
+            // todo load settings
+
             return null;
 
         } catch (NotesException t) {

@@ -164,14 +164,7 @@ $.widget('notes.folder', {
                                 $childFolder
                             );
 
-                            $childFolder.folder({
-                                parent: $self,
-                                model: new notes.model.Folder(folders[i]),
-                                opened: $self.options.opened,
-                                onRefresh: function () {
-                                    $self.refresh();
-                                }
-                            });
+                            $childFolder.folder($self._getFolderConfig(folders[i]));
                         }
                     }
                 });
@@ -187,6 +180,18 @@ $.widget('notes.folder', {
 
     getModel: function () {
         return this.options.model;
+    },
+
+    _getFolderConfig: function (data) {
+        var $self = this;
+        return {
+            parent: $self,
+            model: new notes.model.Folder(data),
+            opened: $self.options.opened,
+            onRefresh: function () {
+                $self.refresh();
+            }
+        };
     },
 
     getParent: function () {

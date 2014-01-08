@@ -3,9 +3,6 @@ package org.notes.core;
 import org.apache.log4j.Logger;
 import org.notes.common.configuration.Configuration;
 import org.notes.core.interfaces.*;
-import org.notes.core.model.Account;
-import org.notes.core.model.Database;
-import org.notes.core.model.User;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -47,77 +44,29 @@ public class StartUp {
 
         LOGGER.info("Notes Version " + Configuration.getStringValue(Configuration.VERSION, "UNKNOWN"));
 
-        synchronized (Startup.class) {
-
-            if (!initialized) {
-                initialized = false;
-
-                try {
-
-                    Account a = new Account();
-                    a.setName("Basic");
-                    a.setQuota(1000l);
-                    a = accountManager.createAccount(a);
-
-
-                    User u = new User();
-                    u.setUsername("testuser");
-                    userManager.createUser(u, a);
-
-
-                    Database d = new Database();
-                    d.setName("work");
-                    d = databaseManager.createDatabase(d, u);
-
-                    /*
-                    Folder f0 = new Folder();
-                    f0.setName("Projekte");
-                    folderManager.createFolder(f0, null, d);
-
-                    Folder f1 = new Folder();
-                    f1.setName("Ideen");
-                    f1 = folderManager.createFolder(f1, null, d);
-
-                    Folder f2 = new Folder();
-                    f2.setName("2014");
-                    f2 = folderManager.createFolder(f2, f1, d);
-
-                    TextDocument td1 = new TextDocument();
-                    td1.setTitle("Wende im Fall Taboga");
-                    td1.setText("Der SV Grödig hat den Vertrag mit Dominique Taboga aufgelöst. Dies gab der Salzburger Verein im Rahmen einer Pressekonferenz am Donnerstag bekannt. Manager Christian Haas");
-                    td1.getTags().add(new Tag("hamster"));
-
-                    td1 = documentManager.createDocument(td1, f2);
-
-                    // todo create 1000 documents
-
-                    TextDocument td2 = new TextDocument();
-                    td2.setTitle("Kosmische Atomschleuder");
-                    td2.setText("Rätsel rund um Schwarze Löcher gelöst: Die Schwerkraftmonster schleudern große Mengen verschiedener Atome mit rund 200.000 Kilometern pro Sekunde ins All hinaus");
-
-                    td2 = documentManager.createDocument(td2, f2);
-
-                    Folder f3 = new Folder();
-                    f3.setName("Herbst");
-                    f3 = folderManager.createFolder(f3, f2, d);
-
-                    TextDocument td3 = new TextDocument();
-                    td3.setTitle("Es ist wieder Zeit, pseudowissenschaftliche \"Leistungen\" zu nominieren");
-                    td3.setText("Der gleichnamige Preis wird von der Gesellschaft für kritisches Denken (GkD), der Wiener Regionalgruppe der internationalen Skeptikervereinigung GWUP (Gesellschaft zur Wissenschaftlichen Untersuchung von Parawissenschaften), bereits zum dritten Mal vergeben. Er soll zum einen auf unwissenschaftliches Vorgehen an sich aufmerksam machen, zum anderen aber auch auf die oft blühenden Geschäfte, die auf dieser Grundlage gedeihen.");
-
-                    td3 = documentManager.createDocument(td3, f3);
-
-                    //documentManager.deleteDocument(td1.getId());
-
-                    //documentManager.getDocument(td2.getId());
-                    */
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-        }
+//        synchronized (Startup.class) {
+//
+//            if (!initialized) {
+//                initialized = false;
+//
+//                try {
+//
+//                    Account a = new Account();
+//                    a.setType(AccountType.BASIC);
+//                    a.setQuota(1000l);
+//                    a = accountManager.createAccount(a);
+//
+//                    a = new Account();
+//                    a.setType(AccountType.ADMIN);
+//                    a.setQuota(4000l);
+//                    a = accountManager.createAccount(a);
+//
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//
+//            }
+//        }
 
     }
 

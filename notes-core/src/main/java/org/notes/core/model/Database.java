@@ -61,6 +61,10 @@ public class Database extends Node {
         setId(id);
     }
 
+    public Database(String name) {
+        setName(name);
+    }
+
     public Database(long id, String name, int documentCount, Date modified) {
         setId(id);
         setName(name);

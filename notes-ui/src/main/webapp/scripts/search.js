@@ -24,9 +24,12 @@ $.widget('notes.search', {
 
         notes.util.jsonCall('GET', '/notes/rest/search/?query=${query}&database=${database}&start=${start}&rows=${rows}', params, null,
             function () {
-                //function (documents) {
-                // todo implement
             }
         );
+//        notes.util.jsonCall('GET', '/notes/rest/search/?query=${query}&database=${database}&start=${start}&rows=${rows}', params, null,
+//            function (documents) {
+//                // todo implement
+//            }
+//        );
     }
 });

@@ -24,6 +24,7 @@ public class User implements Serializable {
 
     @Id
     @Column(nullable = false, unique = true, length = 30)
+    // todo min/max length
     private String username;
 
     @JsonIgnore
@@ -31,16 +32,13 @@ public class User implements Serializable {
     private String email;
 
     @JsonIgnore
-    @Column(length = 256)
-    private String password;
+    @Column(length = 1024)
+    private String passwordHash;
 
-    @JsonIgnore
-    @Column(length = 25)
-    private String salt;
-
-    @JsonIgnore
-    @Basic
-    private int failedLoginCount = 0;
+//    // todo
+//    @JsonIgnore
+//    @Basic
+//    private int failedLoginCount = 0;
 
 //  -- References ------------------------------------------------------------------------------------------------------
 
@@ -50,7 +48,7 @@ public class User implements Serializable {
     private Set<BasicDocument> documents = new HashSet(100);
 
     @Column(name = Account.FK_ACCOUNT_ID, insertable = false, updatable = false)
-    private Long accountId;
+    private String accountId;
 
     @JsonIgnore
     @OneToMany(cascade = {}, fetch = FetchType.LAZY, orphanRemoval = true)
@@ -84,11 +82,11 @@ public class User implements Serializable {
         this.documents = notes;
     }
 
-    public Long getAccountId() {
+    public String getAccountId() {
         return accountId;
     }
 
-    protected void setAccountId(Long accountId) {
+    protected void setAccountId(String accountId) {
         this.accountId = accountId;
     }
 
@@ -106,5 +104,21 @@ public class User implements Serializable {
 
     public void setFolders(Set<Folder> folders) {
         this.folders = folders;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPasswordHash() {
+        return passwordHash;
+    }
+
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
     }
 }

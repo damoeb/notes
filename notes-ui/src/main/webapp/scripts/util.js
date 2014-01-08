@@ -4,9 +4,9 @@
 
 (function (notes) {
 
-    notes.util = new function () {
+    notes.util = {
 
-        this.jsonCall = function (_type, url, urlReplacements, jsonObject, onSuccess, onError) {
+        jsonCall: function (_type, url, urlReplacements, jsonObject, onSuccess, onError) {
             var $this = this;
             try {
 
@@ -27,9 +27,10 @@
                                 }
                                 break;
                             default:
-                                console.error(data.errorMessage);
                                 if (typeof(onError) === 'function') {
                                     onError.call(this, data);
+                                } else {
+                                    console.error(data.errorMessage);
                                 }
                                 break;
                         }
@@ -45,9 +46,9 @@
                     onError.call(this, err);
                 }
             }
-        };
+        },
 
-        this.replaceInUrl = function (url, urlReplacements) {
+        replaceInUrl: function (url, urlReplacements) {
             if (urlReplacements === null) {
                 return url;
             }
@@ -62,15 +63,15 @@
                 }
             }
             return url;
-        };
+        },
 
-        this.strToDate = function (dateStr) {
+        strToDate: function (dateStr) {
             // 2012-08-23 22:27:15
             var arr = dateStr.replace(/:/g, ' ').replace(/-/g, ' ').split(' ');
             return new Date(arr[0], arr[1] - 1, arr[2], arr[3], arr[4], arr[5]);
-        };
+        },
 
-        this.sortArray = function (array) {
+        sortArray: function (array) {
             var n = array.length;
 
             for (var i = 0; i < n; i++) {
@@ -82,9 +83,9 @@
                     }
                 }
             }
-        };
+        },
 
-        this.sortJSONArrayASC = function (array, key) {
+        sortJSONArrayASC: function (array, key) {
             var n = array.length;
 
             for (var i = 0; i < n; i++) {
@@ -96,9 +97,9 @@
                     }
                 }
             }
-        };
+        },
 
-        this.sortJSONArrayDESC = function (array, key) {
+        sortJSONArrayDESC: function (array, key) {
             var n = array.length;
 
             for (var i = 0; i < n; i++) {
@@ -110,9 +111,9 @@
                     }
                 }
             }
-        };
+        },
 
-        this.equal = function (x, y) {
+        equal: function (x, y) {
             for (var p in y) {
                 if (typeof(y[p]) !== typeof(x[p])) {
                     return false;
@@ -143,9 +144,9 @@
                 }
             }
             return true;
-        };
+        },
 
-        this.formatDate = function (date) {
+        formatDate: function (date) {
 
             var millis = date.getTime();
             var now = new Date().getTime();
@@ -165,9 +166,9 @@
             }
 
             return $.datepicker.formatDate('DD d.m.yy', date) + ' ' + hours;
-        };
+        },
 
-        this.formatBytesNum = function (bytes) {
+        formatBytesNum: function (bytes) {
             if (bytes < 0) {
                 return 0 + 'b';
             }
@@ -180,11 +181,11 @@
                 return parseInt(bytes / oneKb) + ' KB';
             }
             return parseInt(bytes / oneMb) + ' MB';
-        };
+        },
 
-        this.toTimestamp = function (str) {
+        toTimestamp: function (str) {
             var d = str.match(/\d+/g); // extract date parts
             return new Date(d[0], d[1] - 1, d[2], d[3], d[4], d[5]); // build Date object
-        };
-    }();
+        }
+    };
 })(notes);

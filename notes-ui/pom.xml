@@ -63,6 +63,7 @@
                 <version>1.7</version>
                 <executions>
                     <execution>
+                        <id>compile</id>
                         <phase>generate-sources</phase>
                         <configuration>
                             <target name="building">
@@ -94,20 +95,30 @@
                                     <arg value="-c"/>
                                     <arg line='"bower install"'/>
                                 </exec>
-
-                                <!--  todo GRUNT  -->
-                                <!--<echo>-->
-                                <!--grunt-->
-                                <!--</echo>-->
-                                <!--<exec executable="cmd" dir="${project.basedir}"-->
-                                <!--osfamily="windows" failonerror="true">-->
-                                <!--<arg line="/c bower install"/>-->
-                                <!--</exec>-->
-                                <!--<exec executable="bash" dir="${project.basedir}"-->
-                                <!--osfamily="unix" failonerror="true">-->
-                                <!--<arg value="-c"/>-->
-                                <!--<arg line='"bower install"'/>-->
-                                <!--</exec>-->
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>test</id>
+                        <phase>test</phase>
+                        <configuration>
+                            <target name="building">
+                                <!--  GRUNT  -->
+                                <echo>
+                                    grunt
+                                </echo>
+                                <exec executable="cmd" dir="${project.basedir}"
+                                      osfamily="windows" failonerror="true">
+                                    <arg line="/c grunt"/>
+                                </exec>
+                                <exec executable="bash" dir="${project.basedir}"
+                                      osfamily="unix" failonerror="true">
+                                    <arg value="-c"/>
+                                    <arg line='"grunt"'/>
+                                </exec>
                             </target>
                         </configuration>
                         <goals>

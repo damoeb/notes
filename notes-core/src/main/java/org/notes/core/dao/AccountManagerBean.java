@@ -5,6 +5,7 @@ import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
 import org.notes.core.interfaces.AccountManager;
 import org.notes.core.model.Account;
+import org.notes.core.model.AccountType;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -27,19 +28,19 @@ public class AccountManagerBean implements AccountManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public Account getAccount(Long accountId) throws NotesException {
+    public Account getAccount(AccountType type) throws NotesException {
         try {
 
-            if (accountId == null || accountId <= 0) {
-                throw new NotesException(String.format("Invalid account id '%s'", accountId));
+            if (type == null) {
+                throw new NotesException(String.format("Invalid account type '%s'", type));
             }
 
-            Query query = em.createNamedQuery(Account.QUERY_BY_ID);
-            query.setParameter("ID", accountId);
+            Query query = em.createNamedQuery(Account.QUERY_BY_TYPE);
+            query.setParameter("TYPE", type);
 
             List<Account> accountList = query.getResultList();
             if (accountList.isEmpty()) {
-                throw new NotesException(String.format("No account with id '%s' found", accountId));
+                throw new NotesException(String.format("No account with type '%s' found", type));
             }
 
             return accountList.get(0);

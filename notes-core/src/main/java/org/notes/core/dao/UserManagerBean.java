@@ -5,9 +5,13 @@ import org.apache.log4j.Logger;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
 import org.notes.core.interfaces.AccountManager;
+import org.notes.core.interfaces.DatabaseManager;
 import org.notes.core.interfaces.UserManager;
 import org.notes.core.model.Account;
+import org.notes.core.model.AccountType;
+import org.notes.core.model.Database;
 import org.notes.core.model.User;
+import org.notes.core.util.PasswordHash;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -31,6 +35,9 @@ public class UserManagerBean implements UserManager {
 
     @Inject
     private AccountManager accountManager;
+
+    @Inject
+    private DatabaseManager databaseManager;
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
@@ -89,7 +96,7 @@ public class UserManagerBean implements UserManager {
             }
 
             if (!em.contains(account)) {
-                account = accountManager.getAccount(account.getId());
+                account = accountManager.getAccount(account.getType());
             }
 
             em.persist(newUser);
@@ -105,6 +112,42 @@ public class UserManagerBean implements UserManager {
             throw t;
         } catch (Throwable t) {
             throw new NotesException("create user", t);
+        }
+    }
+
+    @Override
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public User registerUser(String username, String password, String email) throws NotesException {
+        try {
+
+            if (StringUtils.isBlank(username)) {
+                throw new NotesException("username is null");
+            }
+            if (StringUtils.isBlank(password)) {
+                throw new NotesException("password is too short");
+            }
+            if (StringUtils.isBlank(email)) {
+                throw new NotesException("email is null");
+            }
+
+            User user = new User();
+            user.setUsername(username);
+            user.setPasswordHash(PasswordHash.createHash(password));
+            user.setEmail(email);
+
+            Account account = accountManager.getAccount(AccountType.BASIC);
+
+            user = createUser(user, account);
+
+            Database database = databaseManager.createDatabase(new Database("/"));
+
+            user.getDatabases().add(database);
+
+            return user;
+        } catch (NotesException t) {
+            throw t;
+        } catch (Throwable t) {
+            throw new NotesException("register user", t);
         }
     }
 }

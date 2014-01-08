@@ -14,23 +14,19 @@ import java.util.Set;
 @Entity(name = "Account")
 @Table(name = "Account")
 @NamedQueries({
-        @NamedQuery(name = Account.QUERY_BY_ID, query = "SELECT a FROM Account a where a.id=:ID"),
+        @NamedQuery(name = Account.QUERY_BY_TYPE, query = "SELECT a FROM Account a where a.type=:TYPE"),
         @NamedQuery(name = Account.QUERY_ALL, query = "SELECT a FROM Account a")
 })
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class Account implements Serializable {
 
-    public static final String QUERY_BY_ID = "Account.QUERY_BY_ID";
+    public static final String QUERY_BY_TYPE = "Account.QUERY_BY_TYPE";
     public static final String QUERY_ALL = "Account.QUERY_ALL";
     public static final String FK_ACCOUNT_ID = "account_id";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-
-    @Basic
-    @Column(nullable = false, unique = true)
-    private String name;
+    @Enumerated(EnumType.STRING)
+    private AccountType type;
 
     @Basic
     private long quota;
@@ -48,20 +44,12 @@ public class Account implements Serializable {
         // default
     }
 
-    public long getId() {
-        return id;
+    public AccountType getType() {
+        return type;
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public void setType(AccountType type) {
+        this.type = type;
     }
 
     public long getQuota() {
