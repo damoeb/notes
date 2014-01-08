@@ -5,13 +5,17 @@ import org.notes.common.configuration.NotesInterceptors;
 import org.notes.core.interfaces.AuthenticationManager;
 import org.notes.core.interfaces.UserManager;
 import org.notes.core.metric.ServiceMetric;
+import org.notes.core.model.AuthParams;
 import org.notes.core.model.User;
 import org.notes.core.model.UserSettings;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
@@ -32,13 +36,11 @@ public class UserService {
     @ServiceMetric
     @Path("/register")
     @Produces(MediaType.APPLICATION_JSON)
-    public NotesResponse login(
-            @PathParam("username") String username,
-            @PathParam("password") String password,
-            @PathParam("email") String email
+    public NotesResponse register(
+            AuthParams auth
     ) throws Exception {
         try {
-            User user = userManager.registerUser(username, password, email);
+            User user = userManager.registerUser(auth.getUsername(), auth.getPassword(), auth.getEmail());
             return NotesResponse.ok(user);
         } catch (Exception e) {
             return NotesResponse.error(e);
@@ -51,12 +53,11 @@ public class UserService {
     @Path("/login")
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse login(
-            @PathParam("username") String username,
-            @PathParam("password") String password,
+            AuthParams auth,
             @Context HttpServletRequest request
     ) throws Exception {
         try {
-            UserSettings settings = authenticationManager.authenticate(username, password);
+            UserSettings settings = authenticationManager.authenticate(auth.getUsername(), auth.getPassword());
             request.getSession().setAttribute(USER_SETTINGS, settings);
             return NotesResponse.ok(settings);
         } catch (Exception e) {

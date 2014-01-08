@@ -59,7 +59,12 @@
 
         };
 
-        notes.util.jsonCall('POST', '/notes/rest/user/login', null, null, onSuccess, ontLoginFailed);
+        var payload = {
+            username: $('#field-username').val(),
+            password: $('#field-password').val()
+        };
+
+        notes.util.jsonCall('POST', '/notes/rest/user/login', null, JSON.stringify(payload), onSuccess, ontLoginFailed);
     };
 
     notes.logout = function () {
@@ -89,7 +94,13 @@
 
         };
 
-        notes.util.jsonCall('POST', '/notes/rest/user/register', null, null, onSuccess, ontLoginFailed);
+        var payload = {
+            username: $('#field-username').val(),
+            password: $('#field-password').val(),
+            email: $('#field-email').val()
+        };
+
+        notes.util.jsonCall('POST', '/notes/rest/user/register', null, JSON.stringify(payload), onSuccess, ontLoginFailed);
     };
 
     notes.setup = function () {
