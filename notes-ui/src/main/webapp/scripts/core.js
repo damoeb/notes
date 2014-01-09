@@ -116,6 +116,7 @@
         notes.router = new Router();
 
         // start routing
+        // todo: wait until databases are loaded
         Backbone.history.start();
 
     };

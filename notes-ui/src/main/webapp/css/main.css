@@ -205,11 +205,16 @@ span[kind] {
     padding: 0 10px 0 0;
 }
 
-.sidebar dt {
+.sidebar ul {
     cursor: pointer;
     padding: 3px 3px 3px 5px;
     font-weight: normal;
     border-left: 5px solid transparent;
+}
+
+.sidebar li {
+    list-style: none outside none;
+    line-height: 20px;
 }
 
 .sidebar .active {
@@ -233,7 +238,7 @@ span[kind] {
 }
 
 .fldr:hover,
-dt:hover {
+.sidebar li:hover {
     color: black;
 }
 
