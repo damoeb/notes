@@ -29,7 +29,7 @@ $.widget('notes.folder', {
         // -- Structure ------------------------------------------------------------------------------------------------
 
         $self.$folderLayer = $('<div/>', {class: 'fldr fldr-lvl-' + model.get('level')});
-        $self.$childrenLayer = $('<div/>', {class: 'children'});
+        $self.$childrenLayer = $('<ul/>', {class: 'children'});
 
         $target.append($self.$folderLayer).append($self.$childrenLayer);
 
@@ -157,7 +157,7 @@ $.widget('notes.folder', {
                     if (folders) {
                         for (var i = 0; i < folders.length; i++) {
 
-                            var $childFolder = $('<div/>')
+                            var $childFolder = $('<li/>')
                                 .appendTo($self.$childrenLayer);
 
                             $self.children.push(

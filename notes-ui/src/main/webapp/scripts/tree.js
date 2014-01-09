@@ -42,7 +42,7 @@ $.widget('notes.tree', {
                 if (rootFolders && rootFolders.length > 0) {
 
                     $.each(rootFolders, function (index, rootFolder) {
-                        $('<div/>')
+                        $('<li/>')
                             .appendTo($root)
                             .folder({
                                 model: new notes.model.Folder(rootFolder),
