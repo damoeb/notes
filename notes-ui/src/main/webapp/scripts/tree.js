@@ -24,7 +24,7 @@ $.widget('notes.tree', {
 
         var $this = this;
 
-        $this.element.empty();
+        var $root = $this.element.empty();
 
         var rootFolders = null;
         var openFolders = null;
@@ -38,8 +38,6 @@ $.widget('notes.tree', {
             if (modelLoaded && rootsLoaded && openFolders) {
 
                 $this.model.set('openFolders', openFolders);
-
-                var $root = $('<div/>').appendTo($this.element);
 
                 if (rootFolders && rootFolders.length > 0) {
 
@@ -79,11 +77,6 @@ $.widget('notes.tree', {
 
     getModel: function () {
         return this.model;
-    },
-
-    _destroy: function () {
-        console.log('destroy tree');
-        // todo implement widget method
     }
 
 });
