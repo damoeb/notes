@@ -1,4 +1,4 @@
-- breadcrumbs mit dropdown
+- breadcrumbs: anständiger style, mit dropdown
 - menüs mit ul/li
 - notifications with jquery noty
 - only use needed js stuff
