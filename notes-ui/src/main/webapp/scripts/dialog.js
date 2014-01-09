@@ -60,13 +60,13 @@ notes.dialog.folder = {
                     {
                         text: 'Rename',
                         click: function () {
+                            $(this).dialog('close');
                             model.set('name', $input.val());
                             model.save(null, {
                                 success: function () {
                                     model.change();
                                 }
                             });
-                            $(this).dialog('close');
                         }
                     },
                     {
@@ -95,6 +95,7 @@ notes.dialog.folder = {
                     {
                         text: 'Create',
                         click: function () {
+                            $(this).dialog('close');
 
                             var model = new notes.model.Folder({
                                 name: $input.val(),
@@ -106,7 +107,6 @@ notes.dialog.folder = {
                                     $('#databases').databases('reloadTree');
                                 }
                             });
-                            $(this).dialog('close');
                         }
                     },
                     {
@@ -130,8 +130,8 @@ notes.dialog.database = {
                 $('<div/>').append(
                     $('<a/>', {text: 'Create Folder'}).click(
                         function () {
+                            $dialog.dialog('close');
                             notes.dialog.folder.newFolder(null);
-                            $(this).dialog('close');
                         })
                 )
             ).dialog($.extend({}, notes.dialog.defaults, {
@@ -167,8 +167,8 @@ notes.dialog.document = {
                     {
                         text: 'Create',
                         click: function () {
-                            $('#editors').editors('createDocument', $title.val());
                             $(this).dialog('close');
+                            $('#editors').editors('createDocument', $title.val());
                         }
                     }
                 ]
@@ -226,6 +226,8 @@ notes.dialog.document = {
                         text: 'Bookmark',
                         click: function () {
 
+                            $(this).dialog('close');
+
                             var bookmark = new notes.model.Bookmark({
                                 url: $input.val(),
                                 folderId: notes.app.activeFolderId()
@@ -264,8 +266,6 @@ notes.dialog.document = {
                                 // mark area
                                 $('#document-list').documentList('updateDocument', bookmark);
                             }});
-
-                            $(this).dialog('close');
                         }
                     },
                     {

@@ -107,7 +107,7 @@ public class DatabaseService {
     public NotesResponse getDatabases(
     ) throws Exception {
         try {
-            return NotesResponse.ok(databaseManager.getDatabases());
+            return NotesResponse.ok(databaseManager.getDatabasesOfCurrentUser());
         } catch (Exception e) {
             return NotesResponse.error(e);
         }

@@ -42,7 +42,7 @@ $.widget('notes.documentList', {
 
         $('#breadcrumbs').breadcrumbs('generate', folderId);
 
-        var $native = $('<div/>').appendTo($this.element);
+        var $native = $('<div/>', {text: 'Folder is empty'}).appendTo($this.element);
         var $descendants = $('<div/>', {style: 'border-top: 3px solid #efefef; padding-top:5px'}).appendTo($this.element);
 
         $.each(sources, function (index, source) {
@@ -55,6 +55,10 @@ $.widget('notes.documentList', {
             }
 
             notes.util.jsonCall('GET', source.url, source.params, null, function (documents) {
+
+                if (documents.length > 0) {
+                    $target.empty();
+                }
 
                 $.each(documents, function (id, doc) {
                     $this._render(new notes.model.Document(doc)).appendTo($target);

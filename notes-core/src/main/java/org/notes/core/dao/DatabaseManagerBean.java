@@ -2,10 +2,10 @@ package org.notes.core.dao;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
-import org.notes.common.UserSessionBean;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
 import org.notes.core.interfaces.DatabaseManager;
+import org.notes.core.interfaces.SessionData;
 import org.notes.core.model.Database;
 import org.notes.core.model.Folder;
 
@@ -33,8 +33,7 @@ public class DatabaseManagerBean implements DatabaseManager {
     private EntityManager em;
 
     @Inject
-    private UserSessionBean userSessionBean;
-
+    private SessionData sessionData;
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
@@ -90,15 +89,15 @@ public class DatabaseManagerBean implements DatabaseManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public List<Database> getDatabases() throws NotesException {
+    public List<Database> getDatabasesOfCurrentUser() throws NotesException {
         try {
-            Query query = em.createNamedQuery(Database.QUERY_ALL);
-            query.setParameter("USER", userSessionBean.getUsername());
+            Query query = em.createNamedQuery(Database.QUERY_BY_USER);
+            query.setParameter("USER", sessionData.getUser().getUsername());
 
             return query.getResultList();
 
         } catch (Throwable t) {
-            throw new NotesException("get databases ", t);
+            throw new NotesException("get databases of user ", t);
         }
     }
 
@@ -107,13 +106,13 @@ public class DatabaseManagerBean implements DatabaseManager {
     public List<Folder> getFolders(long databaseId) throws NotesException {
         try {
             Query query = em.createNamedQuery(Folder.QUERY_ROOT_FOLDERS);
-            query.setParameter("OWNER", userSessionBean.getUsername());
+            query.setParameter("OWNER", sessionData.getUser().getUsername());
             query.setParameter("DB_ID", databaseId);
 
             return query.getResultList();
 
         } catch (Throwable t) {
-            throw new NotesException("get database " + databaseId, t);
+            throw new NotesException("get folders " + databaseId, t);
         }
     }
 
@@ -122,13 +121,13 @@ public class DatabaseManagerBean implements DatabaseManager {
     public List<Folder> getOpenFolders(long databaseId) throws NotesException {
         try {
             Query query = em.createNamedQuery(Folder.QUERY_OPEN_FOLDERS);
-            query.setParameter("OWNER", userSessionBean.getUsername());
+            query.setParameter("OWNER", sessionData.getUser().getUsername());
             query.setParameter("DB_ID", databaseId);
 
             return query.getResultList();
 
         } catch (Throwable t) {
-            throw new NotesException("get database " + databaseId, t);
+            throw new NotesException("get open folders " + databaseId, t);
         }
     }
 
@@ -147,6 +146,14 @@ public class DatabaseManagerBean implements DatabaseManager {
     }
 
     // -- Helper -- ----------------------------------------------------------------------------------------------------
+
+//    private SessionData getUserSettings() throws NamingException {
+//
+//        InitialContext ic = new InitialContext();
+//        SessionData bean = (SessionData)
+//                ic.lookup("java:comp/env/SessionDataBean");
+//        return bean;
+//    }
 
     private Database _get(Long databaseId) throws NotesException {
 

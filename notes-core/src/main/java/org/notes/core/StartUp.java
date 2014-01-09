@@ -3,6 +3,8 @@ package org.notes.core;
 import org.apache.log4j.Logger;
 import org.notes.common.configuration.Configuration;
 import org.notes.core.interfaces.*;
+import org.notes.core.model.Account;
+import org.notes.core.model.AccountType;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -44,29 +46,24 @@ public class StartUp {
 
         LOGGER.info("Notes Version " + Configuration.getStringValue(Configuration.VERSION, "UNKNOWN"));
 
-//        synchronized (Startup.class) {
-//
-//            if (!initialized) {
-//                initialized = false;
-//
-//                try {
-//
-//                    Account a = new Account();
-//                    a.setType(AccountType.BASIC);
-//                    a.setQuota(1000l);
-//                    a = accountManager.createAccount(a);
-//
-//                    a = new Account();
-//                    a.setType(AccountType.ADMIN);
-//                    a.setQuota(4000l);
-//                    a = accountManager.createAccount(a);
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//
-//            }
-//        }
+        synchronized (Startup.class) {
+
+            if (!initialized) {
+                initialized = false;
+
+                try {
+
+                    Account a = new Account();
+                    a.setType(AccountType.BASIC);
+                    a.setQuota(1000l);
+                    a = accountManager.createAccount(a);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
 
     }
 

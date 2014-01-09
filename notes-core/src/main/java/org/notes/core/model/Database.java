@@ -19,13 +19,13 @@ import java.util.Set;
 @NamedQueries({
         @NamedQuery(name = Database.QUERY_BY_ID, query = "SELECT a FROM DDatabase a where a.id=:ID"),
         @NamedQuery(name = Database.QUERY_OPEN_FOLDERS, query = "SELECT new Folder(b.id) FROM DDatabase a INNER JOIN a.openFolders b where a.id=:ID"),
-        @NamedQuery(name = Database.QUERY_ALL, query = "SELECT new DDatabase(a.id, a.name, a.documentCount, a.modified) FROM DDatabase a where a.owner=:USER")
+        @NamedQuery(name = Database.QUERY_BY_USER, query = "SELECT new DDatabase(a.id, a.name, a.documentCount, a.modified) FROM DDatabase a where a.owner=:USER")
 })
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class Database extends Node {
 
     public static final String QUERY_BY_ID = "Database.QUERY_BY_ID";
-    public static final String QUERY_ALL = "Database.QUERY_ALL";
+    public static final String QUERY_BY_USER = "Database.QUERY_BY_USER";
     public static final String QUERY_OPEN_FOLDERS = "Database.QUERY_OPEN_FOLDERS";
     //
     public static final String FK_DATABASE_ID = "database_id";

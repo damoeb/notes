@@ -5,58 +5,17 @@
 
 (function (notes) {
 
-    notes.app = function () {
-
-        var _activeFolderId = 0;
-        var _documentId = 0;
-        var _databaseId = 0;
-        var _descendants = {};
-
-        this.activeFolderId = function (id) {
-            if (typeof id !== 'undefined') {
-                _activeFolderId = id;
-            } else {
-                return _activeFolderId;
-            }
-        };
-
-        this.documentId = function (id) {
-            if (typeof id !== 'undefined') {
-                _documentId = id;
-            } else {
-                return _documentId;
-            }
-        };
-
-        this.databaseId = function (id) {
-            if (typeof id !== 'undefined') {
-                _databaseId = id;
-            } else {
-                return _databaseId;
-            }
-        };
-
-        this.add$Folder = function ($folder) {
-            _descendants[$folder.getModel().get('id')] = $folder;
-        };
-
-        this.get$Folder = function (folderId) {
-            return _descendants[folderId];
-        };
-    };
-
-
     notes.login = function () {
 
         var onSuccess = function () {
-
             console.log('logged in');
+            noty({text: 'logged in'})
             notes.setup();
         };
 
         var ontLoginFailed = function () {
             console.log('login failed');
-
+            noty({type: 'error', text: 'login failed'})
         };
 
         var payload = {
@@ -64,21 +23,22 @@
             password: $('#field-password').val()
         };
 
-        notes.util.jsonCall('POST', '/notes/rest/user/login', null, JSON.stringify(payload), onSuccess, ontLoginFailed);
+        notes.util.jsonCall('POST', '/notes/rest/auth/login', null, JSON.stringify(payload), onSuccess, ontLoginFailed);
     };
 
     notes.logout = function () {
 
         var onSuccess = function () {
             console.log('logged out');
+            noty({text: 'logged out'})
         };
 
         var ontLogoutFailed = function () {
             console.log('logout failed');
-
+            noty({type: 'error', text: 'Logout failed'})
         };
 
-        notes.util.jsonCall('GET', '/notes/rest/user/logout', null, null, onSuccess, ontLogoutFailed);
+        notes.util.jsonCall('GET', '/notes/rest/auth/logout', null, null, onSuccess, ontLogoutFailed);
     };
 
     notes.register = function () {
@@ -86,12 +46,10 @@
         var onSuccess = function () {
 
             console.log('registered');
-            notes.setup();
         };
 
-        var ontLoginFailed = function () {
+        var ontRegFailed = function () {
             console.log('registration failed');
-
         };
 
         var payload = {
@@ -100,7 +58,7 @@
             email: $('#field-email').val()
         };
 
-        notes.util.jsonCall('POST', '/notes/rest/user/register', null, JSON.stringify(payload), onSuccess, ontLoginFailed);
+        notes.util.jsonCall('POST', '/notes/rest/auth/register', null, JSON.stringify(payload), onSuccess, ontRegFailed);
     };
 
     notes.setup = function () {
@@ -111,9 +69,10 @@
 
             console.log('Hello ' + settings.user.username);
 
-            notes.app.databaseId(settings.database.id);
+            notes.app.databaseId(settings.databases[0].id);
 
             notes.setup.ui();
+            notes.setup.router();
 
         };
 
@@ -123,7 +82,7 @@
             $('#login-view').show();
         };
 
-        notes.util.jsonCall('GET', '/notes/rest/user/settings', null, null, onSuccess, onNotLoggedIn);
+        notes.util.jsonCall('GET', '/notes/rest/auth/settings', null, null, onSuccess, onNotLoggedIn);
     };
 
     // -- Routing ------------------------------------------------------------------------------------------------------
@@ -154,7 +113,7 @@
             }
         });
 
-        notes.router.instance = new Router();
+        notes.router = new Router();
 
         // start routing
         Backbone.history.start();
@@ -162,6 +121,9 @@
     };
 
     notes.setup.ui = function () {
+
+        $('#content-view').show();
+
         // -- Side Navigation ----------------------------------------------------------------------------------
 
         $('#databases').databases({
@@ -225,4 +187,3 @@
     };
 
 })(notes);
-

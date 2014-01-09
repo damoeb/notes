@@ -10,7 +10,6 @@ import org.apache.solr.client.solrj.impl.XMLResponseParser;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
-import org.notes.common.UserSessionBean;
 import org.notes.common.configuration.Configuration;
 import org.notes.common.configuration.ConfigurationProperty;
 import org.notes.common.configuration.NotesInterceptors;
@@ -22,7 +21,6 @@ import org.notes.search.model.DocumentHit;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
-import javax.inject.Inject;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -38,9 +36,6 @@ public class SearchManagerBean implements SearchManager {
     @ConfigurationProperty(value = Configuration.SOLR_SERVER, mandatory = true)
     private String solrUrl = "http://localhost:8080/solr-4.5.1";
 
-    @Inject
-    private UserSessionBean userSessionBean;
-
     @Override
     public List<DocumentHit> query(String queryString, int start, int rows) throws NotesException {
         try {
@@ -55,7 +50,9 @@ public class SearchManagerBean implements SearchManager {
 
             SolrQuery query = new SolrQuery();
 
-            query.setQuery(String.format("+owner:%1$s +(title:%2$%s text:%2$s)", userSessionBean.getUsername(), queryString));
+//            todo fix
+//            query.setQuery(String.format("+owner:%1$s +(title:%2$%s text:%2$s)", userSessionBean.getUsername(), queryString));
+            query.setQuery(String.format("+(title:%2$%s text:%2$s)", queryString));
 
             query.setFields(SolrFields.ID, SolrFields.DOCUMENT, SolrFields.TITLE, SolrFields.FOLDER, SolrFields.OUTLINE,
                     SolrFields.SECTION, SolrFields.MODIFIED, SolrFields.KIND, SolrFields.OWNER);
