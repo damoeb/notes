@@ -28,7 +28,7 @@ $.widget('notes.folder', {
 
         // -- Structure ------------------------------------------------------------------------------------------------
 
-        $self.$folderLayer = $('<div/>', {class: 'fldr fldr-lvl-' + model.get('level')});
+        $self.$folderLayer = $('<div/>', {class: 'level-' + model.get('level')});
         $self.$childrenLayer = $('<ul/>', {class: 'children'});
 
         $target.append($self.$folderLayer).append($self.$childrenLayer);
@@ -39,8 +39,8 @@ $.widget('notes.folder', {
 
         var documentCount = model.get('documentCount');
 
-        var $fieldName = $('<span/>', {class: 'fldr-name', text: model.get('name') });
-        var $fieldDocCount = $('<span/>', {class: 'fldr-dc-cnt', text: documentCount});
+        var $fieldName = $('<span/>', {text: model.get('name') });
+        var $fieldDocCount = $('<span/>', {class: 'doc-count', text: documentCount});
 
         $self.$fieldName = $fieldName;
         $self.$fieldDocCount = $fieldDocCount;
