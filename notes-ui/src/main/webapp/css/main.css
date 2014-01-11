@@ -200,29 +200,6 @@ span[kind] {
     display: none;
 }
 
-/* sidebar */
-.sidebar {
-    padding: 0 10px 0 0;
-}
-
-.sidebar ul {
-    cursor: pointer;
-    padding: 3px 3px 3px 5px;
-    font-weight: normal;
-    border-left: 5px solid transparent;
-}
-
-.sidebar li {
-    list-style: none outside none;
-    line-height: 20px;
-}
-
-.sidebar .active {
-    border-left-color: black;
-    color: black;
-    /* todo heller shimmer? */
-}
-
 .progress-of-task {
     height: 4px;
     background-color: #cccccc;

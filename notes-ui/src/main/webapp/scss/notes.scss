@@ -1,7 +1,16 @@
 $some-value: 5px;
 
-#header {
-  h1 {
-    padding: $some-value
+.sidebar {
+  ul {
+    padding: 0;
+  }
+
+  li {
+    list-style: none outside none;
+    line-height: 20px;
+  }
+
+  .active {
+
   }
 }
