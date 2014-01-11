@@ -9,13 +9,13 @@
 
         var onSuccess = function () {
             console.log('logged in');
-            noty({text: 'logged in'})
+            noty({text: 'logged in'});
             notes.setup();
         };
 
         var ontLoginFailed = function () {
             console.log('login failed');
-            noty({type: 'error', text: 'login failed'})
+            noty({type: 'error', text: 'login failed'});
         };
 
         var payload = {
@@ -30,7 +30,7 @@
 
         var onSuccess = function () {
             console.log('logged out');
-            noty({text: 'logged out'})
+            noty({text: 'logged out'});
         };
 
         var ontLogoutFailed = function () {
@@ -44,8 +44,8 @@
     notes.register = function () {
 
         var onSuccess = function () {
-
             console.log('registered');
+            noty({text: 'Registered'});
         };
 
         var ontRegFailed = function () {
@@ -182,9 +182,7 @@
             }
         });
 
-
         $('#breadcrumbs').breadcrumbs();
-
     };
 
 })(notes);
