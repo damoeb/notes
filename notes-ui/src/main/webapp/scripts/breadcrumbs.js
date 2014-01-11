@@ -5,7 +5,6 @@
 $.widget('notes.breadcrumbs', {
 
     _init: function () {
-        this.element.attr('style', 'padding:5px; margin-bottom:5px;');
         this.generate();
     },
 
