@@ -16,36 +16,6 @@ notes.dialog = {
 
 notes.dialog.folder = {
 
-    settings: function (model) {
-        var $this = this;
-
-        var $dialog = $('<div/>', {class: 'dialog'});
-
-        $dialog.append(
-                $('<div/>').append(
-                    $('<a/>', {text: 'New Folder'}).click(
-                        function () {
-                            $dialog.dialog('close');
-                            $this.newFolder(model);
-                        })
-                )
-            ).append(
-                $('<div/>').append(
-                    $('<a/>', {text: 'Rename'}).click(
-                        function () {
-                            $dialog.dialog('close');
-                            $this.rename(model);
-                        })
-                )
-            ).append(
-                $('<div/>').append(
-                    $('<a/>', {text: 'Delete'})
-                )
-            ).dialog($.extend({}, notes.dialog.defaults, {
-                title: 'Folder'
-            }));
-    },
-
     rename: function (model) {
 
         var $input = $('<input/>', {name: 'name', type: 'text', value: model.get('name')});

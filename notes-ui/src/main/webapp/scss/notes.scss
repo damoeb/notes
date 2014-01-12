@@ -7,6 +7,14 @@ $some-value: 5px;
 #breadcrumbs {
   padding: 5px;
   margin-bottom: 5px;
+
+  .menu {
+    position: absolute;
+    background-color: white;
+    padding: 5px;
+    border: 1px solid black;
+    z-index: 100;
+  }
 }
 
 // -- ------------------------------------------------------------------------------------------------------------------

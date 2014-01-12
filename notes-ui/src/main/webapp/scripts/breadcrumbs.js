@@ -46,17 +46,37 @@ $.widget('notes.breadcrumbs', {
     },
 
     _getBreadcrumbItem: function ($folder, isLeaf) {
-        var $item = $('<a/>', {href: '#'}).append(
-                $('<span/>', {text: $folder.getModel().get('name') })
-            ).click(function () {
-                notes.dialog.folder.settings($folder.getModel());
-            });
+        var $menuLayer = $('<div/>', {class: 'menu', id: 'menu-' + $folder.getModel().get('id')}).hide();
+        var $menu = $('<ul/>').append(
+                $('<li/>', {text: 'New folder'}).click(function () {
+                    notes.dialog.folder.newFolder($folder.getModel());
+                })
+            ).append(
+                $('<li/>', {text: 'Rename'}).click(function () {
+                    notes.dialog.folder.rename($folder.getModel());
+                })
+            ).append(
+                $('<li/>', {text: 'Delete'}).click(function () {
+                    noty('Not implemented');
+                })
+            );
+        $menuLayer.append($menu);
+
+        var $link = $('<a/>', {href: '#', text: $folder.getModel().get('name')}).click(function () {
+            notes.dialog.folder.settings($folder.getModel());
+        });
+
+        var $item = $('<div/>');
+
+        $item.append($link);
 
         if (!isLeaf) {
             $item.append(
                 '<i class="fa fa-angle-right" style="margin-left:4px; margin-right:4px"></i>'
             );
         }
+
+        $item.append($menuLayer);
 
         return $item;
     }
