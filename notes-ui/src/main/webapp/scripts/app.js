@@ -1,5 +1,4 @@
 /*global notes:false */
-/*global Backbone:false */
 
 'use strict';
 

@@ -16,144 +16,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <!-- build:css styles/vendor.css -->
+    <!-- bower:css -->
+    <!-- endbower -->
+    <!-- endbuild -->
+    <!-- build:css(.tmp) styles/main.css -->
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- endbuild -->
 
-    <link rel="stylesheet" href="components/bootstrap/dist/css/bootstrap.css">
-    <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="components/jquery-ui/themes/base/jquery.ui.all.css">
-    <!-- Icon Font -->
-    <link rel="stylesheet" href="components/font-awesome/css/font-awesome.min.css">
-
-
-    <script src="components/modernizr/modernizr.js"></script>
-
-    <script src="components/jquery/jquery.js"></script>
-    <script src="components/jquery-ui/ui/jquery-ui.js"></script>
-
-    <script src="components/jquery-timeago/jquery.timeago.js"></script>
-    <script type="text/javascript">
-
-        jQuery.timeago.settings.strings = {
-            prefixAgo: '',
-            prefixFromNow: 'in',
-            suffixAgo: '',
-            suffixFromNow: '',
-            seconds: 'now',
-            minute: 'a minute',
-            minutes: '%d minutes',
-            hour: 'an hour',
-            hours: '%d hours',
-            day: 'a day',
-            days: '%d days',
-            month: 'a month',
-            months: '%d month',
-            year: 'a year',
-            years: '%d years'
-        };
-    </script>
-
-    <script src="components/underscore/underscore-min.js"></script>
-    <script src="components/backbone/backbone-min.js"></script>
-
-    <!-- notifications -->
-    <script src="components/noty/js/noty/jquery.noty.js"></script>
-    <script type="text/javascript">
-
-        $.noty.defaults = {
-            layout: 'top',
-            theme: 'defaultTheme',
-            type: 'alert',
-            text: '', // can be html or string
-            dismissQueue: true, // If you want to use queue feature set this true
-            template: '<div class="noty_message"><span class="noty_text"></span><div class="noty_close"></div></div>',
-            animation: {
-                open: {height: 'toggle'},
-                close: {height: 'toggle'},
-                easing: 'swing',
-                speed: 500 // opening & closing animation speed
-            },
-            timeout: 1000, // delay for closing event. Set false for sticky notifications
-            force: false, // adds notification to the beginning of queue when set to true
-            modal: false,
-            maxVisible: 5, // you can set max visible notification for dismissQueue true option,
-            killer: false, // for close all notifications before show
-            closeWith: ['click'], // ['click', 'button', 'hover']
-            callback: {
-                onShow: function () {
-                },
-                afterShow: function () {
-                },
-                onClose: function () {
-                },
-                afterClose: function () {
-                }
-            },
-            buttons: false // an array of buttons
-        };
-    </script>
-
-
-    <script src="components/noty/js/noty/layouts/top.js"></script>
-    <script src="components/noty/js/noty/themes/default.js"></script>
-
-    <!-- file upload -->
-    <script src="scripts/fileupload/jquery.iframe-transport.js"></script>
-    <script src="scripts/fileupload/jquery.fileupload.js"></script>
+    <link rel="stylesheet" href="scripts/pdf/pdf.css">
     <link rel="stylesheet" href="scripts/fileupload/jquery.fileupload-ui.css">
 
-    <script src="scripts/plugins.js"></script>
+    <link rel="stylesheet" href="bower_components/jquery-ui/themes/base/jquery.ui.all.css">
 
-    <script type="text/javascript">
-        var notes = {};
-    </script>
+    <!-- Icon Font -->
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
 
-    <script src="scripts/util.js"></script>
-    <script src="scripts/app.js"></script>
-    <script src="scripts/core.js"></script>
-    <script src="scripts/model.js"></script>
-    <script src="scripts/dialog.js"></script>
-
-    <script src="scripts/breadcrumbs.js"></script>
-    <script src="scripts/documentlist.js"></script>
-
-    <script src="scripts/editors.js"></script>
-    <script src="scripts/basiceditor.js"></script>
-    <script src="scripts/texteditor.js"></script>
-    <script src="scripts/pdfeditor.js"></script>
-
-    <script src="scripts/tree.js"></script>
-    <script src="scripts/databases.js"></script>
-    <script src="scripts/folder.js"></script>
-
-    <script src="components/noty/js/noty/layouts/top.js"></script>
-
-    <script src="scripts/pdf/pdf.js"></script>
-    <script src="scripts/pdf/textlayerbuilder.js"></script>
-    <script src="scripts/pdfloader.js"></script>
-    <link rel="stylesheet" href="scripts/pdf/pdf.css">
-
-
-    <script type="text/javascript">
-
-        $(document).ready(function () {
-
-            // -- Overwrites -------------------------------------------------------------------------------------------
-            var fnCustomParse = function (data) {
-                if (_.isObject(data.result)) {
-                    return data.result;
-                } else {
-                    return data;
-                }
-            };
-            Backbone.Model.prototype.parse = fnCustomParse;
-            Backbone.Collection.prototype.parse = fnCustomParse;
-
-            notes.setup();
-
-        });
-
-    </script>
+    <script src="bower_components/modernizr/modernizr.js"></script>
 
 </head>
+
 <body style="background-color: #C5C5C5">
 
 <!--[if lt IE 7]>
@@ -314,7 +196,150 @@
     </div>
 </script>
 
-<script type="text/html" id="search-result">
+
+<!-- build:js scripts/vendor.js -->
+<!-- bower:js -->
+<script src="bower_components/jquery/jquery.js"></script>
+<script src="bower_components/jquery-ui/ui/jquery-ui.js"></script>
+
+<script src="bower_components/jquery-timeago/jquery.timeago.js"></script>
+<script type="text/javascript">
+
+    jQuery.timeago.settings.strings = {
+        prefixAgo: '',
+        prefixFromNow: 'in',
+        suffixAgo: '',
+        suffixFromNow: '',
+        seconds: 'now',
+        minute: 'a minute',
+        minutes: '%d minutes',
+        hour: 'an hour',
+        hours: '%d hours',
+        day: 'a day',
+        days: '%d days',
+        month: 'a month',
+        months: '%d month',
+        year: 'a year',
+        years: '%d years'
+    };
+</script>
+
+<script src="bower_components/underscore/underscore-min.js"></script>
+<script src="bower_components/backbone/backbone-min.js"></script>
+
+<!-- notifications -->
+<script src="bower_components/noty/js/noty/jquery.noty.js"></script>
+<script type="text/javascript">
+
+    $.noty.defaults = {
+        layout: 'top',
+        theme: 'defaultTheme',
+        type: 'alert',
+        text: '', // can be html or string
+        dismissQueue: true, // If you want to use queue feature set this true
+        template: '<div class="noty_message"><span class="noty_text"></span><div class="noty_close"></div></div>',
+        animation: {
+            open: {height: 'toggle'},
+            close: {height: 'toggle'},
+            easing: 'swing',
+            speed: 500 // opening & closing animation speed
+        },
+        timeout: 1000, // delay for closing event. Set false for sticky notifications
+        force: false, // adds notification to the beginning of queue when set to true
+        modal: false,
+        maxVisible: 5, // you can set max visible notification for dismissQueue true option,
+        killer: false, // for close all notifications before show
+        closeWith: ['click'], // ['click', 'button', 'hover']
+        callback: {
+            onShow: function () {
+            },
+            afterShow: function () {
+            },
+            onClose: function () {
+            },
+            afterClose: function () {
+            }
+        },
+        buttons: false // an array of buttons
+    };
+</script>
+
+
+<script src="bower_components/noty/js/noty/layouts/top.js"></script>
+<script src="bower_components/noty/js/noty/themes/default.js"></script>
+
+<!-- file upload -->
+<script src="scripts/fileupload/jquery.iframe-transport.js"></script>
+<script src="scripts/fileupload/jquery.fileupload.js"></script>
+
+<!-- pdf -->
+<script src="scripts/pdf/pdf.js"></script>
+<script src="scripts/pdf/textlayerbuilder.js"></script>
+<script src="scripts/pdfloader.js"></script>
+
+<!-- endbower -->
+<!-- endbuild -->
+
+
+<!-- build:js scripts/main.js -->
+<script type="text/javascript">
+    var notes = {};
+</script>
+
+<script src="scripts/util.js"></script>
+<script src="scripts/app.js"></script>
+<script src="scripts/core.js"></script>
+<script src="scripts/model.js"></script>
+<script src="scripts/dialog.js"></script>
+
+<script src="scripts/breadcrumbs.js"></script>
+<script src="scripts/documentlist.js"></script>
+
+<script src="scripts/editors.js"></script>
+<script src="scripts/basiceditor.js"></script>
+<script src="scripts/texteditor.js"></script>
+<script src="scripts/pdfeditor.js"></script>
+
+<script src="scripts/tree.js"></script>
+<script src="scripts/databases.js"></script>
+<script src="scripts/folder.js"></script>
+<!-- endbuild -->
+
+
+<!-- build:js scripts/plugins.js -->
+<script src="bower_components/sass-bootstrap/js/affix.js"></script>
+<script src="bower_components/sass-bootstrap/js/alert.js"></script>
+<script src="bower_components/sass-bootstrap/js/dropdown.js"></script>
+<script src="bower_components/sass-bootstrap/js/tooltip.js"></script>
+<script src="bower_components/sass-bootstrap/js/modal.js"></script>
+<script src="bower_components/sass-bootstrap/js/transition.js"></script>
+<script src="bower_components/sass-bootstrap/js/button.js"></script>
+<script src="bower_components/sass-bootstrap/js/popover.js"></script>
+<script src="bower_components/sass-bootstrap/js/carousel.js"></script>
+<script src="bower_components/sass-bootstrap/js/scrollspy.js"></script>
+<script src="bower_components/sass-bootstrap/js/collapse.js"></script>
+<script src="bower_components/sass-bootstrap/js/tab.js"></script>
+<!-- endbuild -->
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        // -- Overwrites -------------------------------------------------------------------------------------------
+        var fnCustomParse = function (data) {
+            if (_.isObject(data.result)) {
+                return data.result;
+            } else {
+                return data;
+            }
+        };
+        Backbone.Model.prototype.parse = fnCustomParse;
+        Backbone.Collection.prototype.parse = fnCustomParse;
+
+        notes.setup();
+
+    });
 
 </script>
 

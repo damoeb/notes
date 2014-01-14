@@ -81,6 +81,7 @@ $.widget('notes.documentList', {
 
     _render: function (model) {
 
+        // todo model.toJson()?
         var values = {
             id: model.get('id'),
             title: model.get('title'),
