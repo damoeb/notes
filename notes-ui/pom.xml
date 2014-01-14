@@ -96,18 +96,18 @@
                                     <arg line='"bower install"'/>
                                 </exec>
 
-                                <!--  SCSS INSTALL  -->
+                                <!--  GRUNT  -->
                                 <echo>
-                                    compile css
+                                    grunt
                                 </echo>
                                 <exec executable="cmd" dir="${project.basedir}"
                                       osfamily="windows" failonerror="true">
-                                    <arg line="/c scss src/main/webapp/scss/notes.scss src/main/webapp/notes.css"/>
+                                    <arg line="/c grunt"/>
                                 </exec>
                                 <exec executable="bash" dir="${project.basedir}"
                                       osfamily="unix" failonerror="true">
                                     <arg value="-c"/>
-                                    <arg line='"scss src/main/webapp/scss/notes.scss src/main/webapp/css/notes.css"'/>
+                                    <arg line='"grunt"'/>
                                 </exec>
                             </target>
                         </configuration>

@@ -1,8 +1,5 @@
+- bootstrap verwenden http://getbootstrap.com/components/
 - breadcrumbs: anständiger style, mit dropdown
-- menüs mit ul/li
-- notifications with jquery noty
-- only use needed js stuff
-- breadcrumbs mit hover menü nach unten, grauer Hintergrund
 - new doc. popup with <choose folder>
 - attachments for docs, valid docs from file only for pdfs, websites
 - suche + in node names, tags
