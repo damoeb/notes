@@ -45,8 +45,8 @@
     notes.register = function () {
 
         var onSuccess = function () {
-
             console.log('registered');
+            noty({text: 'Registered'});
         };
 
         var ontRegFailed = function () {
@@ -183,9 +183,7 @@
             }
         });
 
-
         $('#breadcrumbs').breadcrumbs();
-
     };
 
 })(notes);

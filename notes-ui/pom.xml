@@ -95,6 +95,20 @@
                                     <arg value="-c"/>
                                     <arg line='"bower install"'/>
                                 </exec>
+
+                                <!--  SCSS INSTALL  -->
+                                <echo>
+                                    compile css
+                                </echo>
+                                <exec executable="cmd" dir="${project.basedir}"
+                                      osfamily="windows" failonerror="true">
+                                    <arg line="/c scss src/main/webapp/scss/notes.scss src/main/webapp/notes.css"/>
+                                </exec>
+                                <exec executable="bash" dir="${project.basedir}"
+                                      osfamily="unix" failonerror="true">
+                                    <arg value="-c"/>
+                                    <arg line='"scss src/main/webapp/scss/notes.scss src/main/webapp/css/notes.css"'/>
+                                </exec>
                             </target>
                         </configuration>
                         <goals>

@@ -9,8 +9,8 @@ $.widget('notes.texteditor', $.notes.basiceditor, {
 
         var model = $this.getModel();
 
-        var $fieldTitle = $('<input/>', {class: 'ui-widget-content ui-corner-all title', type: 'text', value: model.get('title')});
-        var $fieldText = $('<textarea/>', {class: 'ui-widget-content ui-corner-all', type: 'text', value: model.get('text')});
+        var $title = $('<input/>', {class: 'ui-widget-content ui-corner-all title', type: 'text', value: model.get('title')});
+        var $text = $('<textarea/>', {class: 'ui-widget-content ui-corner-all', text: model.get('text')});
 
         var $target = $this.element.empty().show().
             addClass('editor text-editor clearfix').
@@ -23,8 +23,8 @@ $.widget('notes.texteditor', $.notes.basiceditor, {
 
         $this.fnPreSyncModel = function () {
             console.log('pre sync');
-            model.set('title', $fieldTitle.val());
-            model.set('text', $fieldText.val());
+            model.set('title', $title.val());
+            model.set('text', $text.val());
         };
 
         $this.fnPreDestroy = function () {
@@ -89,7 +89,7 @@ $.widget('notes.texteditor', $.notes.basiceditor, {
                 $this._getToolbar()
             ).append(
                 $('<div/>', {class: 'row', style: 'margin-top:5px'}).append(
-                    $fieldTitle
+                    $title
                 )
             ).append(
                 $('<div/>', {class: 'row', style: 'margin-top:5px'})
@@ -106,7 +106,7 @@ $.widget('notes.texteditor', $.notes.basiceditor, {
                     )
             ).append(
                 $('<div/>', {class: 'row', style: 'margin-top:5px'}).append(
-                    $fieldText
+                    $text
                 )
             );
     }

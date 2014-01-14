@@ -1,0 +1,139 @@
+$some-value: 5px;
+
+// -- ------------------------------------------------------------------------------------------------------------------
+// BREADCRUMBS
+// -- ------------------------------------------------------------------------------------------------------------------
+
+#breadcrumbs {
+  padding: 5px;
+  margin-bottom: 5px;
+
+  .menu {
+    position: absolute;
+    background-color: white;
+    padding: 5px;
+    border: 1px solid black;
+    z-index: 100;
+  }
+}
+
+// -- ------------------------------------------------------------------------------------------------------------------
+// SIDEBAR
+// -- ------------------------------------------------------------------------------------------------------------------
+
+.sidebar {
+  ul {
+    padding: 0;
+  }
+
+  li {
+    list-style: none outside none;
+    line-height: 20px;
+
+    &:hover {
+      color: black;
+    }
+
+    .doc-count {
+      float: right;
+      padding-right: 4px;
+    }
+
+    &.drop-document {
+      border: 1px solid red;
+    }
+
+    /* levels indention */
+    .level-0 {
+      padding-left: 10px;
+    }
+
+    .level-1 {
+      padding-left: 20px;
+    }
+
+    .level-2 {
+      padding-left: 30px;
+    }
+
+    &.active {
+      // todo
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// DOCUMENTS
+// ---------------------------------------------------------------------------------------------------------------------
+
+#document-list {
+  overflow-y: auto;
+
+  .doc {
+    cursor: default;
+    border-bottom: 1px solid #e7e7e7;
+    margin-bottom: 3px;
+    padding-bottom: 3px;
+
+    &:after {
+      clear: both;
+    }
+    &:before, &:after {
+      content: " ";
+      display: table;
+    }
+    &:hover {
+      color: black;
+    }
+
+  }
+
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// EDOTPR
+// ---------------------------------------------------------------------------------------------------------------------
+
+@mixin editor {
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 15px;
+  padding-right: 15px;
+
+  .title {
+    width: 100%;
+    font-size: 18px;
+  }
+}
+
+#editors {
+
+  .text-editor {
+    @include editor;
+
+    textarea {
+      width: 100%;
+      height: 150px
+    }
+  }
+  .pdf-editor {
+    @include editor;
+
+    .pages {
+      text-align: center;
+      width: 55px;
+      padding: 3px 3px;
+    }
+  }
+
+  .maximized {
+    background-color: white;
+    position: fixed;
+    overflow-y: scroll;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 10px 20px;
+  }
+
+}
