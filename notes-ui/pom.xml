@@ -39,6 +39,12 @@
                 <version>2.3</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
+                    <webResources>
+                        <resource>
+                            <!-- this is relative to the pom.xml directory -->
+                            <directory>dist</directory>
+                        </resource>
+                    </webResources>
                 </configuration>
             </plugin>
 
@@ -64,7 +70,7 @@
                 <executions>
                     <execution>
                         <id>compile</id>
-                        <phase>generate-sources</phase>
+                        <phase>prepare-package</phase>
                         <configuration>
                             <target name="building">
 
@@ -115,30 +121,6 @@
                             <goal>run</goal>
                         </goals>
                     </execution>
-                    <execution>
-                        <id>test</id>
-                        <phase>test</phase>
-                        <configuration>
-                            <target name="building">
-                                <!--  GRUNT  -->
-                                <echo>
-                                    grunt
-                                </echo>
-                                <exec executable="cmd" dir="${project.basedir}"
-                                      osfamily="windows" failonerror="true">
-                                    <arg line="/c grunt"/>
-                                </exec>
-                                <exec executable="bash" dir="${project.basedir}"
-                                      osfamily="unix" failonerror="true">
-                                    <arg value="-c"/>
-                                    <arg line='"grunt"'/>
-                                </exec>
-                            </target>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
                 </executions>
             </plugin>
 
@@ -147,12 +129,6 @@
                 <version>2.5</version>
                 <configuration>
                     <filesets>
-                        <fileset>
-                            <directory>src/main/webapp/components</directory>
-                        </fileset>
-                        <fileset>
-                            <directory>node_modules</directory>
-                        </fileset>
                         <fileset>
                             <directory>.sass-cache</directory>
                         </fileset>

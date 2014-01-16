@@ -42,7 +42,7 @@ $.widget('notes.tree', {
                 if (rootFolders && rootFolders.length > 0) {
 
                     $.each(rootFolders, function (index, rootFolder) {
-                        $('<li/>')
+                        $('<a/>', {class: 'list-group-item', href: '#'})
                             .appendTo($root)
                             .folder({
                                 model: new notes.model.Folder(rootFolder),
@@ -53,21 +53,21 @@ $.widget('notes.tree', {
             }
         };
 
-        notes.util.jsonCall('GET', '/notes/rest/database/${dbId}', {'${dbId}': $this.options.databaseId}, null, function (databaseJson) {
+        notes.util.jsonCall('GET', REST_SERVICE + '/database/${dbId}', {'${dbId}': $this.options.databaseId}, null, function (databaseJson) {
 
             $this.model = new notes.model.Database(databaseJson);
             modelLoaded = true;
             fnSetup();
         });
 
-        notes.util.jsonCall('GET', '/notes/rest/database/${dbId}/roots', {'${dbId}': $this.options.databaseId}, null, function (folders) {
+        notes.util.jsonCall('GET', REST_SERVICE + '/database/${dbId}/roots', {'${dbId}': $this.options.databaseId}, null, function (folders) {
 
             rootFolders = folders;
             rootsLoaded = true;
             fnSetup();
         });
 
-        notes.util.jsonCall('GET', '/notes/rest/database/${dbId}/open', {'${dbId}': $this.options.databaseId}, null, function (folders) {
+        notes.util.jsonCall('GET', REST_SERVICE + '/database/${dbId}/open', {'${dbId}': $this.options.databaseId}, null, function (folders) {
 
             openFolders = folders;
             openLoaded = true;

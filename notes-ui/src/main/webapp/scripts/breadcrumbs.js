@@ -12,74 +12,47 @@ $.widget('notes.breadcrumbs', {
     generate: function (folderId) {
         var $this = this;
 
-        var $crumbs = $('<div/>');
+        var $breadcrumbs = $('<ol/>', {class: 'breadcrumb'});
 
-        $this.element.empty().append($crumbs);
+        $this.element.empty().append($breadcrumbs);
 
         if (typeof folderId !== 'undefined') {
             var $folder = notes.app.get$Folder(folderId);
 
-            var isLeaf = true;
+            var templateFolder = _.template($('#breadcrumb-folder').html());
 
             while ($folder) {
 
-                $crumbs.prepend(
-                    $this._getBreadcrumbItem($folder, isLeaf)
+                $breadcrumbs.prepend(
+                    $this._getBreadcrumbItem($folder, templateFolder)
                 );
 
-                isLeaf = false;
                 $folder = $folder.getParent();
             }
         }
 
         // database crumb
-        $crumbs.prepend(
-            $('<a/>', {href: '#'}).append(
-                    $('<span/>', {text: 'Database' })
-                ).append(
-                    '<i class="fa fa-angle-right" style="margin-left:4px; margin-right:4px"></i>'
-                ).click(function () {
-                    notes.dialog.database.settings();
-                })
+        $breadcrumbs.prepend(
+            _.template($('#breadcrumb-database').html())().trim()
         );
 
-        return $crumbs;
+
+        return $breadcrumbs;
     },
 
-    _getBreadcrumbItem: function ($folder, isLeaf) {
-        var $menuLayer = $('<div/>', {class: 'menu', id: 'menu-' + $folder.getModel().get('id')}).hide();
-        var $menu = $('<ul/>').append(
-                $('<li/>', {text: 'New folder'}).click(function () {
-                    notes.dialog.folder.newFolder($folder.getModel());
-                })
-            ).append(
-                $('<li/>', {text: 'Rename'}).click(function () {
-                    notes.dialog.folder.rename($folder.getModel());
-                })
-            ).append(
-                $('<li/>', {text: 'Delete'}).click(function () {
-                    noty('Not implemented');
-                })
-            );
-        $menuLayer.append($menu);
-
-        var $link = $('<a/>', {href: '#', text: $folder.getModel().get('name')}).click(function () {
-            notes.dialog.folder.settings($folder.getModel());
+    _getBreadcrumbItem: function ($folder, template) {
+        var $breadcrumb = $(template($folder.getModel().attributes).trim());
+        $breadcrumb.find('.action-create').click(function () {
+            notes.dialog.folder.newFolder($folder.getModel());
+        });
+        $breadcrumb.find('.action-delete').click(function () {
+            // todo: implement
+        });
+        $breadcrumb.find('.action-rename').click(function () {
+            notes.dialog.folder.rename($folder.getModel());
         });
 
-        var $item = $('<div/>');
-
-        $item.append($link);
-
-        if (!isLeaf) {
-            $item.append(
-                '<i class="fa fa-angle-right" style="margin-left:4px; margin-right:4px"></i>'
-            );
-        }
-
-        $item.append($menuLayer);
-
-        return $item;
+        return $breadcrumb;
     }
 
 });

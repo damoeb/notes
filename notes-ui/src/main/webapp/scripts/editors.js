@@ -31,7 +31,7 @@ $.widget('notes.editors', {
 
         notes.app.documentId(documentId);
 
-        notes.util.jsonCall('GET', '/notes/rest/document/${documentId}', {'${documentId}': documentId}, null, function (document) {
+        notes.util.jsonCall('GET', REST_SERVICE + '/document/${documentId}', {'${documentId}': documentId}, null, function (document) {
 
             var settings = {
                 kind: document.kind,

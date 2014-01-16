@@ -4,7 +4,7 @@
 
 $.widget('notes.databases', {
 
-    url: '/notes/rest/database/list',
+    url: REST_SERVICE + '/database/list',
 
     options: {
         databaseId: null
@@ -61,7 +61,7 @@ $.widget('notes.databases', {
 
                 var model = new notes.model.Database(json);
 
-                var $tree = $('<ul/>', {class: 'tree'}).appendTo(
+                var $tree = $('<div/>', {class: 'tree list-group'}).appendTo(
                     $target
                 );
 

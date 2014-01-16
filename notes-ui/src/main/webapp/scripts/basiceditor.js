@@ -9,9 +9,7 @@ $.widget('notes.basiceditor', {
     _createButton: function (label, tooltip, onClick) {
         var $this = this;
 
-        return $('<button/>', {title: tooltip}).button({
-            label: label
-        }).click(function () {
+        return $('<button/>', {title: tooltip, class: 'btn btn-default', html: label}).click(function () {
                 if ($.isFunction(onClick)) {
                     onClick.call($this, this);
                 }
@@ -22,7 +20,7 @@ $.widget('notes.basiceditor', {
     _getToolbar: function (config) {
         var $this = this;
 
-        var $toolbar = $('<div/>', {class: 'row', style: 'padding: 5px; background-color:#efefef'});
+        var $toolbar = $('<div/>', {class: 'row', style: 'padding: 5px;'});
 
         var $left = $('<div/>', {style: 'float:left'}
         ).append(
@@ -99,8 +97,6 @@ $.widget('notes.basiceditor', {
 
     syncModel: function () {
         var $this = this;
-
-        //var original = $this.getModel().clone();
 
         if ($.isFunction($this.fnPreSyncModel)) {
             $this.fnPreSyncModel();

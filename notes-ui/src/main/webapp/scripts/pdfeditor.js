@@ -10,7 +10,7 @@ $.widget('notes.pdfeditor', $.notes.basiceditor, {
         var $this = this;
 
         var $target = $this.element.empty().show().
-            addClass('container pdf-editor').
+            addClass('pdf-editor').
             // resets from maximized mode
             removeClass('maximized');
 
@@ -24,7 +24,7 @@ $.widget('notes.pdfeditor', $.notes.basiceditor, {
         var currentPage = 1;
         var numberOfPages = $this.getModel().get('numberOfPages');
 
-        var $numberOfPages = $('<input/>', {type: 'text', class: 'ui-widget-content ui-corner-all pages', value: '1'});
+        var $numberOfPages = $('<input/>', {type: 'text', class: 'form-control pages', style: 'width:70px; display:inline;', value: '1'});
         var $pdfLayer = $('<div/>', {class: 'pdf-container'});
 
         var embedPos = {
@@ -88,16 +88,16 @@ $.widget('notes.pdfeditor', $.notes.basiceditor, {
             ]
         };
 
-        var $fieldTitle = $('<input/>', {class: 'ui-widget-content ui-corner-all title', type: 'text', value: $this.getModel().get('title')});
+        var $fieldTitle = $('<input/>', {class: 'form-control title', type: 'text', value: $this.getModel().get('title')});
 
         $target.append(
                 $this._getToolbar(config)
             ).append(
-                $('<div/>', {class: 'row', style: 'margin-top:5px'}).append(
+                $('<div/>', {class: 'row'}).append(
                     $fieldTitle
                 )
             ).append(
-                $('<div/>', {class: 'row', style: 'margin-top:5px', text: notes.util.formatDate(new Date($this.getModel().get('modified'))) + ' by ' + $this.getModel().get('ownerId')})
+                $('<div/>', {class: 'row', text: notes.util.formatDate(new Date($this.getModel().get('modified'))) + ' by ' + $this.getModel().get('ownerId')})
             ).append(
                 $pdfLayer
             );

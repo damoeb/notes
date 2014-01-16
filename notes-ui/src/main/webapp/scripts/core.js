@@ -24,7 +24,7 @@
             password: $('#field-password').val()
         };
 
-        notes.util.jsonCall('POST', '/notes/rest/auth/login', null, JSON.stringify(payload), onSuccess, ontLoginFailed);
+        notes.util.jsonCall('POST', REST_SERVICE + '/auth/login', null, JSON.stringify(payload), onSuccess, ontLoginFailed);
     };
 
     notes.logout = function () {
@@ -39,7 +39,7 @@
             noty({type: 'error', text: 'Logout failed'});
         };
 
-        notes.util.jsonCall('GET', '/notes/rest/auth/logout', null, null, onSuccess, ontLogoutFailed);
+        notes.util.jsonCall('GET', REST_SERVICE + '/auth/logout', null, null, onSuccess, ontLogoutFailed);
     };
 
     notes.register = function () {
@@ -59,7 +59,7 @@
             email: $('#field-email').val()
         };
 
-        notes.util.jsonCall('POST', '/notes/rest/auth/register', null, JSON.stringify(payload), onSuccess, ontRegFailed);
+        notes.util.jsonCall('POST', REST_SERVICE + '/auth/register', null, JSON.stringify(payload), onSuccess, ontRegFailed);
     };
 
     notes.setup = function () {
@@ -83,7 +83,7 @@
             $('#login-view').show();
         };
 
-        notes.util.jsonCall('GET', '/notes/rest/auth/settings', null, null, onSuccess, onNotLoggedIn);
+        notes.util.jsonCall('GET', REST_SERVICE + '/auth/settings', null, null, onSuccess, onNotLoggedIn);
     };
 
     // -- Routing ------------------------------------------------------------------------------------------------------
@@ -136,21 +136,13 @@
 
         // -- Menu -- ------------------------------------------------------------------------------------------
 
-        $('#settings').button({
-            icons: {primary: 'ui-icon-gear'},
-            text: false
-        }).click(notes.dialog.settings.general);
-
         $('#create-document')
-            .button()
             .click(function () {
                 notes.dialog.document.create();
             });
 
         $('#import-document')
-            .button()
-            .click(notes.dialog.document.import)
-            .parent().buttonset();
+            .click(notes.dialog.document.import);
 
         // todo if file is dropped to document and upload started -> block screen or other indicator
 //            var overallProgress = $('#fileupload').fileupload('progress');
@@ -158,7 +150,7 @@
 
         $('#file-upload').
             fileupload({
-                url: '/notes/rest/file/upload',
+                url: REST_SERVICE + '/file/upload',
                 dataType: 'json'
             })
             .bind('fileuploadsubmit', function (e, data) {

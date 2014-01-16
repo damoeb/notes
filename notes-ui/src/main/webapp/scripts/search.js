@@ -22,7 +22,7 @@ $.widget('notes.search', {
             '${rows}': $this.options.rows
         };
 
-        notes.util.jsonCall('GET', '/notes/rest/search/?query=${query}&database=${database}&start=${start}&rows=${rows}', params, null, null
+        notes.util.jsonCall('GET', REST_SERVICE + '/search/?query=${query}&database=${database}&start=${start}&rows=${rows}', params, null, null
         );
 //        notes.util.jsonCall('GET', '/notes/rest/search/?query=${query}&database=${database}&start=${start}&rows=${rows}', params, null,
 //            function (documents) {

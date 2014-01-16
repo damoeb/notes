@@ -22,47 +22,24 @@ $.widget('notes.documentList', {
     _fetch: function (folderId) {
         var $this = this;
 
-        var sources = [
-            {
-                url: '/notes/rest/folder/${folderId}/documents',
-                params: {'${folderId}': folderId},
-                type: 'native'
-            },
-            {
-                url: '/notes/rest/folder/${folderId}/related-documents?offset=${offset}&count=${count}',
-                params: {
-                    '${folderId}': folderId,
-                    '${offset}': '0',
-                    '${count}': 100
-                }
-            }
-        ];
+        var source =
+        {
+            url: REST_SERVICE + '/folder/${folderId}/documents',
+            params: {'${folderId}': folderId}
+        };
 
-        $this.element.empty();
+        var $target = $this.element.empty().text('Folder is empty');
 
         $('#breadcrumbs').breadcrumbs('generate', folderId);
 
-        var $native = $('<div/>', {text: 'Folder is empty'}).appendTo($this.element);
-        var $descendants = $('<div/>', {style: 'border-top: 3px solid #efefef; padding-top:5px'}).appendTo($this.element);
+        notes.util.jsonCall('GET', source.url, source.params, null, function (documents) {
 
-        $.each(sources, function (index, source) {
-
-            var $target;
-            if (source.type === 'native') {
-                $target = $native;
-            } else {
-                $target = $descendants;
+            if (documents.length > 0) {
+                $target.empty();
             }
 
-            notes.util.jsonCall('GET', source.url, source.params, null, function (documents) {
-
-                if (documents.length > 0) {
-                    $target.empty();
-                }
-
-                $.each(documents, function (id, doc) {
-                    $this._render(new notes.model.Document(doc)).appendTo($target);
-                });
+            $.each(documents, function (id, doc) {
+                $this._render(new notes.model.Document(doc)).appendTo($target);
             });
         });
     },

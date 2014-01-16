@@ -1,4 +1,5 @@
 - bootstrap verwenden http://getbootstrap.com/components/
+- cross domain support from jboss      chromium-browser --disable-web-security
 - breadcrumbs: anständiger style, mit dropdown
 - new doc. popup with <choose folder>
 - attachments for docs, valid docs from file only for pdfs, websites

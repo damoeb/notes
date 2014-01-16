@@ -9,11 +9,11 @@ $.widget('notes.texteditor', $.notes.basiceditor, {
 
         var model = $this.getModel();
 
-        var $title = $('<input/>', {class: 'ui-widget-content ui-corner-all title', type: 'text', value: model.get('title')});
-        var $text = $('<textarea/>', {class: 'ui-widget-content ui-corner-all', text: model.get('text')});
+        var $title = $('<input/>', {class: 'form-control title', type: 'text', value: model.get('title')});
+        var $text = $('<textarea/>', {class: 'form-control', rows: 10, text: model.get('text')});
 
         var $target = $this.element.empty().show().
-            addClass('editor text-editor clearfix').
+            addClass('editor text-editor').
             // resets from maximized mode
             removeClass('maximized');
 
@@ -88,11 +88,11 @@ $.widget('notes.texteditor', $.notes.basiceditor, {
         $target.append(
                 $this._getToolbar()
             ).append(
-                $('<div/>', {class: 'row', style: 'margin-top:5px'}).append(
+                $('<div/>', {class: 'row'}).append(
                     $title
                 )
             ).append(
-                $('<div/>', {class: 'row', style: 'margin-top:5px'})
+                $('<div/>', {class: 'row'})
                     .append(
                         $dateLayer
                     )
@@ -100,12 +100,12 @@ $.widget('notes.texteditor', $.notes.basiceditor, {
                         $ownerLayer
                     )
             ).append(
-                $('<div/>', {class: 'row', style: 'margin-top:5px'})
+                $('<div/>', {class: 'row'})
                     .append(
                         $tagsLayer
                     )
             ).append(
-                $('<div/>', {class: 'row', style: 'margin-top:5px'}).append(
+                $('<div/>', {class: 'row'}).append(
                     $text
                 )
             );

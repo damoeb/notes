@@ -1,3 +1,46 @@
 $icon-font-path: "/bower_components/sass-bootstrap/fonts/";
 
 @import 'sass-bootstrap/lib/bootstrap';
+
+html,
+body,
+div {
+  font: 12px "Lucida Grande", Verdana, Arial, Helvetica, sans-serif;
+}
+
+body {
+  font-size: 12px;
+  font-family: "Trebuchet MS", sans-serif;
+  color: #444444;
+}
+
+.ui-widget {
+  font-family: Trebuchet MS, Tahoma, Verdana, Arial, sans-serif;
+  font-size: 11px !important;
+}
+
+.space {
+  display: inline-block;
+  width: 10px;
+}
+
+.clear {
+  clear: both;
+}
+
+/* dialog */
+.dialog {
+  position: absolute;
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 15px 20px;
+  width: 400px;
+  line-height: 25px;
+  z-index: 10;
+  margin: auto;
+}
+
+.dialog A {
+  display: block;
+  line-height: 25px;
+}
