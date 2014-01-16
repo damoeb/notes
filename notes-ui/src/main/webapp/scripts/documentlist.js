@@ -1,5 +1,6 @@
 /*global notes:false */
 /*global _:false */
+/*global REST_SERVICE:false */
 
 'use strict';
 

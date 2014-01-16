@@ -113,7 +113,7 @@
                                 <exec executable="bash" dir="${project.basedir}"
                                       osfamily="unix" failonerror="true">
                                     <arg value="-c"/>
-                                    <arg line='"grunt"'/>
+                                    <arg line='"grunt --force"'/>
                                 </exec>
                             </target>
                         </configuration>

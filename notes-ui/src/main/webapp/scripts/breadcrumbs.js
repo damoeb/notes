@@ -1,5 +1,5 @@
 /*global notes:false */
-/*global noty:false */
+/*global _:false */
 
 'use strict';
 

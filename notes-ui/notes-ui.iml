@@ -13,9 +13,6 @@
         </webroots>
         <sourceRoots />
       </configuration>
-      <facet type="jsf" name="JSF">
-        <configuration />
-      </facet>
     </facet>
   </component>
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_7" inherit-compiler-output="false">

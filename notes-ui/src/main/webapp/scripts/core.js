@@ -1,6 +1,7 @@
 /*global notes:false */
 /*global Backbone:false */
 /*global noty:false */
+/*global REST_SERVICE:false */
 
 'use strict';
 

@@ -1,4 +1,5 @@
 /*global notes:false */
+/*global REST_SERVICE:false */
 
 'use strict';
 
@@ -155,7 +156,7 @@ $.widget('notes.folder', {
     refresh: function () {
         var $self = this;
 
-        var model = $self.options.model;
+        //var model = $self.options.model;
 
         // todo rename
 

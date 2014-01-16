@@ -1,5 +1,6 @@
 /*global notes:false */
 /*global Backbone:false */
+/*global REST_SERVICE:false */
 
 'use strict';
 

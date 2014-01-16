@@ -1,6 +1,7 @@
 /*global PDFJS:false */
 /*global TextLayerBuilder:false */
 /*global CustomStyle:false */
+/*global REST_SERVICE:false */
 
 'use strict';
 
