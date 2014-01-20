@@ -27,12 +27,19 @@ $.widget('notes.folder', {
 
         var $target = $self.element.empty();
 
-        $target.text(model.get('name')).append('<span class="badge">' + model.get('documentCount') + '</span>');
+        //$target.text(model.get('name')).append('<span class="badge">' + model.get('documentCount') + '</span>');
+
+        var folderId = 'folder-' + model.get('id');
+        var $label = $('<label/>', {for: folderId, text: model.get('name')});
+        var $checkbox = $('<input/>', {type: 'checkbox', checked: 'checked', disabled: 'disabled', id: folderId});
 
         // -- Structure ------------------------------------------------------------------------------------------------
 
+        $target.append($label);
+        $target.append($checkbox);
 
-        $self.$childrenLayer = $('<div/>', {class: 'children'});
+
+        $self.$childrenLayer = $('<ol/>', {class: 'children'});
 
         $target.append($self.$childrenLayer);
 
@@ -110,7 +117,7 @@ $.widget('notes.folder', {
                     if (folders) {
                         for (var i = 0; i < folders.length; i++) {
 
-                            var $childFolder = $('<li/>', {class: 'list-group-item'})
+                            var $childFolder = $('<li/>')
                                 .appendTo($self.$childrenLayer);
 
                             $self.children.push(

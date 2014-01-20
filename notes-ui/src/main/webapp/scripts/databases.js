@@ -62,7 +62,7 @@ $.widget('notes.databases', {
 
                 var model = new notes.model.Database(json);
 
-                var $tree = $('<div/>', {class: 'tree list-group'}).appendTo(
+                var $tree = $('<ol/>', {class: 'tree'}).appendTo(
                     $target
                 );
 
