@@ -27,21 +27,24 @@ $.widget('notes.folder', {
 
         var $target = $self.element.empty();
 
-        //$target.text(model.get('name')).append('<span class="badge">' + model.get('documentCount') + '</span>');
-
-        var folderId = 'folder-' + model.get('id');
-        var $label = $('<label/>', {for: folderId, text: model.get('name')});
-        var $checkbox = $('<input/>', {type: 'checkbox', checked: 'checked', disabled: 'disabled', id: folderId});
+        var $label = $('<a/>', {href: '#', text: model.get('name')}).append($('<span/>', {text: model.get('documentCount'), class: 'pull-right'}));
+        var $toggle = $('<i class="fa fa-plus-square-o fa-fw"></i>');
 
         // -- Structure ------------------------------------------------------------------------------------------------
 
+        if (!model.get('leaf')) {
+            $target.append($('<a/>', {href: '#'}).append($toggle));
+        }
         $target.append($label);
-        $target.append($checkbox);
 
 
-        $self.$childrenLayer = $('<ol/>', {class: 'children'});
+        var $childrenLayer = $('<ol/>', {class: 'children'});
 
-        $target.append($self.$childrenLayer);
+        $target.append($childrenLayer);
+
+
+        $self.$childrenLayer = $childrenLayer;
+        $self.$toggle = $toggle;
 
         //
         // -- Render ---------------------------------------------------------------------------------------------------
@@ -53,40 +56,37 @@ $.widget('notes.folder', {
         // -- Events ---------------------------------------------------------------------------------------------------
         //
 
-        if ($self._isExpanded()) {
-            $self.setExpanded(true, false);
-        }
-
         // model change listener
         model.onChange(function () {
             $self.refresh();
         });
 
-        $target.click(function () {
-            notes.router.navigate('folder/' + model.get('id'));
-            $self.setExpanded(true, true);
+        $toggle.click(function () {
+            //notes.router.navigate('folder/' + model.get('id'));
+            $self.setExpanded(!$self.expanded);
+        });
+
+        $label.click(function () {
+            $self.loadDocuments();
         });
 
         //
         // -- Triggers -------------------------------------------------------------------------------------------------
         //
 
-        notes.app.add$Folder($self);
-    },
-
-    _isExpanded: function () {
-        var $self = this;
         var opened = $self.options.opened;
         var id = $self.options.model.get('id');
         for (var i = 0; i < opened.length; i++) {
             if (opened[i].id === id) {
-                return true;
+                $self.setExpanded(true);
+                break;
             }
         }
-        return false;
+
+        notes.app.add$Folder($self);
     },
 
-    setExpanded: function (expand, callTriggers) {
+    setExpanded: function (expand) {
 
         var $self = this;
 
@@ -95,46 +95,48 @@ $.widget('notes.folder', {
 
         if (expand) {
 
-            $self.$childrenLayer.show();
-            $self._highlight();
+            $self.$toggle.removeClass('fa-plus-square-o').addClass('fa-minus-square-o');
 
-            notes.app.activeFolderId(folderId);
-
-            if (callTriggers) {
-
-                $('#databases')
-                    .databases('addOpenFolder', folderId);
-
-                $self.loadDocuments();
-            }
-
+            $('#databases').databases('addOpenFolder', folderId);
 
             // -- Children --
             if ($self.children.length === 0) {
 
-                notes.util.jsonCall('GET', REST_SERVICE + '/folder/${folderId}/children', {'${folderId}': $self.getModel().get('id')}, null, function (folders) {
-
-                    if (folders) {
-                        for (var i = 0; i < folders.length; i++) {
-
-                            var $childFolder = $('<li/>')
-                                .appendTo($self.$childrenLayer);
-
-                            $self.children.push(
-                                $childFolder
-                            );
-
-                            $childFolder.folder($self._getFolderConfig(folders[i]));
-                        }
-                    }
-                });
+                $self._fetchChildren();
             }
+
+            $self.$childrenLayer.show();
+
+
         } else {
+
+            $self.$toggle.addClass('fa-plus-square-o').removeClass('fa-minus-square-o');
 
             $('#databases').databases('removeOpenFolder', folderId);
 
             $self.$childrenLayer.hide();
         }
+    },
+
+    _fetchChildren: function () {
+        var $self = this;
+
+        notes.util.jsonCall('GET', REST_SERVICE + '/folder/${folderId}/children', {'${folderId}': $self.getModel().get('id')}, null, function (folders) {
+
+            if (folders) {
+                for (var i = 0; i < folders.length; i++) {
+
+                    var $childFolder = $('<li/>')
+                        .appendTo($self.$childrenLayer);
+
+                    $self.children.push(
+                        $childFolder
+                    );
+
+                    $childFolder.folder($self._getFolderConfig(folders[i]));
+                }
+            }
+        });
     },
 
     getModel: function () {
@@ -173,19 +175,14 @@ $.widget('notes.folder', {
 
     },
 
-    getDocumentCount: function () {
-        return this.documentCount;
-    },
-
-    _highlight: function () {
-
-        $('#databases .active').removeClass('active');
-    },
-
     loadDocuments: function () {
         var $self = this;
 
         var folderId = $self.options.model.get('id');
+
+        notes.app.activeFolderId(folderId);
+        // highlight
+
         $('#document-list').documentList({
             folderId: folderId
         });

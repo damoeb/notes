@@ -45,35 +45,9 @@ $.widget('notes.documentList', {
         });
     },
 
-    _getThumbnail: function (kind) {
-        switch (kind.toLowerCase()) {
-            case 'pdf':
-                return 'images/pdf.png';
-            case 'bookmark':
-                return 'images/url.png';
-            default:
-            case 'text':
-                return 'images/text.png';
-        }
-    },
-
     _render: function (model) {
 
-        // todo model.toJson()?
-        var values = {
-            id: model.get('id'),
-            title: model.get('title'),
-            text: model.get('outline'),
-            kind: model.get('kind'),
-            views: model.get('views'),
-            privacy: model.get('privacy'),
-            star: model.get('star'),
-            reminder: model.get('reminder'),
-            thumbnail: this._getThumbnail(model.get('kind')),
-            date: notes.util.formatDate(new Date(model.get('modified')))
-        };
-
-        return $(this.template(values)).click(function () {
+        return $(this.template(model.attributes)).click(function () {
 
             var $tmpl = $(this);
 
@@ -81,7 +55,7 @@ $.widget('notes.documentList', {
             $tmpl.addClass('active');
 
             // call editor
-            $('#editors').editors('edit', values.id, function () {
+            $('#editors').editors('edit', model.get('id'), function () {
                 $tmpl.removeClass('active');
             });
         }).draggable({

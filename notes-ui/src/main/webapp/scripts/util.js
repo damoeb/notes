@@ -186,6 +186,18 @@
         toTimestamp: function (str) {
             var d = str.match(/\d+/g); // extract date parts
             return new Date(d[0], d[1] - 1, d[2], d[3], d[4], d[5]); // build Date object
+        },
+
+        getThumbnailByType: function (kind) {
+            switch (kind.toLowerCase()) {
+                case 'pdf':
+                    return 'images/pdf.png';
+                case 'bookmark':
+                    return 'images/url.png';
+                default:
+                case 'text':
+                    return 'images/text.png';
+            }
         }
     };
 })(notes);

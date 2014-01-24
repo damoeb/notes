@@ -209,34 +209,36 @@
 
 <script type="text/html" id="document-in-list">
 
-    <div class="doc doc-id-<%=id %> row">
-        <div class="col-lg-2">
-            <img src="<%= thumbnail %>">
+    <a href="#">
+        <div class="doc doc-id-<%=id %> row">
+            <div class="col-lg-2">
+                <img src="<%= notes.util.getThumbnailByType(kind) %>">
+            </div>
+            <div class="col-lg-9">
+                <div class="row" style="font-weight:bold">
+                    <%=title %>
+                    <%
+                    if (star) {
+                    %>
+                    <i class="fa fa-star" style="color:red"></i>
+                    <%
+                    }
+                    %>
+                </div>
+                <div class="row">
+                    <%=notes.util.formatDate(new Date(modified)) %> - <%=views %> views
+                </div>
+                <div class="row">
+                    <%=outline %>
+                </div>
+            </div>
+            <div class="col-lg-1" style="text-align:right">
+                <div class="row">
+                    <i class="fa fa-circle" style="color:green"></i>
+                </div>
+            </div>
         </div>
-        <div class="col-lg-9">
-            <div class="row" style="font-weight:bold">
-                <%=title %>
-                <%
-                if (star) {
-                %>
-                <i class="fa fa-star" style="color:red"></i>
-                <%
-                }
-                %>
-            </div>
-            <div class="row">
-                <%=date %> - <%=views %> views
-            </div>
-            <div class="row">
-                <%=text %>
-            </div>
-        </div>
-        <div class="col-lg-1" style="text-align:right">
-            <div class="row">
-                <i class="fa fa-circle" style="color:green"></i>
-            </div>
-        </div>
-    </div>
+    </a>
 </script>
 
 
@@ -327,7 +329,7 @@
 <!-- build:js scripts/main.js -->
 <script type="text/javascript">
     var notes = {};
-    var REST_SERVICE = 'http://127.0.0.1:8080/notes/rest';
+    var REST_SERVICE = '/notes/rest';
 
 </script>
 

@@ -45,4 +45,24 @@ body {
   line-height: 25px;
 }
 
-@import 'tree';
+#databases {
+
+  ol {
+    background-image: url(../images/tree/tree-vertical.png);
+    background-repeat: repeat-y;
+    background-position: left top;
+    margin: 0;
+    padding: 0;
+  }
+
+  li {
+    background-image: url(../images/tree/tree-horizontal.png);
+    background-repeat: no-repeat;
+    background-position: left top;
+    list-style: none;
+    margin: 0;
+    line-height: 20px;
+    padding: 0;
+    padding-left: 22px;
+  }
+}
