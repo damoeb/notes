@@ -181,7 +181,7 @@ $.widget('notes.folder', {
         var folderId = $self.options.model.get('id');
 
         notes.app.activeFolderId(folderId);
-        // highlight
+        // todo highlight
 
         $('#document-list').documentList({
             folderId: folderId
