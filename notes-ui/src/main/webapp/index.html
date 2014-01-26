@@ -73,25 +73,15 @@
 
 <div id="content-view" class="view">
 
-    <div class="container">
-
-        <!-- HEADER -->
-        <div class="row">
-            <ul class="list-inline">
-                <li>Contact</li>
-                <li>Social Media</li>
-            </ul>
-        </div>
-    </div>
-
-    <div class="container" style="background-color: white; padding-top: 10px; padding-bottom: 10px;">
+    <div class="container" style="background-color: white;">
 
         <!-- CONTENT TOP -->
-        <div class="row" style="padding-top: 20px; padding-bottom: 20px">
+        <div class="row" style="padding-top: 20px;">
 
             <!-- LEFT -->
             <div class="col-lg-2">
-                Logo
+                <button class="btn btn-default" style="display: block; width:100%; text-align: left;"><i
+                        class="fa fa-inbox fa-fw fa-lg"></i> Database</a></button>
             </div>
 
             <!-- CONTENT -->
@@ -101,16 +91,11 @@
                 </button>
                 <button id="import-document" title="Import Document" class="btn btn-default"><i class="fa fa-chain"></i>
                 </button>
-
             </div>
-
             <div class="col-lg-6">
 
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="fa fa-search"></i></span>
-                    <input id="search-input" class="form-control" type="text" name="query"
-                           placeholder="Search"/>
-                </div>
+                <input id="search-input" class="form-control" type="text" name="query"
+                       placeholder="Search"/>
             </div>
 
             <!-- RIGHT -->
@@ -139,8 +124,6 @@
 
             <!-- LEFT -->
             <div class="col-lg-2 sidebar">
-                <!--Sidebar-->
-                <a href="#"><i class="fa fa-inbox fa-fw fa-lg"></i> Database</a>
 
                 <div id="databases"></div>
 
@@ -214,8 +197,9 @@
             <div class="col-lg-2">
                 <img src="<%= notes.util.getThumbnailByType(kind) %>">
             </div>
-            <div class="col-lg-9">
-                <div class="row" style="font-weight:bold">
+            <div class="col-lg-10">
+                <div class="row">
+                    <span style="font-weight:bold">
                     <%=title %>
                     <%
                     if (star) {
@@ -224,17 +208,15 @@
                     <%
                     }
                     %>
-                </div>
-                <div class="row">
-                    <%=notes.util.formatDate(new Date(modified)) %> - <%=views %> views
+                    </span>
+
+                    <span class="pull-right">
+                        <%=notes.util.formatDate(new Date(modified)) %>
+                    </span>
+
                 </div>
                 <div class="row">
                     <%=outline %>
-                </div>
-            </div>
-            <div class="col-lg-1" style="text-align:right">
-                <div class="row">
-                    <i class="fa fa-circle" style="color:green"></i>
                 </div>
             </div>
         </div>

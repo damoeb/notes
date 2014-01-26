@@ -27,7 +27,16 @@ $.widget('notes.basiceditor', {
                 $this._createButton('<i class="fa fa-reply"></i>', 'Back', $this.fnClose)
             ).append(
                 $this._createButton('<i class="fa fa-trash-o"></i>', 'Delete', $this.fnDelete)
+            ).append(
+                $this._createButton('<i class="fa fa-tags"></i>', 'Tags', $this.fnTags)
             );
+
+        if ($this.options.model.has('modified')) {
+            $left.append(
+                $('<span/>', {text: 'changed ' + notes.util.formatDate(new Date($this.options.model.get('modified')))})
+            );
+        }
+
 
         if (config && config.left) {
             for (var i = 0; i < config.left.length; i++) {
@@ -43,6 +52,10 @@ $.widget('notes.basiceditor', {
         );
 
         return $toolbar.append($left).append($right);
+    },
+
+    fnTags: function () {
+        notes.dialog.tags.overview(this.getModel());
     },
 
     fnDelete: function () {
@@ -107,6 +120,7 @@ $.widget('notes.basiceditor', {
 
         if (hasChanged) {
             $this.getModel().save(null, {success: function () {
+                noty('Saved');
                 $('#document-list').documentList('updateDocument', $this.getModel());
             }});
         }

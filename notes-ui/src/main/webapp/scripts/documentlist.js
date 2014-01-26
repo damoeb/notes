@@ -13,31 +13,38 @@ $.widget('notes.documentList', {
     _init: function () {
         var $this = this;
 
-        this.template = _.template($('#document-in-list').html());
+        $this.template = _.template($('#document-in-list').html());
+        $this._fetch();
 
-        var folderId = $this.options.folderId;
-        if (folderId && parseInt(folderId) > 0) {
-            $this._fetch(folderId);
-        }
     },
-    _fetch: function (folderId) {
+
+    refresh: function () {
+        this._fetch();
+    },
+
+    _fetch: function () {
         var $this = this;
 
-        var source =
-        {
-            url: REST_SERVICE + '/folder/${folderId}/documents',
-            params: {'${folderId}': folderId}
-        };
+        var folderId = $this.options.folderId;
+        if (!(folderId && parseInt(folderId) > 0)) {
+            return;
+        }
+
+        var url = REST_SERVICE + '/folder/${folderId}/documents';
+        var params = {'${folderId}': folderId};
 
         var $target = $this.element.empty().text('Folder is empty');
 
         $('#breadcrumbs').breadcrumbs('generate', folderId);
 
-        notes.util.jsonCall('GET', source.url, source.params, null, function (documents) {
+        notes.util.jsonCall('GET', url, params, null, function (documents) {
 
             if (documents.length > 0) {
                 $target.empty();
             }
+
+            // sort by date
+            notes.util.sortJSONArrayDESC(documents, 'modified');
 
             $.each(documents, function (id, doc) {
                 $this._render(new notes.model.Document(doc)).appendTo($target);

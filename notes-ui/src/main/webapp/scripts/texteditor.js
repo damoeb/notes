@@ -32,7 +32,6 @@ $.widget('notes.texteditor', $.notes.basiceditor, {
         };
 
         var $tagsLayer = $('<span/>');
-        var $addTag = $('<a/>', {href: '#'});
 
         var fnRenderTags = function () {
 
@@ -52,38 +51,11 @@ $.widget('notes.texteditor', $.notes.basiceditor, {
                         $tagsLayer.append(', ');
                     }
 
-                    if (index >= model.get('tags').length - 1) {
-                        $tagsLayer.append(' ').append(
-                            $addTag.text('add')
-                        );
-                    }
                 });
-            } else {
-                $tagsLayer.append(
-                    $addTag.text('add tag')
-                );
             }
         };
 
         fnRenderTags();
-
-        $addTag.click(function () {
-            notes.dialog.tags.overview(model, function () {
-                fnRenderTags();
-            });
-        });
-
-
-        var $ownerLayer = $('<span/>');
-        if (model.has('owner')) {
-            $ownerLayer.text(' by ' + model.get('owner'));
-        }
-
-        var $dateLayer = $('<span/>');
-
-        if (model.has('modified')) {
-            $dateLayer.text('changed ' + notes.util.formatDate(new Date(model.get('modified'))));
-        }
 
         $target.append(
                 $this._getToolbar()
@@ -91,14 +63,6 @@ $.widget('notes.texteditor', $.notes.basiceditor, {
                 $('<div/>', {class: 'row'}).append(
                     $title
                 )
-            ).append(
-                $('<div/>', {class: 'row'})
-                    .append(
-                        $dateLayer
-                    )
-                    .append(
-                        $ownerLayer
-                    )
             ).append(
                 $('<div/>', {class: 'row'})
                     .append(

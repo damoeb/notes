@@ -45,7 +45,17 @@ body {
   line-height: 25px;
 }
 
+.doc {
+  margin: 0 0 20px 0;
+}
+
+.editor {
+  margin: 15px;
+}
+
 #databases {
+
+  font-size: 14px;
 
   ol {
     background-image: url(../images/tree/tree-vertical.png);

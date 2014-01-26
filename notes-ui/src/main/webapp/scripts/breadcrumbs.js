@@ -51,6 +51,11 @@ $.widget('notes.breadcrumbs', {
         $breadcrumb.find('.action-rename').click(function () {
             notes.dialog.folder.rename($folder.getModel());
         });
+        $breadcrumb.find('.action-open').click(function () {
+            $('#document-list').documentList({
+                folderId: $folder.getModel().get('id')
+            });
+        });
 
         return $breadcrumb;
     }
