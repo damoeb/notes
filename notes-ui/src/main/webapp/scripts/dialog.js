@@ -92,39 +92,6 @@ notes.dialog.folder = {
 
 notes.dialog.document = {
 
-    create: function () {
-
-        var $title = $('<input/>', {name: 'name', type: 'text', placeholder: 'title of document'});
-
-        var folderId = notes.app.activeFolderId();
-        if (typeof folderId === 'undefined') {
-            throw 'Choose folder first';
-        }
-        var folderName = notes.app.get$Folder(folderId).getModel().get('name');
-
-        $('<div/>', {class: 'dialog'}).append(
-                $('<div/>').append(
-                    'in ' + folderName
-                )
-            ).append(
-                $('<div/>').append(
-                    $title
-                )
-            )
-            .dialog($.extend({}, notes.dialog.defaults, {
-                title: 'New',
-                buttons: [
-                    {
-                        text: 'Create',
-                        click: function () {
-                            $(this).dialog('close');
-                            $('#editors').editors('createDocument', $title.val());
-                        }
-                    }
-                ]
-            }));
-    },
-
     bookmark: function () {
 
         var $input = $('<input/>', {name: 'name', type: 'text', value: 'http://' });

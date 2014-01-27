@@ -30,15 +30,16 @@ $.widget('notes.folder', {
         var $label = $('<a/>', {
             href: '#',
             text: model.get('name')
-        }).append($('<span/>', {text: model.get('documentCount'), class: 'pull-right'}));
+        });
         var $toggle = $('<i class="fa fa-caret-right fa-fw fa-lg"></i>');
 
         // -- Structure ------------------------------------------------------------------------------------------------
 
         if (!model.get('leaf')) {
-            $target.append($('<a/>', {href: '#'}).append($toggle));
+            $target.append($('<a/>', {href: '#', class: 'toggle'}).append($toggle));
         }
         $target.append($label);
+        $target.append($('<span/>', {text: model.get('documentCount'), class: 'pull-right'}));
 
 
         var $childrenLayer = $('<ol/>', {class: 'children'});

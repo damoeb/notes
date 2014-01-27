@@ -22,8 +22,7 @@ $.widget('notes.basiceditor', {
 
         var $toolbar = $('<div/>', {class: 'row', style: 'padding: 5px;'});
 
-        var $left = $('<div/>', {style: 'float:left'}
-        ).append(
+        var $left = $('<div/>', {style: 'float:left'}).append(
                 $this._createButton('<i class="fa fa-reply"></i>', 'Back', $this.fnClose)
             ).append(
                 $this._createButton('<i class="fa fa-tags"></i>', 'Tags', $this.fnTags)

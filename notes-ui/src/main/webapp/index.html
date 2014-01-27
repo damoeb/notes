@@ -100,21 +100,52 @@
             <div class="col-lg-2">
 
                 <div class="btn-group dropdown">
-                    <button type="button" class="btn btn-default dropdown-toggle"
-                            onclick="notes.dialog.document.create()">New
+                    <button type="button" class="btn btn-default" data-toggle="modal"
+                            data-target="#create-document-modal">New
                     </button>
+
+                    <div class="modal fade" id="create-document-modal" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal"
+                                            aria-hidden="true">&times;</button>
+                                    <h4 class="modal-title">New Document</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <p><input name="name" type="text" placeholder="title of document"
+                                              id="new-document-title" class="form-control"></p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal"
+                                            onclick="$('#editors').editors('createDocument', $('#new-document-title').val())">
+                                        Create
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- /.modal-content -->
+                        </div>
+                        <!-- /.modal-dialog -->
+                    </div>
+                    <!-- /.modal -->
+
+
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                         <span class="caret"></span>
                         <span class="sr-only">Toggle Dropdown</span>
                     </button>
                     <ul class="dropdown-menu" role="menu" aria-labelledby="create-doc">
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#"
-                                                   onclick="notes.dialog.document.create()">Document</a></li>
+                        <li role="presentation">
+                            <a role="menuitem" tabindex="-1" href="#" onclick="$('#create-document-modal').modal()">Document</a>
+                        </li>
                         <li role="presentation" class="divider"></li>
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#"
-                                                   onclick="$('#file-upload').click()">File</a></li>
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#"
-                                                   onclick="notes.dialog.document.bookmark()">Web</a></li>
+                        <li role="presentation">
+                            <a role="menuitem" tabindex="-1" href="#" onclick="$('#file-upload').click()">File</a>
+                        </li>
+                        <li role="presentation">
+                            <a role="menuitem" tabindex="-1" href="#" onclick="notes.dialog.document.bookmark()">Web</a>
+                        </li>
                     </ul>
                 </div>
 
@@ -188,8 +219,8 @@
 
 <script type="text/html" id="breadcrumb-database">
     <li class="dropdown">
-        <a class="dropdown-toggle" id="bc-db" data-toggle="dropdown" href="#">
-            <i class="fa fa-dot-circle-o fa-lg"></i> Database
+        <a class="dropdown-toggle" id="bc-db" data-toggle="dropdown" href="#" style="font-weight: bold;">
+        <i class="fa fa-dot-circle-o fa-lg"></i> Database
         </a>
         <ul class="dropdown-menu" role="menu" aria-labelledby="bc-db">
             <li role="presentation"><a role="menuitem" tabindex="-1" href="#"
