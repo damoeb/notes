@@ -31,7 +31,7 @@ $.widget('notes.folder', {
             href: '#',
             text: model.get('name')
         }).append($('<span/>', {text: model.get('documentCount'), class: 'pull-right'}));
-        var $toggle = $('<i class="fa fa-plus-square-o fa-fw"></i>');
+        var $toggle = $('<i class="fa fa-caret-right fa-fw fa-lg"></i>');
 
         // -- Structure ------------------------------------------------------------------------------------------------
 
@@ -98,7 +98,7 @@ $.widget('notes.folder', {
 
         if (expand) {
 
-            $self.$toggle.removeClass('fa-plus-square-o').addClass('fa-minus-square-o');
+            $self.$toggle.removeClass('fa-caret-right').addClass('fa-caret-down');
 
             $('#databases').databases('addOpenFolder', folderId);
 
@@ -113,7 +113,7 @@ $.widget('notes.folder', {
 
         } else {
 
-            $self.$toggle.addClass('fa-plus-square-o').removeClass('fa-minus-square-o');
+            $self.$toggle.addClass('fa-caret-right').removeClass('fa-caret-down');
 
             $('#databases').databases('removeOpenFolder', folderId);
 
