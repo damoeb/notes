@@ -26,9 +26,9 @@ $.widget('notes.basiceditor', {
         ).append(
                 $this._createButton('<i class="fa fa-reply"></i>', 'Back', $this.fnClose)
             ).append(
-                $this._createButton('<i class="fa fa-trash-o"></i>', 'Delete', $this.fnDelete)
-            ).append(
                 $this._createButton('<i class="fa fa-tags"></i>', 'Tags', $this.fnTags)
+            ).append(
+                $this._createButton('<i class="fa fa-trash-o"></i>', 'Delete', $this.fnDelete)
             );
 
         if ($this.options.model.has('modified')) {
@@ -36,7 +36,6 @@ $.widget('notes.basiceditor', {
                 $('<span/>', {text: 'changed ' + notes.util.formatDate(new Date($this.options.model.get('modified')))})
             );
         }
-
 
         if (config && config.left) {
             for (var i = 0; i < config.left.length; i++) {
@@ -54,54 +53,59 @@ $.widget('notes.basiceditor', {
         return $toolbar.append($left).append($right);
     },
 
+
+    fnClose: function () {
+        this.syncModel();
+        this.element.hide();
+        $('#document-list').show();
+    },
+
+
+    fnSave: function () {
+        this.syncModel();
+    },
+
     fnTags: function () {
         notes.dialog.tags.overview(this.getModel());
     },
 
     fnDelete: function () {
         var $this = this;
-        $('#document-list').documentList('deleteDocument', $this.getModel());
-        $this.getModel().destroy();
-
+        $('#document-list')
+            .documentList('deleteDocument', $this.getModel())
+            .show();
         $this.element.hide();
-        $('#document-list').show();
 
+        $this.getModel().destroy();
         $this._destroy();
     },
 
     fnMaximize: function (el) {
+        var $this = this;
         var $editor = this.element;
         if ($editor.hasClass('maximized')) {
-            $editor.
-                removeClass('maximized');
+            $editor.removeClass('maximized');
+
             $(el).
                 button('option', 'label', 'Maximize').
                 button('option', 'icons', { primary: 'ui-icon-arrow-4-diag'});
 
-            if ($.isFunction(this.fnPostEmbed)) {
-                this.fnPostEmbed.call(this);
+            if ($.isFunction($this.fnPostEmbed)) {
+                $this.fnPostEmbed.call($this);
             }
 
         } else {
-            $editor.
-                addClass('maximized');
+
+            $editor.addClass('maximized');
+
             $(el).
                 button('option', 'label', 'Unmaximize').
                 button('option', 'icons', { primary: 'ui-icon-arrow-1-se'});
 
-            if ($.isFunction(this.fnPostMaximize)) {
-                this.fnPostMaximize.call(this);
+            if ($.isFunction($this.fnPostMaximize)) {
+                $this.fnPostMaximize.call($this);
             }
         }
-    },
-
-    fnClose: function () {
-        var $this = this;
-
-        $this.syncModel();
-
-        $this.element.hide();
-        $('#document-list').show();
     },
 
     getModel: function () {
@@ -111,14 +115,13 @@ $.widget('notes.basiceditor', {
     syncModel: function () {
         var $this = this;
 
+        var originalModel = $.extend({}, $this.options.model.attributes);
+
         if ($.isFunction($this.fnPreSyncModel)) {
             $this.fnPreSyncModel();
         }
 
-        // todo compare orig and new model
-        var hasChanged = true;
-
-        if (hasChanged) {
+        if (!notes.util.equal(originalModel, $this.options.model.attributes)) {
             $this.getModel().save(null, {success: function () {
                 noty('Saved');
                 $('#document-list').documentList('updateDocument', $this.getModel());
@@ -137,9 +140,6 @@ $.widget('notes.basiceditor', {
         if ($.isFunction($this.fnPreDestroy)) {
             $this.fnPreDestroy();
         }
-
-        // todo implement destroy/reuse?
-        $this.element.hide();
     }
 
 });

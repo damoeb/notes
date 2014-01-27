@@ -36,7 +36,7 @@
 
 </head>
 
-<body style="background-color: #C5C5C5">
+<body>
 
 <!--[if lt IE 7]>
 <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade
@@ -71,31 +71,53 @@
     </div>
 </div>
 
+
 <div id="content-view" class="view">
 
-    <div class="container" style="background-color: white;">
+    <div class="container" style="margin-left: 0;">
 
         <!-- CONTENT TOP -->
-        <div class="row" style="padding-top: 20px;">
+        <div class="row"
+             style="background: none repeat scroll 0 0 #F1F1F1; border-bottom: 1px solid #E8E8E8; padding-top:8px; padding-bottom:8px;">
 
             <!-- LEFT -->
             <div class="col-lg-2">
-                <button class="btn btn-default" style="display: block; width:100%; text-align: left;"><i
-                        class="fa fa-inbox fa-fw fa-lg"></i> Database</a></button>
+                logo
             </div>
 
             <!-- CONTENT -->
-            <div class="col-lg-2 btn-group">
 
-                <button id="create-document" title="New Document" class="btn btn-default"><i class="fa fa-file-o"></i>
-                </button>
-                <button id="import-document" title="Import Document" class="btn btn-default"><i class="fa fa-chain"></i>
-                </button>
-            </div>
             <div class="col-lg-6">
+                <div class="input-group">
+                    <input id="search-input" class="form-control" type="text" name="query"
+                           placeholder="Search"/>
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button">Go!</button>
+                      </span>
+                </div>
+            </div>
 
-                <input id="search-input" class="form-control" type="text" name="query"
-                       placeholder="Search"/>
+            <div class="col-lg-2">
+
+                <div class="btn-group dropdown">
+                    <button type="button" class="btn btn-default dropdown-toggle"
+                            onclick="notes.dialog.document.create()">New
+                    </button>
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        <span class="caret"></span>
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="create-doc">
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#"
+                                                   onclick="notes.dialog.document.create()">Document</a></li>
+                        <li role="presentation" class="divider"></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#"
+                                                   onclick="$('#file-upload').click()">File</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#"
+                                                   onclick="notes.dialog.document.bookmark()">Web</a></li>
+                    </ul>
+                </div>
+
             </div>
 
             <!-- RIGHT -->
@@ -119,22 +141,26 @@
 
         </div>
 
+        <div id="breadcrumbs" class="row" style="height: 32px; ">
+            <!-- generated -->
+        </div>
+
         <!-- CONTENT MAIN -->
         <div class="row">
 
             <!-- LEFT -->
-            <div class="col-lg-2 sidebar">
+            <div class="col-lg-2 sidebar" style="border-right: 1px solid #E2E2E2; min-height: 200px;">
+
+                <i class="fa fa-inbox fa-fw fa-lg"></i>
 
                 <div id="databases"></div>
 
             </div>
 
             <!-- CONTENT -->
-            <div class="col-lg-8">
-                <div id="breadcrumbs">
-                    <!-- generated -->
-                </div>
-                <div id="document-list">
+            <div class="col-lg-7">
+
+                <div id="document-list" style="margin-top: 5px">
                     <!-- generated -->
                 </div>
                 <div id="editors">
@@ -143,7 +169,7 @@
             </div>
 
             <!-- RIGHT -->
-            <div class="col-lg-2">
+            <div class="col-lg-3" style="border-left: 1px solid #E2E2E2; min-height: 200px;">
                 vorschläge
             </div>
 
@@ -201,13 +227,6 @@
                 <div class="row">
                     <span style="font-weight:bold">
                     <%=title %>
-                    <%
-                    if (star) {
-                    %>
-                    <i class="fa fa-star" style="color:red"></i>
-                    <%
-                    }
-                    %>
                     </span>
 
                     <span class="pull-right">

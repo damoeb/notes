@@ -137,11 +137,6 @@
 
         // -- Menu -- ------------------------------------------------------------------------------------------
 
-        $('#create-document')
-            .click(function () {
-                notes.dialog.document.create();
-            });
-
         $('#import-document')
             .click(notes.dialog.document.import);
 

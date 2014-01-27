@@ -22,12 +22,15 @@ $.widget('notes.folder', {
     _init: function () {
         var $self = this;
         $self._reset();
-
+        var $target = $self.element.empty();
         var model = $self.options.model;
 
-        var $target = $self.element.empty();
+        $target.addClass('folder folder-' + model.get('id'));
 
-        var $label = $('<a/>', {href: '#', text: model.get('name')}).append($('<span/>', {text: model.get('documentCount'), class: 'pull-right'}));
+        var $label = $('<a/>', {
+            href: '#',
+            text: model.get('name')
+        }).append($('<span/>', {text: model.get('documentCount'), class: 'pull-right'}));
         var $toggle = $('<i class="fa fa-plus-square-o fa-fw"></i>');
 
         // -- Structure ------------------------------------------------------------------------------------------------
@@ -181,7 +184,9 @@ $.widget('notes.folder', {
         var folderId = $self.options.model.get('id');
 
         notes.app.activeFolderId(folderId);
-        // todo highlight
+
+        $('#databases .folder.active').removeClass('active');
+        $('#databases .folder-' + $self.options.model.get('id')).addClass('active');
 
         $('#document-list').documentList({
             folderId: folderId

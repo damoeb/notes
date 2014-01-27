@@ -5,7 +5,6 @@ import org.notes.common.configuration.NotesInterceptors;
 import org.notes.core.interfaces.AuthManager;
 import org.notes.core.interfaces.SessionData;
 import org.notes.core.metric.ServiceMetric;
-import org.notes.core.model.AuthParams;
 import org.notes.core.model.Database;
 import org.notes.core.model.User;
 

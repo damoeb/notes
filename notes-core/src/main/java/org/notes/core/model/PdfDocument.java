@@ -101,7 +101,6 @@ public class PdfDocument extends BasicDocument implements Extractable, Fulltexta
     public void extract() throws NotesException {
         try {
 
-
             FileReference reference = getFileReference();
 
             if (reference.getFullTexts() == null || reference.getFullTexts().isEmpty()) {

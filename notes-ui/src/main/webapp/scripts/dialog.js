@@ -125,39 +125,6 @@ notes.dialog.document = {
             }));
     },
 
-
-    import: function () {
-
-        var $dialog = $('<div/>', {class: 'dialog'});
-
-        $dialog.append(
-                $('<div/>').append(
-                    $('<a/>', {text: 'From File'}).click(
-                        function () {
-
-                            var upload = $('#file-upload');
-
-                            upload.click();
-
-                            $dialog.dialog('close');
-
-                        })
-                )
-            ).append(
-                $('<div/>').append(
-                    $('<a/>', {text: 'From Web'}).click(
-                        function () {
-                            $dialog.dialog('close');
-
-                            notes.dialog.document.bookmark();
-                        })
-                )
-
-            ).dialog($.extend({}, notes.dialog.defaults, {
-                title: 'Document'
-            }));
-    },
-
     bookmark: function () {
 
         var $input = $('<input/>', {name: 'name', type: 'text', value: 'http://' });

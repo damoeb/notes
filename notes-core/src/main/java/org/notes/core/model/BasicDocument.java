@@ -17,7 +17,6 @@ import org.notes.common.service.CustomDateSerializer;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -31,8 +30,7 @@ import java.util.Set;
 @NamedQueries({
         @NamedQuery(name = Document.QUERY_BY_ID, query = "SELECT a FROM BasicDocument a where a.id=:ID"),
         @NamedQuery(name = Document.QUERY_TRIGGER, query = "SELECT a FROM BasicDocument a where a.trigger in (:TRIGGER)"),
-        @NamedQuery(name = BasicDocument.QUERY_IN_FOLDER, query = "SELECT new BasicDocument(a.id, a.title, a.outline, a.kind, a.modified, a.views, a.star) FROM BasicDocument a where a.folderId=:ID AND a.deleted=false"),
-        @NamedQuery(name = BasicDocument.QUERY_DESCENDANTS_OF_FOLDER, query = "SELECT new BasicDocument(a.id, a.title, a.outline, a.kind, a.modified, a.views, a.star) FROM Folder f JOIN f.inheritedDocuments a WHERE f.id=:ID AND a.deleted=false"),
+        @NamedQuery(name = BasicDocument.QUERY_IN_FOLDER, query = "SELECT new BasicDocument(a.id, a.title, a.outline, a.kind, a.modified, a.star) FROM BasicDocument a where a.folderId=:ID AND a.deleted=false")
 })
 @Inheritance(strategy = InheritanceType.JOINED)
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
@@ -41,7 +39,6 @@ public class BasicDocument implements Document {
     public static final String FK_DOCUMENT_ID = "document_id";
 
     public static final String QUERY_IN_FOLDER = "BasicDocument.QUERY_IN_FOLDER";
-    public static final String QUERY_DESCENDANTS_OF_FOLDER = "BasicDocument.QUERY_DESCS_OF_FOLDER";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -90,9 +87,6 @@ public class BasicDocument implements Document {
     @Basic
     private boolean star;
 
-    @Basic
-    private int views;
-
 //  -- References ------------------------------------------------------------------------------------------------------
 
     @JsonIgnore
@@ -125,13 +119,12 @@ public class BasicDocument implements Document {
         this.kind = kind;
     }
 
-    public BasicDocument(Long id, String title, String outline, Kind kind, Date modified, int views, boolean star) {
+    public BasicDocument(Long id, String title, String outline, Kind kind, Date modified, boolean star) {
         this.id = id;
         this.title = title;
         this.outline = outline;
         this.kind = kind;
         this.modified = modified;
-        this.views = views;
         this.star = star;
     }
 
@@ -291,23 +284,6 @@ public class BasicDocument implements Document {
 
     public void setTrigger(Trigger trigger) {
         this.trigger = trigger;
-    }
-
-    @Override
-    public Map<String, Object> getAdditionalFields() {
-        return null;
-    }
-
-    public int getViews() {
-        return views;
-    }
-
-    public void setViews(int views) {
-        this.views = views;
-    }
-
-    public boolean isStar() {
-        return star;
     }
 
     public void setStar(boolean star) {

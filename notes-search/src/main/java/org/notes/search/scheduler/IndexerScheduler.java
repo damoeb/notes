@@ -22,7 +22,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 //@LocalBean
 @Singleton
@@ -121,13 +124,6 @@ public class IndexerScheduler {
         doc.setField(SolrFields.KIND, document.getKind());
         doc.setField(SolrFields.OWNER, document.getOwner());
         // todo index tags
-
-        Map<String, Object> fields = document.getAdditionalFields();
-        if (fields != null) {
-            for (String field : fields.keySet()) {
-                doc.setField(field, fields.get(field));
-            }
-        }
 
         // todo remove all with this doc id
         getSolrServer().deleteByQuery(String.format("%s:%s", SolrFields.DOCUMENT, document.getId()));

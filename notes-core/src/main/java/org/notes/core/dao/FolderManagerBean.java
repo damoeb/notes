@@ -123,37 +123,6 @@ public class FolderManagerBean implements FolderManager {
     }
 
     @Override
-    public List<BasicDocument> getRelatedDocuments(Long folderId, int offset, int count) throws NotesException {
-        try {
-            if (folderId == null || folderId <= 0) {
-                throw new NotesException(String.format("Invalid folder id '%s'", folderId));
-            }
-
-            if (offset < 0) {
-                offset = 0;
-            }
-            if (count <= 0) {
-                count = 100;
-            }
-            if (count > 100) {
-                count = 100;
-            }
-            Query query = em.createNamedQuery(BasicDocument.QUERY_DESCENDANTS_OF_FOLDER);
-            query.setFirstResult(offset);
-            query.setMaxResults(count);
-
-            query.setParameter("ID", folderId);
-
-            return (List<BasicDocument>) query.getResultList();
-
-        } catch (NotesException e) {
-            throw e;
-        } catch (Throwable t) {
-            throw new NotesException("get documents of " + folderId, t);
-        }
-    }
-
-    @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public List<Folder> getChildren(long folderId) throws NotesException {
         try {

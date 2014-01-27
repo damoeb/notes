@@ -1,4 +1,4 @@
-package org.notes.core.model;
+package org.notes.core.services;
 
 public class AuthParams {
 
