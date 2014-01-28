@@ -2,7 +2,6 @@ package org.notes.core.model;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.notes.common.ForeignKey;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -13,22 +12,20 @@ import java.util.Set;
  * A logical collection of documents. Two different <code>databases</code> are disjunct.
  */
 @Entity(name = "DDatabase")
-@Table(name = "DDatabase",
-        uniqueConstraints = @UniqueConstraint(columnNames = {ForeignKey.USER, "name"})
-)
+@Table(name = "DDatabase")
 @NamedQueries({
         @NamedQuery(name = Database.QUERY_BY_ID, query = "SELECT a FROM DDatabase a where a.id=:ID"),
-        @NamedQuery(name = Database.QUERY_OPEN_FOLDERS, query = "SELECT new Folder(b.id) FROM DDatabase a INNER JOIN a.openFolders b where a.id=:ID"),
-        @NamedQuery(name = Database.QUERY_BY_USER, query = "SELECT new DDatabase(a.id, a.name, a.documentCount, a.modified) FROM DDatabase a where a.owner=:USER")
+        @NamedQuery(name = Database.QUERY_BY_USER, query = "SELECT new DDatabase(a.id, a.documentCount, a.modified) FROM DDatabase a where a.owner=:USER")
 })
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class Database extends Node {
 
     public static final String QUERY_BY_ID = "Database.QUERY_BY_ID";
     public static final String QUERY_BY_USER = "Database.QUERY_BY_USER";
-    public static final String QUERY_OPEN_FOLDERS = "Database.QUERY_OPEN_FOLDERS";
     //
     public static final String FK_DATABASE_ID = "database_id";
+    public static final String ACTIVE_FOLDER_ID = "active_folder_id";
+    public static final String DEFAULT_FOLDER_ID = "default_folder_id";
 
 //  -- References ------------------------------------------------------------------------------------------------------
 
@@ -37,19 +34,21 @@ public class Database extends Node {
     @JoinColumn(name = Database.FK_DATABASE_ID)
     private Set<Folder> folders = new HashSet(10);
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = {})
-    @JoinTable(name = "database2open_folder")
-    private Set<Folder> openFolders = new HashSet(10);
+    @JsonIgnore
+    @OneToOne(cascade = {}, fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = ACTIVE_FOLDER_ID)
+    private Folder activeFolder;
 
-    // todo check active folder
+    @Column(insertable = false, updatable = false, name = ACTIVE_FOLDER_ID, nullable = true)
+    private Long activeFolderId;
 
     @JsonIgnore
     @OneToOne(cascade = {}, fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name = ForeignKey.ACTIVE_FOLDER_ID)
-    private Folder activeFolder;
+    @JoinColumn(name = DEFAULT_FOLDER_ID)
+    private Folder defaultFolder;
 
-    @Column(insertable = false, updatable = false, name = ForeignKey.ACTIVE_FOLDER_ID, nullable = true)
-    private Long activeFolderId;
+    @Column(insertable = false, updatable = false, name = DEFAULT_FOLDER_ID, nullable = true)
+    private Long defaultFolderId;
 
 //  --------------------------------------------------------------------------------------------------------------------
 
@@ -61,24 +60,14 @@ public class Database extends Node {
         setId(id);
     }
 
-    public Database(String name) {
-        setName(name);
-    }
-
-    public Database(long id, String name, int documentCount, Date modified) {
+    public Database(long id, int documentCount, Date modified) {
         setId(id);
-        setName(name);
         setDocumentCount(documentCount);
         setModified(modified);
-        openFolders = null;
     }
 
     public Set<Folder> getFolders() {
         return folders;
-    }
-
-    public Set<Folder> getOpenFolders() {
-        return openFolders;
     }
 
     public Folder getActiveFolder() {
@@ -97,7 +86,19 @@ public class Database extends Node {
         this.activeFolderId = activeFolderId;
     }
 
-    public void setOpenFolders(Set<Folder> openFolders) {
-        this.openFolders = openFolders;
+    public Folder getDefaultFolder() {
+        return defaultFolder;
+    }
+
+    public void setDefaultFolder(Folder defaultFolder) {
+        this.defaultFolder = defaultFolder;
+    }
+
+    public Long getDefaultFolderId() {
+        return defaultFolderId;
+    }
+
+    public void setDefaultFolderId(Long defaultFolderId) {
+        this.defaultFolderId = defaultFolderId;
     }
 }

@@ -38,8 +38,6 @@ $.widget('notes.tree', {
 
             if (modelLoaded && rootsLoaded && openFolders) {
 
-                $this.model.set('openFolders', openFolders);
-
                 if (rootFolders && rootFolders.length > 0) {
 
                     $.each(rootFolders, function (index, rootFolder) {

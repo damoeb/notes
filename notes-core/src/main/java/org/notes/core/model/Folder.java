@@ -20,7 +20,7 @@ import java.util.Set;
         @NamedQuery(name = Folder.QUERY_BY_ID, query = "SELECT a FROM Folder a where a.id=:ID"),
         @NamedQuery(name = Folder.QUERY_CHILDREN, query = "SELECT new Folder(a.id, a.name, a.leaf, a.documentCount, a.modified, a.level) FROM Folder a WHERE a.parentId = :ID"),
         @NamedQuery(name = Folder.QUERY_ROOT_FOLDERS, query = "SELECT new Folder(a.id, a.name, a.leaf, a.documentCount, a.modified, a.level) FROM Folder a WHERE a.databaseId = :DB_ID and a.owner = :OWNER and a.level = 0"),
-        @NamedQuery(name = Folder.QUERY_OPEN_FOLDERS, query = "SELECT new Folder(o.id) FROM DDatabase a INNER JOIN a.openFolders o WHERE a.id = :DB_ID and a.owner = :OWNER")
+        @NamedQuery(name = Folder.QUERY_OPEN_FOLDERS, query = "SELECT new Folder(a.id) FROM Folder a, DDatabase d WHERE a.id = :DB_ID AND d.id = a.databaseId AND d.owner = :OWNER")
 })
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class Folder extends Node {
@@ -29,6 +29,10 @@ public class Folder extends Node {
     public static final String QUERY_CHILDREN = "Folder.QUERY_CHILDREN";
     public static final String QUERY_ROOT_FOLDERS = "Folder.QUERY_ROOT_FOLDERS";
     public static final String QUERY_OPEN_FOLDERS = "Folder.QUERY_OPEN_FOLDERS";
+
+    @Basic
+    @Column(nullable = false)
+    protected String name;
 
     @Basic
     private Integer level = 0;
@@ -42,7 +46,6 @@ public class Folder extends Node {
     /**
      * true, if not leaf and child nodes are shown
      */
-    // todo remove, put in settings
     @Basic
     private Boolean expanded = false;
 
@@ -60,11 +63,6 @@ public class Folder extends Node {
     @OneToMany(fetch = FetchType.LAZY, cascade = {})
     @JoinColumn(name = ForeignKey.FOLDER_ID)
     private Set<BasicDocument> documents = new HashSet(100);
-
-    @JsonIgnore
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {})
-    @JoinTable(name = "folder2related_doc", joinColumns = @JoinColumn(name = ForeignKey.FOLDER_ID), inverseJoinColumns = @JoinColumn(name = BasicDocument.FK_DOCUMENT_ID))
-    private Set<BasicDocument> inheritedDocuments = new HashSet(100);
 
     @Column(updatable = false, insertable = false, nullable = true, name = Database.FK_DATABASE_ID)
     private Long databaseId;
@@ -148,11 +146,11 @@ public class Folder extends Node {
         this.expanded = expanded;
     }
 
-    public Set<BasicDocument> getInheritedDocuments() {
-        return inheritedDocuments;
+    public String getName() {
+        return name;
     }
 
-    public void setInheritedDocuments(Set<BasicDocument> inheritedDocuments) {
-        this.inheritedDocuments = inheritedDocuments;
+    public void setName(String name) {
+        this.name = name;
     }
 }

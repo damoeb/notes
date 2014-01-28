@@ -24,7 +24,6 @@ public class User implements Serializable {
 
     @Id
     @Column(nullable = false, unique = true, length = 30)
-    // todo min/max length
     private String username;
 
     @JsonIgnore
@@ -34,11 +33,6 @@ public class User implements Serializable {
     @JsonIgnore
     @Column(length = 1024)
     private String passwordHash;
-
-//    // todo
-//    @JsonIgnore
-//    @Basic
-//    private int failedLoginCount = 0;
 
 //  -- References ------------------------------------------------------------------------------------------------------
 

@@ -61,7 +61,6 @@ public class AuthService {
             user.setDatabases(null);
 
             for (Database d : settings.getDatabases()) {
-                d.setOpenFolders(null);
                 d.setActiveFolder(null);
             }
 

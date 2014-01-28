@@ -90,36 +90,23 @@ public class DocumentManagerBean implements DocumentManager {
 
         User user = userManager.getUser(inFolder.getOwner());
         user.getDocuments().add(document);
-        em.merge(user);
-
-        _addToParentFolders(document, inFolder);
-
-        em.flush();
-
-        em.refresh(document);
-
-        return document;
-    }
-
-    private void _addToParentFolders(BasicDocument document, Folder folder) throws NotesException {
 
         Session session = em.unwrap(Session.class);
 
-        Folder proxy = (Folder) session.load(Folder.class, folder.getId());
+        Folder proxy = (Folder) session.load(Folder.class, inFolder.getId());
         if (proxy == null) {
             throw new NotesException(String.format("folder with id %s is null", document.getFolderId()));
         }
 
         proxy.getDocuments().add(document);
         proxy.setDocumentCount(proxy.getDocumentCount() + 1);
+        em.merge(user);
         em.merge(proxy);
+        em.flush();
 
-        while (proxy.getParentId() != null) {
-            Folder parent = (Folder) session.load(Folder.class, proxy.getParentId());
-            parent.getInheritedDocuments().add(document);
-            parent.setDocumentCount(parent.getDocumentCount() + 1);
-            proxy = parent;
-        }
+        em.refresh(document);
+
+        return document;
     }
 
     @Override

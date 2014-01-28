@@ -28,7 +28,6 @@ public class DatabaseService {
     ) throws Exception {
         try {
             Database result = databaseManager.updateDatabase(databaseId, database);
-            result.setOpenFolders(null);
             return NotesResponse.ok(result);
         } catch (Exception e) {
             return NotesResponse.error(e);
@@ -45,7 +44,6 @@ public class DatabaseService {
     ) throws Exception {
         try {
             Database database = databaseManager.getDatabase(databaseId);
-            database.setOpenFolders(null);
             return NotesResponse.ok(database);
 
         } catch (Exception e) {

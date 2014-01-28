@@ -6,10 +6,7 @@ import org.hibernate.Hibernate;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
 import org.notes.core.interfaces.*;
-import org.notes.core.model.Account;
-import org.notes.core.model.AccountType;
-import org.notes.core.model.Database;
-import org.notes.core.model.User;
+import org.notes.core.model.*;
 import org.notes.core.util.PasswordHash;
 
 import javax.ejb.Stateless;
@@ -82,7 +79,7 @@ public class AuthManagerBean implements AuthManager {
     }
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    @TransactionAttribute(TransactionAttributeType.NEVER)
     public User register(String username, String password, String email) throws NotesException {
         try {
 
@@ -105,14 +102,11 @@ public class AuthManagerBean implements AuthManager {
 
             user = userManager.createUser(user, account);
 
-            Database database = databaseManager.createDatabase(new Database("/"));
+            Database database = databaseManager.createDatabase(new Database(), user);
 
-            user.getDatabases().add(database);
-            em.merge(user);
-
-//            Folder f0 = new Folder();
-//            f0.setName("Unsorted");
-//            folderManager.createFolder(f0, null, database);
+            Folder f0 = new Folder();
+            f0.setName("Unsorted");
+            folderManager.createFolder(f0, null, database);
 
             return user;
         } catch (NotesException t) {

@@ -27,10 +27,6 @@ public abstract class Node implements Serializable {
     @Basic
     protected Integer documentCount = 0;
 
-    @Basic
-    @Column(nullable = false)
-    protected String name;
-
     @JsonIgnore
     @Basic
     protected boolean deleted;
@@ -63,14 +59,6 @@ public abstract class Node implements Serializable {
 
     public void setDocumentCount(Integer documentCount) {
         this.documentCount = documentCount;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public boolean isDeleted() {

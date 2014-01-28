@@ -128,7 +128,7 @@
                         }
                         break;
                     case 'object':
-                        if (y[p] !== null && x[p] !== null && (y[p].constructor.toString() !== x[p].constructor.toString() || !y[p].equals(x[p]))) {
+                        if (y[p] !== null && x[p] !== null && (y[p].constructor.toString() !== x[p].constructor.toString() || !notes.util.equal(y[p], x[p]))) {
                             return false;
                         }
                         break;

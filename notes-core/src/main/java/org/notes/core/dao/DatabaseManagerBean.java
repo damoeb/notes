@@ -1,13 +1,13 @@
 package org.notes.core.dao;
 
 import org.apache.log4j.Logger;
-import org.hibernate.Session;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
 import org.notes.core.interfaces.DatabaseManager;
 import org.notes.core.interfaces.SessionData;
 import org.notes.core.model.Database;
 import org.notes.core.model.Folder;
+import org.notes.core.model.User;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -17,9 +17,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 //@LocalBean
 @Stateless
@@ -37,16 +35,27 @@ public class DatabaseManagerBean implements DatabaseManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public Database createDatabase(Database database) throws NotesException {
+    public Database createDatabase(Database database, User user) throws NotesException {
         try {
             if (database == null) {
                 throw new NotesException("Database is null");
+            }
+            if (user == null) {
+                throw new NotesException("user is null");
+            }
+
+            if (!em.contains(user)) {
+                Query query = em.createNamedQuery(User.QUERY_BY_ID);
+                query.setParameter("USERNAME", user.getUsername());
+                user = (User) query.getSingleResult();
             }
 
             database.setDocumentCount(0);
             database.setModified(new Date());
 
             em.persist(database);
+            user.getDatabases().add(database);
+            em.merge(user);
             em.flush();
             em.refresh(database);
 
@@ -63,9 +72,7 @@ public class DatabaseManagerBean implements DatabaseManager {
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Database getDatabase(long databaseId) throws NotesException {
         try {
-            Database database = _get(databaseId);
-
-            return database;
+            return _get(databaseId);
 
         } catch (NotesException e) {
             throw e;
@@ -147,14 +154,6 @@ public class DatabaseManagerBean implements DatabaseManager {
 
     // -- Helper -- ----------------------------------------------------------------------------------------------------
 
-//    private SessionData getUserSettings() throws NamingException {
-//
-//        InitialContext ic = new InitialContext();
-//        SessionData bean = (SessionData)
-//                ic.lookup("java:comp/env/SessionDataBean");
-//        return bean;
-//    }
-
     private Database _get(Long databaseId) throws NotesException {
 
         if (databaseId == null || databaseId <= 0) {
@@ -180,20 +179,7 @@ public class DatabaseManagerBean implements DatabaseManager {
         }
 
         Database database = _get(databaseId);
-        database.setName(newDatabase.getName());
         database.setModified(new Date());
-
-        Set<Folder> folders = new HashSet(newDatabase.getOpenFolders().size());
-        folders.clear();
-
-        Session session = em.unwrap(Session.class);
-
-        for (Folder unresolved : newDatabase.getOpenFolders()) {
-            // todo check permissions
-            Folder folder = (Folder) session.load(Folder.class, unresolved.getId());
-            folders.add(folder);
-        }
-        database.setOpenFolders(folders);
 
         em.merge(database);
         em.flush();

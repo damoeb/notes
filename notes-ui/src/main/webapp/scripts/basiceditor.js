@@ -20,7 +20,7 @@ $.widget('notes.basiceditor', {
     _getToolbar: function (config) {
         var $this = this;
 
-        var $toolbar = $('<div/>', {class: 'row', style: 'padding: 5px;'});
+        var $toolbar = $('<div/>', {class: 'row'});
 
         var $left = $('<div/>', {style: 'float:left'}).append(
                 $this._createButton('<i class="fa fa-reply"></i>', 'Back', $this.fnClose)
