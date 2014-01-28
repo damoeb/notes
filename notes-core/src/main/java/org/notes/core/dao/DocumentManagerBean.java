@@ -182,21 +182,7 @@ public class DocumentManagerBean implements DocumentManager {
 
             // decide whether move or update
             if (Event.MOVE.equals(ref.getEvent())) {
-
-                Query query;
-
-                query = em.createNativeQuery("UPDATE Folder f SET f.documentCount = f.documentCount - 1 WHERE f.id = :FOLDER_ID");
-                query.setParameter("FOLDER_ID", document.getFolderId());
-                query.executeUpdate();
-
-                query = em.createNativeQuery("DELETE FROM folder2document WHERE document_id = :DOC_ID");
-                query.setParameter("DOC_ID", document.getId());
-                query.executeUpdate();
-
-                em.flush();
-
-                // todo fix
-                // _addToParentFolders(document, ref.getFolderId());
+                // todo implement
             }
 
             if (Event.UPDATE.equals(ref.getEvent())) {
@@ -344,12 +330,12 @@ public class DocumentManagerBean implements DocumentManager {
 
             validateUrl(ref.getUrl());
 
-            if (inFolder == null) {
-                throw new NotesException("folder is null");
-            }
-
-            if (!em.contains(inFolder)) {
-                inFolder = folderManager.getFolder(inFolder.getId());
+            if (inFolder == null || inFolder.getId() == 0) {
+                inFolder = databaseManager.getDatabaseOfUser().getDefaultFolder();
+            } else {
+                if (!em.contains(inFolder)) {
+                    inFolder = folderManager.getFolder(inFolder.getId());
+                }
             }
 
             BookmarkDocument document = new BookmarkDocument();
