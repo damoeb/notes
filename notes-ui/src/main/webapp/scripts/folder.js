@@ -6,9 +6,7 @@
 $.widget('notes.folder', {
     options: {
         parent: null,
-        model: null,
-        refresh: null,
-        opened: []
+        model: null
     },
     _create: function () {
         this._reset();
@@ -16,8 +14,7 @@ $.widget('notes.folder', {
     _reset: function () {
         var $self = this;
         $self.element.empty();
-        $self.documentCount = 0;
-        $self.expanded = false;
+        $self.childrenLoaded = false;
     },
     _init: function () {
         var $self = this;
@@ -51,23 +48,12 @@ $.widget('notes.folder', {
         $self.$toggle = $toggle;
 
         //
-        // -- Render ---------------------------------------------------------------------------------------------------
-        //
-
-        $self.children = [];
-
-        //
         // -- Events ---------------------------------------------------------------------------------------------------
         //
 
-        // model change listener
-        model.onChange(function () {
-            $self.refresh();
-        });
-
         $toggle.click(function () {
             //notes.router.navigate('folder/' + model.get('id'));
-            $self.setExpanded(!$self.expanded);
+            $self.setExpanded(!model.get('expanded'));
         });
 
         $label.click(function () {
@@ -78,13 +64,8 @@ $.widget('notes.folder', {
         // -- Triggers -------------------------------------------------------------------------------------------------
         //
 
-        var opened = $self.options.opened;
-        var id = $self.options.model.get('id');
-        for (var i = 0; i < opened.length; i++) {
-            if (opened[i].id === id) {
-                $self.setExpanded(true);
-                break;
-            }
+        if (model.get('expanded')) {
+            $self.setExpanded(true);
         }
 
         notes.app.add$Folder($self);
@@ -94,17 +75,20 @@ $.widget('notes.folder', {
 
         var $self = this;
 
-        $self.expanded = expand;
+        if ($self.options.model.get('leaf')) {
+            throw 'cannot expand folder, cause its a leaf';
+        }
+
+        $self.options.model.set('expanded', expand).save();
+
         var folderId = $self.options.model.get('id');
 
         if (expand) {
 
             $self.$toggle.removeClass('fa-caret-right').addClass('fa-caret-down');
 
-            $('#databases').databases('addOpenFolder', folderId);
-
             // -- Children --
-            if ($self.children.length === 0) {
+            if (!$self.childrenLoaded) {
 
                 $self._fetchChildren();
             }
@@ -116,8 +100,6 @@ $.widget('notes.folder', {
 
             $self.$toggle.addClass('fa-caret-right').removeClass('fa-caret-down');
 
-            $('#databases').databases('removeOpenFolder', folderId);
-
             $self.$childrenLayer.hide();
         }
     },
@@ -127,15 +109,13 @@ $.widget('notes.folder', {
 
         notes.util.jsonCall('GET', REST_SERVICE + '/folder/${folderId}/children', {'${folderId}': $self.getModel().get('id')}, null, function (folders) {
 
+            $self.childrenLoaded = true;
+
             if (folders) {
                 for (var i = 0; i < folders.length; i++) {
 
                     var $childFolder = $('<li/>')
                         .appendTo($self.$childrenLayer);
-
-                    $self.children.push(
-                        $childFolder
-                    );
 
                     $childFolder.folder($self._getFolderConfig(folders[i]));
                 }
@@ -151,32 +131,12 @@ $.widget('notes.folder', {
         var $self = this;
         return {
             parent: $self,
-            model: new notes.model.Folder(data),
-            opened: $self.options.opened,
-            onRefresh: function () {
-                $self.refresh();
-            }
+            model: new notes.model.Folder(data)
         };
     },
 
     getParent: function () {
         return this.options.parent;
-    },
-
-    /**
-     * render again
-     */
-    refresh: function () {
-        var $self = this;
-
-        //var model = $self.options.model;
-
-        // todo rename
-
-        if ($self.options.onRefresh) {
-            $self.options.onRefresh();
-        }
-
     },
 
     loadDocuments: function () {

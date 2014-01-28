@@ -18,9 +18,8 @@ import java.util.Set;
 )
 @NamedQueries({
         @NamedQuery(name = Folder.QUERY_BY_ID, query = "SELECT a FROM Folder a where a.id=:ID"),
-        @NamedQuery(name = Folder.QUERY_CHILDREN, query = "SELECT new Folder(a.id, a.name, a.leaf, a.documentCount, a.modified, a.level) FROM Folder a WHERE a.parentId = :ID"),
-        @NamedQuery(name = Folder.QUERY_ROOT_FOLDERS, query = "SELECT new Folder(a.id, a.name, a.leaf, a.documentCount, a.modified, a.level) FROM Folder a WHERE a.databaseId = :DB_ID and a.owner = :OWNER and a.level = 0"),
-        @NamedQuery(name = Folder.QUERY_OPEN_FOLDERS, query = "SELECT new Folder(a.id) FROM Folder a, DDatabase d WHERE a.id = :DB_ID AND d.id = a.databaseId AND d.owner = :OWNER")
+        @NamedQuery(name = Folder.QUERY_CHILDREN, query = "SELECT new Folder(a.id, a.name, a.leaf, a.documentCount, a.modified, a.level, a.expanded) FROM Folder a WHERE a.parentId = :ID"),
+        @NamedQuery(name = Folder.QUERY_ROOT_FOLDERS, query = "SELECT new Folder(a.id, a.name, a.leaf, a.documentCount, a.modified, a.level, a.expanded) FROM Folder a WHERE a.databaseId = :DB_ID and a.owner = :OWNER and a.level = 0")
 })
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class Folder extends Node {
@@ -28,7 +27,6 @@ public class Folder extends Node {
     public static final String QUERY_BY_ID = "Folder.QUERY_BY_ID";
     public static final String QUERY_CHILDREN = "Folder.QUERY_CHILDREN";
     public static final String QUERY_ROOT_FOLDERS = "Folder.QUERY_ROOT_FOLDERS";
-    public static final String QUERY_OPEN_FOLDERS = "Folder.QUERY_OPEN_FOLDERS";
 
     @Basic
     @Column(nullable = false)
@@ -73,13 +71,14 @@ public class Folder extends Node {
         // default
     }
 
-    public Folder(long id, String name, boolean leaf, int documentCount, Date modified, int level) {
+    public Folder(long id, String name, boolean leaf, int documentCount, Date modified, int level, boolean expanded) {
         setId(id);
         setLeaf(leaf);
         setName(name);
         setDocumentCount(documentCount);
         setModified(modified);
         setLevel(level);
+        setExpanded(expanded);
     }
 
     public Folder(long id) {

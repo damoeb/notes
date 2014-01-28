@@ -67,22 +67,6 @@ public class DatabaseService {
         }
     }
 
-    @GET
-    @MethodCache
-    @ServiceMetric
-    @Path("/{id}/open")
-    @Produces(MediaType.APPLICATION_JSON)
-    public NotesResponse getOpenFoldersInDatabase(
-            @PathParam("id") long databaseId
-    ) throws Exception {
-        try {
-            return NotesResponse.ok(databaseManager.getOpenFolders(databaseId));
-
-        } catch (Exception e) {
-            return NotesResponse.error(e);
-        }
-    }
-
     @DELETE
     @MethodCache
     @ServiceMetric

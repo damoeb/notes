@@ -6,21 +6,7 @@
 
 notes.model = {
     Folder: Backbone.Model.extend({
-        urlRoot: REST_SERVICE + '/folder',
-        initialize: function () {
-            this.listener = [];
-        },
-        onChange: function (callback) {
-            this.listener.push(callback);
-        },
-        change: function () {
-            var $this = this;
-            if (typeof(this.listener) !== 'undefined') {
-                $.each(this.listener, function (index, callback) {
-                    callback.call($this);
-                });
-            }
-        }
+        urlRoot: REST_SERVICE + '/folder'
     }),
 
     Database: Backbone.Model.extend({

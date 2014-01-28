@@ -125,21 +125,6 @@ public class DatabaseManagerBean implements DatabaseManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public List<Folder> getOpenFolders(long databaseId) throws NotesException {
-        try {
-            Query query = em.createNamedQuery(Folder.QUERY_OPEN_FOLDERS);
-            query.setParameter("OWNER", sessionData.getUser().getUsername());
-            query.setParameter("DB_ID", databaseId);
-
-            return query.getResultList();
-
-        } catch (Throwable t) {
-            throw new NotesException("get open folders " + databaseId, t);
-        }
-    }
-
-    @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Database updateDatabase(long databaseId, Database database) throws NotesException {
         try {
             if (database == null) {
