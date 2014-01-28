@@ -64,7 +64,7 @@ public class AuthService {
                 d.setActiveFolder(null);
             }
 
-            settings = toDataTransferObject(settings);
+            settings = getDomObjSession(settings);
 
             request.getSession().setAttribute(USER_SETTINGS_SESSION_KEY, settings);
             return NotesResponse.ok(settings);
@@ -73,7 +73,7 @@ public class AuthService {
         }
     }
 
-    private SessionData toDataTransferObject(final SessionData settings) {
+    private SessionData getDomObjSession(final SessionData settings) {
         return new SessionData() {
             @Override
             public User getUser() {

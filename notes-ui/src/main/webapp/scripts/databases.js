@@ -5,8 +5,6 @@
 
 $.widget('notes.databases', {
 
-    url: REST_SERVICE + '/database/list',
-
     options: {
         databaseId: null
     },
@@ -35,19 +33,16 @@ $.widget('notes.databases', {
 
         var $target = $self.element.empty();
 
-        notes.util.jsonCall('GET', $self.url, null, null, function (list) {
+        notes.util.jsonCall('GET', REST_SERVICE + '/database', null, null, function (database) {
 
-            $.each(list, function (index, json) {
+            var model = new notes.model.Database(database);
 
-                var model = new notes.model.Database(json);
+            var $tree = $('<ol/>', {class: 'tree'}).appendTo(
+                $target
+            );
 
-                var $tree = $('<ol/>', {class: 'tree'}).appendTo(
-                    $target
-                );
-
-                $self.$tree = $tree.tree({
-                    databaseId: model.get('id')
-                });
+            $self.$tree = $tree.tree({
+                databaseId: model.get('id')
             });
 
         });

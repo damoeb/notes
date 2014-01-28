@@ -14,7 +14,7 @@ $.widget('notes.tree', {
         var $this = this;
 
         var databaseId = $this.options.databaseId;
-        if (typeof(databaseId) === 'undefined') {
+        if (typeof(databaseId) === 'undefined' || databaseId == null) {
             throw 'databaseId is null';
         }
 

@@ -22,6 +22,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 
@@ -38,6 +39,9 @@ public class DocumentManagerBean implements DocumentManager {
 
     @Inject
     private FolderManager folderManager;
+
+    @Inject
+    private DatabaseManager databaseManager;
 
     @Inject
     private FileReferenceManager fileReferenceManager;
@@ -57,16 +61,18 @@ public class DocumentManagerBean implements DocumentManager {
 
         try {
 
+            LOGGER.info("text document");
+
             if (document == null) {
                 throw new NotesException("document is null");
             }
 
-            if (inFolder == null) {
-                throw new NotesException("folder is null");
-            }
-
-            if (!em.contains(inFolder)) {
-                inFolder = folderManager.getFolder(inFolder.getId());
+            if (inFolder == null || inFolder.getId() == 0) {
+                inFolder = databaseManager.getDatabaseOfUser().getDefaultFolder();
+            } else {
+                if (!em.contains(inFolder)) {
+                    inFolder = folderManager.getFolder(inFolder.getId());
+                }
             }
 
             document.setTrigger(Trigger.INDEX);
@@ -131,6 +137,8 @@ public class DocumentManagerBean implements DocumentManager {
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public BasicDocument deleteDocument(long documentId) throws NotesException {
         try {
+            LOGGER.info("delete document");
+
             BasicDocument document = _get(documentId);
             document.setDeleted(true);
             document.setTrigger(Trigger.DELETE);
@@ -163,6 +171,8 @@ public class DocumentManagerBean implements DocumentManager {
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public BasicDocument updateDocument(BasicDocument ref) throws NotesException {
         try {
+
+            LOGGER.info("update document");
 
             if (ref == null) {
                 throw new IllegalArgumentException("document is null");
@@ -275,26 +285,29 @@ public class DocumentManagerBean implements DocumentManager {
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public PdfDocument uploadDocument(List<FileItem> items) throws NotesException {
         try {
+            LOGGER.info("upload document");
 
             FileReference reference = null;
             String title = null;
 
             Long folderId = NumberUtils.createLong(_getFieldValue("folderId", items));
 
-            Folder inFolder = folderManager.getFolder(folderId);
+            Folder inFolder;
+            if (folderId == null || folderId == 0) {
+                LOGGER.info("in default folder " + folderId);
+                inFolder = databaseManager.getDatabaseOfUser().getDefaultFolder();
+            } else {
+                LOGGER.info("in folder " + folderId);
+                inFolder = folderManager.getFolder(folderId);
+            }
 
             for (FileItem item : items) {
 
                 if (!item.isFormField()) {
 
-                    try {
-                        reference = fileReferenceManager.store(item);
-                        title = item.getName();
-                        break;
-
-                    } catch (NotesException e) {
-                        e.printStackTrace();
-                    }
+                    reference = fileReferenceManager.store(item);
+                    title = item.getName();
+                    break;
                 }
             }
 
@@ -323,19 +336,13 @@ public class DocumentManagerBean implements DocumentManager {
 
         try {
 
-            if (ref == null) {
-                throw new NotesException("bookmark is invalid");
-            }
-
-            if (StringUtils.isBlank(ref.getUrl())) {
-                throw new NotesException("url is empty");
-            }
-            new URL(ref.getUrl());
-
+            LOGGER.info("bookmark document");
 
             if (ref == null) {
                 throw new NotesException("bookmark is invalid");
             }
+
+            validateUrl(ref.getUrl());
 
             if (inFolder == null) {
                 throw new NotesException("folder is null");
@@ -363,6 +370,19 @@ public class DocumentManagerBean implements DocumentManager {
             throw t;
         } catch (Throwable t) {
             throw new NotesException("bookmark failed: " + t.getMessage(), t);
+        }
+    }
+
+    private void validateUrl(String url) throws NotesException {
+
+        if (StringUtils.isBlank(url)) {
+            throw new NotesException("url is empty");
+        }
+
+        try {
+            new URL(url);
+        } catch (MalformedURLException e) {
+            throw new NotesException("url is invalid");
         }
     }
 

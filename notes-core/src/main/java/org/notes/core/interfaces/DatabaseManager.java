@@ -19,8 +19,9 @@ public interface DatabaseManager {
 
     Database updateDatabase(long databaseId, Database database) throws NotesException;
 
-    List<Database> getDatabasesOfCurrentUser() throws NotesException;
+    Database getDatabaseOfUser() throws NotesException;
 
     List<Folder> getFolders(long databaseId) throws NotesException;
 
+    void setDefaultFolder(Database database, Folder folder) throws NotesException;
 }

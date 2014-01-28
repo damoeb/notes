@@ -96,15 +96,15 @@ public class DatabaseManagerBean implements DatabaseManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public List<Database> getDatabasesOfCurrentUser() throws NotesException {
+    public Database getDatabaseOfUser() throws NotesException {
         try {
             Query query = em.createNamedQuery(Database.QUERY_BY_USER);
             query.setParameter("USER", sessionData.getUser().getUsername());
 
-            return query.getResultList();
+            return (Database) query.getSingleResult();
 
         } catch (Throwable t) {
-            throw new NotesException("get databases of user ", t);
+            throw new NotesException("get database of user ", t);
         }
     }
 
@@ -122,6 +122,31 @@ public class DatabaseManagerBean implements DatabaseManager {
             throw new NotesException("get folders " + databaseId, t);
         }
     }
+
+    @Override
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void setDefaultFolder(Database database, Folder folder) throws NotesException {
+        try {
+
+            if (database == null) {
+                throw new IllegalArgumentException("database is null");
+            }
+
+            if (folder == null) {
+                throw new IllegalArgumentException("folder is null");
+            }
+
+            if (!em.contains(database)) {
+                database = getDatabase(database.getId());
+            }
+            database.setDefaultFolder(folder);
+            em.merge(database);
+
+        } catch (Throwable t) {
+            throw new NotesException("set default folder", t);
+        }
+    }
+
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)

@@ -84,12 +84,14 @@ public class DatabaseService {
     @GET
     @MethodCache
     @ServiceMetric
-    @Path("/list")
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse getDatabases(
     ) throws Exception {
         try {
-            return NotesResponse.ok(databaseManager.getDatabasesOfCurrentUser());
+            Database database = databaseManager.getDatabaseOfUser();
+            database.setDefaultFolder(null);
+            database.setActiveFolder(null);
+            return NotesResponse.ok(database);
         } catch (Exception e) {
             return NotesResponse.error(e);
         }
