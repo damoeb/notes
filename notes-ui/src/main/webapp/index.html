@@ -253,9 +253,9 @@
             </div>
             <div class="col-lg-10">
                 <div class="row">
-                    <span style="font-weight:bold">
+                    <h3 style="display: inline-block; margin: 0;">
                     <%=title %>
-                    </span>
+                    </h3>
 
                     <span class="pull-right">
                         <%=notes.util.formatDate(new Date(modified)) %>
@@ -306,7 +306,7 @@
 <script type="text/javascript">
 
     $.noty.defaults = {
-        layout: 'top',
+        layout: 'bottom',
         theme: 'defaultTheme',
         type: 'alert',
         text: '', // can be html or string

@@ -149,8 +149,11 @@ $.widget('notes.folder', {
         $('#databases .folder.active').removeClass('active');
         $('#databases .folder-' + $self.options.model.get('id')).addClass('active');
 
+        // todo save document when closed
         $('#document-list').documentList({
             folderId: folderId
-        });
+        }).show();
+
+        $('#editors').hide();
     }
 });
