@@ -1,3 +1,4 @@
+- active folder is not synched
 - alle popups auf bootstrap
 - click auf element in baum zeigt aufch doc liste an
 - improve treeview: colors, icons
