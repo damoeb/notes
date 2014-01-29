@@ -11,18 +11,17 @@
 
         var onSuccess = function () {
             console.log('logged in');
-            noty({text: 'logged in'});
             notes.setup();
         };
 
         var ontLoginFailed = function () {
             console.log('login failed');
-            noty({type: 'error', text: 'login failed'});
+            notes.register();
         };
 
         var payload = {
-            username: $('#field-username').val(),
-            password: $('#field-password').val()
+            username: 'guest', //$('#field-username').val(),
+            password: 'password' //$('#field-password').val()
         };
 
         notes.util.jsonCall('POST', REST_SERVICE + '/auth/login', null, JSON.stringify(payload), onSuccess, ontLoginFailed);
@@ -47,25 +46,24 @@
 
         var onSuccess = function () {
             console.log('registered');
-            noty({text: 'Registered'});
+            notes.login();
         };
 
         var ontRegFailed = function () {
             console.log('registration failed');
+            noty({type: 'error', text: 'Cannot register'});
         };
 
         var payload = {
-            username: $('#field-username').val(),
-            password: $('#field-password').val(),
-            email: $('#field-email').val()
+            username: 'guest', //$('#field-username').val(),
+            password: 'password', //$('#field-password').val(),
+            email: 'some@exmaple.com' //$('#field-email').val()
         };
 
         notes.util.jsonCall('POST', REST_SERVICE + '/auth/register', null, JSON.stringify(payload), onSuccess, ontRegFailed);
     };
 
     notes.setup = function () {
-
-        $('.view').hide();
 
         var onSuccess = function (settings) {
 
@@ -81,7 +79,8 @@
         var onNotLoggedIn = function () {
             console.log('not logged in');
 
-            $('#login-view').show();
+            notes.login();
+
         };
 
         notes.util.jsonCall('GET', REST_SERVICE + '/auth/settings', null, null, onSuccess, onNotLoggedIn);
@@ -125,6 +124,7 @@
 
     notes.setup.ui = function () {
 
+        $('#init-view').remove();
         $('#content-view').show();
 
         // -- Side Navigation ----------------------------------------------------------------------------------
