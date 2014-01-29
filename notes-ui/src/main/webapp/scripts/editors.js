@@ -5,20 +5,6 @@
 
 $.widget('notes.editors', {
 
-    options: {
-        syncInterval: 15000 // msec
-    },
-
-    _create: function () {
-//        // -- events
-//        setInterval(function () {
-//
-//            // todo $this.syncModel();
-//
-//        }, $this.options.syncInterval);
-
-    },
-
     edit: function (documentId, unloadCallback) {
 
         var $this = this;
@@ -27,8 +13,8 @@ $.widget('notes.editors', {
             throw 'document id is null.';
         }
 
-        $this.element.empty();
-        $('#document-list').hide();
+        $('#document-view').show();
+        $('#folder-view').hide();
 
         notes.app.documentId(documentId);
 
@@ -52,8 +38,8 @@ $.widget('notes.editors', {
 
         var settings = {kind: kindString};
 
-        $this.element.empty();
-        $('#document-list').hide();
+        $('#document-view').show();
+        $('#folder-view').hide();
 
         $this.loadDocument(settings, new notes.model.Document({
             folderId: notes.app.activeFolderId(),
@@ -75,7 +61,7 @@ $.widget('notes.editors', {
                 break;
         }
 
-        $this.element.append($content);
+        $this.element.empty().append($content);
 
     }
 });

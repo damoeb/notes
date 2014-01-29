@@ -152,8 +152,9 @@ $.widget('notes.folder', {
         // todo save document when closed
         $('#document-list').documentList({
             folderId: folderId
-        }).show();
+        });
 
-        $('#editors').hide();
+        $('#document-view').hide();
+        $('#folder-view').show();
     }
 });

@@ -55,8 +55,9 @@ $.widget('notes.basiceditor', {
 
     fnClose: function () {
         this.syncModel();
-        this.element.hide();
-        $('#document-list').show();
+
+        $('#document-view').hide();
+        $('#folder-view').show();
     },
 
 
@@ -71,9 +72,10 @@ $.widget('notes.basiceditor', {
     fnDelete: function () {
         var $this = this;
         $('#document-list')
-            .documentList('deleteDocument', $this.getModel())
-            .show();
-        $this.element.hide();
+            .documentList('deleteDocument', $this.getModel());
+
+        $('#document-view').hide();
+        $('#folder-view').show();
 
         $this.getModel().destroy();
         $this._destroy();
