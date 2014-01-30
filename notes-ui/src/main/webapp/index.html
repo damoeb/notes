@@ -29,6 +29,9 @@
 
     <link rel="stylesheet" href="bower_components/jquery-ui/themes/base/jquery.ui.all.css">
 
+    <!-- editor -->
+    <link rel="stylesheet" href="bower_components/summernote/dist/summernote.css">
+
     <!-- Icon Font -->
     <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
 
@@ -81,7 +84,7 @@
         <div class="row"
              style="background: none repeat scroll 0 0 #F1F1F1; border-bottom: 1px solid #e1e1e1; padding-top:8px; padding-bottom:8px;">
 
-        <!-- LEFT -->
+            <!-- LEFT -->
             <div class="col-lg-2">
 
             </div>
@@ -190,48 +193,6 @@
 
             <div id="document-view" class="col-lg-8">
 
-                <div class="row" style="height: 32px; background-color: whitesmoke;">
-
-                    <div class="btn-group">
-
-                        <button title="Close" class="btn btn-default btn-sm">
-                            <i class="fa fa-reply"></i>
-                        </button>
-
-                        <button title="Star" class="btn btn-default btn-sm">
-                            <i class="fa fa-star-o"></i>
-                        </button>
-
-                        <button title="Tag" class="btn btn-default btn-sm">
-                            <i class="fa fa-tag"></i>
-                        </button>
-
-                        <button title="All settings" class="btn btn-default btn-sm">
-                            <i class="fa fa-th"></i>
-                        </button>
-
-                        <!--<button title="Lock" class="btn btn-default btn-sm">-->
-                        <!--<i class="fa fa-lock"></i>-->
-                        <!--</button>-->
-
-                        <!--<button title="Trash" class="btn btn-default btn-sm">-->
-                        <!--<i class="fa fa-trash-o"></i>-->
-                        <!--</button>-->
-
-                        <!--<button title="Privacy" class="btn btn-default btn-sm">-->
-                        <!--<i class="fa fa-eye"></i>-->
-                        <!--</button>-->
-
-                        <span style="line-height: 30px; padding-left: 5px; padding-right: 5px; display: inline-block; float: left;">10 min ago</span>
-
-                    </div>
-
-                    <div class="btn-group pull-right">
-                        <button title="Maximize" class="btn btn-default btn-sm">
-                            <i class="fa fa-arrows-alt"></i>
-                        </button>
-                    </div>
-                </div>
                 <div id="editors"><!-- generated --></div>
             </div>
 
@@ -261,13 +222,69 @@
 
 <script type="text/html" id="editor-template">
 
-    <div class="editor text-editor" style="display: block;">
-        <div class="row input-group-lg">
-            <input class="form-control title" type="text" value="Test">
+    <div class="row" style="height: 32px; background-color: whitesmoke;">
+
+        <div class="btn-group">
+
+            <button class="btn btn-default btn-sm">
+                <i class="fa fa-fw fa-reply"></i>
+                Back
+            </button>
+
+            <button class="btn btn-default btn-sm">
+                <i class="fa fa-fw fa-pencil"></i>
+                Edit
+            </button>
+
+            <button class="btn btn-default btn-sm">
+                <i class="fa fa-star-o"></i>
+                Highlight
+            </button>
+
+            <button class="btn btn-default btn-sm">
+                <i class="fa fa-fw fa-fw fa-tag"></i>
+                Tags
+            </button>
+
+            <!--<button title="Lock" class="btn btn-default btn-sm">-->
+            <!--<i class="fa fa-lock"></i>-->
+            <!--</button>-->
+
+            <!--<button title="Trash" class="btn btn-default btn-sm">-->
+            <!--<i class="fa fa-trash-o"></i>-->
+            <!--</button>-->
+
+            <!--<button title="Privacy" class="btn btn-default btn-sm">-->
+            <!--<i class="fa fa-eye"></i>-->
+            <!--</button>-->
+
+            <span style="line-height: 30px; padding-left: 5px; padding-right: 5px; display: inline-block; float: left;">10 min ago</span>
+
         </div>
-        <div class="row" style="margin-top: 10px;">
-            <textarea class="form-control" rows="10"></textarea>
+
+        <div class="btn-group pull-right">
+            <button title="Maximize" class="btn btn-default btn-sm">
+                <i class="fa fa-arrows-alt"></i>
+            </button>
         </div>
+    </div>
+
+    <div>
+        <h3>Hase</h3>
+
+        <div style="margin-top: 10px; line-height:20px;" id="xyz">
+            Gabriel Bach gilt heute als einer der bekanntesten israelischen Juristen. Er wurde 1927 in Halberstadt
+            geboren, wuchs später in Berlin auf, emigrierte 1938 mit seiner Familie vor der Nazigewalt nach Amsterdam
+            und floh 1940, einen Monat vor dem Einmarsch der Wehrmacht in die Niederlanden, nach Palästina. Nach dem
+            Krieg studierte er in London Jura und kam 1953 zur Staatsanwaltschaft nach Israel. Im Eichmann-Prozess
+            fungierte er als stellvertretender Generalstaatsanwalt, das Verfahren und die Schilderungen der
+            Holocaust-Überlebenden in dem Prozess verfolgen ihn bis heute. Er hielt Vorträge und ist Träger des
+            Bundesverdienstkreuzes.
+        </div>
+    </div>
+
+    <div style="border-top: 1px solid #efefef">
+        Vorschläge
     </div>
 
 </script>
@@ -396,6 +413,9 @@
 
 <script src="bower_components/noty/js/noty/layouts/top.js"></script>
 <script src="bower_components/noty/js/noty/themes/default.js"></script>
+
+<!-- editor -->
+<script src="bower_components/summernote/dist/summernote.js"></script>
 
 <!-- file upload -->
 <script src="scripts/fileupload/jquery.iframe-transport.js"></script>
