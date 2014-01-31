@@ -5,7 +5,7 @@
 
 $.widget('notes.editors', {
 
-    edit: function (documentId, unloadCallback) {
+    edit: function (documentId) {
 
         var $this = this;
 
@@ -20,48 +20,38 @@ $.widget('notes.editors', {
 
         notes.util.jsonCall('GET', REST_SERVICE + '/document/${documentId}', {'${documentId}': documentId}, null, function (document) {
 
-            var settings = {
-                kind: document.kind,
-                unloadCallback: unloadCallback
-            };
-
             var model = new notes.model.Document(document);
             model.set('event', 'UPDATE');
 
-            $this.loadDocument(settings, model);
+            var $content = $('<div/>');
+
+            switch (document.kind.toLowerCase().trim()) {
+                case 'text':
+                    $content.texteditor({model: model});
+                    break;
+                case 'pdf':
+                    $content.pdfeditor({model: model});
+                    break;
+            }
+
+            $this.element.empty().append($content);
+
         });
     },
 
-    createDocument: function (title) {
+    newDocument: function (title) {
         var $this = this;
-        var kindString = 'text';
-
-        var settings = {kind: kindString};
 
         $('#document-view').show();
         $('#folder-view').hide();
 
-        $this.loadDocument(settings, new notes.model.Document({
+        var model = new notes.model.Document({
             folderId: notes.app.activeFolderId(),
             title: title
-        }));
-    },
+        });
 
-    loadDocument: function (settings, model) {
-        var $this = this;
-
-        var $content = $('<div/>');
-
-        switch (settings.kind.toLowerCase().trim()) {
-            case 'text':
-                $content.texteditor({model: model});
-                break;
-            case 'pdf':
-                $content.pdfeditor({model: model});
-                break;
-        }
+        var $content = $('<div/>').texteditor({model: model, editMode: true});
 
         $this.element.empty().append($content);
-
     }
 });

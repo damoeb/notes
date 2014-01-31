@@ -2,57 +2,6 @@
 
 $.widget('notes.basiceditor', {
 
-    options: {
-        model: null
-    },
-
-    _createButton: function (label, tooltip, onClick) {
-        var $this = this;
-
-        return $('<button/>', {title: tooltip, class: 'btn btn-default', html: label}).click(function () {
-                if ($.isFunction(onClick)) {
-                    onClick.call($this, this);
-                }
-            }
-        );
-    },
-
-    _getToolbar: function (config) {
-        var $this = this;
-
-        var $toolbar = $('<div/>', {class: 'row'});
-
-        var $left = $('<div/>', {style: 'float:left'}).append(
-                $this._createButton('<i class="fa fa-reply"></i>', 'Back', $this.fnClose)
-            ).append(
-                $this._createButton('<i class="fa fa-tags"></i>', 'Tags', $this.fnTags)
-            ).append(
-                $this._createButton('<i class="fa fa-trash-o"></i>', 'Delete', $this.fnDelete)
-            );
-
-        if ($this.options.model.has('modified')) {
-            $left.append(
-                $('<span/>', {text: 'changed ' + notes.util.formatDate(new Date($this.options.model.get('modified')))})
-            );
-        }
-
-        if (config && config.left) {
-            for (var i = 0; i < config.left.length; i++) {
-
-                $left.append(
-                    config.left[i]
-                );
-            }
-        }
-
-        var $right = $('<div/>', {style: 'float:right'}).append(
-            $this._createButton('<i class="fa fa-arrows-alt"></i>', 'Maximize', $this.fnMaximize)
-        );
-
-        return $toolbar.append($left).append($right);
-    },
-
-
     fnClose: function () {
         this.syncModel();
 
@@ -60,8 +9,8 @@ $.widget('notes.basiceditor', {
         $('#folder-view').show();
     },
 
-
     fnSave: function () {
+        console.log('save');
         this.syncModel();
     },
 
@@ -118,13 +67,13 @@ $.widget('notes.basiceditor', {
 
         var originalModel = $.extend({}, $this.options.model.attributes);
 
-        if ($.isFunction($this.fnPreSyncModel)) {
-            $this.fnPreSyncModel();
+        if ($.isFunction($this.fnUpdateModel)) {
+            $this.fnUpdateModel();
         }
 
         if (!notes.util.equal(originalModel, $this.options.model.attributes)) {
             $this.getModel().save(null, {success: function () {
-                noty('Saved');
+                console.log('saved');
                 $('#document-list').documentList('updateDocument', $this.getModel());
             }});
         }
@@ -136,10 +85,6 @@ $.widget('notes.basiceditor', {
         console.log('unload callback');
         if ($.isFunction($this.unloadCallback)) {
             $this.unloadCallback();
-        }
-
-        if ($.isFunction($this.fnPreDestroy)) {
-            $this.fnPreDestroy();
         }
     }
 

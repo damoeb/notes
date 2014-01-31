@@ -4,74 +4,95 @@
 
 $.widget('notes.texteditor', $.notes.basiceditor, {
 
+    options: {
+        editMode: false
+    },
+
     _create: function () {
+
+        console.log('create text editor');
+
         var $this = this;
+
+        var $target = $this.element.empty();
 
         var model = $this.getModel();
 
-        var $title = $('<input/>', {class: 'form-control title', type: 'text', value: model.get('title')});
-        var $text = $('<textarea/>', {class: 'form-control', rows: 10, text: model.get('text')});
+        var template = _.template($('#editor-template').html());
 
-        var $target = $this.element.empty().show().
-            addClass('editor text-editor').
-            // resets from maximized mode
-            removeClass('maximized');
+        var $rendered = $(template(model.attributes).trim());
+        var $title = $rendered.find('.field-title');
+        var $text = $rendered.find('.field-text');
 
-        // todo both should be dialogs?
+        $target.append($rendered);
 
-        // todo implement star/pin functionality
-
-        $this.fnPreSyncModel = function () {
-            console.log('pre sync');
-            model.set('title', $title.val());
-            model.set('text', $text.val());
+        $this.fnUpdateModel = function () {
+            console.log('update model');
+            model.set('title', $title.code());
+            model.set('text', $text.code());
         };
 
-        $this.fnPreDestroy = function () {
-            console.log('pre destory');
+        $this.fnEditMode = function () {
+            console.log('edit mode');
+
+//            $rendered.find('.action-save').show();
+            $rendered.find('.action-edit-mode').hide();
+            $rendered.find('.action-view-mode').show();
+            $text.summernote(SUMMERNOTE_CFG);
         };
 
-        var $tagsLayer = $('<span/>');
+        $this.fnViewMode = function () {
+            console.log('view mode');
+//            $rendered.find('.action-save').hide();
+            $rendered.find('.action-edit-mode').show();
+            $rendered.find('.action-view-mode').hide();
 
-        var fnRenderTags = function () {
+            $this.fnSave.call($this);
 
-            $tagsLayer.empty();
-
-            if (model.has('tags') && model.get('tags').length > 0) {
-                // todo sort tags
-                $.each(model.get('tags'), function (index, tag) {
-                    $tagsLayer.append(
-                        $('<a/>', {
-                            text: tag.name,
-                            href: '#tag:' + tag.name
-                        })
-                    );
-
-                    if (index < model.get('tags').length - 1) {
-                        $tagsLayer.append(', ');
-                    }
-
-                });
-            }
+            $text.destroy();
         };
 
-        fnRenderTags();
+        if ($this.options.editMode) {
+            $this.fnEditMode.call($this);
+        }
 
-        $target.append(
-                $this._getToolbar()
-            ).append(
-                $('<div/>', {class: 'row'}).append(
-                    $title
-                )
-            ).append(
-                $('<div/>', {class: 'row'})
-                    .append(
-                        $tagsLayer
-                    )
-            ).append(
-                $('<div/>', {class: 'row'}).append(
-                    $text
-                )
-            );
+        $rendered.find('.action-edit-mode').click(function () {
+            $this.fnEditMode.call($this);
+        });
+
+        $rendered.find('.action-view-mode').click(function () {
+            $this.fnViewMode.call($this);
+        });
+
+//        $rendered.find('.action-save').click(function() {
+//            $this.fnSave.call($this);
+//        });
+
+//        var $tagsLayer = $('<span/>');
+//
+//        var fnRenderTags = function () {
+//
+//            $tagsLayer.empty();
+//
+//            if (model.has('tags') && model.get('tags').length > 0) {
+//                // todo sort tags
+//                $.each(model.get('tags'), function (index, tag) {
+//                    $tagsLayer.append(
+//                        $('<a/>', {
+//                            text: tag.name,
+//                            href: '#tag:' + tag.name
+//                        })
+//                    );
+//
+//                    if (index < model.get('tags').length - 1) {
+//                        $tagsLayer.append(', ');
+//                    }
+//
+//                });
+//            }
+//        };
+//
+//        fnRenderTags();
+
     }
 });

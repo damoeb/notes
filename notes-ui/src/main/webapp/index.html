@@ -123,8 +123,8 @@
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                     <button type="button" class="btn btn-primary" data-dismiss="modal"
-                                            onclick="$('#editors').editors('createDocument', $('#new-document-title').val())">
-                                        Create
+                                            onclick="$('#editors').editors('newDocument', $('#new-document-title').val())">
+                                    Create
                                     </button>
                                 </div>
                             </div>
@@ -226,15 +226,25 @@
 
         <div class="btn-group">
 
-            <button class="btn btn-default btn-sm">
-                <i class="fa fa-fw fa-reply"></i>
+            <button class="btn btn-default btn-sm action-back">
+            <i class="fa fa-fw fa-reply"></i>
                 Back
             </button>
 
-            <button class="btn btn-default btn-sm">
+            <button class="btn btn-default btn-sm action-edit-mode">
                 <i class="fa fa-fw fa-pencil"></i>
-                Edit
+                Edit Mode
             </button>
+
+            <button class="btn btn-primary btn-sm action-view-mode" style="display: none">
+                <i class="fa fa-fw fa-eye"></i>
+                View Mode
+            </button>
+
+            <!--<button class="btn btn-default btn-sm action-save" style="display: none">-->
+            <!--<i class="fa fa-fw fa-floppy-o"></i>-->
+            <!--Save-->
+            <!--</button>-->
 
             <button class="btn btn-default btn-sm">
                 <i class="fa fa-star-o"></i>
@@ -258,34 +268,28 @@
             <!--<i class="fa fa-eye"></i>-->
             <!--</button>-->
 
-            <span style="line-height: 30px; padding-left: 5px; padding-right: 5px; display: inline-block; float: left;">10 min ago</span>
+            <span style="line-height: 30px; padding-left: 5px; padding-right: 5px; display: inline-block; float: left;"><%= modified?$.timeago(modified):'' %></span>
 
         </div>
 
         <div class="btn-group pull-right">
-            <button title="Maximize" class="btn btn-default btn-sm">
-                <i class="fa fa-arrows-alt"></i>
+            <button title="Maximize" class="btn btn-default btn-sm action-maximize">
+            <i class="fa fa-arrows-alt"></i>
             </button>
         </div>
     </div>
 
     <div>
-        <h3>Hase</h3>
+        <h3 class="field-title"><%= title %></h3>
 
-        <div style="margin-top: 10px; line-height:20px;" id="xyz">
-            Gabriel Bach gilt heute als einer der bekanntesten israelischen Juristen. Er wurde 1927 in Halberstadt
-            geboren, wuchs später in Berlin auf, emigrierte 1938 mit seiner Familie vor der Nazigewalt nach Amsterdam
-            und floh 1940, einen Monat vor dem Einmarsch der Wehrmacht in die Niederlanden, nach Palästina. Nach dem
-            Krieg studierte er in London Jura und kam 1953 zur Staatsanwaltschaft nach Israel. Im Eichmann-Prozess
-            fungierte er als stellvertretender Generalstaatsanwalt, das Verfahren und die Schilderungen der
-            Holocaust-Überlebenden in dem Prozess verfolgen ihn bis heute. Er hielt Vorträge und ist Träger des
-            Bundesverdienstkreuzes.
-        </div>
+        <div style="margin-top: 10px; line-height:20px;" class="field-text"><%= text %></div>
+
     </div>
 
-    <div style="border-top: 1px solid #efefef">
-        Vorschläge
-    </div>
+    <!--<div style="border-top: 1px solid #efefef; margin-top: 15px; padding-top: 15px;">-->
+    <!--<h4>Recommended</h4>-->
+    <!---->
+    <!--</div>-->
 
 </script>
 
@@ -491,9 +495,29 @@
         notes.setup();
 
         $('#document-view').show();
-        $('#editors').empty().append(_.template($('#editor-template').html())().trim());
+
+//        var values = {
+//            modified:null,
+//            title:'sometitle'
+//        };
+//        $('#editors').empty().append(_.template($('#editor-template').html())(values).trim());
 
     });
+
+    var SUMMERNOTE_CFG = {
+        height: 300,
+        toolbar: [
+            //['style', ['style']], // no style button
+            ['style', ['bold', 'italic', 'underline', 'clear']],
+            ['fontsize', ['fontsize']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['height', ['height']],
+            //['insert', ['picture', 'link']], // no insert buttons
+            ['table', ['table']], // no table button
+            //['help', ['help']] //no help button
+        ]
+    };
 
 </script>
 
