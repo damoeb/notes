@@ -5,7 +5,8 @@
 $.widget('notes.texteditor', $.notes.basiceditor, {
 
     options: {
-        editMode: false
+        editMode: false,
+        template: '#text-editor'
     },
 
     _create: function () {
@@ -18,7 +19,7 @@ $.widget('notes.texteditor', $.notes.basiceditor, {
 
         var model = $this.getModel();
 
-        var template = _.template($('#editor-template').html());
+        var template = _.template($($this.options.template).html());
 
         var $rendered = $(template(model.attributes).trim());
         var $title = $rendered.find('.field-title');
@@ -62,6 +63,15 @@ $.widget('notes.texteditor', $.notes.basiceditor, {
 
         $rendered.find('.action-view-mode').click(function () {
             $this.fnViewMode.call($this);
+        });
+
+        $rendered.find('.action-back').click(function () {
+            $this.fnSave.call($this);
+
+            $this._destroy();
+
+            $('#document-view').hide();
+            $('#folder-view').show();
         });
 
 //        $rendered.find('.action-save').click(function() {

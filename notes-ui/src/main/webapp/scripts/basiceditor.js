@@ -21,7 +21,7 @@ $.widget('notes.basiceditor', {
     fnDelete: function () {
         var $this = this;
         $('#document-list')
-            .documentList('deleteDocument', $this.getModel());
+            .documentList('refresh', $this.getModel().get('folderId'));
 
         $('#document-view').hide();
         $('#folder-view').show();
@@ -74,17 +74,8 @@ $.widget('notes.basiceditor', {
         if (!notes.util.equal(originalModel, $this.options.model.attributes)) {
             $this.getModel().save(null, {success: function () {
                 console.log('saved');
-                $('#document-list').documentList('updateDocument', $this.getModel());
+                $('#document-list').documentList('refresh', $this.getModel().get('folderId'));
             }});
-        }
-    },
-
-    _destroy: function () {
-        var $this = this;
-
-        console.log('unload callback');
-        if ($.isFunction($this.unloadCallback)) {
-            $this.unloadCallback();
         }
     }
 

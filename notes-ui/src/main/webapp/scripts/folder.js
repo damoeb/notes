@@ -150,9 +150,7 @@ $.widget('notes.folder', {
         $('#databases .folder-' + $self.options.model.get('id')).addClass('active');
 
         // todo save document when closed
-        $('#document-list').documentList({
-            folderId: folderId
-        });
+        $('#document-list').documentList('refresh', folderId);
 
         $('#document-view').hide();
         $('#folder-view').show();

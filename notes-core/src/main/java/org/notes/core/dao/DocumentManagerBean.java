@@ -112,7 +112,14 @@ public class DocumentManagerBean implements DocumentManager {
 
         em.refresh(document);
 
+        document.setHash(getUniqueHash(document));
+        em.merge(document);
+
         return document;
+    }
+
+    private String getUniqueHash(BasicDocument document) {
+        return Long.toHexString(document.getId() * 1000000 + System.nanoTime() % 1000000);
     }
 
     @Override

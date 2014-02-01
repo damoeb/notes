@@ -1,12 +1,10 @@
 - vorschläge unterhalb, nicht rechts
-- list-view, editor view/readonly view
 - viewer for bookmarks
 - active folder is not synched
 - alle popups auf bootstrap
-- click auf element in baum zeigt aufch doc liste an
 - improve treeview: colors, icons
 - owner view: mir tree auf linker seite, public view: ohne treeview
-- jedes dokument hat unique link: user/document-hash
+- jedes dokument hat unique link: watch?v=document-hash
 - anzahl der directories auf 1 limitieren
 - pdf ist ausnahme, normal nur text dokumente mit attachments
 - bootstrap verwenden http://getbootstrap.com/components/

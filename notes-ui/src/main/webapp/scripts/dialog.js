@@ -148,7 +148,7 @@ notes.dialog.document = {
 //                                setTimeout(fetchModel, 2000);
 
                                 // mark area
-                                $('#document-list').documentList('updateDocument', bookmark);
+                                $('#document-list').documentList('refresh', bookmark.get('folderId'));
                             }});
                         }
                     },

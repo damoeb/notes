@@ -49,6 +49,11 @@ public class BasicDocument implements Document {
     @Column(nullable = false, length = 256)
     private String title;
 
+    @Index(name = "doc-hash")
+    @Basic
+    @Column(length = 256)
+    private String hash;
+
     @Basic
     @Column(length = Configuration.Constants.OUTLINE_LENGTH)
     private String outline;
@@ -297,6 +302,14 @@ public class BasicDocument implements Document {
 
     public void setTags(Set<Tag> tags) {
         this.tags = tags;
+    }
+
+    public String getHash() {
+        return hash;
+    }
+
+    public void setHash(String hash) {
+        this.hash = hash;
     }
 
     public void validate() throws NotesException {

@@ -6,26 +6,21 @@
 
 $.widget('notes.documentList', {
 
-    options: {
-        folderId: null
-    },
-
     _init: function () {
-        var $this = this;
-
-        $this.template = _.template($('#document-in-list').html());
-        $this._fetch();
-
+        this.template = _.template($('#document-in-list').html());
     },
 
-    refresh: function () {
-        this._fetch();
+    refresh: function (folderId) {
+
+        if (typeof folderId === 'undefined' || folderId === null) {
+            throw 'folderId is null';
+        }
+        this._fetch(folderId);
     },
 
-    _fetch: function () {
+    _fetch: function (folderId) {
         var $this = this;
 
-        var folderId = $this.options.folderId;
         if (!(folderId && parseInt(folderId) > 0)) {
             return;
         }
@@ -44,6 +39,7 @@ $.widget('notes.documentList', {
             }
 
             // sort by date
+            // todo get sort field
             notes.util.sortJSONArrayDESC(documents, 'modified');
 
             $.each(documents, function (id, doc) {
@@ -72,18 +68,6 @@ $.widget('notes.documentList', {
                 },
                 opacity: 0.6
             });
-    },
-
-    updateDocument: function (model) {
-        var $this = this;
-        var $element = $this.element.find('.doc-id-' + model.get('id'));
-
-        $element.replaceWith($this._render(model));
-    },
-
-    deleteDocument: function (model) {
-        var $this = this;
-        $this.element.find('.doc-id-' + model.get('id')).remove();
     }
 
 });

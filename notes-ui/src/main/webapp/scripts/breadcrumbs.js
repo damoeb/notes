@@ -52,9 +52,7 @@ $.widget('notes.breadcrumbs', {
             notes.dialog.folder.rename($folder.getModel());
         });
         $breadcrumb.find('.action-open').click(function () {
-            $('#document-list').documentList({
-                folderId: $folder.getModel().get('id')
-            });
+            $('#document-list').documentList('refresh', $folder.getModel().get('id'));
         });
 
         return $breadcrumb;

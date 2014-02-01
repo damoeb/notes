@@ -106,11 +106,9 @@
 
             },
 
-            folder: function (id) {
-                console.log('open folder ' + id);
-                $('#document-list').documentList({
-                    folderId: id
-                });
+            folder: function (folderId) {
+                console.log('open folder ' + folderId);
+                $('#document-list').documentList('refresh', folderId);
             }
         });
 
@@ -161,7 +159,7 @@
 
                 var model = new notes.model.Document(xhr.result.result);
 
-                $('#document-list').documentList('updateDocument', model);
+                $('#document-list').documentList('refresh', model.get('folderId'));
             });
 
 
