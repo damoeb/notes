@@ -5,27 +5,40 @@
 
 $.widget('notes.pdfeditor', $.notes.basiceditor, {
 
+    options: {
+        template: '#pdf-editor'
+    },
+
     _create: function () {
+
+        console.log('create pdf editor');
 
         var $this = this;
 
-        var $target = $this.element.empty().show().
-            addClass('pdf-editor').
-            // resets from maximized mode
-            removeClass('maximized');
+        var $target = $this.element.empty();
 
-        $this.fnPreSyncModel = function () {
-            console.log('pre sync');
-        };
-        $this.fnPreDestroy = function () {
-            console.log('pre destory');
+        var model = $this.getModel();
+
+        var template = _.template($($this.options.template).html());
+
+        var $rendered = $(template(model.attributes).trim());
+        var $title = $rendered.find('.field-title');
+        var $page = $rendered.find('.field-current-page');
+
+        var $pdfLayer = $rendered.find('.pdf-container');
+        var $numberOfPages = $rendered.find('.field-page');
+
+
+        $target.append($rendered);
+
+        $this.fnUpdateModel = function () {
+            console.log('update model');
+            model.set('title', $title.code());
         };
 
         var currentPage = 1;
         var numberOfPages = $this.getModel().get('numberOfPages');
 
-        var $numberOfPages = $('<input/>', {type: 'text', class: 'form-control pages', style: 'width:70px; display:inline;', value: '1'});
-        var $pdfLayer = $('<div/>', {class: 'pdf-container'});
 
         var embedPos = {
             top: 385,
@@ -49,59 +62,34 @@ $.widget('notes.pdfeditor', $.notes.basiceditor, {
             pdfloader.loadPdf(pdfConfig);
         };
 
-        $this.fnPostMaximize = function () {
-            pdfConfig.position = maxPos;
-            loadPdf();
-        };
-
-        $this.fnPostEmbed = function () {
-            pdfConfig.position = embedPos;
-            loadPdf();
-        };
-
-        var fnPrevious = function () {
+        $rendered.find('.action-previous-page').click(function () {
             if (currentPage > 1) {
                 currentPage--;
-                $numberOfPages.val(currentPage);
+                $page.val(currentPage);
 
                 loadPdf();
             }
-        };
+        });
 
-        var fnNext = function () {
+        $rendered.find('.action-next-page').click(function () {
             if (currentPage < numberOfPages) {
                 currentPage++;
-                $numberOfPages.val(currentPage);
+                $page.val(currentPage);
 
                 pdfConfig.page = currentPage;
                 pdfloader.loadPdf(pdfConfig);
             }
-        };
-
-        var config = {
-            left: [
-                $('<span/>', {style: 'margin-left:15px'}),
-                $this._createButton('<i class="fa fa-angle-left"></i>', 'Previous Page', fnPrevious),
-                $numberOfPages,
-                $('<span/>', {text: 'of ' + numberOfPages, style: 'padding-left:5px; padding-right:5px'}),
-                $this._createButton('<i class="fa fa-angle-right"></i>', 'Next Page', fnNext)
-            ]
-        };
-
-        var $fieldTitle = $('<input/>', {class: 'form-control title', type: 'text', value: $this.getModel().get('title')});
-
-        $target.append(
-                $this._getToolbar(config)
-            ).append(
-                $('<div/>', {class: 'row'}).append(
-                    $fieldTitle
-                )
-            ).append(
-                $('<div/>', {class: 'row', text: notes.util.formatDate(new Date($this.getModel().get('modified'))) + ' by ' + $this.getModel().get('ownerId')})
-            ).append(
-                $pdfLayer
-            );
+        });
 
         pdfloader.loadPdf(pdfConfig);
+
+        $rendered.find('.action-close').click(function () {
+            $this.fnSave.call($this);
+
+            $this._destroy();
+
+            $('#document-view').hide();
+            $('#folder-view').show();
+        });
     }
 });

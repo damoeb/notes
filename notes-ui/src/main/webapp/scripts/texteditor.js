@@ -65,7 +65,7 @@ $.widget('notes.texteditor', $.notes.basiceditor, {
             $this.fnViewMode.call($this);
         });
 
-        $rendered.find('.action-back').click(function () {
+        $rendered.find('.action-close').click(function () {
             $this.fnSave.call($this);
 
             $this._destroy();
