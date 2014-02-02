@@ -5,7 +5,7 @@
 
 $.widget('notes.editors', {
 
-    edit: function (documentId) {
+    editDocument: function (documentId) {
 
         var $this = this;
 
@@ -25,12 +25,19 @@ $.widget('notes.editors', {
 
             var $content = $('<div/>');
 
+            var hash = model.get('hash');
+
+            location.replace('#doc:' + hash);
+
             switch (document.kind.toLowerCase().trim()) {
                 case 'text':
                     $content.texteditor({model: model});
                     break;
                 case 'pdf':
                     $content.pdfeditor({model: model});
+                    break;
+                default:
+                    console.error('no editor found for ' + document.kind);
                     break;
             }
 

@@ -357,6 +357,8 @@ public class DocumentManagerBean implements DocumentManager {
 //            to pdf -> to tmp storage
 //            annotate/crop on client
 
+            Hibernate.initialize(document.getTags());
+
             return document;
 
         } catch (NotesException t) {

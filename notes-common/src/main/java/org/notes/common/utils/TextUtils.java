@@ -7,28 +7,25 @@ import org.jsoup.safety.Cleaner;
 import org.jsoup.safety.Whitelist;
 import org.notes.common.configuration.Configuration;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 public final class TextUtils {
 
-    private static final Pattern TRIM_PATTERN = Pattern.compile("^[\\W \n\t]+|[\\W \n\t]+$");
-
-    public static String trim(String str) {
-
-        if (StringUtils.isBlank(str)) {
-            return null;
-
-        } else {
-            Matcher m = TRIM_PATTERN.matcher(str);
-            StringBuffer sb = new StringBuffer(50);
-            while (m.find()) {
-                m.appendReplacement(sb, "");
-            }
-            m.appendTail(sb);
-            return sb.toString();
-        }
-    }
+//    private static final Pattern TRIM_PATTERN = Pattern.compile("^[\\W \n\t]+|[\\W \n\t]+$");
+//
+//    public static String trim(String str) {
+//
+//        if (StringUtils.isBlank(str)) {
+//            return null;
+//
+//        } else {
+//            Matcher m = TRIM_PATTERN.matcher(str);
+//            StringBuffer sb = new StringBuffer(50);
+//            while (m.find()) {
+//                m.appendReplacement(sb, "");
+//            }
+//            m.appendTail(sb);
+//            return sb.toString();
+//        }
+//    }
 
     public static String toOutline(String first, String... more) {
         int outlineSize = Configuration.Constants.OUTLINE_LENGTH;
@@ -56,6 +53,6 @@ public final class TextUtils {
     }
 
     private static String norm(String text) {
-        return trim(text.replaceAll("[\n\t\r ]+", " "));
+        return text.replaceAll("[\n\t\r ]+", " ");
     }
 }
