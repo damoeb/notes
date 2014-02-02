@@ -417,28 +417,40 @@
 
 <script type="text/html" id="document-in-list">
 
-    <a href="#">
-        <div class="doc doc-id-<%=id %> row">
-            <div class="col-lg-2">
-                <img src="<%= notes.util.getThumbnailByType(kind) %>">
-            </div>
-            <div class="col-lg-10">
-                <div class="row">
-                    <h3 style="display: inline-block; margin: 0;">
+    <div class="doc doc-id-<%=id %> row">
+        <div class="col-lg-2">
+            <img src="<%= notes.util.getThumbnailByType(kind) %>">
+        </div>
+        <div class="col-lg-10">
+
+            <div class="row">
+                <a href="#doc:<%=hash %>">
+                    <h4 style="display: inline-block; margin: 0; overflow: hidden; white-space: nowrap; ">
                         <%=title %>
-                    </h3>
+                        <%
+                        if (star) {
+                        %>
+                        <i class="fa fa-star fa-fw"></i>
+                        <%
+                        }
+                        %>
+                        <i class="fa fa-paperclip fa-fw" style="color: #808080"></i>
 
-                    <span class="pull-right">
-                        <%=notes.util.formatDate(new Date(modified)) %>
-                    </span>
-
-                </div>
-                <div class="row">
-                    <%=outline %>
-                </div>
+                    </h4>
+                </a>
+                <span class="pull-right">
+                    <%=notes.util.formatDate(new Date(modified)) %>
+                </span>
+            </div>
+            <div class="row" style="color:#666666; line-height: 16px; ">
+                <%=outline %>
+            </div>
+            <div class="row" style="margin-top: 5px">
+                <a href="#tag:blablub" class="label label-default">blablub</a>
             </div>
         </div>
-    </a>
+    </div>
+
 </script>
 
 

@@ -30,7 +30,7 @@ import java.util.Set;
 @NamedQueries({
         @NamedQuery(name = Document.QUERY_BY_ID, query = "SELECT a FROM BasicDocument a where a.id=:ID"),
         @NamedQuery(name = Document.QUERY_TRIGGER, query = "SELECT a FROM BasicDocument a where a.trigger in (:TRIGGER)"),
-        @NamedQuery(name = BasicDocument.QUERY_IN_FOLDER, query = "SELECT new BasicDocument(a.id, a.title, a.outline, a.kind, a.modified, a.star) FROM BasicDocument a where a.folderId=:ID AND a.deleted=false")
+        @NamedQuery(name = BasicDocument.QUERY_IN_FOLDER, query = "SELECT new BasicDocument(a.id, a.hash, a.title, a.outline, a.kind, a.modified, a.star) FROM BasicDocument a where a.folderId=:ID AND a.deleted=false")
 })
 @Inheritance(strategy = InheritanceType.JOINED)
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
@@ -124,13 +124,15 @@ public class BasicDocument implements Document {
         this.kind = kind;
     }
 
-    public BasicDocument(Long id, String title, String outline, Kind kind, Date modified, boolean star) {
+    public BasicDocument(Long id, String hash, String title, String outline, Kind kind, Date modified, boolean star) {
         this.id = id;
+        this.hash = hash;
         this.title = title;
         this.outline = outline;
         this.kind = kind;
         this.modified = modified;
         this.star = star;
+        this.tags = null;
     }
 
     @PrePersist
@@ -289,6 +291,10 @@ public class BasicDocument implements Document {
 
     public void setTrigger(Trigger trigger) {
         this.trigger = trigger;
+    }
+
+    public boolean isStar() {
+        return star;
     }
 
     public void setStar(boolean star) {

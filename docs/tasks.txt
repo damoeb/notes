@@ -1,3 +1,4 @@
+- tags, star, improve list
 - remove editors widget
 - vorschläge unterhalb, nicht rechts
 - viewer for bookmarks
