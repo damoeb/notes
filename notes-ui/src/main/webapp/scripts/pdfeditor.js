@@ -26,8 +26,6 @@ $.widget('notes.pdfeditor', $.notes.basiceditor, {
         var $page = $rendered.find('.field-current-page');
 
         var $pdfLayer = $rendered.find('.pdf-container');
-        var $numberOfPages = $rendered.find('.field-page');
-
 
         $target.append($rendered);
 
@@ -41,14 +39,14 @@ $.widget('notes.pdfeditor', $.notes.basiceditor, {
 
 
         var embedPos = {
-            top: 385,
-            left: 30
+            top: 87,
+            left: 15
         };
 
-        var maxPos = {
-            top: 93,
-            left: 20
-        };
+//        var maxPos = {
+//            top: 93,
+//            left: 20
+//        };
 
         var pdfConfig = {
             fileId: $this.getModel().get('fileReferenceId'),
@@ -76,8 +74,27 @@ $.widget('notes.pdfeditor', $.notes.basiceditor, {
                 currentPage++;
                 $page.val(currentPage);
 
-                pdfConfig.page = currentPage;
-                pdfloader.loadPdf(pdfConfig);
+                loadPdf();
+            }
+        });
+
+        $rendered.find('.field-current-page').val(1).keypress(function (e) {
+            if (e.which == 13) {
+
+                var requestPage = parseInt($(this).val());
+
+                console.log('request page ' + requestPage);
+
+                if (requestPage > 0 && requestPage < numberOfPages) {
+                    currentPage = requestPage;
+                } else {
+                    console.log('constraint violated - using page fallback');
+                    currentPage = 1;
+                }
+
+                $(this).val(currentPage);
+
+                loadPdf();
             }
         });
 

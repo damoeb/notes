@@ -243,10 +243,14 @@
 
         <div class="btn-group pull-left">
 
-            <button class="btn btn-default btn-sm action-close">
-                <i class="fa fa-fw fa-circle-o"></i>
+            <button class="btn btn-default btn-sm action-close" title="Close">
+            <i class="fa fa-fw fa-circle-o"></i>
                 Close
             </button>
+
+            <!--<button class="btn btn-default btn-sm action-maximize" title="Maximize">-->
+            <!--<i class="fa fa-fw fa-angle-up"></i>-->
+            <!--</button>-->
 
         </div>
 
@@ -312,17 +316,22 @@
 
         <div class="btn-group input-group-sm pull-left">
 
-            <button class="btn btn-default btn-sm action-close">
-                <i class="fa fa-fw fa-circle-o"></i>
+            <button class="btn btn-default btn-sm action-close" title="Close">
+            <i class="fa fa-fw fa-circle-o"></i>
                 Close
             </button>
 
-            <button class="btn btn-default btn-sm action-previous-page" style="margin-left: 20px" title="Previous Page">
-                <i class="fa fa-fw fa-angle-left"></i>
+            <!--<button class="btn btn-default btn-sm action-maximize" title="Maximize">-->
+            <!--<i class="fa fa-fw fa-angle-up"></i>-->
+            <!--</button>-->
+
+            <button class="btn btn-default btn-sm action-previous-page" style="margin-left: 140px"
+                    title="Previous Page">
+            <i class="fa fa-fw fa-angle-left"></i>
             </button>
 
             <input type="text" class="form-control field-current-page"
-                   style="width:50px; display:inline-block; float: left;" value="1">
+                   style="width:50px; display:inline-block; float: left; text-align: center;" value="1">
 
             <span style="line-height: 30px; padding-left: 5px; padding-right: 5px; display: inline-block; float: left;">of <%= numberOfPages %></span>
 
