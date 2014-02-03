@@ -68,6 +68,16 @@ $.widget('notes.folder', {
             $self.setExpanded(true);
         }
 
+        // default folder
+        if (notes.app.activeFolderId() === 0 && notes.app.defaultFolderId() === model.get('id')) {
+            $self.loadDocuments();
+        } else {
+            // active folder
+            if (notes.app.activeFolderId() === model.get('id')) {
+                $target.addClass('active');
+            }
+        }
+
         notes.app.add$Folder($self);
     },
 

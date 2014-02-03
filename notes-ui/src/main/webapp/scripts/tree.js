@@ -52,6 +52,7 @@ $.widget('notes.tree', {
         notes.util.jsonCall('GET', REST_SERVICE + '/database/${dbId}', {'${dbId}': $this.options.databaseId}, null, function (databaseJson) {
 
             $this.model = new notes.model.Database(databaseJson);
+            notes.app.defaultFolderId(databaseJson.defaultFolderId);
             modelLoaded = true;
             fnSetup();
         });

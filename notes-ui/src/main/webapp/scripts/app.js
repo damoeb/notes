@@ -7,6 +7,7 @@
     notes.app = new function () {
 
         var _activeFolderId = 0;
+        var _defaultFolderId = 0;
         var _documentId = 0;
         var _databaseId = 0;
         var _descendants = {};
@@ -16,6 +17,14 @@
                 _activeFolderId = id;
             } else {
                 return _activeFolderId;
+            }
+        };
+
+        this.defaultFolderId = function (id) {
+            if (typeof id !== 'undefined') {
+                _defaultFolderId = id;
+            } else {
+                return _defaultFolderId;
             }
         };
 
