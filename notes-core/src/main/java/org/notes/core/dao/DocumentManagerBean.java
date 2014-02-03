@@ -112,7 +112,7 @@ public class DocumentManagerBean implements DocumentManager {
 
         em.refresh(document);
 
-        document.setHash(getUniqueHash(document));
+        document.setUniqueHash(getUniqueHash(document));
         em.merge(document);
 
         return document;
@@ -199,11 +199,12 @@ public class DocumentManagerBean implements DocumentManager {
 
                 boolean similarTitle = StringUtils.equals(txtDoc.getTitle(), txtRef.getTitle());
                 boolean similarText = StringUtils.equals(txtDoc.getText(), txtRef.getText());
+                boolean similarStarState = txtDoc.isStar() == txtRef.isStar();
 
                 Set<Tag> tagsDoc = txtDoc.getTags();
                 Set<Tag> tagsRef = txtRef.getTags();
 
-                boolean hasChanged = !(similarTitle && similarText && equalsTags(tagsDoc, tagsRef));
+                boolean hasChanged = !(similarTitle && similarText && equalsTags(tagsDoc, tagsRef) && similarStarState);
 
                 if (hasChanged) {
                     // todo calc diff
@@ -214,6 +215,7 @@ public class DocumentManagerBean implements DocumentManager {
                     // update
                     txtDoc.setTitle(txtRef.getTitle());
                     txtDoc.setText(txtRef.getText());
+                    txtDoc.setStar(txtRef.isStar());
 
                     document.setTrigger(Trigger.INDEX);
 

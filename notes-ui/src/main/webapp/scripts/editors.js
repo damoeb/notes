@@ -25,10 +25,6 @@ $.widget('notes.editors', {
 
             var $content = $('<div/>');
 
-            var hash = model.get('hash');
-
-            location.replace('#doc:' + hash);
-
             switch (document.kind.toLowerCase().trim()) {
                 case 'text':
                     $content.texteditor({model: model});

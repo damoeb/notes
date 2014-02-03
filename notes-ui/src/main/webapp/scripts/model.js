@@ -17,7 +17,8 @@ notes.model = {
         defaults: {
             modified: null,
             title: '',
-            text: ''
+            text: '',
+            star: false
         },
         urlRoot: REST_SERVICE + '/document/'
     }),

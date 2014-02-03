@@ -1,4 +1,5 @@
 /*global notes:false */
+/*global SUMMERNOTE_CFG:false */
 
 'use strict';
 
@@ -24,6 +25,7 @@ $.widget('notes.texteditor', $.notes.basiceditor, {
         var $rendered = $(template(model.attributes).trim());
         var $title = $rendered.find('.field-title');
         var $text = $rendered.find('.field-text');
+        var $star = $rendered.find('.action-star');
 
         $target.append($rendered);
 
@@ -31,6 +33,7 @@ $.widget('notes.texteditor', $.notes.basiceditor, {
             console.log('update model');
             model.set('title', $title.code());
             model.set('text', $text.code());
+            model.set('star', $star.attr('star') === 'true');
         };
 
         $this.fnEditMode = function () {
@@ -64,6 +67,8 @@ $.widget('notes.texteditor', $.notes.basiceditor, {
         $rendered.find('.action-view-mode').click(function () {
             $this.fnViewMode.call($this);
         });
+
+        $star.click($this.fnStar);
 
         $rendered.find('.action-close').click(function () {
             $this.fnSave.call($this);

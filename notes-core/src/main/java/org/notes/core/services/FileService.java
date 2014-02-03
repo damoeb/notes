@@ -70,9 +70,9 @@ public class FileService {
 
             List<FileItem> items = upload.parseRequest(request);
 
-            //String tmp = _getFieldValue("", items);
-
             PdfDocument pdfDocument = getDocumentManager().uploadDocument(items);
+
+            pdfDocument.setTags(null);
 
             return NotesResponse.ok(pdfDocument);
 
