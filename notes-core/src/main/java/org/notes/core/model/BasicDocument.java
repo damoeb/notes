@@ -47,7 +47,7 @@ public class BasicDocument implements Document {
     @Column(nullable = false, length = 256)
     private String title;
 
-    @Index(name = "doc-hash")
+    @Index(name = "uniqueHash")
     @Basic
     @Column(length = 256)
     private String uniqueHash;
