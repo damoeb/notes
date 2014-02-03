@@ -108,8 +108,8 @@
                             data-target="#create-document-modal">New
                     </button>
 
-                    <div class="modal fade" id="create-document-modal" tabindex="-1" role="dialog" aria-hidden="true">
-                        <div class="modal-dialog">
+                    <div class="modal" id="create-document-modal" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal"
@@ -241,7 +241,28 @@
 -->
 <!--<div id="bookmark-preview-pdf" class="pdf-container" style="width: 1024px; margin:auto;"></div>-->
 <!--</div>-->
-<div style="display: none"><input id="file-upload" type="file" name="files[]" multiple></div>
+<div style="display: none">
+    <input id="file-upload" type="file" name="files[]" multiple>
+</div>
+
+<!-- Modal Tags Of Document -->
+<div class="modal" id="modal-tags" tabindex="-1" role="dialog" aria-labelledby="tags-label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="tags-label">Tags</h4>
+            </div>
+            <div class="modal-body tags-layer">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script type="text/html" id="text-editor">
 
@@ -291,8 +312,8 @@
             </button>
 
 
-            <button class="btn btn-default btn-sm">
-                <i class="fa fa-fw fa-fw fa-tag"></i>
+            <button class="btn btn-default btn-sm action-tags">
+            <i class="fa fa-fw fa-fw fa-tag"></i>
                 Tags
             </button>
 
@@ -358,7 +379,7 @@
 
             <span style="line-height: 30px; padding-left: 5px; padding-right: 5px; display: inline-block; float: left;"><%= modified?'changed '+$.timeago(modified):'' %></span>
 
-            <button class="btn btn-default btn-sm action-star" title="Highlight">
+            <button class="btn btn-default btn-sm action-star" title="Highlight" star="<%=star %>">
                 <span class="pane-with-star <%=!star?'hidden':'' %>">
                     <i class="fa fa-star" style="color:red;"></i>
                     Highlight

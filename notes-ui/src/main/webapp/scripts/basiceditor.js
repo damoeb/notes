@@ -9,6 +9,31 @@ $.widget('notes.basiceditor', {
         $('#folder-view').show();
     },
 
+    _createParent: function () {
+        var $this = this;
+
+        console.log('create parent');
+
+        var $rendered = $this.element;
+        $rendered.find('.action-close').click(function () {
+            $this.fnSave.call($this);
+
+            $this._destroy();
+
+            $('#document-view').hide();
+            $('#folder-view').show();
+        });
+
+        $rendered.find('.action-star').click($this.fnStar);
+
+        // todo render tags
+
+        $rendered.find('.action-tags').click(function () {
+            $('#modal-tags').modal();
+        });
+
+    },
+
     fnSave: function () {
         console.log('save');
         this.syncModel();

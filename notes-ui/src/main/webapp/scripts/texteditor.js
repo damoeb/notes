@@ -39,7 +39,6 @@ $.widget('notes.texteditor', $.notes.basiceditor, {
         $this.fnEditMode = function () {
             console.log('edit mode');
 
-//            $rendered.find('.action-save').show();
             $rendered.find('.action-edit-mode').hide();
             $rendered.find('.action-view-mode').show();
             $text.summernote(SUMMERNOTE_CFG);
@@ -47,7 +46,7 @@ $.widget('notes.texteditor', $.notes.basiceditor, {
 
         $this.fnViewMode = function () {
             console.log('view mode');
-//            $rendered.find('.action-save').hide();
+
             $rendered.find('.action-edit-mode').show();
             $rendered.find('.action-view-mode').hide();
 
@@ -68,16 +67,7 @@ $.widget('notes.texteditor', $.notes.basiceditor, {
             $this.fnViewMode.call($this);
         });
 
-        $star.click($this.fnStar);
-
-        $rendered.find('.action-close').click(function () {
-            $this.fnSave.call($this);
-
-            $this._destroy();
-
-            $('#document-view').hide();
-            $('#folder-view').show();
-        });
+        $this._createParent();
 
 //        $rendered.find('.action-save').click(function() {
 //            $this.fnSave.call($this);
