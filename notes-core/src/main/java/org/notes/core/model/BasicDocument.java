@@ -30,13 +30,11 @@ import java.util.Set;
 @NamedQueries({
         @NamedQuery(name = Document.QUERY_BY_ID, query = "SELECT a FROM BasicDocument a where a.id=:ID"),
         @NamedQuery(name = Document.QUERY_TRIGGER, query = "SELECT a FROM BasicDocument a where a.trigger in (:TRIGGER)"),
-        @NamedQuery(name = BasicDocument.QUERY_IN_FOLDER, query = "SELECT new BasicDocument(a.id, a.hash, a.title, a.outline, a.kind, a.modified, a.star) FROM BasicDocument a where a.folderId=:ID AND a.deleted=false")
+        @NamedQuery(name = BasicDocument.QUERY_IN_FOLDER, query = "SELECT new BasicDocument(a.id, a.uniqueHash, a.title, a.outline, a.kind, a.modified, a.star) FROM BasicDocument a where a.folderId=:ID AND a.deleted=false")
 })
 @Inheritance(strategy = InheritanceType.JOINED)
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class BasicDocument implements Document {
-
-    public static final String FK_DOCUMENT_ID = "document_id";
 
     public static final String QUERY_IN_FOLDER = "BasicDocument.QUERY_IN_FOLDER";
 
@@ -52,7 +50,7 @@ public class BasicDocument implements Document {
     @Index(name = "doc-hash")
     @Basic
     @Column(length = 256)
-    private String hash;
+    private String uniqueHash;
 
     @Basic
     @Column(length = Configuration.Constants.OUTLINE_LENGTH)
@@ -124,9 +122,9 @@ public class BasicDocument implements Document {
         this.kind = kind;
     }
 
-    public BasicDocument(Long id, String hash, String title, String outline, Kind kind, Date modified, boolean star) {
+    public BasicDocument(Long id, String uniqueHash, String title, String outline, Kind kind, Date modified, boolean star) {
         this.id = id;
-        this.hash = hash;
+        this.uniqueHash = uniqueHash;
         this.title = title;
         this.outline = outline;
         this.kind = kind;
@@ -310,12 +308,12 @@ public class BasicDocument implements Document {
         this.tags = tags;
     }
 
-    public String getHash() {
-        return hash;
+    public String getUniqueHash() {
+        return uniqueHash;
     }
 
-    public void setHash(String hash) {
-        this.hash = hash;
+    public void setUniqueHash(String hash) {
+        this.uniqueHash = hash;
     }
 
     public void validate() throws NotesException {

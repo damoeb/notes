@@ -24,15 +24,18 @@ $.widget('notes.pdfeditor', $.notes.basiceditor, {
         var $rendered = $(template(model.attributes).trim());
         var $title = $rendered.find('.field-title');
         var $page = $rendered.find('.field-current-page');
-
         var $pdfLayer = $rendered.find('.pdf-container');
+        var $star = $rendered.find('.action-star');
 
         $target.append($rendered);
 
         $this.fnUpdateModel = function () {
             console.log('update model');
             model.set('title', $title.code());
+            model.set('star', $star.attr('star') === 'true')
         };
+
+        $star.click($this.fnStar);
 
         var currentPage = 1;
         var numberOfPages = $this.getModel().get('numberOfPages');

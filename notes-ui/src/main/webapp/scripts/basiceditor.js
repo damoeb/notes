@@ -30,6 +30,22 @@ $.widget('notes.basiceditor', {
         $this._destroy();
     },
 
+    fnStar: function () {
+        var isStar = $(this).attr('star') === 'true';
+        var newStarState = !isStar;
+        $(this).attr('star', newStarState);
+
+        if (newStarState) {
+            $(this).find('.pane-with-star').removeClass('hidden');
+            $(this).find('.pane-without-star').addClass('hidden');
+            console.log('star document');
+        } else {
+            $(this).find('.pane-with-star').addClass('hidden');
+            $(this).find('.pane-without-star').removeClass('hidden');
+            console.log('de-star document');
+        }
+    },
+
     fnMaximize: function (el) {
         var $this = this;
         var $editor = this.element;
