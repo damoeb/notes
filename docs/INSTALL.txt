@@ -1,0 +1,8 @@
+1.
+vi bin/standalone.conf
+ - set JBOSS_HOME
+ - [optional] set remote socket debugging in JAVA_OPTS
+
+2.
+vi standalone/configuration/standalone.xml
+ - search for notes_mysql and adapt the data source

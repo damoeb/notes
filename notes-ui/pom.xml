@@ -66,7 +66,7 @@
                                 </echo>
                                 <exec executable="cmd" dir="${project.basedir}"
                                       osfamily="windows" failonerror="true">
-                                    <arg line="/c sass --load-path src/main/webapp/bower_components/ src/main/webapp/styles/main.scss src/main/webapp/styles/main.css"/>
+                                    <arg line="/c sass --load-path src/main/webapp/bower_components/ src/main/webapp/styles/main.scss src/main/webapp/styles/main.compiled.css"/>
                                 </exec>
                                 <exec executable="bash" dir="${project.basedir}"
                                       osfamily="unix" failonerror="true">

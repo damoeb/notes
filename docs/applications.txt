@@ -1,8 +1,9 @@
-WhizFolders http://pauljmiller.wordpress.com/2013/04/21/review-of-whizfolders/?relatedposts_exclude=83
-ConnectedText http://pauljmiller.wordpress.com/2013/04/21/review-of-connectedtext
-key note
-devon think
-myInfo
-askSam
-nota bene
-scrivener
+Similar tools:
+    WhizFolders http://pauljmiller.wordpress.com/2013/04/21/review-of-whizfolders/?relatedposts_exclude=83
+    ConnectedText http://pauljmiller.wordpress.com/2013/04/21/review-of-connectedtext
+    key note
+    devon think
+    myInfo
+    askSam
+    nota bene
+    scrivener
