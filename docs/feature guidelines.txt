@@ -1,3 +1,36 @@
+Automatic key extraction
+Thesaurus, categories, keyword cloud and metadata navigator
+Integrated TWAIN scanner
+OCR integration
+Microsoft Office AddIns
+OpenOffice Add On
+AutoCAD preview
+Watermark ( text - image )
+Digital signature
+Generate new documents with wizard ( templates + forms )
+Cryptography ( encrypt and decrypt documents )
+Google Apps Synchronization
+WebDAV
+Workflow ( jBPM )
+Mobile interface ( iPhone, Android, Blackberry, etc. )
+Programmable automatic cataloging
+Complete activity log
+Webservices API
+Extensible frontend API
+Integrated with LDAP and Active directory
+Zonal OCR
+Antivirus integration
+Dicom preview
+OpenMeetings integration
+HTML Editor
+Forum and Wiki
+Zoho integration
+Joomla explorer component
+2D barcode reader
+CAS authentication
+Expiration of documents
+
+
 1. Connectivity
 - Transclusion
 - External Hyperlinks

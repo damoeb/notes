@@ -7,3 +7,4 @@ Similar tools:
     askSam
     nota bene
     scrivener
+    http://sourceforge.net/projects/openkm/
