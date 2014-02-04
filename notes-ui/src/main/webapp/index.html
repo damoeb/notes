@@ -317,6 +317,16 @@
                 Tags
             </button>
 
+            <button title="Attachment" class="btn btn-default btn-sm">
+                <i class="fa fa-paperclip"></i>
+                Attachment
+            </button>
+
+            <button title="Attributes" class="btn btn-default btn-sm">
+                <i class="fa fa-list"></i>
+                Attributes
+            </button>
+
             <!--<button title="Lock" class="btn btn-default btn-sm">-->
             <!--<i class="fa fa-lock"></i>-->
             <!--</button>-->
@@ -393,6 +403,16 @@
             <button class="btn btn-default btn-sm">
                 <i class="fa fa-fw fa-fw fa-tag"></i>
                 Tags
+            </button>
+
+            <button title="Attachment" class="btn btn-default btn-sm">
+                <i class="fa fa-paperclip"></i>
+                Attachment
+            </button>
+
+            <button title="Attributes" class="btn btn-default btn-sm">
+                <i class="fa fa-list"></i>
+                Attributes
             </button>
 
             <!--<button title="Trash" class="btn btn-default btn-sm">-->
@@ -516,6 +536,24 @@
 </script>
 
 <script src="bower_components/underscore/underscore-min.js"></script>
+<script type="text/javascript">
+
+    // Extend underscore's template() to allow inclusions
+    function template(str, data) {
+        // match "<% include template-id %>"
+        return _.template(
+                str.replace(
+                        /<%\s*include\s*(.*?)\s*%>/g,
+                        function (match, templateId) {
+                            var el = document.getElementById(templateId);
+                            return el ? el.innerHTML : '';
+                        }
+                ),
+                data
+        );
+    }
+</script>
+
 <script src="bower_components/backbone/backbone-min.js"></script>
 
 <!-- notifications -->
