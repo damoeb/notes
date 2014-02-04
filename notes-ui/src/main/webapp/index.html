@@ -264,7 +264,54 @@
     </div>
 </div>
 
-<script type="text/html" id="text-editor">
+<script type="text/template" id="base-editor">
+
+    <button class="btn btn-default btn-sm action-star" title="Highlight" star="<%=star %>">
+        <span class="pane-with-star <%=!star?'hidden':'' %>">
+            <i class="fa fa-star" style="color:red;"></i>
+            Highlight
+        </span>
+        <span class="pane-without-star <%=star?'hidden':'' %>">
+            <i class="fa fa-star-o"></i>
+            Highlight
+        </span>
+    </button>
+
+
+    <button class="btn btn-default btn-sm action-tags">
+        <i class="fa fa-fw fa-fw fa-tag"></i>
+        Tags
+    </button>
+
+    <button title="Attachment" class="btn btn-default btn-sm">
+        <i class="fa fa-paperclip"></i>
+        Attachment
+    </button>
+
+    <button title="Attributes" class="btn btn-default btn-sm">
+        <i class="fa fa-list"></i>
+        Attributes
+    </button>
+
+    <!--<button title="Lock" class="btn btn-default btn-sm">-->
+    <!--<i class="fa fa-lock"></i>-->
+    <!--</button>-->
+
+    <!--<button title="Trash" class="btn btn-default btn-sm">-->
+    <!--<i class="fa fa-trash-o"></i>-->
+    <!--</button>-->
+
+    <!--<button title="Privacy" class="btn btn-default btn-sm">-->
+    <!--<i class="fa fa-eye"></i>-->
+    <!--</button>-->
+
+    <!--<button title="Maximize" class="btn btn-default btn-sm action-maximize">-->
+    <!--<i class="fa fa-arrows-alt fa-fw"></i> Maximize-->
+    <!--</button>-->
+
+</script>
+
+<script type="text/template" id="text-editor">
 
     <div class="row" style="height: 32px; background-color: whitesmoke;">
 
@@ -300,48 +347,8 @@
             <!--Save-->
             <!--</button>-->
 
-            <button class="btn btn-default btn-sm action-star" title="Highlight" star="<%=star %>">
-                <span class="pane-with-star <%=!star?'hidden':'' %>">
-                    <i class="fa fa-star" style="color:red;"></i>
-                    Highlight
-                </span>
-                <span class="pane-without-star <%=star?'hidden':'' %>">
-                    <i class="fa fa-star-o"></i>
-                    Highlight
-                </span>
-            </button>
+            <% include base-editor %>
 
-
-            <button class="btn btn-default btn-sm action-tags">
-            <i class="fa fa-fw fa-fw fa-tag"></i>
-                Tags
-            </button>
-
-            <button title="Attachment" class="btn btn-default btn-sm">
-                <i class="fa fa-paperclip"></i>
-                Attachment
-            </button>
-
-            <button title="Attributes" class="btn btn-default btn-sm">
-                <i class="fa fa-list"></i>
-                Attributes
-            </button>
-
-            <!--<button title="Lock" class="btn btn-default btn-sm">-->
-            <!--<i class="fa fa-lock"></i>-->
-            <!--</button>-->
-
-            <!--<button title="Trash" class="btn btn-default btn-sm">-->
-            <!--<i class="fa fa-trash-o"></i>-->
-            <!--</button>-->
-
-            <!--<button title="Privacy" class="btn btn-default btn-sm">-->
-            <!--<i class="fa fa-eye"></i>-->
-            <!--</button>-->
-
-            <!--<button title="Maximize" class="btn btn-default btn-sm action-maximize">-->
-            <!--<i class="fa fa-arrows-alt fa-fw"></i> Maximize-->
-            <!--</button>-->
         </div>
     </div>
 
@@ -354,7 +361,7 @@
 
 </script>
 
-<script type="text/html" id="pdf-editor">
+<script type="text/template" id="pdf-editor">
 
     <div class="row" style="height: 32px; background-color: whitesmoke;">
 
@@ -389,43 +396,8 @@
 
             <span style="line-height: 30px; padding-left: 5px; padding-right: 5px; display: inline-block; float: left;"><%= modified?'changed '+$.timeago(modified):'' %></span>
 
-            <button class="btn btn-default btn-sm action-star" title="Highlight" star="<%=star %>">
-                <span class="pane-with-star <%=!star?'hidden':'' %>">
-                    <i class="fa fa-star" style="color:red;"></i>
-                    Highlight
-                </span>
-                <span class="pane-without-star <%=star?'hidden':'' %>">
-                    <i class="fa fa-star-o"></i>
-                    Highlight
-                </span>
-            </button>
+            <% include base-editor %>
 
-            <button class="btn btn-default btn-sm">
-                <i class="fa fa-fw fa-fw fa-tag"></i>
-                Tags
-            </button>
-
-            <button title="Attachment" class="btn btn-default btn-sm">
-                <i class="fa fa-paperclip"></i>
-                Attachment
-            </button>
-
-            <button title="Attributes" class="btn btn-default btn-sm">
-                <i class="fa fa-list"></i>
-                Attributes
-            </button>
-
-            <!--<button title="Trash" class="btn btn-default btn-sm">-->
-            <!--<i class="fa fa-trash-o"></i>-->
-            <!--</button>-->
-
-            <!--<button title="Privacy" class="btn btn-default btn-sm">-->
-            <!--<i class="fa fa-eye"></i>-->
-            <!--</button>-->
-
-            <!--<button title="Maximize" class="btn btn-default btn-sm action-maximize">-->
-            <!--<i class="fa fa-arrows-alt fa-fw"></i> Maximize-->
-            <!--</button>-->
         </div>
     </div>
 
@@ -442,7 +414,7 @@
 
 </script>
 
-<script type="text/html" id="breadcrumb-database">
+<script type="text/template" id="breadcrumb-database">
     <li class="dropdown">
         <i class="fa fa-dot-circle-o fa-lg"></i>
         <a class="dropdown-toggle" id="bc-db" data-toggle="dropdown" href="#" style="font-weight: bold;">Database</a>
@@ -453,7 +425,7 @@
     </li>
 </script>
 
-<script type="text/html" id="breadcrumb-folder">
+<script type="text/template" id="breadcrumb-folder">
     <li class="dropdown">
         <a class="dropdown-toggle" id="bc-folder-<%= id %>" data-toggle="dropdown" href="#">
             <%= name %>
@@ -469,7 +441,7 @@
     </li>
 </script>
 
-<script type="text/html" id="document-in-list">
+<script type="text/template" id="document-in-list">
 
     <div class="doc doc-id-<%=id %> row">
         <div class="col-lg-2">
@@ -538,20 +510,21 @@
 <script src="bower_components/underscore/underscore-min.js"></script>
 <script type="text/javascript">
 
-    // Extend underscore's template() to allow inclusions
-    function template(str, data) {
+    // nested templates support
+    var _underscore_template = _.template;
+    _.template = function (str, data) {
         // match "<% include template-id %>"
-        return _.template(
+        return _underscore_template(
                 str.replace(
                         /<%\s*include\s*(.*?)\s*%>/g,
                         function (match, templateId) {
-                            var el = document.getElementById(templateId);
-                            return el ? el.innerHTML : '';
+                            var el = $('#' + templateId);
+                            return el ? el.html() : '';
                         }
                 ),
                 data
         );
-    }
+    };
 </script>
 
 <script src="bower_components/backbone/backbone-min.js"></script>
