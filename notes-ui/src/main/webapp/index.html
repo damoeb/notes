@@ -109,8 +109,8 @@
                     </button>
 
                     <div class="modal" id="create-document-modal" tabindex="-1" role="dialog" aria-hidden="true">
-                    <div class="modal-dialog">
-                            <div class="modal-content">
+                        <div class="modal-dialog">
+                        <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal"
                                             aria-hidden="true">&times;</button>
@@ -180,9 +180,9 @@
         <div class="row">
 
             <!-- LEFT -->
-            <div class="col-lg-4 sidebar" style="border-right: 1px solid #E2E2E2; min-height: 600px;">
+            <div class="col-lg-2 sidebar" style="border-right: 1px solid #E2E2E2; min-height: 600px;">
 
-                <div id="breadcrumbs" class="row" style="height: 32px; background-color: whitesmoke;">
+            <div id="breadcrumbs" class="row" style="height: 32px; background-color: whitesmoke;">
                     <!-- generated --></div>
 
                 <div id="databases"><!-- generated --></div>
@@ -193,16 +193,17 @@
 
             <!-- DOCUMENT VIEW -->
 
-            <div id="document-view" class="col-lg-8">
+            <div id="document-view">
 
-                <div id="editors"><!-- generated --></div>
+            <div id="editors"><!-- generated --></div>
+
             </div>
 
             <!-- FOLDER VIEW -->
 
-            <div id="folder-view" class="col-lg-8" style="display: none">
+            <div id="folder-view" class="col-lg-10" style="display: none">
 
-                <div class="row" style="height: 32px; background-color: whitesmoke;">
+            <div class="row" style="height: 32px; background-color: whitesmoke;">
 
                     <div class="pull-right">
                         <div class="dropdown">
@@ -266,151 +267,161 @@
 
 <script type="text/template" id="base-editor">
 
-    <button class="btn btn-default btn-sm action-star" title="Highlight" star="<%=star %>">
-        <span class="pane-with-star <%=!star?'hidden':'' %>">
-            <i class="fa fa-star" style="color:red;"></i>
-            Highlight
-        </span>
-        <span class="pane-without-star <%=star?'hidden':'' %>">
-            <i class="fa fa-star-o"></i>
-            Highlight
-        </span>
-    </button>
+    <div class="col-lg-2">
 
+        <!-- header -->
+        <div style="height: 32px; background-color: whitesmoke;" class="row">
+            <div class="btn-group pull-right">
 
-    <button class="btn btn-default btn-sm action-tags">
-        <i class="fa fa-fw fa-fw fa-tag"></i>
-        Tags
-    </button>
+                <button class="btn btn-default btn-sm action-star" title="Highlight" star="<%=star %>">
+                                <span class="pane-with-star <%=!star?'hidden':'' %>">
+                                    <i class="fa fa-star" style="color:red;"></i>
+                                </span>
+                                <span class="pane-without-star <%=star?'hidden':'' %>">
+                                    <i class="fa fa-star-o"></i>
+                                </span>
+                </button>
 
-    <button title="Attachment" class="btn btn-default btn-sm">
-        <i class="fa fa-paperclip"></i>
-        Attachment
-    </button>
+            </div>
+        </div>
 
-    <button title="Attributes" class="btn btn-default btn-sm">
-        <i class="fa fa-list"></i>
-        Attributes
-    </button>
+        <!-- content -->
+        <div class="row" style="margin-top: 10px; padding-bottom:10px;">
+            <h4><i class="fa fa-fw fa-paperclip"></i> Attachments</h4>
+        </div>
 
-    <!--<button title="Lock" class="btn btn-default btn-sm">-->
-    <!--<i class="fa fa-lock"></i>-->
-    <!--</button>-->
+        <!--<div class="row" style="margin-top: 10px; padding-bottom:10px;">-->
+        <!--<h4><i class="fa fa-fw fa-list"></i> Attributes</h4>-->
+        <!--<table class="table table-striped">-->
+        <!--<tbody>-->
+        <!--<tr>-->
+        <!--<td>Katze</td>-->
+        <!--<td>Kuchen</td>-->
+        <!--</tr>-->
+        <!--</tbody>-->
+        <!--</table>-->
+        <!--</div>-->
 
-    <!--<button title="Trash" class="btn btn-default btn-sm">-->
-    <!--<i class="fa fa-trash-o"></i>-->
-    <!--</button>-->
+        <div class="row" style="margin-top: 10px; padding-bottom:10px;">
+            <h4><i class="fa fa-fw fa-tag"></i> Tags</h4>
 
-    <!--<button title="Privacy" class="btn btn-default btn-sm">-->
-    <!--<i class="fa fa-eye"></i>-->
-    <!--</button>-->
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Add a new tag">
+                              <span class="input-group-btn">
+                                <button class="btn btn-default" type="button">Add</button>
+                              </span>
+            </div>
+            <!-- /input-group -->
 
-    <!--<button title="Maximize" class="btn btn-default btn-sm action-maximize">-->
-    <!--<i class="fa fa-arrows-alt fa-fw"></i> Maximize-->
-    <!--</button>-->
+            <div>recommended tags</div>
+            <a href="#" class="label label-info">something</a>
+
+            <div>your network</div>
+            <a href="#" class="label label-default">something</a>
+        </div>
+
+    </div>
 
 </script>
 
 <script type="text/template" id="text-editor">
 
-    <div class="row" style="height: 32px; background-color: whitesmoke;">
 
-        <div class="btn-group pull-left">
+    <div class="col-lg-8">
+        <div class="row" style="height: 32px; background-color: whitesmoke;">
 
-            <button class="btn btn-default btn-sm action-close" title="Close">
-                <i class="fa fa-fw fa-circle-o"></i>
-                Close
-            </button>
+            <div class="btn-group pull-left">
 
-            <!--<button class="btn btn-default btn-sm action-maximize" title="Maximize">-->
-            <!--<i class="fa fa-fw fa-angle-up"></i>-->
-            <!--</button>-->
+                <button class="btn btn-default btn-sm action-close" title="Close">
+                    <i class="fa fa-fw fa-circle-o"></i>
+                    Close
+                </button>
+
+
+                <button class="btn btn-default btn-sm action-edit-mode">
+                    <i class="fa fa-fw fa-pencil"></i>
+                    Edit Mode
+                </button>
+
+                <button class="btn btn-primary btn-sm action-view-mode" style="display: none">
+                    <i class="fa fa-fw fa-eye"></i>
+                    View Mode
+                </button>
+
+            </div>
+
+            <div class="pull-right">
+
+                <span style="line-height: 30px;"><%= modified?'changed '+$.timeago(modified):'' %></span>
+
+            </div>
 
         </div>
 
-        <div class="btn-group pull-right">
+        <div>
+            <h3 class="field-title"><%= title %></h3>
 
-            <span style="line-height: 30px; padding-left: 5px; padding-right: 5px; display: inline-block; float: left;"><%= modified?'changed '+$.timeago(modified):'' %></span>
-
-            <button class="btn btn-default btn-sm action-edit-mode">
-                <i class="fa fa-fw fa-pencil"></i>
-                Edit Mode
-            </button>
-
-            <button class="btn btn-primary btn-sm action-view-mode" style="display: none">
-                <i class="fa fa-fw fa-eye"></i>
-                View Mode
-            </button>
-
-            <!--<button class="btn btn-default btn-sm action-save" style="display: none">-->
-            <!--<i class="fa fa-fw fa-floppy-o"></i>-->
-            <!--Save-->
-            <!--</button>-->
-
-            <% include base-editor %>
+            <div style="margin-top: 10px; line-height:20px;" class="field-text"><%= text %></div>
 
         </div>
     </div>
 
-    <div>
-        <h3 class="field-title"><%= title %></h3>
-
-        <div style="margin-top: 10px; line-height:20px;" class="field-text"><%= text %></div>
-
-    </div>
+    <% include base-editor %>
 
 </script>
 
 <script type="text/template" id="pdf-editor">
 
-    <div class="row" style="height: 32px; background-color: whitesmoke;">
+    <div class="col-lg-8">
+        <div class="row" style="height: 32px; background-color: whitesmoke;">
 
-        <div class="btn-group input-group-sm pull-left">
+            <div class="btn-group input-group-sm pull-left">
 
-            <button class="btn btn-default btn-sm action-close" title="Close">
-                <i class="fa fa-fw fa-circle-o"></i>
-                Close
-            </button>
+                <button class="btn btn-default btn-sm action-close" title="Close">
+                    <i class="fa fa-fw fa-circle-o"></i>
+                    Close
+                </button>
 
-            <!--<button class="btn btn-default btn-sm action-maximize" title="Maximize">-->
-            <!--<i class="fa fa-fw fa-angle-up"></i>-->
-            <!--</button>-->
+                <!--<button class="btn btn-default btn-sm action-maximize" title="Maximize">-->
+                <!--<i class="fa fa-fw fa-angle-up"></i>-->
+                <!--</button>-->
 
-            <button class="btn btn-default btn-sm action-previous-page" style="margin-left: 140px"
-                    title="Previous Page">
-                <i class="fa fa-fw fa-angle-left"></i>
-            </button>
+                <button class="btn btn-default btn-sm action-previous-page" style="margin-left: 140px"
+                        title="Previous Page">
+                    <i class="fa fa-fw fa-angle-left"></i>
+                </button>
 
-            <input type="text" class="form-control field-current-page"
-                   style="width:50px; display:inline-block; float: left; text-align: center;" value="1">
+                <input type="text" class="form-control field-current-page"
+                       style="width:50px; display:inline-block; float: left; text-align: center;" value="1">
 
-            <span style="line-height: 30px; padding-left: 5px; padding-right: 5px; display: inline-block; float: left;">of <%= numberOfPages %></span>
+                <span style="line-height: 30px; padding-left: 5px; padding-right: 5px; display: inline-block; float: left;">of <%= numberOfPages %></span>
 
-            <button class="btn btn-default btn-sm action-next-page" title="Next Page">
-                <i class="fa fa-fw fa-angle-right"></i>
-            </button>
+                <button class="btn btn-default btn-sm action-next-page" title="Next Page">
+                    <i class="fa fa-fw fa-angle-right"></i>
+                </button>
 
+            </div>
+
+            <div class="pull-right">
+
+                <span style="line-height: 30px; "><%= modified?'changed '+$.timeago(modified):'' %></span>
+
+            </div>
         </div>
 
-        <div class="btn-group pull-right">
+        <div>
+            <h3 class="field-title"><%= title %></h3>
 
-            <span style="line-height: 30px; padding-left: 5px; padding-right: 5px; display: inline-block; float: left;"><%= modified?'changed '+$.timeago(modified):'' %></span>
+            <div style="margin-top: 10px; line-height:20px;" class="field-text"><%= text %></div>
 
-            <% include base-editor %>
+            <div class="pdf-container">
+                <!-- generated -->
+            </div>
 
         </div>
     </div>
 
-    <div>
-        <h3 class="field-title"><%= title %></h3>
-
-        <div style="margin-top: 10px; line-height:20px;" class="field-text"><%= text %></div>
-
-        <div class="pdf-container">
-            <!-- generated -->
-        </div>
-
-    </div>
+    <% include base-editor %>
 
 </script>
 
