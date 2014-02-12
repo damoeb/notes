@@ -1,7 +1,5 @@
-- tags, star, improve list
-- remove editors widget
 - vorschläge unterhalb, nicht rechts
-- viewer for bookmarks
+- viewer for unknown
 - active folder is not synched
 - alle popups auf bootstrap
 - improve treeview: colors, icons
