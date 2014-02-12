@@ -69,35 +69,5 @@ $.widget('notes.texteditor', $.notes.basiceditor, {
 
         $this._createParent();
 
-//        $rendered.find('.action-save').click(function() {
-//            $this.fnSave.call($this);
-//        });
-
-//        var $tagsLayer = $('<span/>');
-//
-//        var fnRenderTags = function () {
-//
-//            $tagsLayer.empty();
-//
-//            if (model.has('tags') && model.get('tags').length > 0) {
-//                // todo sort tags
-//                $.each(model.get('tags'), function (index, tag) {
-//                    $tagsLayer.append(
-//                        $('<a/>', {
-//                            text: tag.name,
-//                            href: '#tag:' + tag.name
-//                        })
-//                    );
-//
-//                    if (index < model.get('tags').length - 1) {
-//                        $tagsLayer.append(', ');
-//                    }
-//
-//                });
-//            }
-//        };
-//
-//        fnRenderTags();
-
     }
 });

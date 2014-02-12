@@ -246,25 +246,6 @@
     <input id="file-upload" type="file" name="files[]" multiple>
 </div>
 
-<!-- Modal Tags Of Document -->
-<div class="modal" id="modal-tags" tabindex="-1" role="dialog" aria-labelledby="tags-label" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="tags-label">Tags</h4>
-            </div>
-            <div class="modal-body tags-layer">
-
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Save changes</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <script type="text/template" id="base-editor">
 
     <div class="col-lg-2">
@@ -287,9 +268,13 @@
 
         <!-- content -->
         <div class="row" style="margin-top: 10px; padding-bottom:10px;">
-            <h4><i class="fa fa-fw fa-paperclip"></i> Attachments</h4>
+            <h4>
+                <i class="fa fa-fw fa-paperclip"></i> Attachments
+            </h4>
+            <a href="#" class="btn btn-default"><i class="fa fa-fw fa-plus"></i> Add new file</a>
         </div>
 
+        <!--&lt;!&ndash; Document Attributes &ndash;&gt;-->
         <!--<div class="row" style="margin-top: 10px; padding-bottom:10px;">-->
         <!--<h4><i class="fa fa-fw fa-list"></i> Attributes</h4>-->
         <!--<table class="table table-striped">-->
@@ -305,19 +290,33 @@
         <div class="row" style="margin-top: 10px; padding-bottom:10px;">
             <h4><i class="fa fa-fw fa-tag"></i> Tags</h4>
 
+            <div class="document-tags" style="margin-bottom: 10px">
+                <a href="#" class="label label-default" title="Remove tag">something</a>
+            </div>
+
             <div class="input-group">
-                <input type="text" class="form-control" placeholder="Add a new tag">
-                              <span class="input-group-btn">
-                                <button class="btn btn-default" type="button">Add</button>
-                              </span>
+                <input type="text" class="form-control new-tag-value" placeholder="Add a new tag">
+                  <span class="input-group-btn">
+                    <button class="btn btn-default action-new-tag" type="button">Add</button>
+                  </span>
             </div>
             <!-- /input-group -->
 
-            <div>recommended tags</div>
-            <a href="#" class="label label-info">something</a>
+            <div>
+                <h6 style="margin-bottom: 5px">Recommended tags</h6>
 
-            <div>your network</div>
-            <a href="#" class="label label-default">something</a>
+                <a href="#" class="label label-success" title="Add tag">something</a>
+                <a href="#" class="label label-success" title="Add tag">something2</a>
+
+            </div>
+
+            <div>
+                <h6 style="margin-bottom: 5px">Your network</h6>
+
+                <a href="#" class="label label-primary" title="Add tag">something</a>
+                <a href="#" class="label label-primary" title="Add tag">something3</a>
+            </div>
+
         </div>
 
     </div>

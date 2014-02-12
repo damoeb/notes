@@ -26,12 +26,26 @@ $.widget('notes.basiceditor', {
 
         $rendered.find('.action-star').click($this.fnStar);
 
-        // todo render tags
+        $this.fnRenderTags();
 
-        $rendered.find('.action-tags').click(function () {
-            $('#modal-tags').modal();
-        });
-
+        var addNewTagsFromField = function () {
+            var newTagNames = $this.element.find('.new-tag-value').val().split(' ');
+            for (var i = 0; i < newTagNames.length; i++) {
+                var newTagName = newTagNames[i];
+                if (newTagName.length > 3) {
+                    $this.fnAddTag(newTagName);
+                }
+            }
+            $(this).select().focus();
+        };
+        $this.element.find('.action-new-tag')
+            .click(addNewTagsFromField)
+            .keypress(function (e) {
+                if (e.which == 13) {
+                    addNewTagsFromField();
+                }
+            }
+        );
     },
 
     fnSave: function () {
@@ -39,8 +53,59 @@ $.widget('notes.basiceditor', {
         this.syncModel();
     },
 
-    fnTags: function () {
-        notes.dialog.tags.overview(this.getModel());
+    fnRemoveTag: function (name) {
+        var $this = this;
+
+        console.log('remove tag ' + name);
+
+        var model = $this.getModel();
+
+        var newTags = [];
+        for (var i = 0; i < model.get('tags').length; i++) {
+            var t = model.get('tags')[i];
+            if (t.name !== name) {
+                newTags.push(t);
+            }
+        }
+        model.set('tags', newTags);
+        $this.tagsChanged = true;
+
+        $this.fnRenderTags();
+    },
+
+    fnAddTag: function (name) {
+        var $this = this;
+
+        console.log('add tag "' + name + '"');
+
+        var model = $this.getModel();
+
+        model.get('tags').push({name: name});
+
+        $this.tagsChanged = true;
+
+        $this.fnRenderTags();
+    },
+
+    fnRenderTags: function () {
+        var $this = this;
+
+        console.log('render tags');
+
+        var model = $this.getModel();
+
+        var $tagsLayer = $this.element.find('.document-tags').empty();
+
+        if (model.has('tags') && model.get('tags').length > 0) {
+            // todo sort tags
+            $.each(model.get('tags'), function (index, tag) {
+                //var $tag = $('<a href="#" class="label label-default" title="Remove tag"></a>', {text: tag.name}).click(function(){
+                var $tag = $('<a/>', {href: '#', class: 'label label-default', title: 'Remove tag', text: tag.name}).click(function () {
+                    $this.fnRemoveTag(tag.name);
+                });
+                $tagsLayer.append($tag);
+            });
+        }
     },
 
     fnDelete: function () {
@@ -71,33 +136,33 @@ $.widget('notes.basiceditor', {
         }
     },
 
-    fnMaximize: function (el) {
-        var $this = this;
-        var $editor = this.element;
-        if ($editor.hasClass('maximized')) {
-            $editor.removeClass('maximized');
-
-            $(el).
-                button('option', 'label', 'Maximize').
-                button('option', 'icons', { primary: 'ui-icon-arrow-4-diag'});
-
-            if ($.isFunction($this.fnPostEmbed)) {
-                $this.fnPostEmbed.call($this);
-            }
-
-        } else {
-
-            $editor.addClass('maximized');
-
-            $(el).
-                button('option', 'label', 'Unmaximize').
-                button('option', 'icons', { primary: 'ui-icon-arrow-1-se'});
-
-            if ($.isFunction($this.fnPostMaximize)) {
-                $this.fnPostMaximize.call($this);
-            }
-        }
-    },
+//    fnMaximize: function (el) {
+//        var $this = this;
+//        var $editor = this.element;
+//        if ($editor.hasClass('maximized')) {
+//            $editor.removeClass('maximized');
+//
+//            $(el).
+//                button('option', 'label', 'Maximize').
+//                button('option', 'icons', { primary: 'ui-icon-arrow-4-diag'});
+//
+//            if ($.isFunction($this.fnPostEmbed)) {
+//                $this.fnPostEmbed.call($this);
+//            }
+//
+//        } else {
+//
+//            $editor.addClass('maximized');
+//
+//            $(el).
+//                button('option', 'label', 'Unmaximize').
+//                button('option', 'icons', { primary: 'ui-icon-arrow-1-se'});
+//
+//            if ($.isFunction($this.fnPostMaximize)) {
+//                $this.fnPostMaximize.call($this);
+//            }
+//        }
+//    },
 
     getModel: function () {
         return this.options.model;
@@ -112,7 +177,7 @@ $.widget('notes.basiceditor', {
             $this.fnUpdateModel();
         }
 
-        if (!notes.util.equal(originalModel, $this.options.model.attributes)) {
+        if ($this.tagsChanged || !notes.util.equal(originalModel, $this.options.model.attributes)) {
             $this.getModel().save(null, {success: function () {
                 console.log('saved');
                 $('#document-list').documentList('refresh', $this.getModel().get('folderId'));
