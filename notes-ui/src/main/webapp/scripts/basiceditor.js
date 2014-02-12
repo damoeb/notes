@@ -32,14 +32,15 @@ $.widget('notes.basiceditor', {
             var newTagNames = $this.element.find('.new-tag-value').val().split(' ');
             for (var i = 0; i < newTagNames.length; i++) {
                 var newTagName = newTagNames[i];
-                if (newTagName.length > 3) {
+                if (newTagName.length > 1) {
                     $this.fnAddTag(newTagName);
                 }
             }
             $(this).select().focus();
         };
         $this.element.find('.action-new-tag')
-            .click(addNewTagsFromField)
+            .click(addNewTagsFromField);
+        $this.element.find('.new-tag-value')
             .keypress(function (e) {
                 if (e.which == 13) {
                     addNewTagsFromField();
