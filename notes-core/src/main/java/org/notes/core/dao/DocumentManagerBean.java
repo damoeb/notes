@@ -196,7 +196,7 @@ public class DocumentManagerBean implements DocumentManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public BasicDocument updateDocument(BasicDocument ref) throws NotesException {
+    public BasicDocument updateBasicDocument(BasicDocument ref) throws NotesException {
         try {
 
             LOGGER.info("update document");
@@ -207,43 +207,15 @@ public class DocumentManagerBean implements DocumentManager {
 
             BasicDocument document = _get(ref.getId());
 
-            // decide whether move or update
-            if (Event.MOVE.equals(ref.getEvent())) {
-                // todo implement
-            }
+            if (!equals(ref, document)) {
 
-            if (Event.UPDATE.equals(ref.getEvent())) {
+                copyAttributes(ref, document);
 
-                TextDocument txtDoc = (TextDocument) document;
-                TextDocument txtRef = (TextDocument) ref;
+                document.setTrigger(Trigger.INDEX);
 
-                boolean similarTitle = StringUtils.equals(txtDoc.getTitle(), txtRef.getTitle());
-                boolean similarText = StringUtils.equals(txtDoc.getText(), txtRef.getText());
-                boolean similarStarState = txtDoc.isStar() == txtRef.isStar();
-
-                Set<Tag> tagsDoc = txtDoc.getTags();
-                Set<Tag> tagsRef = txtRef.getTags();
-
-                boolean hasChanged = !(similarTitle && similarText && equalsTags(tagsDoc, tagsRef) && similarStarState);
-
-                if (hasChanged) {
-                    // todo calc diff
-                    // Patch patch = DiffUtils.diff(Arrays.asList(txtDoc.getTitle(), txtDoc.getText()), Arrays.asList(txtRef.getTitle(), txtRef.getText()));
-
-                    txtDoc.setTags(resolveTags(tagsDoc, tagsRef));
-
-                    // update
-                    txtDoc.setTitle(txtRef.getTitle());
-                    txtDoc.setText(txtRef.getText());
-                    txtDoc.setStar(txtRef.isStar());
-
-                    document.setTrigger(Trigger.INDEX);
-
-                    em.merge(document);
-                    em.flush();
-                    em.refresh(document);
-                }
-
+                em.merge(document);
+                em.flush();
+                em.refresh(document);
             }
 
             Hibernate.initialize(document.getTags());
@@ -254,6 +226,58 @@ public class DocumentManagerBean implements DocumentManager {
             throw t;
         } catch (Throwable t) {
             throw new NotesException("update document failed: " + t.getMessage(), t);
+        }
+    }
+
+    private void copyAttributes(BasicDocument source, BasicDocument target) throws NotesException {
+        target.setTags(resolveTags(target.getTags(), source.getTags()));
+        target.setStar(source.isStar());
+        target.setTitle(source.getTitle());
+    }
+
+    private boolean equals(BasicDocument a, BasicDocument b) {
+        boolean similarTitle = StringUtils.equals(b.getTitle(), a.getTitle());
+        boolean similarStarState = b.isStar() == a.isStar();
+
+        return similarTitle && equalsTags(b.getTags(), a.getTags()) && similarStarState;
+    }
+
+    @Override
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public BasicDocument updateTextDocument(TextDocument ref) throws NotesException {
+        try {
+
+            LOGGER.info("update text-document");
+
+            if (ref == null) {
+                throw new IllegalArgumentException("document is null");
+            }
+
+            TextDocument document = (TextDocument) _get(ref.getId());
+            boolean similarText = StringUtils.equals(ref.getText(), document.getText());
+
+            if (!equals(ref, document) || !similarText) {
+
+                copyAttributes(ref, document);
+
+                document.setText(ref.getText());
+
+                document.setTrigger(Trigger.INDEX);
+
+                em.merge(document);
+                em.flush();
+                em.refresh(document);
+            }
+
+
+            Hibernate.initialize(document.getTags());
+
+            return document;
+
+        } catch (NotesException t) {
+            throw t;
+        } catch (Throwable t) {
+            throw new NotesException("update text-document failed: " + t.getMessage(), t);
         }
     }
 

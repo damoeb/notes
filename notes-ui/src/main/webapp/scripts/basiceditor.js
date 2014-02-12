@@ -104,6 +104,7 @@ $.widget('notes.basiceditor', {
                     $this.fnRemoveTag(tag.name);
                 });
                 $tagsLayer.append($tag);
+                $tagsLayer.append(' ');
             });
         }
     },

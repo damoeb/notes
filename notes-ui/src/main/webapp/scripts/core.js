@@ -157,7 +157,7 @@
             .bind('fileuploaddone', function (e, xhr) {
                 console.log('done');
 
-                var model = new notes.model.Document(xhr.result.result);
+                var model = new notes.model.BasicDocument(xhr.result.result);
 
                 $('#document-list').documentList('refresh', model.get('folderId'));
             });

@@ -2,6 +2,7 @@ package org.notes.core.model;
 
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.hibernate.annotations.Index;
@@ -35,6 +36,7 @@ import java.util.Set;
 })
 @Inheritance(strategy = InheritanceType.JOINED)
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class BasicDocument implements Document {
 
     public static final String QUERY_IN_FOLDER = "BasicDocument.QUERY_IN_FOLDER";

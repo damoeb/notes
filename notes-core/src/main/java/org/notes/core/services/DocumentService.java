@@ -23,7 +23,8 @@ public class DocumentService {
     @MethodCache
     @ServiceMetric
     @Produces(MediaType.APPLICATION_JSON)
-    public NotesResponse createDocument(
+    @Path(value = "/text")
+    public NotesResponse createTextDocument(
             TextDocument document
     ) throws Exception {
 
@@ -38,13 +39,26 @@ public class DocumentService {
     @PUT
     @MethodCache
     @ServiceMetric
-    @Path(value = "/{id}")
+    @Path(value = "/text/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public NotesResponse updateDocument(
+    public NotesResponse updateTextDocument(
             TextDocument document,
             @PathParam("id") long documentId
     ) throws Exception {
-        BasicDocument result = documentManager.updateDocument(document);
+        BasicDocument result = documentManager.updateTextDocument(document);
+        return NotesResponse.ok(result);
+    }
+
+    @PUT
+    @MethodCache
+    @ServiceMetric
+    @Path(value = "/basic/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public NotesResponse updateBasicDocument(
+            BasicDocument document,
+            @PathParam("id") long documentId
+    ) throws Exception {
+        BasicDocument result = documentManager.updateBasicDocument(document);
         return NotesResponse.ok(result);
     }
 
@@ -53,7 +67,7 @@ public class DocumentService {
     @ServiceMetric
     @Path(value = "/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public NotesResponse getDocument(
+    public NotesResponse getAnyDocument(
             @PathParam("id") long documentId
     ) {
         try {

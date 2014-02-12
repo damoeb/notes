@@ -20,19 +20,23 @@ $.widget('notes.editors', {
 
         notes.util.jsonCall('GET', REST_SERVICE + '/document/${documentId}', {'${documentId}': documentId}, null, function (document) {
 
-            var model = new notes.model.Document(document);
-            model.set('event', 'UPDATE');
-
             var $content = $('<div/>');
 
             switch (document.kind.toLowerCase().trim()) {
                 case 'text':
-                    $content.texteditor({model: model});
+                    console.log('edit text-document');
+                    $content.texteditor({
+                        model: new notes.model.TextDocument(document)
+                    });
                     break;
                 case 'pdf':
-                    $content.pdfeditor({model: model});
+                    console.log('edit pdf-document');
+                    $content.pdfeditor({
+                        model: new notes.model.BasicDocument(document)
+                    });
                     break;
                 default:
+                    var model = new notes.model.BasicDocument(document);
                     console.error('no editor found for ' + document.kind);
                     break;
             }
@@ -48,7 +52,7 @@ $.widget('notes.editors', {
         $('#document-view').show();
         $('#folder-view').hide();
 
-        var model = new notes.model.Document({
+        var model = new notes.model.TextDocument({
             folderId: notes.app.activeFolderId(),
             title: title
         });

@@ -13,14 +13,23 @@ notes.model = {
         urlRoot: REST_SERVICE + '/database'
     }),
 
-    Document: Backbone.Model.extend({
+    BasicDocument: Backbone.Model.extend({
         defaults: {
             modified: null,
             title: '',
-            text: '',
             star: false
         },
-        urlRoot: REST_SERVICE + '/document/'
+        urlRoot: REST_SERVICE + '/document/basic/'
+    }),
+
+    TextDocument: Backbone.Model.extend({
+        defaults: {
+            modified: null,
+            title: '',
+            star: false,
+            text: ''
+        },
+        urlRoot: REST_SERVICE + '/document/text/'
     }),
 
     Bookmark: Backbone.Model.extend({

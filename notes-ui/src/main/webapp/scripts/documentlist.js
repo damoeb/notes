@@ -43,7 +43,7 @@ $.widget('notes.documentList', {
             notes.util.sortJSONArrayDESC(documents, 'modified');
 
             $.each(documents, function (id, doc) {
-                $this._render(new notes.model.Document(doc)).appendTo($target);
+                $this._render(new notes.model.BasicDocument(doc)).appendTo($target);
             });
         });
     },

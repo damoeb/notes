@@ -101,6 +101,8 @@ $.widget('notes.pdfeditor', $.notes.basiceditor, {
             }
         });
 
+        $this._createParent();
+
         pdfloader.loadPdf(pdfConfig);
 
         $rendered.find('.action-close').click(function () {
