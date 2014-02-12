@@ -122,6 +122,26 @@ public class DocumentManagerBean implements DocumentManager {
         return Long.toHexString(document.getId() * 1000000 + System.nanoTime() % 1000000);
     }
 
+
+    @Override
+    public List<BasicDocument> getDocumentsInFolder(Long folderId) throws NotesException {
+        try {
+            if (folderId == null || folderId <= 0) {
+                throw new NotesException(String.format("Invalid folder id '%s'", folderId));
+            }
+
+            Query query = em.createNamedQuery(BasicDocument.QUERY_IN_FOLDER);
+            query.setParameter("ID", folderId);
+
+            return (List<BasicDocument>) query.getResultList();
+
+        } catch (NotesException e) {
+            throw e;
+        } catch (Throwable t) {
+            throw new NotesException("get documents of " + folderId, t);
+        }
+    }
+
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public BasicDocument getDocument(long documentId) throws NotesException {

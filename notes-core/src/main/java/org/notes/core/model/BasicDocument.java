@@ -30,6 +30,7 @@ import java.util.Set;
 @NamedQueries({
         @NamedQuery(name = Document.QUERY_BY_ID, query = "SELECT a FROM BasicDocument a where a.id=:ID"),
         @NamedQuery(name = Document.QUERY_TRIGGER, query = "SELECT a FROM BasicDocument a where a.trigger in (:TRIGGER)"),
+        // todo provide tags for next query
         @NamedQuery(name = BasicDocument.QUERY_IN_FOLDER, query = "SELECT new BasicDocument(a.id, a.uniqueHash, a.title, a.outline, a.kind, a.modified, a.star) FROM BasicDocument a where a.folderId=:ID AND a.deleted=false")
 })
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -100,6 +101,7 @@ public class BasicDocument implements Document {
 
     @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinTable(name = "document2tag")
+    @Access(AccessType.FIELD)
     private Set<Tag> tags = new HashSet(100);
 
 //  -- Transient -------------------------------------------------------------------------------------------------------

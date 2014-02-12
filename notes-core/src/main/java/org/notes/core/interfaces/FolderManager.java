@@ -1,7 +1,6 @@
 package org.notes.core.interfaces;
 
 import org.notes.common.exceptions.NotesException;
-import org.notes.core.model.BasicDocument;
 import org.notes.core.model.Database;
 import org.notes.core.model.Folder;
 
@@ -18,8 +17,6 @@ public interface FolderManager {
     Folder deleteFolder(long folderId) throws NotesException;
 
     Folder updateFolder(long folderId, Folder folder) throws NotesException;
-
-    List<BasicDocument> getDocuments(Long folderId) throws NotesException;
 
     List<Folder> getChildren(long folderId) throws NotesException;
 }

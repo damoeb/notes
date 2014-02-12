@@ -2,6 +2,7 @@ package org.notes.core.services;
 
 import org.notes.common.cache.MethodCache;
 import org.notes.common.configuration.NotesInterceptors;
+import org.notes.core.interfaces.DocumentManager;
 import org.notes.core.interfaces.FolderManager;
 import org.notes.core.metric.ServiceMetric;
 import org.notes.core.model.Database;
@@ -18,6 +19,9 @@ public class FolderService {
 
     @Inject
     private FolderManager folderManager;
+
+    @Inject
+    private DocumentManager documentManager;
 
     @POST
     @MethodCache
@@ -99,7 +103,7 @@ public class FolderService {
             @PathParam("id") long folderId
     ) throws Exception {
         try {
-            return NotesResponse.ok(folderManager.getDocuments(folderId));
+            return NotesResponse.ok(documentManager.getDocumentsInFolder(folderId));
         } catch (Exception e) {
             return NotesResponse.error(e);
         }

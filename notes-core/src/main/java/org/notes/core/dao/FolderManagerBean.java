@@ -7,7 +7,6 @@ import org.notes.common.exceptions.NotesException;
 import org.notes.core.interfaces.DatabaseManager;
 import org.notes.core.interfaces.FolderManager;
 import org.notes.core.interfaces.UserManager;
-import org.notes.core.model.BasicDocument;
 import org.notes.core.model.Database;
 import org.notes.core.model.Folder;
 import org.notes.core.model.User;
@@ -100,25 +99,6 @@ public class FolderManagerBean implements FolderManager {
             throw e;
         } catch (Throwable t) {
             throw new NotesException("get folder " + folderId, t);
-        }
-    }
-
-    @Override
-    public List<BasicDocument> getDocuments(Long folderId) throws NotesException {
-        try {
-            if (folderId == null || folderId <= 0) {
-                throw new NotesException(String.format("Invalid folder id '%s'", folderId));
-            }
-
-            Query query = em.createNamedQuery(BasicDocument.QUERY_IN_FOLDER);
-            query.setParameter("ID", folderId);
-
-            return (List<BasicDocument>) query.getResultList();
-
-        } catch (NotesException e) {
-            throw e;
-        } catch (Throwable t) {
-            throw new NotesException("get documents of " + folderId, t);
         }
     }
 

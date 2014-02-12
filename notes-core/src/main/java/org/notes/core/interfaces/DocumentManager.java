@@ -12,6 +12,8 @@ public interface DocumentManager {
 
     TextDocument createDocument(TextDocument document, Folder inFolder) throws NotesException;
 
+    List<BasicDocument> getDocumentsInFolder(Long folderId) throws NotesException;
+
     BasicDocument getDocument(long documentId) throws NotesException;
 
     BasicDocument deleteDocument(long documentId) throws NotesException;
