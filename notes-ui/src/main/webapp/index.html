@@ -195,7 +195,7 @@
 
             <div id="document-view">
 
-            <div id="editors"><!-- generated --></div>
+                <div id="editors"><!-- generated --></div>
 
             </div>
 
@@ -245,6 +245,17 @@
 <div style="display: none">
     <input id="file-upload" type="file" name="files[]" multiple>
 </div>
+
+<script type="text/template" id="recommendations">
+    <div style="margin-top: 80px; border-top: 1px solid #E2E2E2;">
+        <h4>Recommended</h4>
+
+        <div class="recommendations">
+            <i class="fa fa-spinner fa-spin"></i>
+            <!-- generated -->
+        </div>
+    </div>
+</script>
 
 <!-- included in the other templates -->
 <script type="text/template" id="base-editor">
@@ -306,16 +317,23 @@
             <div>
                 <h6 style="margin-bottom: 5px; line-height: 20px">Recommended tags</h6>
 
-                <a href="#" class="label label-success" title="Add tag">something</a>
-                <a href="#" class="label label-success" title="Add tag">something2</a>
+                <!-- todo get recommended tags -->
+                <!--<a href="#" class="label label-success" title="Add tag">something</a>-->
+
+                <i class="fa fa-spinner fa-spin"></i>
+                <!-- generated -->
 
             </div>
 
             <div>
                 <h6 style="margin-bottom: 5px; line-height: 20px">Your network</h6>
 
-                <a href="#" class="label label-primary" title="Add tag">something</a>
-                <a href="#" class="label label-primary" title="Add tag">something3</a>
+                <!-- todo get tag network -->
+                <!--<a href="#" class="label label-primary" title="Add tag">something</a>-->
+
+                <i class="fa fa-spinner fa-spin"></i>
+                <!-- generated -->
+
             </div>
 
         </div>
@@ -364,6 +382,9 @@
             <div style="margin-top: 10px; line-height:20px;" class="field-text"><%= text %></div>
 
         </div>
+
+        <% include recommendations %>
+
     </div>
 
     <% include base-editor %>
@@ -417,6 +438,9 @@
             </div>
 
         </div>
+
+        <% include recommendations %>
+
     </div>
 
     <% include base-editor %>
