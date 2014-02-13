@@ -1,7 +1,7 @@
-- suche unabhaengiges modul
-- vorschläge unterhalb, nicht rechts
+- use uniqueHash instead of document id
+- in common only use interfaces, put impl in core/..
 - viewer for unknown type
-- active folder is not synched
+- active folder is not synced
 - alle popups auf bootstrap
 - improve treeview: colors, icons
 

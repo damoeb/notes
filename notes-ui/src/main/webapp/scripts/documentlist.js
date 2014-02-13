@@ -7,7 +7,7 @@
 $.widget('notes.documentList', {
 
     _init: function () {
-        this.template = _.template($('#document-in-list').html());
+        this.template = _.template($('#document-in-folder-view').html());
     },
 
     refresh: function (folderId) {

@@ -12,8 +12,6 @@ import org.notes.common.configuration.Configuration;
 import org.notes.common.configuration.ConfigurationProperty;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.interfaces.Document;
-import org.notes.common.interfaces.Fulltextable;
-import org.notes.common.model.FullText;
 import org.notes.common.model.SolrFields;
 import org.notes.common.model.Trigger;
 
@@ -23,9 +21,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 //@LocalBean
 @Singleton
@@ -91,26 +87,26 @@ public class IndexerScheduler {
         }
     }
 
-    private void indexFullTexts(Document document, Fulltextable provider) throws IOException, SolrServerException {
-
-        if (provider.getFullTexts() == null) {
-            return;
-        }
-
-        Set<SolrInputDocument> docs = new HashSet(provider.getFullTexts().size() * 2);
-        for (FullText fullText : provider.getFullTexts()) {
-
-            SolrInputDocument doc = new SolrInputDocument();
-            doc.setField(SolrFields.DOCUMENT, document.getId());
-            doc.setField(SolrFields.FOLDER, document.getFolderId());
-            doc.setField(SolrFields.OWNER, document.getOwner());
-            doc.setField(SolrFields.TEXT, fullText.getText());
-            doc.setField(SolrFields.SECTION, fullText.getSection());
-            docs.add(doc);
-        }
-
-        getSolrServer().add(docs, COMMIT_WITHIN_MS);
-    }
+//    private void indexFullTexts(Document document, Fulltextable provider) throws IOException, SolrServerException {
+//
+//        if (provider.getFullTexts() == null) {
+//            return;
+//        }
+//
+//        Set<SolrInputDocument> docs = new HashSet(provider.getFullTexts().size() * 2);
+//        for (FullText fullText : provider.getFullTexts()) {
+//
+//            SolrInputDocument doc = new SolrInputDocument();
+//            doc.setField(SolrFields.DOCUMENT, document.getId());
+//            doc.setField(SolrFields.FOLDER, document.getFolderId());
+//            doc.setField(SolrFields.OWNER, document.getOwner());
+//            doc.setField(SolrFields.TEXT, fullText.getText());
+//            doc.setField(SolrFields.SECTION, fullText.getSection());
+//            docs.add(doc);
+//        }
+//
+//        getSolrServer().add(docs, COMMIT_WITHIN_MS);
+//    }
 
     private void indexDocument(Document document) throws IOException, SolrServerException {
         // todo update document http://wiki.apache.org/solr/UpdateXmlMessages#Optional_attributes_for_.22field.22
@@ -123,6 +119,8 @@ public class IndexerScheduler {
         doc.setField(SolrFields.OUTLINE, document.getOutline());
         doc.setField(SolrFields.KIND, document.getKind());
         doc.setField(SolrFields.OWNER, document.getOwner());
+        doc.setField(SolrFields.UNIQUE_HASH, document.getUniqueHash());
+        doc.setField(SolrFields.STAR, document.isStar());
         // todo index tags
 
         // todo remove all with this doc id

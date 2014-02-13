@@ -110,8 +110,8 @@
 
                     <div class="modal" id="create-document-modal" tabindex="-1" role="dialog" aria-hidden="true">
                         <div class="modal-dialog">
-                        <div class="modal-content">
-                                <div class="modal-header">
+                            <div class="modal-content">
+                            <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal"
                                             aria-hidden="true">&times;</button>
                                     <h4 class="modal-title">New Document</h4>
@@ -182,8 +182,8 @@
             <!-- LEFT -->
             <div class="col-lg-2 sidebar" style="border-right: 1px solid #E2E2E2; min-height: 600px;">
 
-            <div id="breadcrumbs" class="row" style="height: 32px; background-color: whitesmoke;">
-                    <!-- generated --></div>
+                <div id="breadcrumbs" class="row" style="height: 32px; background-color: whitesmoke;">
+                <!-- generated --></div>
 
                 <div id="databases"><!-- generated --></div>
 
@@ -203,9 +203,9 @@
 
             <div id="folder-view" class="col-lg-10" style="display: none">
 
-            <div class="row" style="height: 32px; background-color: whitesmoke;">
+                <div class="row" style="height: 32px; background-color: whitesmoke;">
 
-                    <div class="pull-right">
+                <div class="pull-right">
                         <div class="dropdown">
                             <a class="dropdown-toggle btn btn-default btn-sm" id="sortBy" data-toggle="dropdown"
                                href="#"><i class="fa fa-sort-alpha-asc fa-fw"></i> Sort</a>
@@ -226,6 +226,18 @@
                 </div>
 
                 <div id="document-list" style="margin-top: 5px"><!-- generated --></div>
+
+            </div>
+
+            <!-- SEARCH VIEW -->
+
+            <div id="search-view" class="col-lg-10" style="display: none">
+
+                <div class="row" style="height: 32px; background-color: whitesmoke;">
+
+                </div>
+
+                <div id="hit-list" style="margin-top: 5px"><!-- generated --></div>
 
             </div>
 
@@ -303,7 +315,7 @@
             <h4><i class="fa fa-fw fa-tag"></i> Tags</h4>
 
             <div class="document-tags" style="margin-bottom: 10px; line-height: 20px">
-            <a href="#" class="label label-default" title="Remove tag">something</a>
+                <a href="#" class="label label-default" title="Remove tag">something</a>
             </div>
 
             <div class="input-group">
@@ -474,10 +486,48 @@
     </li>
 </script>
 
-<script type="text/template" id="document-in-list">
+<script type="text/template" id="document-in-folder-view">
 
-    <div class="doc doc-id-<%=id %> row">
+    <div class="doc doc-id-<%=uniqueHash %> row">
         <div class="col-lg-2">
+            <img src="<%= notes.util.getThumbnailByType(kind) %>">
+        </div>
+        <div class="col-lg-10">
+
+            <div class="row">
+                <a href="#doc:<%=uniqueHash %>">
+                    <h4 style="display: inline-block; margin: 0; overflow: hidden; white-space: nowrap; ">
+                        <%=title %>
+                        <%
+                        if (star) {
+                        %>
+                        <i class="fa fa-star fa-fw" style="color: #808080"></i>
+                        <%
+                        }
+                        %>
+                        <i class="fa fa-paperclip fa-fw" style="color: #808080"></i>
+
+                    </h4>
+                </a>
+                <span class="pull-right">
+                    <%=notes.util.formatDate(new Date(modified)) %>
+                </span>
+            </div>
+            <div class="row" style="color:#666666; line-height: 16px; ">
+                <%=outline %>
+            </div>
+            <div class="row" style="margin-top: 5px">
+                <a href="#tag:blablub" class="label label-default">blablub</a>
+            </div>
+        </div>
+    </div>
+
+</script>
+
+<script type="text/template" id="document-in-hits-view">
+
+    <div class="doc doc-id-<%=uniqueHash %> row">
+    <div class="col-lg-2">
             <img src="<%= notes.util.getThumbnailByType(kind) %>">
         </div>
         <div class="col-lg-10">
@@ -682,7 +732,7 @@
         notes.setup();
 
         $('#document-list').documentList();
-
+        $('#search-view').search();
 
 //        $('#document-view').show();
 

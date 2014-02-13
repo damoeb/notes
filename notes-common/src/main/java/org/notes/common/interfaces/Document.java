@@ -32,4 +32,8 @@ public interface Document extends Serializable {
     void setTrigger(Trigger trigger);
 
     String getOutline();
+
+    boolean isStar();
+
+    String getUniqueHash();
 }

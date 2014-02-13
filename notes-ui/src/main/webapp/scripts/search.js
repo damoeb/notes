@@ -3,44 +3,41 @@
 
 'use strict';
 
-(function (notes) {
+$.widget('notes.search', {
+    _create: function () {
 
-    $('#search-input').keypress(function (e) {
-        if (e.which == 13) {
-            notes.search();
-        }
-    });
+    },
+    refresh: function (query) {
 
-    $('#action-search').click(function (e) {
-        notes.search();
-    });
-
-
-    notes.search = function () {
-
-        var query = $('#search-input').val();
+        var $this = this;
 
         if (query.trim().length < 2) {
             console.log('skip search');
             return;
         }
 
-        var params = {
-            '${query}': query,
-            '${start}': 0,
-            '${database}': notes.app.databaseId(),
-            '${rows}': 100
-        };
+        $this.query = query;
+        $this.start = 0;
+        $this.rows = 100;
 
-        console.log('execute query');
-        console.log(params);
+        $this._query();
+    },
+    _query: function () {
+
+        var $this = this;
+
+        var params = {
+            '${query}': $this.query,
+            '${start}': $this.start,
+            '${database}': notes.app.databaseId(),
+            '${rows}': $this.rows
+        };
 
         notes.util.jsonCall('GET', '/notes/rest/search/?query=${query}&database=${database}&start=${start}&rows=${rows}', params, null,
             function (documents) {
-                console.log(documents.length)
+
             }
         );
 
     }
-
-})(notes);
+});

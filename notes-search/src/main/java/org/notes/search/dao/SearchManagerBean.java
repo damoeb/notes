@@ -56,7 +56,7 @@ public class SearchManagerBean implements SearchManager {
             query.setQuery(String.format("+(title:%1$s text:%1$s)", queryString));
 
             query.setFields(SolrFields.ID, SolrFields.DOCUMENT, SolrFields.TITLE, SolrFields.FOLDER, SolrFields.OUTLINE,
-                    SolrFields.SECTION, SolrFields.MODIFIED, SolrFields.KIND, SolrFields.OWNER);
+                    SolrFields.SECTION, SolrFields.MODIFIED, SolrFields.KIND, SolrFields.OWNER, SolrFields.STAR, SolrFields.UNIQUE_HASH);
             query.setStart(start);
             query.setRows(rows);
 

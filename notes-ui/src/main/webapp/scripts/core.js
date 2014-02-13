@@ -86,6 +86,25 @@
         notes.util.jsonCall('GET', REST_SERVICE + '/auth/settings', null, null, onSuccess, onNotLoggedIn);
     };
 
+    // -- Search -------------------------------------------------------------------------------------------------------
+
+    notes.search = function () {
+
+        var query = $('#search-input').val();
+
+        $('#search-view').search('refresh', query);
+    };
+
+    $('#search-input').keypress(function (e) {
+        if (e.which == 13) {
+            notes.search();
+        }
+    });
+
+    $('#action-search').click(function (e) {
+        notes.search();
+    });
+
     // -- Routing ------------------------------------------------------------------------------------------------------
 
     notes.setup.router = function () {

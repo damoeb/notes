@@ -279,14 +279,6 @@ public class BasicDocument implements Document {
         this.deleted = deleted;
     }
 
-    public Event getEvent() {
-        return event;
-    }
-
-    public void setEvent(Event event) {
-        this.event = event;
-    }
-
     public Trigger getTrigger() {
         return trigger;
     }
@@ -295,6 +287,7 @@ public class BasicDocument implements Document {
         this.trigger = trigger;
     }
 
+    @Override
     public boolean isStar() {
         return star;
     }
@@ -312,6 +305,7 @@ public class BasicDocument implements Document {
         this.tags = tags;
     }
 
+    @Override
     public String getUniqueHash() {
         return uniqueHash;
     }
