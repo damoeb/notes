@@ -37,7 +37,7 @@ public class SearchManagerBean implements SearchManager {
     private String solrUrl = "http://localhost:8080/solr-4.5.1";
 
     @Override
-    public List<DocumentHit> query(String queryString, int start, int rows) throws NotesException {
+    public List<DocumentHit> query(long databaseId, String queryString, int start, int rows) throws NotesException {
         try {
             if (start < 0) {
                 start = 0;
@@ -50,9 +50,10 @@ public class SearchManagerBean implements SearchManager {
 
             SolrQuery query = new SolrQuery();
 
-//            todo fix
-//            query.setQuery(String.format("+owner:%1$s +(title:%2$%s text:%2$s)", userSessionBean.getUsername(), queryString));
-            query.setQuery(String.format("+(title:%2$%s text:%2$s)", queryString));
+            // todo add databaseId
+
+            //query.setQuery(String.format("+database:%1$s +(title:%2$s text:%2$s)", databaseId, queryString));
+            query.setQuery(String.format("+(title:%1$s text:%1$s)", queryString));
 
             query.setFields(SolrFields.ID, SolrFields.DOCUMENT, SolrFields.TITLE, SolrFields.FOLDER, SolrFields.OUTLINE,
                     SolrFields.SECTION, SolrFields.MODIFIED, SolrFields.KIND, SolrFields.OWNER);

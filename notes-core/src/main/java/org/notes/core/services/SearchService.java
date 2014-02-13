@@ -25,12 +25,13 @@ public class SearchService {
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse search(
             @QueryParam("query") String query,
+            @QueryParam("databaseId") long databaseId,
             @QueryParam("start") int start,
             @QueryParam("rows") int rows
 
     ) throws Exception {
         try {
-            return NotesResponse.ok(searchManager.query(query, start, rows));
+            return NotesResponse.ok(searchManager.query(databaseId, query, start, rows));
         } catch (Exception e) {
             return NotesResponse.error(e);
         }

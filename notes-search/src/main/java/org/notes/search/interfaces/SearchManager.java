@@ -9,6 +9,6 @@ import java.util.List;
 @Local
 public interface SearchManager {
 
-    List<DocumentHit> query(String queryString, int start, int rows) throws NotesException;
+    List<DocumentHit> query(long databaseId, String queryString, int start, int rows) throws NotesException;
 
 }

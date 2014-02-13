@@ -3,32 +3,44 @@
 
 'use strict';
 
-$.widget('notes.search', {
+(function (notes) {
 
-    options: {
-        query: null,
-        folderId: null,
-        databaseId: null,
-        start: 0,
-        rows: 100
-    },
+    $('#search-input').keypress(function (e) {
+        if (e.which == 13) {
+            notes.search();
+        }
+    });
 
-    _create: function () {
+    $('#action-search').click(function (e) {
+        notes.search();
+    });
 
-        var $this = this;
+
+    notes.search = function () {
+
+        var query = $('#search-input').val();
+
+        if (query.trim().length < 2) {
+            console.log('skip search');
+            return;
+        }
 
         var params = {
-            '${query}': $this.options.query,
-            '${start}': $this.options.start,
-            '${rows}': $this.options.rows
+            '${query}': query,
+            '${start}': 0,
+            '${database}': notes.app.databaseId(),
+            '${rows}': 100
         };
 
-        notes.util.jsonCall('GET', REST_SERVICE + '/search/?query=${query}&database=${database}&start=${start}&rows=${rows}', params, null, null
+        console.log('execute query');
+        console.log(params);
+
+        notes.util.jsonCall('GET', '/notes/rest/search/?query=${query}&database=${database}&start=${start}&rows=${rows}', params, null,
+            function (documents) {
+                console.log(documents.length)
+            }
         );
-//        notes.util.jsonCall('GET', '/notes/rest/search/?query=${query}&database=${database}&start=${start}&rows=${rows}', params, null,
-//            function (documents) {
-//                // todo implement
-//            }
-//        );
+
     }
-});
+
+})(notes);

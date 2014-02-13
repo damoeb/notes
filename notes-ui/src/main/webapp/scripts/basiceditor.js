@@ -36,11 +36,12 @@ $.widget('notes.basiceditor', {
                     $this.fnAddTag(newTagName);
                 }
             }
-            $(this).select().focus();
         };
         $this.element.find('.action-new-tag')
+            .unbind('click')
             .click(addNewTagsFromField);
         $this.element.find('.new-tag-value')
+            .unbind('keypress')
             .keypress(function (e) {
                 if (e.which == 13) {
                     addNewTagsFromField();
