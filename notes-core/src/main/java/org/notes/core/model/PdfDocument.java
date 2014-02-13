@@ -11,9 +11,9 @@ import org.notes.common.model.FileReference;
 import org.notes.common.model.FullText;
 import org.notes.common.model.Kind;
 import org.notes.common.utils.TextUtils;
-import org.notes.text.ExtractionResult;
-import org.notes.text.PdfTextExtractor;
-import org.notes.text.interfaces.TextExtractor;
+import org.notes.search.ExtractionResult;
+import org.notes.search.PdfTextExtractor;
+import org.notes.search.interfaces.TextExtractor;
 
 import javax.naming.InitialContext;
 import javax.persistence.*;

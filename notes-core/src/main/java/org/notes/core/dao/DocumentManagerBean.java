@@ -12,7 +12,7 @@ import org.notes.common.model.FileReference;
 import org.notes.common.model.Trigger;
 import org.notes.core.interfaces.*;
 import org.notes.core.model.*;
-import org.notes.text.scheduler.ExtractionScheduler;
+import org.notes.search.scheduler.ExtractionScheduler;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;

@@ -1,4 +1,4 @@
-package org.notes.text;
+package org.notes.search;
 
 import org.notes.common.model.FullText;
 

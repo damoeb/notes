@@ -1,8 +1,8 @@
-package org.notes.text.interfaces;
+package org.notes.search.interfaces;
 
 import org.notes.common.exceptions.NotesException;
 import org.notes.common.model.FileReference;
-import org.notes.text.ExtractionResult;
+import org.notes.search.ExtractionResult;
 
 public interface TextExtractor {
 

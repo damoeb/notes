@@ -1,19 +1,18 @@
+- suche unabhaengiges modul
 - vorschläge unterhalb, nicht rechts
-- viewer for unknown
+- viewer for unknown type
 - active folder is not synched
 - alle popups auf bootstrap
 - improve treeview: colors, icons
+
+- attributes for document
+  build in: due date, reminder, % complete, finished date
+- related to: find documents, check literature, to find out relatedness
+
 - owner view: mir tree auf linker seite, public view: ohne treeview
-- jedes dokument hat unique link: watch?v=document-hash
-- anzahl der directories auf 1 limitieren
-- pdf ist ausnahme, normal nur text dokumente mit attachments
-- bootstrap verwenden http://getbootstrap.com/components/
-- cross domain support from jboss
-  Firefox: about:config -> security.fileuri.strict_origin_policy -> false
-  Chrome: run with command line switch: --disable-web-security
+- anzahl der directories auf 1 limitieren (backend)
 
 - new doc. popup with <choose folder>
-- attachments for docs, valid docs from file only for pdfs, websites
 - suche + in node names, tags
 - document thumbnail?
 - triggers for document in separate table
@@ -26,16 +25,12 @@
 - check all queries for permissions
 
 - ocr
-- reminder: attached to document vs one for several docs?
 - annotate audio
-- related to: find documents, check literature, to find out relatedness
 
 --
 - transklusion
 - clone document
 - calendar
-- attributes for document
-  build in: due date, reminder, % complete, finished date
 
 - monitor hibernate
   http://docs.jboss.org/hibernate/core/3.5/reference/en/html/performance.html#performance-monitoring

@@ -15,7 +15,7 @@ $.widget('notes.basiceditor', {
         console.log('create parent');
 
         var $rendered = $this.element;
-        $rendered.find('.action-close').click(function () {
+        $rendered.find('.action-close').unbind('click').click(function () {
             $this.fnSave.call($this);
 
             $this._destroy();
@@ -24,7 +24,7 @@ $.widget('notes.basiceditor', {
             $('#folder-view').show();
         });
 
-        $rendered.find('.action-star').click($this.fnStar);
+        $rendered.find('.action-star').unbind('click').click($this.fnStar);
 
         $this.fnRenderTags();
 

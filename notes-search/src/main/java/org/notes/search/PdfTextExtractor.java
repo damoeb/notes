@@ -1,4 +1,4 @@
-package org.notes.text;
+package org.notes.search;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.pdfbox.cos.COSDocument;
@@ -8,7 +8,7 @@ import org.apache.pdfbox.util.PDFTextStripper;
 import org.notes.common.exceptions.NotesException;
 import org.notes.common.model.FileReference;
 import org.notes.common.model.FullText;
-import org.notes.text.interfaces.TextExtractor;
+import org.notes.search.interfaces.TextExtractor;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;

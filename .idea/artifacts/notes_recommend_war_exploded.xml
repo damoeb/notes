@@ -1,0 +1,24 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="notes-recommend:war exploded">
+    <output-path>$PROJECT_DIR$/notes-recommend/target/notes-recommend.war</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="notes-recommend/web/Web" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="notes-recommend" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="archive" name="notes-common-0.1.jar">
+            <element id="module-output" name="notes-common" />
+          </element>
+          <element id="library" level="project" name="Maven: org.jsoup:jsoup:1.7.2" />
+          <element id="library" level="project" name="Maven: commons-lang:commons-lang:2.6" />
+          <element id="library" level="project" name="Maven: net.sf.ehcache:ehcache-core:2.6.3" />
+          <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:1.6.1" />
+          <element id="library" level="project" name="Maven: net.sf.ehcache:ehcache-terracotta:2.6.3" />
+          <element id="library" level="project" name="Maven: org.terracotta:terracotta-toolkit-1.6-runtime:5.3.0" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>
