@@ -1,3 +1,4 @@
+- search: fulltext suche fuer text, index wird geloescht am start
 - use uniqueHash instead of document id
 - in common only use interfaces, put impl in core/..
 - viewer for unknown type

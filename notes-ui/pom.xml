@@ -71,7 +71,7 @@
                                 <exec executable="bash" dir="${project.basedir}"
                                       osfamily="unix" failonerror="true">
                                     <arg value="-c"/>
-                                    <arg line='"sass --load-path src/main/webapp/bower_components/ src/main/webapp/styles/main.scss src/main/webapp/styles/main.css"'/>
+                                    <arg line='"sass --load-path src/main/webapp/bower_components/ src/main/webapp/styles/main.scss src/main/webapp/styles/main.compiled.css"'/>
                                 </exec>
                             </target>
                         </configuration>

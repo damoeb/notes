@@ -7,6 +7,13 @@ $.widget('notes.search', {
 
     _init: function () {
         this.template = _.template($('#document-in-hits-view').html());
+
+        this.element.find('.action-close').unbind('click').click(function () {
+            $('#search-view').hide();
+            $('#folder-view').show();
+            $('#document-view').hide();
+        });
+
     },
     refresh: function (query) {
 
