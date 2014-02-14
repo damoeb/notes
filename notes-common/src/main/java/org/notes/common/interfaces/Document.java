@@ -1,9 +1,11 @@
 package org.notes.common.interfaces;
 
+import org.notes.common.model.FullText;
 import org.notes.common.model.Kind;
 import org.notes.common.model.Trigger;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
 
 public interface Document extends Serializable {
@@ -36,4 +38,6 @@ public interface Document extends Serializable {
     boolean isStar();
 
     String getUniqueHash();
+
+    Collection<FullText> getTexts();
 }

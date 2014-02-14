@@ -567,11 +567,14 @@
                 </span>
             </div>
             <div class="row" style="color:#666666; line-height: 16px; ">
-                <% for(var i=0; i
-                <highlights.length
-                ; i++) { %>
+
+                <% if(highlights.length>0) { %>
+                <% for(var i=0; i + 1 < highlights.length; i++) { %>
                 <%=highlights[i] %>
-                <% } %>
+                ...
+                <% } // for %>
+                <%=highlights[highlights.length-1] %>
+                <% } // if %>
             </div>
         </div>
     </div>

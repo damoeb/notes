@@ -4,7 +4,6 @@ import org.apache.log4j.Logger;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.notes.common.ForeignKey;
-import org.notes.common.interfaces.Fulltextable;
 import org.notes.common.interfaces.Harvestable;
 import org.notes.common.model.FileReference;
 import org.notes.common.model.FullText;
@@ -17,7 +16,7 @@ import java.util.Collection;
 @Entity(name = "BookmarkDocument")
 @Table(name = "BookmarkDocument")
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-public class BookmarkDocument extends BasicDocument implements Fulltextable, Harvestable {
+public class BookmarkDocument extends BasicDocument implements Harvestable {
 
     private static final Logger LOGGER = Logger.getLogger(BookmarkDocument.class);
 
@@ -79,7 +78,7 @@ public class BookmarkDocument extends BasicDocument implements Fulltextable, Har
 
     @JsonIgnore
     @Override
-    public Collection<FullText> getFullTexts() {
+    public Collection<FullText> getTexts() {
         return Arrays.asList(new FullText(1, text));
     }
 }

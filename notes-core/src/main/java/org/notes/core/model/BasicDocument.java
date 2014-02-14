@@ -10,12 +10,14 @@ import org.notes.common.ForeignKey;
 import org.notes.common.configuration.Configuration;
 import org.notes.common.exceptions.NotesException;
 import org.notes.common.interfaces.Document;
+import org.notes.common.model.FullText;
 import org.notes.common.model.Kind;
 import org.notes.common.model.Trigger;
 import org.notes.common.service.CustomDateDeserializer;
 import org.notes.common.service.CustomDateSerializer;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -308,6 +310,11 @@ public class BasicDocument implements Document {
     @Override
     public String getUniqueHash() {
         return uniqueHash;
+    }
+
+    @Override
+    public Collection<FullText> getTexts() {
+        return null;
     }
 
     public void setUniqueHash(String hash) {

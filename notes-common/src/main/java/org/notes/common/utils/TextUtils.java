@@ -9,24 +9,6 @@ import org.notes.common.configuration.Configuration;
 
 public final class TextUtils {
 
-//    private static final Pattern TRIM_PATTERN = Pattern.compile("^[\\W \n\t]+|[\\W \n\t]+$");
-//
-//    public static String trim(String str) {
-//
-//        if (StringUtils.isBlank(str)) {
-//            return null;
-//
-//        } else {
-//            Matcher m = TRIM_PATTERN.matcher(str);
-//            StringBuffer sb = new StringBuffer(50);
-//            while (m.find()) {
-//                m.appendReplacement(sb, "");
-//            }
-//            m.appendTail(sb);
-//            return sb.toString();
-//        }
-//    }
-
     public static String toOutline(String first, String... more) {
         int outlineSize = Configuration.Constants.OUTLINE_LENGTH;
         StringBuilder outline = new StringBuilder(outlineSize * 2);
@@ -46,10 +28,15 @@ public final class TextUtils {
             outline.append(" ");
         }
 
-        Cleaner cleaner = new Cleaner(Whitelist.simpleText());
-        Document cleaned = cleaner.clean(Jsoup.parse(outline.toString()));
+        return StringUtils.substring(cleanHtml(outline.toString()), 0, outlineSize);
+    }
 
-        return StringUtils.substring(cleaned.body().text(), 0, outlineSize);
+    public static String cleanHtml(String html) {
+
+        Cleaner cleaner = new Cleaner(Whitelist.simpleText());
+        Document cleaned = cleaner.clean(Jsoup.parse(html));
+
+        return cleaned.body().text();
     }
 
     private static String norm(String text) {

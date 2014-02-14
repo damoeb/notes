@@ -28,20 +28,6 @@ public class Tag implements Serializable {
     @Column(nullable = false, unique = true)
     private String name;
 
-
-//  -- References ------------------------------------------------------------------------------------------------------
-
-//    @Column(insertable = false, updatable = false, name = ForeignKey.TAG_ID)
-//    private Long tagId;
-
-//    @JsonIgnore
-//    @OneToMany(cascade = {}, fetch = FetchType.LAZY, orphanRemoval = true)
-//    @JoinColumn(name = ForeignKey.USER)
-//    private Set<User> users = new HashSet(100);
-//
-//    @Column(name = Account.FK_ACCOUNT_ID, insertable = false, updatable = false)
-//    private Long accountId;
-
 //  --------------------------------------------------------------------------------------------------------------------
 
     public Tag() {

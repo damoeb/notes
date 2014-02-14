@@ -52,19 +52,21 @@ public class SearchManagerBean implements SearchManager {
 
             // todo add databaseId
 
-            //query.setQuery(String.format("+database:%1$s +(title:%2$s text:%2$s)", databaseId, queryString));
             query.setQuery(String.format("+(title:%1$s text:%1$s)", queryString));
+            query.add("group.field", "document");
+            query.add("group.main", "true");
+            query.add("group", "true");
 
             query.setFields(SolrFields.ID, SolrFields.DOCUMENT, SolrFields.TITLE, SolrFields.FOLDER, SolrFields.OUTLINE,
-                    SolrFields.SECTION, SolrFields.MODIFIED, SolrFields.KIND, SolrFields.OWNER, SolrFields.STAR, SolrFields.UNIQUE_HASH);
+                    SolrFields.SECTION, SolrFields.MODIFIED, SolrFields.KIND, SolrFields.OWNER, SolrFields.STAR,
+                    SolrFields.UNIQUE_HASH, SolrFields.TEXT);
             query.setStart(start);
             query.setRows(rows);
 
             // see http://wiki.apache.org/solr/HighlightingParameters
-            query.setHighlightSnippets(1);
+            query.setHighlightSnippets(3);
 
             query.addHighlightField(SolrFields.TITLE);
-            query.addHighlightField(SolrFields.OUTLINE);
             query.addHighlightField(SolrFields.TEXT);
             query.setIncludeScore(true);
 

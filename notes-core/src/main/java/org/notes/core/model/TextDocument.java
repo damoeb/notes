@@ -2,7 +2,6 @@ package org.notes.core.model;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.notes.common.interfaces.Fulltextable;
 import org.notes.common.model.FullText;
 import org.notes.common.model.Kind;
 import org.notes.common.utils.TextUtils;
@@ -16,7 +15,7 @@ import java.util.Collection;
 @Entity(name = "TextDocument")
 @Table(name = "TextDocument")
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-public class TextDocument extends BasicDocument implements Fulltextable {
+public class TextDocument extends BasicDocument {
 
     @Lob
     private String text;
@@ -44,7 +43,7 @@ public class TextDocument extends BasicDocument implements Fulltextable {
 
     @Override
     @JsonIgnore
-    public Collection<FullText> getFullTexts() {
+    public Collection<FullText> getTexts() {
         return Arrays.asList(new FullText(0, text));
     }
 }

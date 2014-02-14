@@ -12,8 +12,10 @@ import org.notes.common.configuration.Configuration;
 import org.notes.common.configuration.ConfigurationProperty;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.interfaces.Document;
+import org.notes.common.model.FullText;
 import org.notes.common.model.SolrFields;
 import org.notes.common.model.Trigger;
+import org.notes.common.utils.TextUtils;
 
 import javax.ejb.*;
 import javax.persistence.EntityManager;
@@ -21,7 +23,9 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 //@LocalBean
 @Singleton
@@ -32,7 +36,7 @@ public class IndexerScheduler {
     private static final Logger LOGGER = Logger.getLogger(IndexerScheduler.class);
     private static final int COMMIT_WITHIN_MS = 3000;
 
-    @ConfigurationProperty(value = Configuration.SOLR_SERVER, mandatory = true, defaultValue = "hase")
+    @ConfigurationProperty(value = Configuration.SOLR_SERVER, mandatory = true)
     private String solrUrl = "http://localhost:8080/solr-4.5.1";
 
     @PersistenceContext(unitName = "primary")
@@ -70,9 +74,7 @@ public class IndexerScheduler {
                         indexDocument(document);
 
                         // todo support fulltext of attachement/pdf
-//                        if (document instanceof Fulltextable) {
-//                            indexFullTexts(document, (Fulltextable) document);
-//                        }
+                        indexTexts(document);
                     }
 
                     document.setTrigger(null);
@@ -87,30 +89,39 @@ public class IndexerScheduler {
         }
     }
 
-//    private void indexFullTexts(Document document, Fulltextable provider) throws IOException, SolrServerException {
-//
-//        if (provider.getFullTexts() == null) {
-//            return;
-//        }
-//
-//        Set<SolrInputDocument> docs = new HashSet(provider.getFullTexts().size() * 2);
-//        for (FullText fullText : provider.getFullTexts()) {
-//
-//            SolrInputDocument doc = new SolrInputDocument();
-//            doc.setField(SolrFields.DOCUMENT, document.getId());
-//            doc.setField(SolrFields.FOLDER, document.getFolderId());
-//            doc.setField(SolrFields.OWNER, document.getOwner());
-//            doc.setField(SolrFields.TEXT, fullText.getText());
-//            doc.setField(SolrFields.SECTION, fullText.getSection());
-//            docs.add(doc);
-//        }
-//
-//        getSolrServer().add(docs, COMMIT_WITHIN_MS);
-//    }
+    private void indexTexts(Document document) throws IOException, SolrServerException {
+
+        if (document.getTexts() == null) {
+            return;
+        }
+
+        Set<SolrInputDocument> docs = new HashSet(document.getTexts().size() * 2);
+        for (FullText fullText : document.getTexts()) {
+
+            SolrInputDocument doc = getSolrDocument(document);
+
+            doc.setField(SolrFields.SECTION, fullText.getSection());
+            doc.setField(SolrFields.TEXT, TextUtils.cleanHtml(fullText.getText()));
+
+            docs.add(doc);
+        }
+
+        getSolrServer().add(docs, COMMIT_WITHIN_MS);
+    }
 
     private void indexDocument(Document document) throws IOException, SolrServerException {
         // todo update document http://wiki.apache.org/solr/UpdateXmlMessages#Optional_attributes_for_.22field.22
 
+        SolrInputDocument doc = getSolrDocument(document);
+
+        // todo index tags
+        //document.getTags();
+
+        getSolrServer().deleteByQuery(String.format("%s:%s", SolrFields.DOCUMENT, document.getId()));
+        getSolrServer().add(doc, COMMIT_WITHIN_MS);
+    }
+
+    private SolrInputDocument getSolrDocument(Document document) {
         SolrInputDocument doc = new SolrInputDocument();
         doc.setField(SolrFields.DOCUMENT, document.getId());
         doc.setField(SolrFields.FOLDER, document.getFolderId());
@@ -121,11 +132,7 @@ public class IndexerScheduler {
         doc.setField(SolrFields.OWNER, document.getOwner());
         doc.setField(SolrFields.UNIQUE_HASH, document.getUniqueHash());
         doc.setField(SolrFields.STAR, document.isStar());
-        // todo index tags
-
-        // todo remove all with this doc id
-        getSolrServer().deleteByQuery(String.format("%s:%s", SolrFields.DOCUMENT, document.getId()));
-        getSolrServer().add(doc, COMMIT_WITHIN_MS);
+        return doc;
     }
 
     private SolrServer getSolrServer() {
