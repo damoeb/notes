@@ -525,7 +525,11 @@
                 <%=outline %>
             </div>
             <div class="row" style="margin-top: 5px">
-                <a href="#tag:blablub" class="label label-default">blablub</a>
+                <% for(var i=0; i < tags.length; i++) { %>
+
+                <a href="#tag:<%=tags[i].name %>" class="label label-default"><%=tags[i].name %></a>
+
+                <% } // for %>
             </div>
         </div>
     </div>

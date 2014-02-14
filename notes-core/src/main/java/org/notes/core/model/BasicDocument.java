@@ -3,6 +3,8 @@ package org.notes.core.model;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.ObjectWriter;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.hibernate.annotations.Index;
@@ -17,10 +19,8 @@ import org.notes.common.service.CustomDateDeserializer;
 import org.notes.common.service.CustomDateSerializer;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * The basic document
@@ -34,7 +34,7 @@ import java.util.Set;
         @NamedQuery(name = Document.QUERY_BY_ID, query = "SELECT a FROM BasicDocument a where a.id=:ID"),
         @NamedQuery(name = Document.QUERY_TRIGGER, query = "SELECT a FROM BasicDocument a where a.trigger in (:TRIGGER)"),
         // todo provide tags for next query
-        @NamedQuery(name = BasicDocument.QUERY_IN_FOLDER, query = "SELECT new BasicDocument(a.id, a.uniqueHash, a.title, a.outline, a.kind, a.modified, a.star) FROM BasicDocument a where a.folderId=:ID AND a.deleted=false")
+        @NamedQuery(name = BasicDocument.QUERY_IN_FOLDER, query = "SELECT new BasicDocument(a.id, a.uniqueHash, a.title, a.outline, a.kind, a.modified, a.star, a.tagsJson) FROM BasicDocument a where a.folderId=:ID AND a.deleted=false")
 })
 @Inheritance(strategy = InheritanceType.JOINED)
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
@@ -95,6 +95,10 @@ public class BasicDocument implements Document {
     @Basic
     private boolean star;
 
+    @JsonIgnore
+    @Basic
+    private String tagsJson;
+
 //  -- References ------------------------------------------------------------------------------------------------------
 
     @JsonIgnore
@@ -128,7 +132,7 @@ public class BasicDocument implements Document {
         this.kind = kind;
     }
 
-    public BasicDocument(Long id, String uniqueHash, String title, String outline, Kind kind, Date modified, boolean star) {
+    public BasicDocument(Long id, String uniqueHash, String title, String outline, Kind kind, Date modified, boolean star, String tagsJson) {
         this.id = id;
         this.uniqueHash = uniqueHash;
         this.title = title;
@@ -136,7 +140,14 @@ public class BasicDocument implements Document {
         this.kind = kind;
         this.modified = modified;
         this.star = star;
-        this.tags = null;
+        if (StringUtils.isNotBlank(tagsJson)) {
+            try {
+                Tag[] tags = new ObjectMapper().readValue(tagsJson, Tag[].class);
+                this.tags.addAll(Arrays.asList(tags));
+            } catch (IOException e) {
+                //
+            }
+        }
     }
 
     @PrePersist
@@ -305,6 +316,15 @@ public class BasicDocument implements Document {
 
     public void setTags(Set<Tag> tags) {
         this.tags = tags;
+
+        if (tags != null) {
+            try {
+                ObjectWriter ow = new ObjectMapper().writer();
+                this.tagsJson = ow.writeValueAsString(tags);
+            } catch (IOException e) {
+                //
+            }
+        }
     }
 
     @Override
