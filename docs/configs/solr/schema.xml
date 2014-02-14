@@ -116,12 +116,13 @@
         <field name="folder" type="long" indexed="true" stored="true"/>
         <field name="modified" type="date" indexed="true" stored="true"/>
         <field name="title" type="text_general" indexed="true" stored="true"/>
+        <field name="title_stored_only" type="string" indexed="false" stored="true"/>
         <field name="kind" type="string" indexed="true" stored="true"/>
         <field name="owner" type="string" indexed="true" stored="true"/>
         <field name="uniqueHash" type="string" indexed="true" stored="true"/>
         <field name="star" type="boolean" indexed="true" stored="true"/>
         <field name="text" type="text_general" indexed="true" stored="true"/>
-        <field name="outline" type="text_general" indexed="true" stored="true"/>
+        <field name="outline" type="text_general" indexed="false" stored="true"/>
         <field name="section" type="long" indexed="true" stored="true"/>
 
 

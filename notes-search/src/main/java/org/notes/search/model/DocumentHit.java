@@ -31,7 +31,11 @@ public class DocumentHit {
     public DocumentHit(SolrDocument solrDocument, Map<String, List<String>> highlights) {
 
         this.modified = (Date) solrDocument.getFirstValue(SolrFields.MODIFIED);
-        this.title = (String) solrDocument.getFirstValue(SolrFields.TITLE);
+        if (solrDocument.containsKey(SolrFields.TITLE)) {
+            this.title = (String) solrDocument.getFirstValue(SolrFields.TITLE);
+        } else {
+            this.title = (String) solrDocument.getFirstValue(SolrFields.TITLE_STORED_ONLY);
+        }
         this.owner = (String) solrDocument.getFirstValue(SolrFields.OWNER);
         this.outline = (String) solrDocument.getFirstValue(SolrFields.OUTLINE);
         this.star = (Boolean) solrDocument.getFirstValue(SolrFields.STAR);

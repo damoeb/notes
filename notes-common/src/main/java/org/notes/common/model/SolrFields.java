@@ -13,4 +13,5 @@ public class SolrFields {
     public static final String ID = "id";
     public static final String UNIQUE_HASH = "uniqueHash";
     public static final String STAR = "star";
+    public static final String TITLE_STORED_ONLY = "title_stored_only";
 }

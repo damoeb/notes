@@ -95,11 +95,12 @@ public class IndexerScheduler {
             return;
         }
 
-        Set<SolrInputDocument> docs = new HashSet(document.getTexts().size() * 2);
+        Set<SolrInputDocument> docs = new HashSet<>(document.getTexts().size() * 2);
         for (FullText fullText : document.getTexts()) {
 
             SolrInputDocument doc = getSolrDocument(document);
 
+            doc.setField(SolrFields.TITLE_STORED_ONLY, document.getTitle());
             doc.setField(SolrFields.SECTION, fullText.getSection());
             doc.setField(SolrFields.TEXT, TextUtils.cleanHtml(fullText.getText()));
 
@@ -113,7 +114,7 @@ public class IndexerScheduler {
         // todo update document http://wiki.apache.org/solr/UpdateXmlMessages#Optional_attributes_for_.22field.22
 
         SolrInputDocument doc = getSolrDocument(document);
-
+        doc.setField(SolrFields.TITLE, document.getTitle());
         // todo index tags
         //document.getTags();
 
@@ -126,7 +127,6 @@ public class IndexerScheduler {
         doc.setField(SolrFields.DOCUMENT, document.getId());
         doc.setField(SolrFields.FOLDER, document.getFolderId());
         doc.setField(SolrFields.MODIFIED, document.getModified());
-        doc.setField(SolrFields.TITLE, document.getTitle());
         doc.setField(SolrFields.OUTLINE, document.getOutline());
         doc.setField(SolrFields.KIND, document.getKind());
         doc.setField(SolrFields.OWNER, document.getOwner());
