@@ -21,6 +21,10 @@ $.widget('notes.search', {
         $this.start = 0;
         $this.rows = 100;
 
+        $('#search-view').show();
+        $('#folder-view').hide();
+        $('#document-view').hide();
+
         $this._query();
 
     },
@@ -42,6 +46,10 @@ $.widget('notes.search', {
         notes.util.jsonCall('GET', '/notes/rest/search/?query=${query}&database=${database}&start=${start}&rows=${rows}', params, null,
             function (result) {
                 console.log(result.docs.length + ' hits');
+
+                $this.element.find('.numFound').text(result.numFound);
+                $this.element.find('.elapsedTime').text(Math.round(result.elapsedTime / 10) / 100);
+
                 $.each(result.docs, function (index, document) {
                     $target.append($this.template(document));
                 });

@@ -12,6 +12,7 @@ import java.util.Map;
 
 public class SearchResponse {
 
+    private final long elapsedTime;
     private long numFound;
     private long start;
     private List<DocumentHit> docs;
@@ -31,6 +32,7 @@ public class SearchResponse {
 
         numFound = results.getNumFound();
         start = results.getStart();
+        elapsedTime = response.getElapsedTime();
     }
 
     public long getNumFound() {
@@ -43,5 +45,9 @@ public class SearchResponse {
 
     public List<DocumentHit> getDocs() {
         return docs;
+    }
+
+    public long getElapsedTime() {
+        return elapsedTime;
     }
 }

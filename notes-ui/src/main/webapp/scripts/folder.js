@@ -164,5 +164,6 @@ $.widget('notes.folder', {
 
         $('#document-view').hide();
         $('#folder-view').show();
+        $('#search-view').hide();
     }
 });

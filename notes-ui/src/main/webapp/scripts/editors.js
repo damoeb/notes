@@ -15,6 +15,7 @@ $.widget('notes.editors', {
 
         $('#document-view').show();
         $('#folder-view').hide();
+        $('#search-view').hide();
 
         notes.app.documentId(documentId);
 
