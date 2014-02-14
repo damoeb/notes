@@ -1,5 +1,6 @@
 package org.notes.search.dao;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.log4j.Logger;
@@ -8,22 +9,16 @@ import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.impl.HttpSolrServer;
 import org.apache.solr.client.solrj.impl.XMLResponseParser;
 import org.apache.solr.client.solrj.response.QueryResponse;
-import org.apache.solr.common.SolrDocument;
-import org.apache.solr.common.SolrDocumentList;
 import org.notes.common.configuration.Configuration;
 import org.notes.common.configuration.ConfigurationProperty;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
 import org.notes.common.model.SolrFields;
 import org.notes.search.interfaces.SearchManager;
-import org.notes.search.model.DocumentHit;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 
 //@LocalBean
 @Stateless
@@ -37,8 +32,13 @@ public class SearchManagerBean implements SearchManager {
     private String solrUrl = "http://localhost:8080/solr-4.5.1";
 
     @Override
-    public List<DocumentHit> query(long databaseId, String queryString, int start, int rows) throws NotesException {
+    public SearchResponse query(long databaseId, String queryString, int start, int rows) throws NotesException {
         try {
+
+            if (StringUtils.trim(queryString).length() < 3) {
+                throw new IllegalArgumentException("Too short query");
+            }
+
             if (start < 0) {
                 start = 0;
             }
@@ -74,21 +74,12 @@ public class SearchManagerBean implements SearchManager {
 
             // a hits can be an attachment or folder too
 
-            List<DocumentHit> hits = new LinkedList<>();
             QueryResponse response = server.query(query);
-            SolrDocumentList results = response.getResults();
-            Map<String, Map<String, List<String>>> highlighting = response.getHighlighting();
 
-            for (SolrDocument solrDocument : results) {
-                String id = (String) solrDocument.get(SolrFields.ID);
-
-                hits.add(new DocumentHit(solrDocument, highlighting.get(id)));
-            }
-
-            return hits;
+            return new SearchResponse(response);
 
         } catch (Throwable t) {
-            throw new NotesException("query: " + t.getMessage(), t);
+            throw new NotesException("search aborted: " + t.getMessage(), t);
         }
     }
 

@@ -50,7 +50,7 @@ $.widget('notes.documentList', {
 
     _render: function (model) {
 
-        return $(this.template(model.attributes)).click(function () {
+        return $(this.template(model.attributes).trim()).click(function () {
 
             var $tmpl = $(this);
 

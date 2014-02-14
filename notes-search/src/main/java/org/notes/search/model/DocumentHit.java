@@ -1,8 +1,12 @@
 package org.notes.search.model;
 
 import org.apache.solr.common.SolrDocument;
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.notes.common.model.Kind;
 import org.notes.common.model.SolrFields;
+import org.notes.common.service.CustomDateDeserializer;
+import org.notes.common.service.CustomDateSerializer;
 
 import java.util.Date;
 import java.util.LinkedList;
@@ -13,6 +17,9 @@ public class DocumentHit {
 
     private final String outline;
     private final Float score;
+
+    @JsonDeserialize(using = CustomDateDeserializer.class)
+    @JsonSerialize(using = CustomDateSerializer.class)
     private final Date modified;
     private final String title;
     private final String owner;
