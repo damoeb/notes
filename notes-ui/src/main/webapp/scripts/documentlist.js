@@ -43,7 +43,7 @@ $.widget('notes.documentList', {
             notes.util.sortJSONArrayDESC(documents, 'modified');
 
             $.each(documents, function (id, doc) {
-                $this._render(new notes.model.BasicDocument(doc)).appendTo($target);
+                $($this.template(doc).trim()).appendTo($target);
             });
         });
     },
@@ -60,14 +60,7 @@ $.widget('notes.documentList', {
             // call editor
             $('#editors').editors('editDocument', model.get('id'));
 
-        }).draggable({
-                cursor: 'move',
-                cursorAt: { top: 5, left: -5 },
-                helper: function () {
-                    return $('<i class="fa fa-file-o fa-lg"></i>');
-                },
-                opacity: 0.6
-            });
+        })
     }
 
 });

@@ -52,7 +52,7 @@ public class SearchManagerBean implements SearchManager {
 
             // todo add databaseId
 
-            query.setQuery(String.format("+(title:%1$s text:%1$s)", queryString));
+            query.setQuery(String.format("+(title:%1$s^10 text:%1$s)", queryString));
             query.add("group.field", "document");
             query.add("group.main", "true");
             query.add("group", "true");

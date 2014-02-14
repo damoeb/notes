@@ -112,7 +112,7 @@
         var Router = Backbone.Router.extend({
 
             routes: {
-                'folder/:id': 'folder',
+                'doc\::id': 'document',
                 'search/:query': 'search'   // #search/kiwis/p7
             },
 
@@ -125,9 +125,9 @@
 
             },
 
-            folder: function (folderId) {
-                console.log('open folder ' + folderId);
-                $('#document-list').documentList('refresh', folderId);
+            document: function (docId) {
+                console.log('view doc ' + docId);
+                $('#editors').editors('editDocument', docId);
             }
         });
 

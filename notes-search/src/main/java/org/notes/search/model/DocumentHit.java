@@ -27,9 +27,11 @@ public class DocumentHit {
     private final Kind kind;
     private final Boolean star;
     private final String uniqueHash;
+    private final Long id;
 
     public DocumentHit(SolrDocument solrDocument, Map<String, List<String>> highlights) {
 
+        this.id = (Long) solrDocument.getFirstValue(SolrFields.DOCUMENT);
         this.modified = (Date) solrDocument.getFirstValue(SolrFields.MODIFIED);
         if (solrDocument.containsKey(SolrFields.TITLE)) {
             this.title = (String) solrDocument.getFirstValue(SolrFields.TITLE);
@@ -48,6 +50,10 @@ public class DocumentHit {
                 this.highlights.addAll(highlight);
             }
         }
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public Boolean getStar() {
