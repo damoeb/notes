@@ -123,6 +123,7 @@
         <field name="star" type="boolean" indexed="true" stored="true"/>
         <field name="text" type="text_general" indexed="true" stored="true"/>
         <field name="outline" type="text_general" indexed="false" stored="true"/>
+        <field name="tag" type="text_general" indexed="true" stored="true" multiValued="true"/>
         <field name="section" type="long" indexed="true" stored="true"/>
 
 

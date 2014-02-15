@@ -2,11 +2,13 @@ package org.notes.common.interfaces;
 
 import org.notes.common.model.FullText;
 import org.notes.common.model.Kind;
+import org.notes.common.model.Tag;
 import org.notes.common.model.Trigger;
 
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Set;
 
 public interface Document extends Serializable {
 
@@ -36,6 +38,8 @@ public interface Document extends Serializable {
     String getOutline();
 
     boolean isStar();
+
+    Set<? extends Tag> getTags();
 
     String getUniqueHash();
 

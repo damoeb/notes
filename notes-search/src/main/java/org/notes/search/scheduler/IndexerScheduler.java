@@ -14,6 +14,7 @@ import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.interfaces.Document;
 import org.notes.common.model.FullText;
 import org.notes.common.model.SolrFields;
+import org.notes.common.model.Tag;
 import org.notes.common.model.Trigger;
 import org.notes.common.utils.TextUtils;
 
@@ -115,8 +116,10 @@ public class IndexerScheduler {
 
         SolrInputDocument doc = getSolrDocument(document);
         doc.setField(SolrFields.TITLE, document.getTitle());
-        // todo index tags
-        //document.getTags();
+
+        for (Tag tag : document.getTags()) {
+            doc.addField(SolrFields.TAG, tag.getName());
+        }
 
         getSolrServer().deleteByQuery(String.format("%s:%s", SolrFields.DOCUMENT, document.getId()));
         getSolrServer().add(doc, COMMIT_WITHIN_MS);

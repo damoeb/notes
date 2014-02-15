@@ -5,7 +5,7 @@ import org.apache.log4j.Logger;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
 import org.notes.core.interfaces.TagManager;
-import org.notes.core.model.Tag;
+import org.notes.core.model.DefaultTag;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -28,21 +28,21 @@ public class TagManagerBean implements TagManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public Tag findOrCreate(String name) throws NotesException {
+    public DefaultTag findOrCreate(String name) throws NotesException {
         try {
             if (StringUtils.isBlank(name)) {
                 throw new NotesException("name is null");
             }
 
-            Query query = em.createNamedQuery(Tag.QUERY_BY_NAME);
+            Query query = em.createNamedQuery(DefaultTag.QUERY_BY_NAME);
             query.setParameter("NAME", name);
             List results = query.getResultList();
             if (!results.isEmpty()) {
-                return (Tag) results.get(0);
+                return (DefaultTag) results.get(0);
             }
 
 
-            Tag tag = new Tag(name);
+            DefaultTag tag = new DefaultTag(name);
             em.persist(tag);
             em.flush();
             em.refresh(tag);

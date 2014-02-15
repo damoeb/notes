@@ -14,6 +14,7 @@ import org.notes.common.exceptions.NotesException;
 import org.notes.common.interfaces.Document;
 import org.notes.common.model.FullText;
 import org.notes.common.model.Kind;
+import org.notes.common.model.Tag;
 import org.notes.common.model.Trigger;
 import org.notes.common.service.CustomDateDeserializer;
 import org.notes.common.service.CustomDateSerializer;
@@ -110,7 +111,7 @@ public class BasicDocument implements Document {
     @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinTable(name = "document2tag")
     @Access(AccessType.FIELD)
-    private Set<Tag> tags = new HashSet(100);
+    private Set<DefaultTag> tags = new HashSet<>(100);
 
 //  -- Transient -------------------------------------------------------------------------------------------------------
 
@@ -142,7 +143,7 @@ public class BasicDocument implements Document {
         this.star = star;
         if (StringUtils.isNotBlank(tagsJson)) {
             try {
-                Tag[] tags = new ObjectMapper().readValue(tagsJson, Tag[].class);
+                DefaultTag[] tags = new ObjectMapper().readValue(tagsJson, DefaultTag[].class);
                 this.tags.addAll(Arrays.asList(tags));
             } catch (IOException e) {
                 //
@@ -309,12 +310,13 @@ public class BasicDocument implements Document {
         this.star = star;
     }
 
-    public Set<Tag> getTags() {
+    @Override
+    public Set<? extends Tag> getTags() {
         // todo tags should be indexed
         return tags;
     }
 
-    public void setTags(Set<Tag> tags) {
+    public void setTags(Set<DefaultTag> tags) {
         this.tags = tags;
 
         if (tags != null) {

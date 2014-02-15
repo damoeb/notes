@@ -2,23 +2,23 @@ package org.notes.core.model;
 
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.notes.common.model.Tag;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 @Entity(name = "Tag")
 @Table(name = "Tag")
 @NamedQueries({
-        @NamedQuery(name = Tag.QUERY_BY_ID, query = "SELECT a FROM Tag a where a.id=:ID"),
-        @NamedQuery(name = Tag.QUERY_BY_NAME, query = "SELECT a FROM Tag a where a.name=:NAME"),
-        @NamedQuery(name = Tag.QUERY_ALL, query = "SELECT a FROM Tag a")
+        @NamedQuery(name = DefaultTag.QUERY_BY_ID, query = "SELECT a FROM Tag a where a.id=:ID"),
+        @NamedQuery(name = DefaultTag.QUERY_BY_NAME, query = "SELECT a FROM Tag a where a.name=:NAME"),
+        @NamedQuery(name = DefaultTag.QUERY_ALL, query = "SELECT a FROM Tag a")
 })
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-public class Tag implements Serializable {
+public class DefaultTag implements Tag {
 
-    public static final String QUERY_BY_ID = "Tag.QUERY_BY_ID";
-    public static final String QUERY_ALL = "Tag.QUERY_ALL";
-    public static final String QUERY_BY_NAME = "Tag.QUERY_BY_NAME";
+    public static final String QUERY_BY_ID = "DefaultTag.QUERY_BY_ID";
+    public static final String QUERY_ALL = "DefaultTag.QUERY_ALL";
+    public static final String QUERY_BY_NAME = "DefaultTag.QUERY_BY_NAME";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,11 +30,11 @@ public class Tag implements Serializable {
 
 //  --------------------------------------------------------------------------------------------------------------------
 
-    public Tag() {
+    public DefaultTag() {
         // default
     }
 
-    public Tag(String name) {
+    public DefaultTag(String name) {
         this.name = name;
     }
 
@@ -46,6 +46,7 @@ public class Tag implements Serializable {
         this.id = id;
     }
 
+    @Override
     public String getName() {
         return name;
     }
@@ -56,8 +57,8 @@ public class Tag implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof Tag) {
-            Tag other = (Tag) obj;
+        if (obj instanceof DefaultTag) {
+            DefaultTag other = (DefaultTag) obj;
             return StringUtils.equals(other.getName(), getName());
         }
         return super.equals(obj);

@@ -9,6 +9,7 @@ import org.hibernate.Session;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
 import org.notes.common.model.FileReference;
+import org.notes.common.model.Tag;
 import org.notes.common.model.Trigger;
 import org.notes.core.interfaces.*;
 import org.notes.core.model.*;
@@ -281,9 +282,12 @@ public class DocumentManagerBean implements DocumentManager {
         }
     }
 
-    private boolean equalsTags(Set<Tag> a, Set<Tag> b) {
+    private boolean equalsTags(Set<? extends Tag> a, Set<? extends Tag> b) {
         if (a == null && b == null) {
             return true;
+        }
+        if (a == null) {
+            return false;
         }
         if (a.isEmpty() && b.isEmpty()) {
             return true;
@@ -301,12 +305,12 @@ public class DocumentManagerBean implements DocumentManager {
         return true;
     }
 
-    private Set<Tag> resolveTags(Set<Tag> cached, Set<Tag> tags) throws NotesException {
-        Set<Tag> resolved = new HashSet<>(tags.size());
+    private Set<DefaultTag> resolveTags(Set<? extends Tag> cached, Set<? extends Tag> tags) throws NotesException {
+        Set<DefaultTag> resolved = new HashSet<>(tags.size());
 
-        Map<String, Tag> cache = new HashMap<>();
+        Map<String, DefaultTag> cache = new HashMap<>();
         for (Tag c : cached) {
-            cache.put(c.getName(), c);
+            cache.put(c.getName(), (DefaultTag) c);
         }
 
         for (Tag t : tags) {
