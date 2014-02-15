@@ -17,7 +17,8 @@ notes.model = {
         defaults: {
             modified: null,
             title: '',
-            star: false
+            star: false,
+            tags: []
         },
         urlRoot: REST_SERVICE + '/document/basic/'
     }),
@@ -27,7 +28,8 @@ notes.model = {
             modified: null,
             title: '',
             star: false,
-            text: ''
+            text: '',
+            tags: []
         },
         urlRoot: REST_SERVICE + '/document/text/'
     }),

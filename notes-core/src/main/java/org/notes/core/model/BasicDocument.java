@@ -3,6 +3,7 @@ package org.notes.core.model;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.annotate.JsonTypeInfo;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
@@ -108,10 +109,11 @@ public class BasicDocument implements Document {
     @Index(name = "event_trigger_idx")
     private Trigger trigger;
 
-    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, defaultImpl = DefaultTag.class)
+    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, targetEntity = DefaultTag.class)
     @JoinTable(name = "document2tag")
     @Access(AccessType.FIELD)
-    private Set<DefaultTag> tags = new HashSet<>(100);
+    private Set<Tag> tags = new HashSet<>(100);
 
 //  -- Transient -------------------------------------------------------------------------------------------------------
 
@@ -311,12 +313,11 @@ public class BasicDocument implements Document {
     }
 
     @Override
-    public Set<? extends Tag> getTags() {
-        // todo tags should be indexed
+    public Set<Tag> getTags() {
         return tags;
     }
 
-    public void setTags(Set<DefaultTag> tags) {
+    public void setTags(Set<Tag> tags) {
         this.tags = tags;
 
         if (tags != null) {

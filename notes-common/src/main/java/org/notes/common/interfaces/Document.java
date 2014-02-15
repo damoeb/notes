@@ -39,7 +39,7 @@ public interface Document extends Serializable {
 
     boolean isStar();
 
-    Set<? extends Tag> getTags();
+    Set<Tag> getTags();
 
     String getUniqueHash();
 
