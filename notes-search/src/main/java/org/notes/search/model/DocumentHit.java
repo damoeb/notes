@@ -15,7 +15,6 @@ import java.util.Map;
 
 public class DocumentHit {
 
-    private final String outline;
     private final Float score;
 
     @JsonDeserialize(using = CustomDateDeserializer.class)
@@ -28,6 +27,8 @@ public class DocumentHit {
     private final Boolean star;
     private final String uniqueHash;
     private final Long id;
+    private Long numFoundInGroup;
+    private final Long section;
 
     public DocumentHit(SolrDocument solrDocument, Map<String, List<String>> highlights) {
 
@@ -39,8 +40,8 @@ public class DocumentHit {
             this.title = (String) solrDocument.getFirstValue(SolrFields.TITLE_STORED_ONLY);
         }
         this.owner = (String) solrDocument.getFirstValue(SolrFields.OWNER);
-        this.outline = (String) solrDocument.getFirstValue(SolrFields.OUTLINE);
         this.star = (Boolean) solrDocument.getFirstValue(SolrFields.STAR);
+        this.section = (Long) solrDocument.getFirstValue(SolrFields.SECTION);
         this.uniqueHash = (String) solrDocument.getFirstValue(SolrFields.UNIQUE_HASH);
         this.kind = Kind.valueOf((String) solrDocument.getFirstValue(SolrFields.KIND));
         this.score = (Float) solrDocument.getFirstValue("score");
@@ -64,16 +65,16 @@ public class DocumentHit {
         return uniqueHash;
     }
 
-    public String getOutline() {
-        return outline;
-    }
-
     public Float getScore() {
         return score;
     }
 
     public Date getModified() {
         return modified;
+    }
+
+    public Long getSection() {
+        return section;
     }
 
     public String getTitle() {
@@ -90,5 +91,13 @@ public class DocumentHit {
 
     public Kind getKind() {
         return kind;
+    }
+
+    public Long getNumFoundInGroup() {
+        return numFoundInGroup;
+    }
+
+    public void setNumFoundInGroup(Long numFoundInGroup) {
+        this.numFoundInGroup = numFoundInGroup;
     }
 }

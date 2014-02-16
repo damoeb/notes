@@ -50,13 +50,6 @@ public class SearchManagerBean implements SearchManager {
 
             SolrQuery query = new SolrQuery();
 
-            // todo add databaseId
-
-            query.setQuery(String.format("+(title:%1$s^10 text:%1$s)", queryString));
-            query.add("group.field", "document");
-            query.add("group.main", "true");
-            query.add("group", "true");
-
             query.setFields(SolrFields.ID, SolrFields.DOCUMENT, SolrFields.TITLE, SolrFields.TITLE_STORED_ONLY, SolrFields.FOLDER, SolrFields.OUTLINE,
                     SolrFields.SECTION, SolrFields.MODIFIED, SolrFields.KIND, SolrFields.OWNER, SolrFields.STAR,
                     SolrFields.UNIQUE_HASH, SolrFields.TEXT);
@@ -70,7 +63,17 @@ public class SearchManagerBean implements SearchManager {
             query.addHighlightField(SolrFields.TEXT);
             query.setIncludeScore(true);
 
-            // todo join http://wiki.apache.org/solr/Join
+            query.setTimeAllowed(3000);
+
+            // todo add databaseId
+
+
+            query.setQuery(String.format("+(title:%1$s^10 text:%1$s)", queryString));
+            // docs https://wiki.apache.org/solr/FieldCollapsing
+            query.add("group.field", "document");
+            //query.add("group.main", "true");
+            query.add("group", "true");
+            query.add("group.format", "grouped");
 
             // todo facets
 

@@ -1,4 +1,5 @@
 - search: index wird geloescht am start
+- tags not required als db entity
 - use uniqueHash instead of document id
 - in common only use interfaces, put impl in core/..
 - viewer for unknown type
