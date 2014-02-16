@@ -10,8 +10,9 @@ import org.notes.common.model.FullText;
 import org.notes.common.model.Kind;
 
 import javax.persistence.*;
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
 @Entity(name = "BookmarkDocument")
 @Table(name = "BookmarkDocument")
@@ -79,6 +80,8 @@ public class BookmarkDocument extends BasicDocument implements Harvestable {
     @JsonIgnore
     @Override
     public Collection<FullText> getTexts() {
-        return Arrays.asList(new FullText(1, text));
+        List<FullText> list = new LinkedList<>();
+        list.add(new DefaultFullText(0, text));
+        return list;
     }
 }

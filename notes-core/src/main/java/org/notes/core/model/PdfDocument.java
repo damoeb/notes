@@ -17,15 +17,12 @@ import org.notes.search.interfaces.TextExtractor;
 import javax.naming.InitialContext;
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 @Entity(name = "PdfDocument")
-@Table(name = "PdfDocument"
-//    todo uniqueConstraints = @UniqueConstraint(columnNames = {
-//            FileReference.FK_FILE_REFERENCE_ID,
-//            Folder.FK_FOLDER_ID
-//    })
-)
+@Table(name = "PdfDocument")
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class PdfDocument extends BasicDocument implements Extractable {
 
@@ -111,10 +108,12 @@ public class PdfDocument extends BasicDocument implements Extractable {
 
                 TextExtractor extractor = (TextExtractor) ic.lookup("java:comp/env/" + PdfTextExtractor.BEAN_NAME);
                 ExtractionResult result = extractor.extract(reference);
-                Set<FullText> fullTexts = result.getFullTexts();
-                if (fullTexts.isEmpty()) {
-                    // todo check if working
-                    throw new NotesException("FullText not extractable");
+                Map<Integer, String> extracted = result.getFullTexts();
+
+                Set<FullText> fullTexts = new HashSet<>(extracted.size());
+                for (Integer page : extracted.keySet()) {
+                    String text = extracted.get(page);
+                    fullTexts.add(new DefaultFullText(page, text));
                 }
 
                 ((DefaultFileReference) reference).setFullTexts(fullTexts);

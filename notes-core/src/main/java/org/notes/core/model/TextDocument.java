@@ -9,8 +9,9 @@ import org.notes.common.utils.TextUtils;
 import javax.persistence.Entity;
 import javax.persistence.Lob;
 import javax.persistence.Table;
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
 @Entity(name = "TextDocument")
 @Table(name = "TextDocument")
@@ -44,6 +45,8 @@ public class TextDocument extends BasicDocument {
     @Override
     @JsonIgnore
     public Collection<FullText> getTexts() {
-        return Arrays.asList(new FullText(0, text));
+        List<FullText> list = new LinkedList<>();
+        list.add(new DefaultFullText(0, text));
+        return list;
     }
 }

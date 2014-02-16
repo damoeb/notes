@@ -7,7 +7,6 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.util.PDFTextStripper;
 import org.notes.common.exceptions.NotesException;
 import org.notes.common.model.FileReference;
-import org.notes.common.model.FullText;
 import org.notes.search.interfaces.TextExtractor;
 
 import javax.ejb.EJB;
@@ -15,8 +14,8 @@ import javax.ejb.Stateless;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 @Stateless
 @EJB(name = PdfTextExtractor.BEAN_NAME, beanInterface = TextExtractor.class)
@@ -31,7 +30,7 @@ public class PdfTextExtractor implements TextExtractor {
         COSDocument cosDoc = null;
 
         try {
-            Set<FullText> fullTexts = new HashSet<>(50);
+            Map<Integer, String> fullTexts = new HashMap<>(50);
 
             PDFParser parser = new PDFParser(new FileInputStream(new File(file.getReference())));
             parser.parse();
@@ -45,8 +44,9 @@ public class PdfTextExtractor implements TextExtractor {
                 stripper.setEndPage(page);
 
                 String fullText = stripper.getText(pdDoc);
-                if (StringUtils.isNotBlank(fullText)) {
-                    fullTexts.add(new FullText(page, fullText));
+                if (StringUtils.isNotBlank(StringUtils.trim(fullText))) {
+                    //fullTexts.add(new FullText(page, fullText));
+                    fullTexts.put(page, fullText);
                 }
             }
 

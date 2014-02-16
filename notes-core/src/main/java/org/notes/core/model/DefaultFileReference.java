@@ -9,7 +9,6 @@ import org.notes.common.model.FileReference;
 import org.notes.common.model.FullText;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -48,7 +47,7 @@ public class DefaultFileReference implements FileReference {
     private ContentType contentType;
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = DefaultFullText.class)
     @JoinColumn(name = ForeignKey.FILE_REFERENCE_ID)
     private Set<FullText> fullTexts = new HashSet(50);
 

@@ -1,20 +1,18 @@
 package org.notes.search;
 
-import org.notes.common.model.FullText;
-
-import java.util.Set;
+import java.util.Map;
 
 public class ExtractionResult {
 
-    private Set<FullText> fullTexts;
+    private Map<Integer, String> fullTexts;
     private int numberOfPages;
 
-    public ExtractionResult(Set<FullText> fullTexts, int numberOfPages) {
+    public ExtractionResult(Map<Integer, String> fullTexts, int numberOfPages) {
         this.fullTexts = fullTexts;
         this.numberOfPages = numberOfPages;
     }
 
-    public Set<FullText> getFullTexts() {
+    public Map<Integer, String> getFullTexts() {
         return fullTexts;
     }
 
