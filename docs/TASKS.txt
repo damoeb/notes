@@ -1,4 +1,6 @@
+- back knopf ist nicht noetig, da bereits durch browser funktion zurueck vorhanden
 - search: index wird geloescht am start
+- search: auf sidebar facetten anzeigen
 - tags not required als db entity
 - use uniqueHash instead of document id
 - in common only use interfaces, put impl in core/..
