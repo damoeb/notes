@@ -43,7 +43,7 @@ public class Attachment implements Serializable {
 //  -- References ------------------------------------------------------------------------------------------------------
 
     @JsonIgnore
-    @ManyToOne(cascade = {}, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = {}, fetch = FetchType.LAZY, targetEntity = DefaultFileReference.class)
     @JoinColumn(name = ForeignKey.FILE_REFERENCE_ID)
     private FileReference fileReference;
 

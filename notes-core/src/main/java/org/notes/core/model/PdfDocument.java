@@ -34,7 +34,7 @@ public class PdfDocument extends BasicDocument implements Extractable {
 //  -- References ------------------------------------------------------------------------------------------------------
 
     @JsonIgnore
-    @ManyToOne(cascade = {}, fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(cascade = {}, fetch = FetchType.LAZY, optional = false, targetEntity = DefaultFileReference.class)
     @JoinColumn(name = ForeignKey.FILE_REFERENCE_ID)
     private FileReference fileReference;
 
@@ -117,7 +117,7 @@ public class PdfDocument extends BasicDocument implements Extractable {
                     throw new NotesException("FullText not extractable");
                 }
 
-                reference.setFullTexts(fullTexts);
+                ((DefaultFileReference) reference).setFullTexts(fullTexts);
                 setNumberOfPages(result.getNumberOfPages());
 
                 long delta = System.currentTimeMillis() - time;

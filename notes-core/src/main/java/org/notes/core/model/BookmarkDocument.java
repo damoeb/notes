@@ -23,7 +23,7 @@ public class BookmarkDocument extends BasicDocument implements Harvestable {
 //  -- References ------------------------------------------------------------------------------------------------------
 
     @JsonIgnore
-    @OneToOne(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, optional = true)
+    @OneToOne(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, optional = true, targetEntity = DefaultFileReference.class)
     @JoinColumn(name = ForeignKey.FILE_REFERENCE_ID)
     private FileReference siteSnapshot;
 

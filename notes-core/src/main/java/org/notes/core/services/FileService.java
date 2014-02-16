@@ -5,7 +5,7 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.lang.math.NumberUtils;
 import org.notes.common.configuration.NotesInterceptors;
-import org.notes.common.model.FileReference;
+import org.notes.core.model.DefaultFileReference;
 import org.notes.core.interfaces.DocumentManager;
 import org.notes.core.interfaces.FileReferenceManager;
 import org.notes.core.metric.ServiceMetric;
@@ -132,7 +132,7 @@ public class FileService {
 
         // Get requested file by path info.
 
-        FileReference reference;
+        DefaultFileReference reference;
         try {
             if (!NumberUtils.isNumber(fileIdString)) {
                 throw new IllegalArgumentException("Invalid file id");

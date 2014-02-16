@@ -31,7 +31,7 @@ public class PdfTextExtractor implements TextExtractor {
         COSDocument cosDoc = null;
 
         try {
-            Set<FullText> fullTexts = new HashSet(50);
+            Set<FullText> fullTexts = new HashSet<>(50);
 
             PDFParser parser = new PDFParser(new FileInputStream(new File(file.getReference())));
             parser.parse();
