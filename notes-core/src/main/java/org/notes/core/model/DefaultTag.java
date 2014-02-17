@@ -27,7 +27,7 @@ public class DefaultTag implements Tag {
     private long id;
 
     @Basic
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String name;
 
     @Transient

@@ -27,6 +27,8 @@ $.widget('notes.basiceditor', {
         $rendered.find('.action-star').unbind('click').click($this.fnStar);
 
         $this.fnRenderTags();
+        // todo recommend tags
+        $this.fnRenderTagNetwork();
 
         var addNewTagsFromField = function () {
             var newTagNames = $this.element.find('.new-tag-value').val().split(' ');
@@ -89,6 +91,33 @@ $.widget('notes.basiceditor', {
         $this.fnRenderTags();
     },
 
+    fnRenderTagNetwork: function () {
+        var $this = this;
+
+        console.log('render tag network');
+
+        var $tagsLayer = $this.element.find('.tags-network');
+
+        var onSuccess = function (tags) {
+            $tagsLayer.empty();
+            if (tags.length == 0) {
+                $tagsLayer.append('none');
+            } else {
+                for (var i = 0; i < tags.length; i++) {
+                    var tag = tags[i];
+                    var $tag = $('<a/>', {href: '#', class: 'label label-default', title: 'Add tag', text: tag.name}).click(function () {
+                        $this.fnAddTag(tag.name);
+                    });
+                    $tagsLayer.append(' ');
+                    $tagsLayer.append($tag);
+                }
+            }
+        };
+
+        notes.util.jsonCall('GET', REST_SERVICE + '/tag/network', null, null, onSuccess, null);
+
+    },
+
     fnRenderTags: function () {
         var $this = this;
 
@@ -101,7 +130,6 @@ $.widget('notes.basiceditor', {
         if (model.has('tags') && model.get('tags').length > 0) {
             // todo sort tags
             $.each(model.get('tags'), function (index, tag) {
-                //var $tag = $('<a href="#" class="label label-default" title="Remove tag"></a>', {text: tag.name}).click(function(){
                 var $tag = $('<a/>', {href: '#', class: 'label label-default', title: 'Remove tag', text: tag.name}).click(function () {
                     $this.fnRemoveTag(tag.name);
                 });
