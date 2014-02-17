@@ -12,8 +12,8 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 import org.notes.common.configuration.Configuration;
 import org.notes.common.configuration.ConfigurationProperty;
 import org.notes.common.configuration.NotesInterceptors;
+import org.notes.common.configuration.SolrFields;
 import org.notes.common.exceptions.NotesException;
-import org.notes.common.model.SolrFields;
 import org.notes.search.interfaces.SearchManager;
 
 import javax.ejb.Stateless;

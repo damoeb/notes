@@ -5,7 +5,7 @@ import org.apache.solr.client.solrj.response.GroupCommand;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
-import org.notes.common.model.SolrFields;
+import org.notes.common.configuration.SolrFields;
 import org.notes.search.model.DocumentHit;
 
 import java.util.LinkedList;

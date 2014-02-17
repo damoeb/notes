@@ -4,7 +4,6 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.hibernate.annotations.Index;
 import org.notes.common.ForeignKey;
-import org.notes.common.model.ContentType;
 import org.notes.common.model.FileReference;
 import org.notes.common.model.FullText;
 
@@ -33,7 +32,7 @@ public class DefaultFileReference implements FileReference {
 
     @Basic
     @Index(name = "checksumIdx")
-    @Column(name = "checksum", nullable = false)
+    @Column(nullable = false)
     private String checksum;
 
     @JsonIgnore
@@ -43,8 +42,7 @@ public class DefaultFileReference implements FileReference {
 
     @Basic
     @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private ContentType contentType;
+    private String contentType;
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = DefaultFullText.class)
@@ -52,7 +50,7 @@ public class DefaultFileReference implements FileReference {
     private Set<FullText> fullTexts = new HashSet(50);
 
     @Basic
-    @Column(name = "size", nullable = false)
+    @Column(nullable = false)
     private long size;
 
     @JsonIgnore
@@ -91,11 +89,11 @@ public class DefaultFileReference implements FileReference {
         this.reference = reference;
     }
 
-    public ContentType getContentType() {
+    public String getContentType() {
         return contentType;
     }
 
-    public void setContentType(ContentType contentType) {
+    public void setContentType(String contentType) {
         this.contentType = contentType;
     }
 

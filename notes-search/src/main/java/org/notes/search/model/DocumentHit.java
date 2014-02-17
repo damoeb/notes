@@ -3,8 +3,8 @@ package org.notes.search.model;
 import org.apache.solr.common.SolrDocument;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.notes.common.configuration.SolrFields;
 import org.notes.common.model.Kind;
-import org.notes.common.model.SolrFields;
 import org.notes.common.service.CustomDateDeserializer;
 import org.notes.common.service.CustomDateSerializer;
 

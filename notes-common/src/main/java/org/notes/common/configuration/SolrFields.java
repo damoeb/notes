@@ -1,4 +1,4 @@
-package org.notes.common.model;
+package org.notes.common.configuration;
 
 public class SolrFields {
     public static final String DOCUMENT = "document";

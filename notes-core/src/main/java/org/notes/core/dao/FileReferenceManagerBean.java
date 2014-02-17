@@ -7,9 +7,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
-import org.notes.common.model.ContentType;
-import org.notes.core.model.DefaultFileReference;
 import org.notes.core.interfaces.FileReferenceManager;
+import org.notes.core.model.DefaultFileReference;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
@@ -78,9 +77,9 @@ public class FileReferenceManagerBean implements FileReferenceManager {
             File fileInRepo = getNewPath(checksum);
             item.write(fileInRepo);
 
-            ContentType contentType = getContentType(fileInRepo);
+            String contentType = getContentType(fileInRepo);
 
-            if (ContentType.UNKNOWN == contentType) {
+            if (contentType == null) {
                 throw new IllegalArgumentException(String.format("MimeType %s is not supported", contentType));
             }
 
@@ -102,8 +101,8 @@ public class FileReferenceManagerBean implements FileReferenceManager {
         }
     }
 
-    private ContentType getContentType(File file) throws IOException {
-        return ContentType.fromString(Files.probeContentType(Paths.get(file.toURI())));
+    private String getContentType(File file) throws IOException {
+        return Files.probeContentType(Paths.get(file.toURI()));
     }
 
     @Override
@@ -184,11 +183,9 @@ public class FileReferenceManagerBean implements FileReferenceManager {
             File fileInRepo = getNewPath(checksum);
             FileUtils.copyFile(resource, fileInRepo);
 
-            ContentType contentType = ContentType.TEMP;
-
             fileInRepo.setExecutable(false);
 
-            reference.setContentType(contentType);
+            reference.setContentType("temp");
             reference.setChecksum(checksum);
             reference.setSize(0);
             reference.setReference(fileInRepo.getAbsolutePath());
