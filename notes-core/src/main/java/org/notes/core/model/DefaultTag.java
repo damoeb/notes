@@ -11,6 +11,7 @@ import javax.persistence.*;
 @NamedQueries({
         @NamedQuery(name = DefaultTag.QUERY_BY_ID, query = "SELECT a FROM Tag a where a.id=:ID"),
         @NamedQuery(name = DefaultTag.QUERY_BY_NAME, query = "SELECT a FROM Tag a where a.name=:NAME"),
+        @NamedQuery(name = DefaultTag.QUERY_USER_NETWORK, query = "SELECT new Tag(t.name, COUNT(t.id)) FROM BasicDocument d INNER JOIN d.tags t where d.owner=:USER GROUP BY t.name ORDER BY COUNT(t.name) DESC"),
         @NamedQuery(name = DefaultTag.QUERY_ALL, query = "SELECT a FROM Tag a")
 })
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
@@ -19,6 +20,7 @@ public class DefaultTag implements Tag {
     public static final String QUERY_BY_ID = "DefaultTag.QUERY_BY_ID";
     public static final String QUERY_ALL = "DefaultTag.QUERY_ALL";
     public static final String QUERY_BY_NAME = "DefaultTag.QUERY_BY_NAME";
+    public static final String QUERY_USER_NETWORK = "DefaultTag.QUERY_USER_NETWORK";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,6 +30,9 @@ public class DefaultTag implements Tag {
     @Column(nullable = false, unique = true)
     private String name;
 
+    @Transient
+    private Long frequency;
+
 //  --------------------------------------------------------------------------------------------------------------------
 
     public DefaultTag() {
@@ -36,6 +41,15 @@ public class DefaultTag implements Tag {
 
     public DefaultTag(String name) {
         this.name = name;
+    }
+
+    public DefaultTag(String name, Long frequency) {
+        this(name);
+        this.frequency = frequency;
+    }
+
+    public Long getFrequency() {
+        return frequency;
     }
 
     public long getId() {

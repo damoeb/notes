@@ -62,7 +62,7 @@ public class DocumentManagerBean implements DocumentManager {
 
         try {
 
-            LOGGER.info("text document");
+            LOGGER.info("create text-document");
 
             if (document == null) {
                 throw new NotesException("document is null");

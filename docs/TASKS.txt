@@ -1,3 +1,4 @@
+- mehrere tags mitm gleichen namen? redundant, oder eines mit freq count?
 - back knopf ist nicht noetig, da bereits durch browser funktion zurueck vorhanden
 - search: index wird geloescht am start
 - search: auf sidebar facetten anzeigen

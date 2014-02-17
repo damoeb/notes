@@ -4,15 +4,21 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
+import org.notes.common.model.Tag;
+import org.notes.core.interfaces.SessionData;
 import org.notes.core.interfaces.TagManager;
 import org.notes.core.model.DefaultTag;
+import org.notes.core.model.TextDocument;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
 //@LocalBean
@@ -25,6 +31,9 @@ public class TagManagerBean implements TagManager {
 
     @PersistenceContext(unitName = "primary")
     private EntityManager em;
+
+    @Inject
+    private SessionData sessionData;
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
@@ -56,4 +65,36 @@ public class TagManagerBean implements TagManager {
         }
     }
 
+    @Override
+    public Collection<Tag> getRecommendations(TextDocument document) throws NotesException {
+        try {
+            if (document == null) {
+                throw new IllegalArgumentException("name is null");
+            }
+
+            List<Tag> recommendations = new LinkedList<>();
+
+            // todo implement
+
+            return recommendations;
+
+        } catch (Throwable t) {
+            throw new NotesException("get recommendations", t);
+        }
+    }
+
+    @Override
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public Collection<Tag> getTagNetwork() throws NotesException {
+        try {
+            Query query = em.createNamedQuery(DefaultTag.QUERY_USER_NETWORK);
+            query.setMaxResults(5);
+
+            query.setParameter("USER", sessionData.getUser().getUsername());
+            return query.getResultList();
+
+        } catch (Throwable t) {
+            throw new NotesException("get tag-network", t);
+        }
+    }
 }
