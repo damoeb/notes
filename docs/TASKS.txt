@@ -1,4 +1,5 @@
-- tags redundanz entfernen
+- web clipping
+- tags redundanz entfernen, datenbank model verbessern
 - back knopf ist nicht noetig, da bereits durch browser funktion zurueck vorhanden
 - search: index wird geloescht am start
 - search: auf sidebar facetten anzeigen

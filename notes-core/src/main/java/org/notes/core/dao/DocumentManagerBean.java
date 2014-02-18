@@ -398,6 +398,7 @@ public class DocumentManagerBean implements DocumentManager {
             BookmarkDocument document = new BookmarkDocument();
             document.setUrl(ref.getUrl());
             document.setTitle(ref.getUrl());
+            document.setOutline("<i class=\"fa fa-globe fa-fw\"></i> " + document.getDomain());
 
             document.setTrigger(Trigger.HARVEST);
 

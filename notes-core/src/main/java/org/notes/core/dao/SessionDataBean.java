@@ -8,7 +8,6 @@ import org.notes.core.model.User;
 import javax.enterprise.context.SessionScoped;
 import java.util.Set;
 
-@Deprecated
 @SessionScoped
 //@StatefulTimeout(unit = TimeUnit.MINUTES, value = 30)
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)

@@ -2,6 +2,7 @@ package org.notes.core.services;
 
 import org.notes.common.cache.MethodCache;
 import org.notes.common.configuration.NotesInterceptors;
+import org.notes.core.interfaces.DocumentManager;
 import org.notes.core.interfaces.TagManager;
 import org.notes.core.metric.ServiceMetric;
 import org.notes.core.model.TextDocument;
@@ -9,6 +10,7 @@ import org.notes.core.model.TextDocument;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
@@ -20,6 +22,20 @@ public class TagService {
 
     @Inject
     private TagManager tagManager;
+    @Inject
+    private DocumentManager documentManager;
+
+    @GET
+    @ServiceMetric
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path(value = "/recommend/{documentId}")
+    public NotesResponse getRecommendations(@PathParam("documentId") long documentId) {
+        try {
+            return NotesResponse.ok(tagManager.getRecommendations(documentManager.getDocument(documentId)));
+        } catch (Throwable t) {
+            return NotesResponse.error(t);
+        }
+    }
 
     @GET
     @ServiceMetric
@@ -27,14 +43,11 @@ public class TagService {
     @Path(value = "/recommend")
     public NotesResponse getRecommendations(TextDocument document) {
         try {
-
             return NotesResponse.ok(tagManager.getRecommendations(document));
-
         } catch (Throwable t) {
             return NotesResponse.error(t);
         }
     }
-
 
     @GET
     @MethodCache
@@ -48,5 +61,4 @@ public class TagService {
             return NotesResponse.error(t);
         }
     }
-
 }

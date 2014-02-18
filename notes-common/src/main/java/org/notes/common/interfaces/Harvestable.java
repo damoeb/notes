@@ -8,6 +8,8 @@ public interface Harvestable extends Document {
 
     void setText(String text);
 
+    String getText();
+
     FileReference getSiteSnapshot();
 
     void setSiteSnapshot(FileReference siteSnapshot);
@@ -17,4 +19,6 @@ public interface Harvestable extends Document {
     void setTitle(String title);
 
     void setOutline(String url);
+
+    String getDomain();
 }
