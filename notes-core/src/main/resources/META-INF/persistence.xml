@@ -8,7 +8,7 @@
     <persistence-unit name="primary">
         <jta-data-source>java:jboss/datasources/notes_mysql</jta-data-source>
 
-        <class>org.notes.common.model.FileReference</class>
+        <class>org.notes.core.model.DefaultFileReference</class>
         <class>org.notes.common.model.FullText</class>
         <class>org.notes.core.model.BasicDocument</class>
         <class>org.notes.core.model.TextDocument</class>
@@ -17,6 +17,9 @@
         <class>org.notes.core.model.Attachment</class>
         <class>org.notes.core.model.Database</class>
         <class>org.notes.core.model.Folder</class>
+
+        <class>org.notes.core.text.TermFrequency</class>
+        <class>org.notes.core.text.TermFrequencyProperties</class>
 
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect"/>
