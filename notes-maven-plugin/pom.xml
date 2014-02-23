@@ -142,7 +142,7 @@
                 <executions>
                     <execution>
                         <id>execute</id>
-                        <phase>install</phase>
+                        <phase>package</phase>
                         <goals>
                             <goal>term-frequency</goal>
                         </goals>
