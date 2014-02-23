@@ -16,6 +16,7 @@
         <module>notes-ui</module>
         <module>notes-search</module>
         <module>notes-recommend</module>
+        <module>notes-maven-plugin</module>
     </modules>
 
 </project>
