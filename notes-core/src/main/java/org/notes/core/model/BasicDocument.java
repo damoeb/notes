@@ -90,12 +90,16 @@ public class BasicDocument implements Document {
 //	  @CollectionTable(name="attribute", joinColumns=@JoinColumn(name="document_id"))
 //    private Map<String,String> attributes = new HashMap<String, String>(3);
 
+    @Basic
+    private boolean star;
+
+    @Basic
+    @Column(length = 1024)
+    private String thumbnailUrl;
+
     @JsonIgnore
     @Basic
     private boolean deleted;
-
-    @Basic
-    private boolean star;
 
     @JsonIgnore
     @Basic
@@ -114,11 +118,6 @@ public class BasicDocument implements Document {
     @JoinTable(name = "document2tag")
     @Access(AccessType.FIELD)
     private Set<Tag> tags = new HashSet<>(100);
-
-//  -- Transient -------------------------------------------------------------------------------------------------------
-
-    @Transient
-    private Event event;
 
 //  --------------------------------------------------------------------------------------------------------------------
 
@@ -229,6 +228,15 @@ public class BasicDocument implements Document {
 
     protected void setId(long id) {
         this.id = id;
+    }
+
+    @Override
+    public String getThumbnailUrl() {
+        return thumbnailUrl;
+    }
+
+    public void setThumbnailUrl(String thumbnailUrl) {
+        this.thumbnailUrl = thumbnailUrl;
     }
 
     public String getTitle() {

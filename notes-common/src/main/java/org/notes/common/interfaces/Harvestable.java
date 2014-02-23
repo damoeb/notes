@@ -8,6 +8,10 @@ public interface Harvestable extends Document {
 
     void setText(String text);
 
+    String getThumbnailUrl();
+
+    void setThumbnailUrl(String url);
+
     String getText();
 
     FileReference getSiteSnapshot();

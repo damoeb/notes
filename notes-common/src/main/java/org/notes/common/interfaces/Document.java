@@ -17,6 +17,8 @@ public interface Document extends Serializable {
 
     long getId();
 
+    String getThumbnailUrl();
+
     String getTitle();
 
     Date getCreated();

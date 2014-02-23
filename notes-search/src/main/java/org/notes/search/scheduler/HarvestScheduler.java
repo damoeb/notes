@@ -2,6 +2,7 @@ package org.notes.search.scheduler;
 
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Element;
 import org.notes.common.configuration.Configuration;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
@@ -60,11 +61,13 @@ public class HarvestScheduler {
 //                    }
 
                     org.jsoup.nodes.Document document = Jsoup.parse(new URL(harvestable.getUrl()), 4000);
+                    document.setBaseUri(harvestable.getUrl()); // todo check
 
                     String text = document.text();
 
                     harvestable.setText(text);
                     harvestable.setTitle(document.title());
+                    harvestable.setThumbnailUrl(getThumbnailUrl(document));
 
                     harvestable.setTrigger(Trigger.INDEX);
 
@@ -75,7 +78,34 @@ public class HarvestScheduler {
 
         } catch (Throwable t) {
             LOGGER.error(t);
+
         }
+    }
+
+    private String getThumbnailUrl(org.jsoup.nodes.Document document) {
+        Element e = null;
+        e = document.select("link[rel=apple-touch-icon][href][size=114x114]").first();
+        if (e != null) {
+            return e.absUrl("href");
+        }
+        e = document.select("link[rel=apple-touch-icon][href][size=72x72]").first();
+        if (e != null) {
+            return e.absUrl("href");
+        }
+        e = document.select("link[rel=apple-touch-icon][href]").first();
+        if (e != null) {
+            return e.absUrl("href");
+        }
+        e = document.select("link[rel=icon][href]").first();
+        if (e != null) {
+            return e.absUrl("href");
+        }
+        e = document.select("link[rel=shortcut icon][href]").first();
+        if (e != null) {
+            return e.absUrl("href");
+        }
+
+        return null;
     }
 
     private FileReference harvest(String url) throws IOException, InterruptedException, NotesException {

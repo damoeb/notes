@@ -10,6 +10,7 @@ import org.notes.core.interfaces.SessionData;
 import org.notes.core.interfaces.TagManager;
 import org.notes.core.model.BasicDocument;
 import org.notes.core.model.DefaultTag;
+import org.notes.core.util.TermUtils;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -92,24 +93,31 @@ public class TagManagerBean implements TagManager {
 
     private Set<String> getBestKeywords(int num, Collection<FullText> texts) {
 
-        final Map<String, Integer> keywordFreq = getKeywordFreqMap(texts);
+        final Map<String, Integer> termFreqInDocument = getKeywordFreqMap(texts);
 
-        // todo calc tf-idf
+        int maxTermFreq = 0;
+        for (Integer freq : termFreqInDocument.values()) {
+            if (freq > maxTermFreq) {
+                maxTermFreq = freq;
+            }
+        }
+
+        final int finalMaxTermFreq = maxTermFreq;
 
         SortedSet<String> byScore = new TreeSet<>(new Comparator<String>() {
 
             @Override
             public int compare(String s1, String s2) {
-                Integer f1 = keywordFreq.get(s1);
-                Integer f2 = keywordFreq.get(s2);
-                if (f1.equals(f2)) {
+                Double tfidf1 = TermUtils.tfidf(s1, termFreqInDocument.get(s1), finalMaxTermFreq);
+                Double tfidf2 = TermUtils.tfidf(s2, termFreqInDocument.get(s2), finalMaxTermFreq);
+                if (tfidf1.equals(tfidf2)) {
                     return -1;
                 }
-                return f2.compareTo(f1);
+                return tfidf2.compareTo(tfidf1);
             }
         });
 
-        byScore.addAll(keywordFreq.keySet());
+        byScore.addAll(termFreqInDocument.keySet());
 
         // order by name
         SortedSet<String> byName = new TreeSet<>(new Comparator<String>() {

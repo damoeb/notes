@@ -54,11 +54,8 @@ public class Outputter {
             out.flush();
             out.close();
 
-
         } catch (FileNotFoundException e) {
             getLog().error(e.getMessage());
         }
-
-
     }
 }

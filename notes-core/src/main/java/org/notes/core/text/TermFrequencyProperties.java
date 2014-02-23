@@ -8,18 +8,19 @@ import java.io.Serializable;
 @Entity(name = "TermFrequencyProperties")
 @Table(name = "TermFrequencyProperties")
 @NamedQueries({
-        @NamedQuery(name = TermFrequencyProperties.QUERY_BY_NAME, query = "SELECT a FROM TermFrequencyProperties a where a.term=:term")
+        @NamedQuery(name = TermFrequencyProperties.QUERY_BY_KEY, query = "SELECT a FROM TermFrequencyProperties a where a.key=:key")
 })
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class TermFrequencyProperties implements Serializable {
 
-    public static final String QUERY_BY_NAME = "TermFrequencyProperties.QUERY_BY_NAME";
+    public static final String QUERY_BY_KEY = "TermFrequencyProperties.QUERY_BY_KEY";
 
     @Id
     @Enumerated(EnumType.STRING)
+    @Column(name = "property")
     private TermFrequencyPropertiesKey key;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "value")
     private String value;
 
 //  --------------------------------------------------------------------------------------------------------------------
