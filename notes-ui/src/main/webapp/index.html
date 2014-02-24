@@ -499,7 +499,13 @@
 
     <div class="doc doc-id-<%=uniqueHash %> row">
         <div class="col-lg-2">
-            <img src="<%= notes.util.getThumbnailByType(kind) %>">
+            <%
+            if (typeof thumbnailUrl !== 'undefined') {
+            %>
+            <img src="<%= thumbnailUrl %>" width="72">
+            <%
+            }
+            %>
         </div>
         <div class="col-lg-10">
 

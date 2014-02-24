@@ -27,7 +27,7 @@ public class BookmarkService {
         try {
 
             Folder folder = null;
-            if (bookmark == null && bookmark.getFolderId() != null) {
+            if (bookmark != null && bookmark.getFolderId() != null) {
                 folder = new Folder(bookmark.getFolderId());
             }
 
