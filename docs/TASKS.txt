@@ -1,9 +1,7 @@
-- web clipping: fav/shortcut icon als bild
 - tags redundanz entfernen, datenbank model verbessern
 - back knopf ist nicht noetig, da bereits durch browser funktion zurueck vorhanden
 - search: index wird geloescht am start
 - search: auf sidebar facetten anzeigen
-- tags not required als db entity
 - use uniqueHash instead of document id
 - viewer for unknown type
 - active folder is not synced

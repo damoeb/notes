@@ -48,28 +48,33 @@ public class HarvestScheduler {
 
             if (!list.isEmpty()) {
 
-                int count = 0;
-
                 for (Harvestable harvestable : list) {
 
-                    LOGGER.info("harvest " + harvestable.getId());
+                    try {
 
-//                    try {
-//                        harvestable.setSiteSnapshot(harvest(harvestable.getUrl()));
-//                    } catch (Throwable t) {
-//                        LOGGER.error("harvest failed", t);
-//                    }
+                        LOGGER.info("harvest " + harvestable.getId());
 
-                    org.jsoup.nodes.Document document = Jsoup.parse(new URL(harvestable.getUrl()), 4000);
-                    document.setBaseUri(harvestable.getUrl()); // todo check
+//                        try {
+//                            harvestable.setSiteSnapshot(harvest(harvestable.getUrl()));
+//                        } catch (Throwable t) {
+//                            LOGGER.error("harvest failed", t);
+//                        }
 
-                    String text = document.text();
+                        org.jsoup.nodes.Document document = Jsoup.parse(new URL(harvestable.getUrl()), 4000);
+                        document.setBaseUri(harvestable.getUrl()); // todo check
 
-                    harvestable.setText(text);
-                    harvestable.setTitle(document.title());
-                    harvestable.setThumbnailUrl(getThumbnailUrl(document));
+                        String text = document.text();
 
-                    harvestable.setTrigger(Trigger.INDEX);
+                        harvestable.setText(text);
+                        harvestable.setTitle(document.title());
+                        harvestable.setThumbnailUrl(getThumbnailUrl(document));
+
+                        harvestable.setTrigger(Trigger.INDEX);
+
+                    } catch (Throwable t) {
+                        LOGGER.warn("harvest failed " + harvestable.getId());
+                        harvestable.setTrigger(Trigger.HARVEST_FAILED);
+                    }
 
                     em.merge(harvestable);
                     em.flush();

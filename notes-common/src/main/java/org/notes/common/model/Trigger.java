@@ -5,5 +5,5 @@ public enum Trigger {
     EXTRACT_PDF,
     EXTRACT_FAILED,
     HARVEST,
-    DELETE
+    HARVEST_FAILED, DELETE
 }
