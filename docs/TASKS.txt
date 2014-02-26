@@ -1,3 +1,7 @@
+- thumbnail wie mei gmail, falls kein hq shortcut icon verfügbar: Quadrat mit Anfangsbuchstaben drin, je Buchstabe andere Farbe
+- BasicDocument, User referenzieren FingerPrint aus Array von Strings
+- navigation nur über pfad
+- pfad muss schon am anfang ausgewertet werden
 - tags redundanz entfernen, datenbank model verbessern
 - back knopf ist nicht noetig, da bereits durch browser funktion zurueck vorhanden
 - search: index wird geloescht am start

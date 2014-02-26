@@ -69,6 +69,8 @@ public class HarvestScheduler {
                         harvestable.setTitle(document.title());
                         harvestable.setThumbnailUrl(getThumbnailUrl(document));
 
+                        // todo fingerprint document
+
                         harvestable.setTrigger(Trigger.INDEX);
 
                     } catch (Throwable t) {
@@ -88,7 +90,7 @@ public class HarvestScheduler {
     }
 
     private String getThumbnailUrl(org.jsoup.nodes.Document document) {
-        Element e = null;
+        Element e;
         e = document.select("link[rel=apple-touch-icon][href][size=114x114]").first();
         if (e != null) {
             return e.absUrl("href");
