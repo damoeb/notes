@@ -1,5 +1,7 @@
 package org.notes.plugin.tf;
 
+import org.notes.common.model.TermFrequency;
+
 import java.util.SortedSet;
 
 public class ParserResult {

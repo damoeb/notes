@@ -1,4 +1,4 @@
-package org.notes.core.text;
+package org.notes.common.model;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.hibernate.annotations.Index;
@@ -21,7 +21,7 @@ public class TermFrequency implements Serializable {
     private String term;
 
     @Basic
-    private int frequency;
+    private Integer frequency;
 
 //  --------------------------------------------------------------------------------------------------------------------
 
@@ -37,11 +37,11 @@ public class TermFrequency implements Serializable {
         this.term = term;
     }
 
-    public int getFrequency() {
+    public Integer getFrequency() {
         return frequency;
     }
 
-    public void setFrequency(int frequency) {
+    public void setFrequency(Integer frequency) {
         this.frequency = frequency;
     }
 }

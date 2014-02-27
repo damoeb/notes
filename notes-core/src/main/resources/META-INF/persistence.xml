@@ -18,8 +18,8 @@
         <class>org.notes.core.model.Database</class>
         <class>org.notes.core.model.Folder</class>
 
-        <class>org.notes.core.text.TermFrequency</class>
-        <class>org.notes.core.text.TermFrequencyProperties</class>
+        <class>org.notes.common.model.TermFrequency</class>
+        <class>org.notes.common.model.TermFrequencyProperties</class>
 
         <class>org.notes.core.text.FingerPrint</class>
 

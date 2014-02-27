@@ -1,5 +1,6 @@
 package org.notes.plugin.tf;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -47,10 +48,23 @@ public class TermFrequencyGoal extends AbstractMojo {
     private String outputFileName;
 
     /**
+     * outputType
+     */
+    @Parameter(defaultValue = "sql", required = true)
+    private String outputType;
+
+    /**
+     * abortAfterDocCount
+     */
+    @Parameter
+    private Integer abortAfterDocCount;
+
+    /**
      * logOnDocCount
      */
     @Parameter(defaultValue = "100000")
     private Integer logOnDocCount;
+    private Outputter outputterByType;
 
     public TermFrequencyGoal() {
         // default
@@ -64,13 +78,30 @@ public class TermFrequencyGoal extends AbstractMojo {
         getLog().info("minTermOccurrences: " + minTermOccurrences);
         getLog().info("pathToWikiDumpXml: " + pathToWikiDumpXml);
         getLog().info("outputFileName: " + outputFileName);
+        getLog().info("abortAfterDocCount: " + abortAfterDocCount);
 
-        WikiDumpParser parser = new WikiDumpParser(minTermLength, maxTermLength, pathToWikiDumpXml, logOnDocCount, getLog());
+        Output output = Output.fromString(outputType);
+        if (output == null) {
+            throw new IllegalArgumentException(String.format("Invalid outputType '%s'. Valid ones are %s", outputType, StringUtils.join(Output.values(), ", ")));
+        }
+        getLog().info("outputType: " + outputType);
 
-        RawOutputter outputter = new RawOutputter(outputFileName, minTermOccurrences, getLog());
+        WikiDumpParser parser = new WikiDumpParser(minTermLength, maxTermLength, pathToWikiDumpXml, logOnDocCount, abortAfterDocCount, getLog());
+
+        Outputter outputter = getOutputterByType(output);
 
         outputter.output(parser.parse());
 
         getLog().info("Finished");
+    }
+
+    public Outputter getOutputterByType(Output type) {
+        switch (type) {
+            case SQL:
+                return new SqlOutputter(outputFileName, minTermOccurrences, getLog());
+            default:
+            case RAW:
+                return new RawOutputter(outputFileName, minTermOccurrences, getLog());
+        }
     }
 }

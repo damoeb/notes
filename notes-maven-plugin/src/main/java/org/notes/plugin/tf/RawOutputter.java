@@ -2,6 +2,7 @@ package org.notes.plugin.tf;
 
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.maven.plugin.logging.Log;
+import org.notes.common.model.TermFrequency;
 
 import java.io.File;
 import java.io.FileNotFoundException;

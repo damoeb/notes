@@ -5,6 +5,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.safety.Cleaner;
 import org.jsoup.safety.Whitelist;
+import org.notes.common.model.TermFrequency;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
@@ -29,6 +30,7 @@ public class WikiDumpParser {
     private final Integer maxTermLength;
     private final String pathToWikiDumpXml;
     private final Integer logOnDocCount;
+    private final Integer stopAfterDocCount;
 
     // ------------
 
@@ -52,11 +54,12 @@ public class WikiDumpParser {
 
     private long documentCount = 0;
 
-    public WikiDumpParser(Integer minTermLength, Integer maxTermLength, String pathToWikiDumpXml, Integer logOnDocCount, Log log) {
+    public WikiDumpParser(Integer minTermLength, Integer maxTermLength, String pathToWikiDumpXml, Integer logOnDocCount, Integer stopAfterDocCount, Log log) {
         this.minTermLength = minTermLength;
         this.maxTermLength = maxTermLength;
         this.pathToWikiDumpXml = pathToWikiDumpXml;
         this.logOnDocCount = logOnDocCount;
+        this.stopAfterDocCount = stopAfterDocCount;
         this.log = log;
     }
 
@@ -117,7 +120,13 @@ public class WikiDumpParser {
                 parser.next();
             }
 
-            getLog().info("finished dump in " + (System.currentTimeMillis() - start) / 1000d + "s");
+            getLog().info("Finished dump in " + (System.currentTimeMillis() - start) / 1000d + "s");
+
+            return new ParserResult(documentCount, sortedTerms);
+
+        } catch (InterruptedException e) {
+
+            getLog().info("Aborted parsing after " + (System.currentTimeMillis() - start) / 1000d + "s");
 
             return new ParserResult(documentCount, sortedTerms);
 
@@ -165,6 +174,11 @@ public class WikiDumpParser {
             getLog().info(documentCount + " documents parsed");
         }
 
+        if (stopAfterDocCount != null && documentCount >= stopAfterDocCount) {
+            getLog().info(String.format("Reached manual limit of %s documents - abort", stopAfterDocCount));
+            throw new InterruptedException();
+        }
+
         documentCount++;
 
         final StringTokenizer tokenizer = new StringTokenizer(text, " &\\_\"<>|!?=+–~-*/„“()’`´_#'°^@€%$§[]{}\n\t :,;.ˈ¹−…₂»«%¬”‘·∴ʿ");
@@ -200,12 +214,17 @@ public class WikiDumpParser {
             TermFrequency tf = termFreqMap.get(term);
 
             sortedTerms.remove(tf);
-            tf.incrementFrequency();
+
+            tf.setFrequency(tf.getFrequency() + 1);
+
             sortedTerms.add(tf);
 
         } else {
 
-            TermFrequency tf = new TermFrequency(term);
+            TermFrequency tf = new TermFrequency();
+            tf.setTerm(term);
+            tf.setFrequency(1);
+
             termFreqMap.put(term, tf);
             sortedTerms.add(tf);
         }
