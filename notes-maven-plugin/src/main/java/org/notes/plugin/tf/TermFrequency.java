@@ -1,9 +1,15 @@
 package org.notes.plugin.tf;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
 
+@Table
+@Entity
 class TermFrequency implements Serializable, Comparable<TermFrequency> {
 
+    @Id
     private String term;
     private int frequency;
 

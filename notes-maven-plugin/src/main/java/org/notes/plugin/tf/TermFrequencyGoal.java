@@ -67,7 +67,7 @@ public class TermFrequencyGoal extends AbstractMojo {
 
         WikiDumpParser parser = new WikiDumpParser(minTermLength, maxTermLength, pathToWikiDumpXml, logOnDocCount, getLog());
 
-        Outputter outputter = new Outputter(outputFileName, minTermOccurrences, getLog());
+        RawOutputter outputter = new RawOutputter(outputFileName, minTermOccurrences, getLog());
 
         outputter.output(parser.parse());
 
