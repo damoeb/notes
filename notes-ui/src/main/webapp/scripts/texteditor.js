@@ -36,37 +36,6 @@ $.widget('notes.texteditor', $.notes.basiceditor, {
             model.set('star', $star.attr('star') === 'true');
         };
 
-        $this.fnEditMode = function () {
-            console.log('edit mode');
-
-            $rendered.find('.action-edit-mode').hide();
-            $rendered.find('.action-view-mode').show();
-            $text.summernote(SUMMERNOTE_CFG);
-        };
-
-        $this.fnViewMode = function () {
-            console.log('view mode');
-
-            $rendered.find('.action-edit-mode').show();
-            $rendered.find('.action-view-mode').hide();
-
-            $this.fnSave.call($this);
-
-            $text.destroy();
-        };
-
-        if ($this.options.editMode) {
-            $this.fnEditMode.call($this);
-        }
-
-        $rendered.find('.action-edit-mode').click(function () {
-            $this.fnEditMode.call($this);
-        });
-
-        $rendered.find('.action-view-mode').click(function () {
-            $this.fnViewMode.call($this);
-        });
-
         $this._createParent();
 
     }

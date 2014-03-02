@@ -235,14 +235,8 @@
 
             <div id="search-view" class="col-lg-9" style="display: none">
 
-            <div class="row" style="height: 32px; background-color: whitesmoke;">
-
-                    <button class="btn btn-default btn-sm action-close" title="Back">
-                        <i class="fa fa-fw fa-angle-left"></i>
-                        Back
-                    </button>
-
-                    <!--All In Folder | All Notes PDFs Media-->
+                <div class="row" style="height: 32px;">
+                <!--All In Folder | All Notes PDFs Media-->
                 </div>
 
                 <div style="margin-top: 5px; color: #999"><span class="numFound">0</span> results (<span
@@ -286,8 +280,8 @@
     <div class="col-lg-2">
 
         <!-- header -->
-        <div style="height: 32px; background-color: whitesmoke;" class="row">
-            <div class="btn-group pull-right">
+        <div style="height: 32px;" class="row">
+        <div class="btn-group pull-right">
 
                 <button class="btn btn-default btn-sm action-star" title="Highlight" star="<%=star %>">
                                 <span class="pane-with-star <%=!star?'hidden':'' %>">
@@ -367,23 +361,13 @@
 
 
     <div class="col-lg-7">
-    <div class="row" style="height: 32px; background-color: whitesmoke;">
+        <div class="row" style="height: 32px;">
 
             <div class="btn-group pull-left">
 
-                <button class="btn btn-default btn-sm action-close" title="Back">
+                <button class="btn btn-default btn-sm action-close" title="Save">
                     <i class="fa fa-fw fa-angle-left"></i>
-                    Back
-                </button>
-
-                <button class="btn btn-default btn-sm action-edit-mode">
-                    <i class="fa fa-fw fa-pencil"></i>
-                    Edit Mode
-                </button>
-
-                <button class="btn btn-primary btn-sm action-view-mode" style="display: none">
-                    <i class="fa fa-fw fa-eye"></i>
-                    View Mode
+                    Save
                 </button>
 
             </div>
@@ -397,9 +381,9 @@
         </div>
 
         <div>
-            <h3 class="field-title"><%= title %></h3>
+            <h3 class="field-title editable-simple"><%= title %></h3>
 
-            <div style="margin-top: 10px; line-height:20px;" class="field-text"><%= text %></div>
+            <div style="margin-top: 10px; line-height:20px;" class="field-text editable-complex"><%= text %></div>
 
         </div>
 
@@ -415,13 +399,13 @@
 
 
     <div class="col-lg-7">
-        <div class="row" style="height: 32px; background-color: whitesmoke;">
+        <div class="row" style="height: 32px; ">
 
             <div class="btn-group pull-left">
 
-                <button class="btn btn-default btn-sm action-close" title="Back">
+                <button class="btn btn-default btn-sm action-close" title="Save">
                     <i class="fa fa-fw fa-angle-left"></i>
-                    Back
+                    Save
                 </button>
 
             </div>
@@ -435,11 +419,10 @@
         </div>
 
         <div>
-            <h3 class="field-title"><%= title %></h3>
+            <h3 class="field-title editable-simple"><%= title %></h3>
 
             <div style="margin-top: 10px; line-height:20px;" class="field-url"><%= url %></div>
-            <div style="margin-top: 10px; line-height:20px;" class="field-text"><%= text %></div>
-            <!--<div style="margin-top: 10px; line-height:20px;" class="field-fingerprint"><%= fingerprint %></div>-->
+            <!--<div style="margin-top: 10px; line-height:20px;" class="field-text editable-complex"></div>-->
 
         </div>
 
@@ -455,13 +438,13 @@
 <script type="text/template" id="pdf-editor">
 
     <div class="col-lg-7">
-    <div class="row" style="height: 32px; background-color: whitesmoke;">
+        <div class="row" style="height: 32px; ">
 
             <div class="btn-group input-group-sm pull-left">
 
-                <button class="btn btn-default btn-sm action-close" title="Back">
+                <button class="btn btn-default btn-sm action-close" title="Save">
                     <i class="fa fa-fw fa-angle-left"></i>
-                    Back
+                    Save
                 </button>
 
                 <!--<button class="btn btn-default btn-sm action-maximize" title="Maximize">-->
@@ -492,7 +475,7 @@
         </div>
 
         <div>
-            <h3 class="field-title"><%= title %></h3>
+            <h3 class="field-title editable-simple"><%= title %></h3>
 
             <div class="pdf-container">
                 <!-- generated -->
@@ -696,38 +679,39 @@
 <!-- notifications -->
 <script src="bower_components/noty/js/noty/jquery.noty.js"></script>
 <script type="text/javascript">
-
-    $.noty.defaults = {
-        layout: 'bottom',
-        theme: 'defaultTheme',
-        type: 'alert',
-        text: '', // can be html or string
-        dismissQueue: true, // If you want to use queue feature set this true
-        template: '<div class="noty_message"><span class="noty_text"></span><div class="noty_close"></div></div>',
-        animation: {
-            open: {height: 'toggle'},
-            close: {height: 'toggle'},
-            easing: 'swing',
-            speed: 500 // opening & closing animation speed
-        },
-        timeout: 1000, // delay for closing event. Set false for sticky notifications
-        force: false, // adds notification to the beginning of queue when set to true
-        modal: false,
-        maxVisible: 5, // you can set max visible notification for dismissQueue true option,
-        killer: false, // for close all notifications before show
-        closeWith: ['click'], // ['click', 'button', 'hover']
-        callback: {
-            onShow: function () {
+    $(function () {
+        $.noty.defaults = {
+            layout: 'top',
+            theme: 'defaultTheme',
+            type: 'alert',
+            text: '', // can be html or string
+            dismissQueue: true, // If you want to use queue feature set this true
+            template: '<div class="noty_message"><span class="noty_text"></span><div class="noty_close"></div></div>',
+            animation: {
+                open: {height: 'toggle'},
+                close: {height: 'toggle'},
+                easing: 'swing',
+                speed: 500 // opening & closing animation speed
             },
-            afterShow: function () {
+            timeout: 1000, // delay for closing event. Set false for sticky notifications
+            force: false, // adds notification to the beginning of queue when set to true
+            modal: false,
+            maxVisible: 5, // you can set max visible notification for dismissQueue true option,
+            killer: false, // for close all notifications before show
+            closeWith: ['click'], // ['click', 'button', 'hover']
+            callback: {
+                onShow: function () {
+                },
+                afterShow: function () {
+                },
+                onClose: function () {
+                },
+                afterClose: function () {
+                }
             },
-            onClose: function () {
-            },
-            afterClose: function () {
-            }
-        },
-        buttons: false // an array of buttons
-    };
+            buttons: false // an array of buttons
+        };
+    });
 </script>
 
 
@@ -826,7 +810,7 @@
 
     });
 
-    var SUMMERNOTE_CFG = {
+    var SUMMERNOTE_COMPLEX_CFG = {
         height: 300,
         toolbar: [
             //['style', ['style']], // no style button
@@ -836,8 +820,16 @@
             ['para', ['ul', 'ol', 'paragraph']],
             ['height', ['height']],
             //['insert', ['picture', 'link']], // no insert buttons
-            ['table', ['table']], // no table button
+            ['table', ['table']], // table button
             //['help', ['help']] //no help button
+        ]
+    };
+
+    var SUMMERNOTE_SIMPLE_CFG = {
+        height: 35,
+        toolbar: [
+            ['style', ['bold', 'italic', 'underline', 'clear']],
+            ['color', ['color']],
         ]
     };
 
