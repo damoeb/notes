@@ -44,4 +44,21 @@ public class TermFrequency implements Serializable {
     public void setFrequency(Integer frequency) {
         this.frequency = frequency;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof TermFrequency)) return false;
+
+        TermFrequency that = (TermFrequency) o;
+
+        if (!term.equalsIgnoreCase(that.term)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return term.hashCode();
+    }
 }

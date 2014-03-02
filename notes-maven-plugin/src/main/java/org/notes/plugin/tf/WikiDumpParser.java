@@ -14,6 +14,7 @@ import javax.xml.stream.XMLStreamReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.Normalizer;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -22,6 +23,7 @@ public class WikiDumpParser {
     private static final int MAX_ELEMENTS = 0;
 
     private final Pattern urlPattern = Pattern.compile("http[s]?://[^ ]+");
+    private final Pattern asciiPattern = Pattern.compile("[^\\\\p{ASCII}]");
 
     // ------------
 
@@ -48,7 +50,7 @@ public class WikiDumpParser {
 
     });
 
-    private final Set<String> termsInDocument = new HashSet<>(1000);
+    private final Map<String, String> termsInDocument = new HashMap<>(1000);
 
     // ------------
 
@@ -181,7 +183,7 @@ public class WikiDumpParser {
 
         documentCount++;
 
-        final StringTokenizer tokenizer = new StringTokenizer(text, " &\\_\"<>|!?=+–~-*/„“()’`´_#'°^@€%$§[]{}\n\t :,;.ˈ¹−…₂»«%¬”‘·∴ʿ");
+        final StringTokenizer tokenizer = new StringTokenizer(text, " &\\_\"<>|!?=+–~-*/„“()’`´_#'°^@€%$§[]{}\n\t :,;.ˈ¹−…₂»«%¬”‘·∴ʿ‰″");
 
         termsInDocument.clear();
 
@@ -199,19 +201,19 @@ public class WikiDumpParser {
                 continue;
             }
 
-            termsInDocument.add(token);
+            termsInDocument.put(normTerm(token), token);
         }
 
-        for (String term : termsInDocument) {
-            pushTerm(term);
+        for (String normed : termsInDocument.keySet()) {
+            pushTerm(normed, termsInDocument.get(normed));
         }
     }
 
-    private void pushTerm(final String term) throws InterruptedException {
+    private void pushTerm(final String normed, String term) throws InterruptedException {
 
-        if (termFreqMap.containsKey(term)) {
+        if (termFreqMap.containsKey(normed)) {
 
-            TermFrequency tf = termFreqMap.get(term);
+            TermFrequency tf = termFreqMap.get(normed);
 
             sortedTerms.remove(tf);
 
@@ -225,9 +227,14 @@ public class WikiDumpParser {
             tf.setTerm(term);
             tf.setFrequency(1);
 
-            termFreqMap.put(term, tf);
+            termFreqMap.put(normed, tf);
             sortedTerms.add(tf);
         }
+    }
+
+    private String normTerm(String term) {
+        term = Normalizer.normalize(term, Normalizer.Form.NFD);
+        return asciiPattern.matcher(term).replaceAll("").toLowerCase();
     }
 
 }

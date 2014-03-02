@@ -10,10 +10,8 @@ import org.apache.maven.plugins.annotations.Parameter;
 
 import java.util.regex.Pattern;
 
-@Mojo(name = "term-frequency", threadSafe = true, requiresOnline = false, defaultPhase = LifecyclePhase.GENERATE_RESOURCES)
+@Mojo(name = "term-frequency", threadSafe = false, requiresOnline = false, defaultPhase = LifecyclePhase.GENERATE_RESOURCES)
 public class TermFrequencyGoal extends AbstractMojo {
-
-    private static final int MAX_ELEMENTS = 0;
 
     private final Pattern urlPattern = Pattern.compile("http[s]?://[^ ]+");
 
@@ -33,7 +31,7 @@ public class TermFrequencyGoal extends AbstractMojo {
      * minTermOccurrences
      */
     @Parameter
-    private Integer minTermOccurrences = 2;
+    private Integer minTermOccurrences = 4;
 
     /**
      * pathToWikiDumpXml
@@ -44,7 +42,7 @@ public class TermFrequencyGoal extends AbstractMojo {
     /**
      * outputFileName
      */
-    @Parameter(defaultValue = "TermFrequency.txt")
+    @Parameter(defaultValue = "TermFrequency.out")
     private String outputFileName;
 
     /**

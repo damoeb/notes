@@ -61,9 +61,9 @@ public class HarvestScheduler {
 //                        }
 
                         org.jsoup.nodes.Document document = Jsoup.parse(new URL(harvestable.getUrl()), 4000);
-                        document.setBaseUri(harvestable.getUrl()); // todo check
+                        document.setBaseUri(harvestable.getUrl());
 
-                        String text = document.text();
+                        String text = document.select("body").text();
 
                         harvestable.setText(text);
                         harvestable.setTitle(document.title());

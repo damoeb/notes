@@ -10,6 +10,10 @@ import org.notes.common.configuration.Configuration;
 public final class TextUtils {
 
     public static String toOutline(String first, String... more) {
+        if (first == null) {
+            return "";
+        }
+
         int outlineSize = Configuration.Constants.OUTLINE_LENGTH;
         StringBuilder outline = new StringBuilder(outlineSize * 2);
 

@@ -47,6 +47,99 @@ body {
 
 .doc {
   margin: 0 0 20px 0;
+
+  .url {
+    color: #006621;
+    margin-bottom: 5px;
+  }
+  .thumb {
+    width: 70px;
+    height: 70px;
+    background-color: #BDBDBD;
+    color: white;
+    font-size: 38px;
+    text-align: center;
+    line-height: 65px;
+  }
+  .thumb-a {
+    background-color: #FA5858;
+  }
+  .thumb-b {
+    background-color: #FA8258;
+  }
+  .thumb-c {
+    background-color: #FAAC58;
+  }
+  .thumb-d {
+    background-color: #F7D358;
+  }
+  .thumb-e {
+    background-color: #F4FA58;
+  }
+  .thumb-f {
+    background-color: #D0FA58;
+  }
+  .thumb-g {
+    background-color: #ACFA58;
+  }
+  .thumb-h {
+    background-color: #82FA58;
+  }
+  .thumb-i {
+    background-color: #58FA58;
+  }
+  .thumb-j {
+    background-color: #58FA82;
+  }
+  .thumb-k {
+    background-color: #58FAAC;
+  }
+  .thumb-l {
+    background-color: #58FAD0;
+  }
+  .thumb-m {
+    background-color: #58FAF4;
+  }
+  .thumb-n {
+    background-color: #58D3F7;
+  }
+  .thumb-o {
+    background-color: #58ACFA;
+  }
+  .thumb-p {
+    background-color: #5882FA;
+  }
+  .thumb-q {
+    background-color: #5858FA;
+  }
+  .thumb-r {
+    background-color: #8258FA;
+  }
+  .thumb-s {
+    background-color: #AC58FA;
+  }
+  .thumb-t {
+    background-color: #D358F7;
+  }
+  .thumb-u {
+    background-color: #FA58F4;
+  }
+  .thumb-v {
+    background-color: #FA58D0;
+  }
+  .thumb-w {
+    background-color: #FA58AC;
+  }
+  .thumb-x {
+    background-color: #FA5882;
+  }
+  .thumb-y {
+    background-color: #BDBDBD;
+  }
+  .thumb-z {
+    background-color: #FA5858;
+  }
+
 }
 
 .editor {
@@ -73,19 +166,13 @@ body {
     padding: 0;
     padding-left: 22px;
 
-    &.active > A:not(.toggle) {
-      display: inline-block;
-      min-width: 10px;
-      padding: 3px 7px;
-      font-size: 12px;
-      font-weight: bold;
-      line-height: 1;
-      color: #fff;
-      text-align: center;
-      white-space: nowrap;
-      vertical-align: baseline;
+    &.active {
       background-color: #999;
-      border-radius: 10px;
+    }
+    &.active > A {
+      color: #fff;
+      white-space: nowrap;
+      text-decoration: none;
     }
   }
 }
@@ -100,3 +187,4 @@ body {
     }
   }
 }
+

@@ -178,12 +178,14 @@
 
         <!-- CONTENT MAIN -->
         <div class="row">
+            <div id="breadcrumbs" style="height: 32px; background-color: whitesmoke;">
+                <!-- generated --></div>
+        </div>
+
+        <div class="row">
 
             <!-- LEFT -->
             <div class="col-lg-2 sidebar" style="border-right: 1px solid #E2E2E2; min-height: 600px;">
-
-                <div id="breadcrumbs" class="row" style="height: 32px; background-color: whitesmoke;">
-                    <!-- generated --></div>
 
                 <div id="databases"><!-- generated --></div>
 
@@ -203,9 +205,9 @@
 
             <div id="folder-view" class="col-lg-10" style="display: none">
 
-                <div class="row" style="height: 32px; background-color: whitesmoke;">
+                <div class="row" style="height: 32px;">
 
-                    <div class="pull-right">
+                <div class="pull-right">
                         <div class="dropdown">
                             <a class="dropdown-toggle btn btn-default btn-sm" id="sortBy" data-toggle="dropdown"
                                href="#"><i class="fa fa-sort-alpha-asc fa-fw"></i> Sort</a>
@@ -498,20 +500,24 @@
 <script type="text/template" id="document-in-folder-view">
 
     <div class="doc doc-id-<%=uniqueHash %> row">
-        <div class="col-lg-2">
-            <%
-            if (typeof thumbnailUrl !== 'undefined') {
-            %>
-            <img src="<%= thumbnailUrl %>" width="72">
-            <%
-            }
-            %>
+        <div style="float:left; margin-right: 15px;">
+            <div class="thumb thumb-<%=title.substring(0,1).toLowerCase() %>"
+                    ><%=title.substring(0,1).toUpperCase() %>
+            </div>
         </div>
         <div class="col-lg-10">
 
             <div class="row">
                 <a href="#doc:<%=id %>">
                     <h4 style="display: inline-block; margin: 0; overflow: hidden; white-space: nowrap; ">
+                        <%
+                        if (typeof thumbnailUrl !== 'undefined') {
+                        %>
+                        <!--<img src="<%= thumbnailUrl %>" style="max-height: 18px"/>-->
+                        <%
+                        }
+                        %>
+
                         <%=title.length > 80 ? title.substring(0, 80)+'...' : title %>
                         <%
                         if (star) {

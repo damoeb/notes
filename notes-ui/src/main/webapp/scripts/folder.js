@@ -36,7 +36,8 @@ $.widget('notes.folder', {
             $target.append($('<a/>', {href: '#', class: 'toggle'}).append($toggle));
         }
         $target.append($label);
-        $target.append($('<span/>', {text: model.get('documentCount'), class: 'pull-right label label-default', style: 'font-size:90%; margin-top:2px;'}));
+        $target.append(' (' + model.get('documentCount') + ')');
+//        $target.append($('<span/>', {text: model.get('documentCount'), class: 'pull-right label label-default', style: 'font-size:90%; margin-top:2px;'}));
 
 
         var $childrenLayer = $('<ol/>', {class: 'children'});

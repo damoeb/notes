@@ -1,19 +1,14 @@
 package org.notes.plugin.tf;
 
-import org.apache.log4j.ConsoleAppender;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PatternLayout;
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.maven.plugin.logging.Log;
 import org.notes.common.model.TermFrequency;
+import org.notes.common.model.TermFrequencyPropertiesKey;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
+import java.util.Date;
 import java.util.Iterator;
 
 public class SqlOutputter implements Outputter {
@@ -28,12 +23,12 @@ public class SqlOutputter implements Outputter {
         this.minTermOccurrences = minTermOccurrences;
         this.log = log;
 
-        ConsoleAppender console = new ConsoleAppender(); //create appender
-        console.setLayout(new PatternLayout("%d [%p|%c|%C{1}] %m%n"));
-        console.setThreshold(Level.OFF);
-        console.activateOptions();
-
-        Logger.getRootLogger().addAppender(console);
+//        ConsoleAppender console = new ConsoleAppender(); //create appender
+//        console.setLayout(new PatternLayout("%d [%p|%c|%C{1}] %m%n"));
+//        console.setThreshold(Level.OFF);
+//        console.activateOptions();
+//
+//        Logger.getRootLogger().addAppender(console);
         /*
         Configuration configuration = new Configuration();
 
@@ -63,57 +58,63 @@ public class SqlOutputter implements Outputter {
     @Override
     public void output(ParserResult result) {
 
-//        Configuration configuration = new Configuration();
+        try (PrintStream fout = new PrintStream(new FileOutputStream("target/" + outputFileName))) {
 
-        EntityManagerFactory factory = Persistence.createEntityManagerFactory("primary");
-        EntityManager em = factory.createEntityManager();
+//            Configuration configuration = new Configuration();
+//
+//            configuration
+//                    .setProperty(Environment.DIALECT, "org.hibernate.dialect.PostgreSQLDialect");
+//
+//            configuration.addAnnotatedClass(TermFrequency.class);
+//            configuration.addAnnotatedClass(TermFrequencyProperties.class);
+//
+//            SchemaExport schemaExport = new SchemaExport(configuration);
+//            schemaExport.setFormat(true);
+//
+//            PrintStream out = System.out;
+//            System.setOut(fout);
+//            schemaExport.create(true, false);
+//            System.setOut(out);
 
-        PrintStream out = System.out;
-        try (PrintStream grabber = new PrintStream(new FileOutputStream(outputFileName))) {
-            System.setOut(grabber);
-
-            writeTerms(result, em);
-            writeMetadata(result, em);
+            fout.println(String.format("insert into TermFrequencyProperties(property, value) values ('%s', '%s');", TermFrequencyPropertiesKey.DOCUMENT_COUNT, result.getDocumentCount()));
+            fout.println(String.format("insert into TermFrequencyProperties(property, value) values ('%s', '%s')", TermFrequencyPropertiesKey.BUILD_DATE, new Date()));
 
 
-            em.close();
+            Iterator<TermFrequency> iterator = result.getTerms().iterator();
+
+            int BULK_SIZE = 100;
+            int count = 0;
+
+            while (iterator.hasNext()) {
+
+                TermFrequency t = iterator.next();
+
+                if (NumberUtils.isNumber(t.getTerm())) {
+                    continue;
+                }
+
+                if (t.getFrequency() < minTermOccurrences) {
+                    continue;
+                }
+
+                if (count++ % BULK_SIZE == 0) {
+                    fout.print("; insert into TermFrequency (frequency, term) values ");
+                    count = 1;
+                } else {
+                    fout.print(",\n ");
+                }
+
+                fout.print(toSql(t));
+            }
+            fout.println(";");
 
         } catch (FileNotFoundException e) {
             getLog().error(e);
-        } finally {
-            System.setOut(out);
         }
 
     }
 
-    private void writeMetadata(ParserResult result, EntityManager em) {
-        EntityTransaction ta = em.getTransaction();
-        ta.begin();
-
-
-        ta.commit();
-    }
-
-    private void writeTerms(ParserResult result, EntityManager em) {
-        Iterator<TermFrequency> iterator = result.getTerms().iterator();
-
-        EntityTransaction ta = em.getTransaction();
-        ta.begin();
-
-        int BULK_SIZE = 100;
-        int elementsInBulk = 0;
-
-        while (iterator.hasNext()) {
-
-            TermFrequency tf = iterator.next();
-
-            em.persist(tf);
-
-            if (elementsInBulk++ >= BULK_SIZE) {
-                ta.commit();
-                ta.begin();
-            }
-        }
-        ta.commit();
+    private String toSql(TermFrequency termFrequency) {
+        return String.format("(%s, '%s') ", termFrequency.getFrequency(), termFrequency.getTerm());
     }
 }

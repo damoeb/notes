@@ -1,5 +1,6 @@
 package org.notes.core.model;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
@@ -8,6 +9,7 @@ import org.notes.common.interfaces.Harvestable;
 import org.notes.common.model.FileReference;
 import org.notes.common.model.FullText;
 import org.notes.common.model.Kind;
+import org.notes.common.utils.TextUtils;
 
 import javax.persistence.*;
 import java.net.MalformedURLException;
@@ -94,6 +96,20 @@ public class BookmarkDocument extends BasicDocument implements Harvestable {
 
     public void setSiteSnapshotId(Long siteSnapshotId) {
         this.siteSnapshotId = siteSnapshotId;
+    }
+
+    @PrePersist
+    @PreUpdate
+    @Override
+    public void onPersist() {
+        super.onPersist();
+        String url = "<div class=\"url\">" + removeProtocol(getUrl()) + "</div>";
+        String text = StringUtils.substring(TextUtils.toOutline(getText()), 0, 256);
+        setOutline(url + text);
+    }
+
+    private String removeProtocol(String url) {
+        return url.replaceFirst("^[a-zA-Z]+://", "");
     }
 
     @JsonIgnore

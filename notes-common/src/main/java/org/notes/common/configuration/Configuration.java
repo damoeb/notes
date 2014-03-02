@@ -36,7 +36,7 @@ public class Configuration {
     public static final String CMD_RASTERIZE_JS = "notes.cmd.rasterizejs";
 
     public static final class Constants {
-        public static final int OUTLINE_LENGTH = 256;
+        public static final int OUTLINE_LENGTH = 1024;
     }
 
     private static Configuration getInstance() {
