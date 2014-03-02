@@ -11,6 +11,7 @@ import org.notes.common.exceptions.NotesException;
 import org.notes.common.model.FileReference;
 import org.notes.common.model.Tag;
 import org.notes.common.model.Trigger;
+import org.notes.common.utils.TextUtils;
 import org.notes.core.interfaces.*;
 import org.notes.core.model.*;
 import org.notes.search.scheduler.ExtractionScheduler;
@@ -233,7 +234,7 @@ public class DocumentManagerBean implements DocumentManager {
     private void copyAttributes(BasicDocument source, BasicDocument target) throws NotesException {
         target.setTags(resolveTags(target.getTags(), source.getTags()));
         target.setStar(source.isStar());
-        target.setTitle(source.getTitle());
+        target.setTitle(TextUtils.cleanHtml(source.getTitle()).replace("\n",""));
     }
 
     private boolean equals(BasicDocument a, BasicDocument b) {
@@ -270,8 +271,7 @@ public class DocumentManagerBean implements DocumentManager {
                 em.refresh(document);
             }
 
-
-            Hibernate.initialize(document.getTags());
+//            Hibernate.initialize(document.getTags());
 
             return document;
 

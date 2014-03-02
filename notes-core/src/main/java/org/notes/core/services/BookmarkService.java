@@ -4,6 +4,7 @@ import org.notes.common.cache.MethodCache;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.core.interfaces.DocumentManager;
 import org.notes.core.metric.ServiceMetric;
+import org.notes.core.model.BasicDocument;
 import org.notes.core.model.BookmarkDocument;
 import org.notes.core.model.Folder;
 
@@ -38,6 +39,18 @@ public class BookmarkService {
         }
     }
 
+    @PUT
+    @MethodCache
+    @ServiceMetric
+    @Path(value = "/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public NotesResponse updateBookmark(
+            BookmarkDocument document,
+            @PathParam("id") long documentId
+    ) throws Exception {
+        BasicDocument result = documentManager.updateBasicDocument(document);
+        return NotesResponse.ok(result);
+    }
 
     @GET
     @MethodCache
