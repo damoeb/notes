@@ -74,11 +74,10 @@ public class IndexerScheduler {
 
                         indexDocument(document);
 
-                        // todo support fulltext of attachement/pdf
                         indexTexts(document);
                     }
 
-                    document.setTrigger(null);
+                    document.setTrigger(Trigger.FINGERPRINT);
                     em.merge(document);
                     em.flush();
 

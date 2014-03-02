@@ -1,17 +1,20 @@
-- thumbnail wie mei gmail, falls kein hq shortcut icon verfügbar: Quadrat mit Anfangsbuchstaben drin, je Buchstabe andere Farbe
+- active folder is not synced
+- fulltext, fingerprint unterhalb anzeigen als accordion
 - BasicDocument, User referenzieren FingerPrint aus Array von Strings
 - navigation nur über pfad
-- pfad muss schon am anfang ausgewertet werden
+- suchergebnis darstellung verbessern, auch mit icon, score vielleicht unterhalb als horizontaler balken ueber die gesamte breite
+- pfad muss schon am anfang ausgewertet werden: wird er, aber ueberschrieben
+- verlinken verbessern
+- improve treeview: colors, icons
 - tags redundanz entfernen, datenbank model verbessern
 - back knopf ist nicht noetig, da bereits durch browser funktion zurueck vorhanden
 - search: index wird geloescht am start
-- search: auf sidebar facetten anzeigen
+- search: auf sidebar facetten anzeigen?
 - use uniqueHash instead of document id
 - viewer for unknown type
-- active folder is not synced
 - alle popups auf bootstrap
-- improve treeview: colors, icons
 
+- doc sidebar: nicht alle features anzeigen, zusaetzliche (wie die folgenden) in menue zur auswahl anbieten
 - attributes for document
   build in: due date, reminder, % complete, finished date
 - related to: find documents, check literature, to find out relatedness
