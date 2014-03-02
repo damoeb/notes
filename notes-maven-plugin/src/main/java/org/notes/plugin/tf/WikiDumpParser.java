@@ -22,8 +22,8 @@ public class WikiDumpParser {
 
     private static final int MAX_ELEMENTS = 0;
 
-    private final Pattern urlPattern = Pattern.compile("http[s]?://[^ ]+");
-    private final Pattern asciiPattern = Pattern.compile("[^\\\\p{ASCII}]");
+    private static final Pattern URL_PATTERN = Pattern.compile("http[s]?://[^ ]+");
+    private static final Pattern ASCII_PATTERN = Pattern.compile("[^\\p{ASCII}]");
 
     // ------------
 
@@ -154,7 +154,7 @@ public class WikiDumpParser {
     }
 
     private String cleanUrls(String plaintext) {
-        return urlPattern.matcher(plaintext).replaceAll("");
+        return URL_PATTERN.matcher(plaintext).replaceAll("");
     }
 
     private Cleaner cleaner = new Cleaner(Whitelist.simpleText());
@@ -232,9 +232,14 @@ public class WikiDumpParser {
         }
     }
 
-    private String normTerm(String term) {
+    private static String normTerm(String term) {
         term = Normalizer.normalize(term, Normalizer.Form.NFD);
-        return asciiPattern.matcher(term).replaceAll("").toLowerCase();
+        return ASCII_PATTERN.matcher(term).replaceAll("").toLowerCase();
+    }
+
+    public static void main(String[] args) {
+        System.out.println(normTerm("Haus"));
+        System.out.println(normTerm("ParanáHaus"));
     }
 
 }

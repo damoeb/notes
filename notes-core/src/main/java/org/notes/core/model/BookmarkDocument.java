@@ -12,8 +12,6 @@ import org.notes.common.model.Kind;
 import org.notes.common.utils.TextUtils;
 
 import javax.persistence.*;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -41,7 +39,6 @@ public class BookmarkDocument extends BasicDocument implements Harvestable {
     @Column(nullable = false, length = 1024)
     private String url;
 
-    @JsonIgnore
     @Lob
     private String text;
 
@@ -82,16 +79,6 @@ public class BookmarkDocument extends BasicDocument implements Harvestable {
     @Override
     public Long getSiteSnapshotId() {
         return siteSnapshotId;
-    }
-
-    @Override
-    public String getDomain() {
-        try {
-            return new URL(getUrl()).getHost();
-        } catch (MalformedURLException e) {
-            // should not happen
-            throw new IllegalArgumentException(e);
-        }
     }
 
     public void setSiteSnapshotId(Long siteSnapshotId) {

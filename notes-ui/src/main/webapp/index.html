@@ -185,9 +185,9 @@
         <div class="row">
 
             <!-- LEFT -->
-            <div class="col-lg-2 sidebar" style="border-right: 1px solid #E2E2E2; min-height: 600px;">
+            <div class="col-lg-3 sidebar" style="border-right: 1px solid #E2E2E2; min-height: 600px;">
 
-                <div id="databases"><!-- generated --></div>
+            <div id="databases"><!-- generated --></div>
 
             </div>
 
@@ -203,12 +203,12 @@
 
             <!-- FOLDER VIEW -->
 
-            <div id="folder-view" class="col-lg-10" style="display: none">
+            <div id="folder-view" class="col-lg-9" style="display: none">
 
                 <div class="row" style="height: 32px;">
 
-                <div class="pull-right">
-                        <div class="dropdown">
+                    <div class="pull-right">
+                    <div class="dropdown">
                             <a class="dropdown-toggle btn btn-default btn-sm" id="sortBy" data-toggle="dropdown"
                                href="#"><i class="fa fa-sort-alpha-asc fa-fw"></i> Sort</a>
                             <ul class="dropdown-menu" role="menu" aria-labelledby="sortBy">
@@ -233,9 +233,9 @@
 
             <!-- SEARCH VIEW -->
 
-            <div id="search-view" class="col-lg-10" style="display: none">
+            <div id="search-view" class="col-lg-9" style="display: none">
 
-                <div class="row" style="height: 32px; background-color: whitesmoke;">
+            <div class="row" style="height: 32px; background-color: whitesmoke;">
 
                     <button class="btn btn-default btn-sm action-close" title="Back">
                         <i class="fa fa-fw fa-angle-left"></i>
@@ -366,8 +366,8 @@
 <script type="text/template" id="text-editor">
 
 
-    <div class="col-lg-8">
-        <div class="row" style="height: 32px; background-color: whitesmoke;">
+    <div class="col-lg-7">
+    <div class="row" style="height: 32px; background-color: whitesmoke;">
 
             <div class="btn-group pull-left">
 
@@ -411,11 +411,51 @@
 
 </script>
 
+<script type="text/template" id="bookmark-editor">
+
+
+    <div class="col-lg-7">
+        <div class="row" style="height: 32px; background-color: whitesmoke;">
+
+            <div class="btn-group pull-left">
+
+                <button class="btn btn-default btn-sm action-close" title="Back">
+                    <i class="fa fa-fw fa-angle-left"></i>
+                    Back
+                </button>
+
+            </div>
+
+            <div class="pull-right">
+
+                <span style="line-height: 30px;"><%= modified?'changed '+$.timeago(modified):'' %></span>
+
+            </div>
+
+        </div>
+
+        <div>
+            <h3 class="field-title"><%= title %></h3>
+
+            <div style="margin-top: 10px; line-height:20px;" class="field-url"><%= url %></div>
+            <div style="margin-top: 10px; line-height:20px;" class="field-text"><%= text %></div>
+            <!--<div style="margin-top: 10px; line-height:20px;" class="field-fingerprint"><%= fingerprint %></div>-->
+
+        </div>
+
+        <% include recommendations %>
+
+    </div>
+
+    <% include base-editor %>
+
+</script>
+
 
 <script type="text/template" id="pdf-editor">
 
-    <div class="col-lg-8">
-        <div class="row" style="height: 32px; background-color: whitesmoke;">
+    <div class="col-lg-7">
+    <div class="row" style="height: 32px; background-color: whitesmoke;">
 
             <div class="btn-group input-group-sm pull-left">
 
@@ -730,6 +770,7 @@
 <script src="scripts/basiceditor.js"></script>
 <script src="scripts/texteditor.js"></script>
 <script src="scripts/pdfeditor.js"></script>
+<script src="scripts/bookmark.js"></script>
 
 <script src="scripts/tree.js"></script>
 <script src="scripts/databases.js"></script>

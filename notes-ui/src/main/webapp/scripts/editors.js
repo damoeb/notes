@@ -36,6 +36,12 @@ $.widget('notes.editors', {
                         model: new notes.model.BasicDocument(document)
                     });
                     break;
+                case 'bookmark':
+                    console.log('edit bookmark');
+                    $content.bookmark({
+                        model: new notes.model.Bookmark(document)
+                    });
+                    break;
                 default:
                     var model = new notes.model.BasicDocument(document);
                     console.error('no editor found for ' + document.kind);

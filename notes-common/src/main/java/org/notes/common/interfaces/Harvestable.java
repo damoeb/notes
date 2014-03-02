@@ -24,5 +24,4 @@ public interface Harvestable extends Document {
 
     void setOutline(String url);
 
-    String getDomain();
 }
