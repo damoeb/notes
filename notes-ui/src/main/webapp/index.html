@@ -187,7 +187,7 @@
             <!-- LEFT -->
             <div class="col-lg-3 sidebar" style="border-right: 1px solid #E2E2E2; min-height: 600px;">
 
-            <div id="databases"><!-- generated --></div>
+                <div id="databases"><!-- generated --></div>
 
             </div>
 
@@ -208,7 +208,7 @@
                 <div class="row" style="height: 32px;">
 
                     <div class="pull-right">
-                    <div class="dropdown">
+                        <div class="dropdown">
                             <a class="dropdown-toggle btn btn-default btn-sm" id="sortBy" data-toggle="dropdown"
                                href="#"><i class="fa fa-sort-alpha-asc fa-fw"></i> Sort</a>
                             <ul class="dropdown-menu" role="menu" aria-labelledby="sortBy">
@@ -236,7 +236,7 @@
             <div id="search-view" class="col-lg-9" style="display: none">
 
                 <div class="row" style="height: 32px;">
-                <!--All In Folder | All Notes PDFs Media-->
+                    <!--All In Folder | All Notes PDFs Media-->
                 </div>
 
                 <div style="margin-top: 5px; color: #999"><span class="numFound">0</span> results (<span
@@ -264,7 +264,7 @@
 </div>
 
 <script type="text/template" id="recommendations">
-    <div style="margin-top: 80px; border-top: 1px solid #E2E2E2;">
+    <div style="margin-top: 80px; padding-top:10px; border-top: 1px solid #E2E2E2;">
         <h4>Recommended</h4>
 
         <div class="recommendations">
@@ -275,25 +275,54 @@
 </script>
 
 <script type="text/template" id="fulltext">
-    <div style="margin-top: 60px;">
-        <h4>Full Text</h4>
 
-        <div class="fulltext">
-            <i class="fa fa-spinner fa-spin"></i>
-            <!-- generated -->
+    <div class="panel-group" id="panel-fulltext" style="margin-top: 60px;">
+        <div class="panel" style="box-shadow: none">
+            <div class="panel-heading" style="background-color:none;">
+                <h4 class="panel-title">
+                    <i class="fa fa-angle-down"></i>
+                    <a data-toggle="collapse" data-parent="#panel-fulltext" href="#collapse-fulltext">
+                        Full Text
+                    </a>
+                </h4>
+            </div>
+            <div id="collapse-fulltext" class="panel-collapse collapse">
+                <div class="panel-body editable-complex">
+                    <%
+                    if (typeof text !== 'undefined') {
+                    %>
+                    <%= text %>
+                    <%
+                    }
+                    %>
+                </div>
+            </div>
         </div>
     </div>
+
 </script>
 
-<script type="text/template" id="fingerprint">
-    <div style="margin-top: 60px;">
-        <h4>Fingerprint</h4>
+<script type="text/template" id="essence">
 
-        <div class="fingerprint">
-            <i class="fa fa-spinner fa-spin"></i>
-            <!-- generated -->
+    <div class="panel-group" id="panel-essence">
+        <div class="panel" style="box-shadow: none">
+            <div class="panel-heading" style="background-color:none;">
+                <h4 class="panel-title">
+                    <i class="fa fa-angle-down"></i>
+                    <a data-toggle="collapse" data-parent="#panel-fulltext" href="#collapse-essence">
+                        Essence
+                    </a>
+                </h4>
+            </div>
+            <div id="collapse-essence" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <i class="fa fa-spinner fa-spin"></i>
+                    <!-- generated -->
+                </div>
+            </div>
         </div>
     </div>
+
 </script>
 
 <!-- included in the other templates -->
@@ -303,7 +332,7 @@
 
         <!-- header -->
         <div style="height: 32px;" class="row">
-        <div class="btn-group pull-right">
+            <div class="btn-group pull-right">
 
                 <button class="btn btn-default btn-sm action-star" title="Highlight" star="<%=star %>">
                                 <span class="pane-with-star <%=!star?'hidden':'' %>">
@@ -410,7 +439,7 @@
         </div>
 
 
-        <% include fingerprint %>
+        <% include essence %>
         <% include recommendations %>
 
     </div>
@@ -445,13 +474,12 @@
         <div>
             <h3 class="field-title editable-simple"><%= title %></h3>
 
-            <div style="margin-top: 10px; line-height:20px;" class="field-url"><%= url %></div>
-            <!--<div style="margin-top: 10px; line-height:20px;" class="field-text editable-complex"></div>-->
+            <div style="margin-top: 10px; line-height:20px;" class="field-url"><a href="<%= url %>"><%= url %></a></div>
 
         </div>
 
         <% include fulltext %>
-        <% include fingerprint %>
+        <% include essence %>
         <% include recommendations %>
 
     </div>
@@ -509,7 +537,7 @@
 
         </div>
 
-        <% include fingerprint %>
+        <% include essence %>
         <% include recommendations %>
 
     </div>

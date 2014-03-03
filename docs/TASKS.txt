@@ -25,7 +25,7 @@
 - new doc. popup with <choose folder>
 - suche + in node names, tags
 - document thumbnail?
-- triggers for document in separate table
+- triggers über JMS oder for document in separate table
 
 - import/export
 - scrollbars, min text editor
