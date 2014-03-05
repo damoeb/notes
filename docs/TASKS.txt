@@ -1,3 +1,4 @@
+- sort menu, icons
 - active folder is not synced
 - fulltext, fingerprint unterhalb anzeigen als accordion
 - BasicDocument, User referenzieren FingerPrint aus Array von Strings

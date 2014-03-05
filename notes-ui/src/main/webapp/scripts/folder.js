@@ -25,7 +25,7 @@ $.widget('notes.folder', {
         $target.addClass('folder folder-' + model.get('id'));
 
         var $label = $('<a/>', {
-            href: '#',
+            href: '#folder:' + model.get('id'),
             text: model.get('name')
         });
         var $toggle = $('<i class="fa fa-caret-right fa-fw fa-lg"></i>');
@@ -69,14 +69,9 @@ $.widget('notes.folder', {
             $self.setExpanded(true);
         }
 
-        // default folder
-        if (notes.app.activeFolderId() === 0 && notes.app.defaultFolderId() === model.get('id')) {
-            $self.loadDocuments();
-        } else {
-            // active folder
-            if (notes.app.activeFolderId() === model.get('id')) {
-                $target.addClass('active');
-            }
+        // active folder
+        if (notes.app.activeFolderId() === model.get('id')) {
+            $target.addClass('active');
         }
 
         notes.app.add$Folder($self);

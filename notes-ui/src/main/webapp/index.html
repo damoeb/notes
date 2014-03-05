@@ -205,25 +205,26 @@
 
             <div id="folder-view" class="col-lg-9" style="display: none">
 
-                <div class="row" style="height: 32px;">
+                <div class="navbar">
 
-                    <div class="pull-right">
-                        <div class="dropdown">
-                            <a class="dropdown-toggle btn btn-default btn-sm" id="sortBy" data-toggle="dropdown"
-                               href="#"><i class="fa fa-sort-alpha-asc fa-fw"></i> Sort</a>
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="sortBy">
-                                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">
-                                    <i class="fa fa-circle-o fa-fw"></i>
-                                    by title</a></li>
-                                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">
-                                    <i class="fa fa-circle fa-fw"></i>
-                                    by date</a></li>
-                                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">
-                                    <i class="fa fa-circle-o fa-fw"></i>
-                                    by type</a></li>
+                    <ul class="nav nav-tabs">
+                        <li><a href="#">Up</a></li>
+                        <li><a href="#"
+                               onclick="notes.dialog.folder.newFolder(new notes.model.Folder({id:notes.app.activeFolderId()}))">New
+                            Folder</a></li>
+                        <li><a href="#">Sort</a></li>
+                        <li class="pull-right dropdown">
+                            <a class="dropdown-toggle" id="folder-options" data-toggle="dropdown" href="#">
+                                More
+                            </a>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="folder-options">
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="#"
+                                                           class="action-folder-rename">Rename</a></li>
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="#"
+                                                           class="action-folder-delete">Delete</a></li>
                             </ul>
-                        </div>
-                    </div>
+                        </li>
+                    </ul>
 
                 </div>
 
@@ -412,24 +413,29 @@
 
 
     <div class="col-lg-7">
-        <div class="row" style="height: 32px;">
+        <!--<div class="row" style="height: 32px;">-->
 
-            <div class="btn-group pull-left">
+        <!--<div class="btn-group pull-left">-->
 
-                <button class="btn btn-default btn-sm action-close" title="Save">
-                    <i class="fa fa-fw fa-angle-left"></i>
-                    Save
-                </button>
+        <!--<button class="btn btn-default btn-sm action-close" title="Save">-->
+        <!--<i class="fa fa-fw fa-angle-left"></i>-->
+        <!--Save-->
+        <!--</button>-->
 
-            </div>
+        <!--</div>-->
 
-            <div class="pull-right">
+        <!--<div class="pull-right">-->
 
-                <span style="line-height: 30px;"><%= modified?'changed '+$.timeago(modified):'' %></span>
+        <!--<span style="line-height: 30px;"><%= modified?'changed '+$.timeago(modified):'' %></span>-->
 
-            </div>
+        <!--</div>-->
 
-        </div>
+        <!--</div>-->
+
+        <ul class="nav nav-tabs">
+            <li><a href="#" class="action-close"><i class="fa fa-fw fa-angle-left"></i></a></li>
+            <li><span style="line-height: 30px;"><%= modified?'changed '+$.timeago(modified):'' %></span></li>
+        </ul>
 
         <div>
             <h3 class="field-title editable-simple"><%= title %></h3>
@@ -452,24 +458,11 @@
 
 
     <div class="col-lg-7">
-        <div class="row" style="height: 32px; ">
 
-            <div class="btn-group pull-left">
-
-                <button class="btn btn-default btn-sm action-close" title="Save">
-                    <i class="fa fa-fw fa-angle-left"></i>
-                    Save
-                </button>
-
-            </div>
-
-            <div class="pull-right">
-
-                <span style="line-height: 30px;"><%= modified?'changed '+$.timeago(modified):'' %></span>
-
-            </div>
-
-        </div>
+        <ul class="nav nav-tabs">
+            <li><a href="#" class="action-close"><i class="fa fa-fw fa-angle-left"></i></a></li>
+            <li><span style="line-height: 30px;"><%= modified?'changed '+$.timeago(modified):'' %></span></li>
+        </ul>
 
         <div>
             <h3 class="field-title editable-simple"><%= title %></h3>
@@ -559,25 +552,17 @@
 
 
 <script type="text/template" id="breadcrumb-folder">
-    <li class="dropdown">
-        <a class="dropdown-toggle" id="bc-folder-<%= id %>" data-toggle="dropdown" href="#">
+    <li>
+        <a href="#folder:<%= id %>">
             <%= name %>
         </a>
-        <ul class="dropdown-menu" role="menu" aria-labelledby="bc-folder-<%= id %>">
-            <li role="presentation"><a role="menuitem" tabindex="-1" href="#" class="action-open">Open</a></li>
-            <li role="presentation" class="divider"></li>
-            <li role="presentation"><a role="menuitem" tabindex="-1" href="#" class="action-create">Create Folder</a>
-            </li>
-            <li role="presentation"><a role="menuitem" tabindex="-1" href="#" class="action-rename">Rename</a></li>
-            <li role="presentation"><a role="menuitem" tabindex="-1" href="#" class="action-delete">Delete</a></li>
-        </ul>
     </li>
 </script>
 
 
 <script type="text/template" id="document-in-folder-view">
 
-    <div class="doc doc-id-<%=uniqueHash %> row">
+    <div class="doc doc-id-<%=uniqueHash %>">
         <div style="float:left; margin-right: 15px;">
             <div class="thumb thumb-<%=title.substring(0,1).toLowerCase() %>"
                     ><%=title.substring(0,1).toUpperCase() %>
@@ -596,7 +581,7 @@
                         }
                         %>
 
-                        <%=title.length > 80 ? title.substring(0, 80)+'...' : title %>
+                        <%=title.length > 65 ? title.substring(0, 65)+'...' : title %>
                         <%
                         if (star) {
                         %>

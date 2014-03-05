@@ -56,7 +56,7 @@ public class StartUp {
                     Account a = new Account();
                     a.setType(AccountType.BASIC);
                     a.setQuota(1000l);
-//                    a = accountManager.createAccount(a);
+                    a = accountManager.createAccount(a);
 
                 } catch (Exception e) {
                     e.printStackTrace();

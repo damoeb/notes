@@ -23,6 +23,8 @@ $.widget('notes.editors', {
 
             var $content = $('<div/>');
 
+            notes.app.activeFolderId(document.folderId);
+
             switch (document.kind.toLowerCase().trim()) {
                 case 'text':
                     console.log('edit text-document');

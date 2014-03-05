@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Singleton
+@ConcurrencyManagement(ConcurrencyManagementType.CONTAINER)
 @NotesInterceptors
 @TransactionAttribute(TransactionAttributeType.NEVER)
 public class ExtractionScheduler {
@@ -24,7 +25,7 @@ public class ExtractionScheduler {
     @PersistenceContext(unitName = "primary")
     private EntityManager em;
 
-    @Schedule(second = "*/10", minute = "*", hour = "*", persistent = false)
+    @Schedule(second = "*/10", minute = "*", hour = "*", persistent = false, info = "Extracts text from PDFs")
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     @Lock(LockType.WRITE)
     @AccessTimeout(0) // no concurrent access
