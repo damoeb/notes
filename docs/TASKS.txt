@@ -1,4 +1,6 @@
-- sort menu, icons
+- treeview und suchergebnisse entsprechend der bilder in inspiration
+- eintraege in liste sollen markierbar sein
+- menue in docview wie in folderview, ganze breite und ganz rechts der "more" link
 - active folder is not synced
 - fulltext, fingerprint unterhalb anzeigen als accordion
 - BasicDocument, User referenzieren FingerPrint aus Array von Strings

@@ -85,14 +85,26 @@
              style="background: none repeat scroll 0 0 #F1F1F1; border-bottom: 1px solid #e1e1e1; padding-top:8px; padding-bottom:8px;">
 
             <!-- LEFT -->
-            <div class="col-lg-2">
+            <div class="col-lg-3">
 
             </div>
 
             <!-- CONTENT -->
 
-            <div class="col-lg-6">
+            <div class="col-lg-5">
                 <div class="input-group">
+                    <div class="input-group-btn">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">All <span
+                                class="caret"></span></button>
+                        <ul class="dropdown-menu">
+                            <li role="presentation" class="dropdown-header">Places</li>
+                            <li><a href="#">All Folders</a></li>
+                            <li><a href="#">Current Folder</a></li>
+
+                        </ul>
+                    </div>
+                    <!-- /btn-group -->
+
                     <input id="search-input" class="form-control" type="text" name="query"
                            placeholder="Search"/>
                     <span class="input-group-btn">
@@ -156,23 +168,23 @@
             </div>
 
             <!-- RIGHT -->
-            <div class="col-lg-2">
+            <!--<div class="col-lg-2">-->
 
-                <div class="pull-right dropdown">
-                    <button class="btn btn-default dropdown-toggle" type="button" id="settings" data-toggle="dropdown">
-                        <i class="fa fa-bars"></i>
-                    </button>
-                    <ul class="dropdown-menu" role="menu" aria-labelledby="settings">
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Export as Archive</a></li>
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#"
-                                                   onclick="notes.dialog.document.import()">Import Archive</a></li>
-                        <li role="presentation" class="divider"></li>
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="notes.core.logout()">Logout</a>
-                        </li>
-                    </ul>
-                </div>
+            <!--<div class="pull-right dropdown">-->
+            <!--<button class="btn btn-default dropdown-toggle" type="button" id="settings" data-toggle="dropdown">-->
+            <!--<i class="fa fa-bars"></i>-->
+            <!--</button>-->
+            <!--<ul class="dropdown-menu" role="menu" aria-labelledby="settings">-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Export as Archive</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#"-->
+            <!--onclick="notes.dialog.document.import()">Import Archive</a></li>-->
+            <!--<li role="presentation" class="divider"></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="notes.core.logout()">Logout</a>-->
+            <!--</li>-->
+            <!--</ul>-->
+            <!--</div>-->
 
-            </div>
+            <!--</div>-->
 
         </div>
 
@@ -208,20 +220,30 @@
                 <div class="navbar">
 
                     <ul class="nav nav-tabs">
-                        <li><a href="#">Up</a></li>
+                        <li><a href="#"><i class="fa fa-angle-up"></i></a></li>
                         <li><a href="#"
                                onclick="notes.dialog.folder.newFolder(new notes.model.Folder({id:notes.app.activeFolderId()}))">New
                             Folder</a></li>
-                        <li><a href="#">Sort</a></li>
+
+                        <li class="pull-right dropdown">
+                            <a class="dropdown-toggle" id="sprt-options" data-toggle="dropdown" href="#">
+                                Sort <i class="fa fa-angle-down fa-fw"></i>
+                            </a>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="sort-options">
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="#"
+                                                           class="">By Date</a></li>
+                            </ul>
+                        </li>
+
                         <li class="pull-right dropdown">
                             <a class="dropdown-toggle" id="folder-options" data-toggle="dropdown" href="#">
-                                More
+                                More <i class="fa fa-angle-down fa-fw"></i>
                             </a>
                             <ul class="dropdown-menu" role="menu" aria-labelledby="folder-options">
                                 <li role="presentation"><a role="menuitem" tabindex="-1" href="#"
-                                                           class="action-folder-rename">Rename</a></li>
+                                                           class="action-folder-rename">Rename Folder</a></li>
                                 <li role="presentation"><a role="menuitem" tabindex="-1" href="#"
-                                                           class="action-folder-delete">Delete</a></li>
+                                                           class="action-folder-delete">Delete Folder</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -326,6 +348,26 @@
 
 </script>
 
+<script type="text/template" id="navigation">
+
+    <ul class="nav nav-tabs">
+        <li><a href="#" class="action-close"><i class="fa fa-fw fa-angle-left"></i></a></li>
+        <li><a href="#" class="action-star" star="<%=star %>">
+                    <span class="pane-with-star <%=!star?'hidden':'' %>">
+                        <i class="fa fa-star" style="color:red;"></i>
+                    </span>
+                    <span class="pane-without-star <%=star?'hidden':'' %>">
+                        <i class="fa fa-star-o"></i>
+                    </span>
+        </a>
+        </li>
+        <li class="pull-right"><span
+                style="padding: 10px 15px; display: block;"><%= modified?'changed '+$.timeago(modified):'' %></span>
+        </li>
+    </ul>
+
+</script>
+
 <!-- included in the other templates -->
 <script type="text/template" id="base-editor">
 
@@ -333,18 +375,6 @@
 
         <!-- header -->
         <div style="height: 32px;" class="row">
-            <div class="btn-group pull-right">
-
-                <button class="btn btn-default btn-sm action-star" title="Highlight" star="<%=star %>">
-                                <span class="pane-with-star <%=!star?'hidden':'' %>">
-                                    <i class="fa fa-star" style="color:red;"></i>
-                                </span>
-                                <span class="pane-without-star <%=star?'hidden':'' %>">
-                                    <i class="fa fa-star-o"></i>
-                                </span>
-                </button>
-
-            </div>
         </div>
 
         <!-- content -->
@@ -413,29 +443,8 @@
 
 
     <div class="col-lg-7">
-        <!--<div class="row" style="height: 32px;">-->
 
-        <!--<div class="btn-group pull-left">-->
-
-        <!--<button class="btn btn-default btn-sm action-close" title="Save">-->
-        <!--<i class="fa fa-fw fa-angle-left"></i>-->
-        <!--Save-->
-        <!--</button>-->
-
-        <!--</div>-->
-
-        <!--<div class="pull-right">-->
-
-        <!--<span style="line-height: 30px;"><%= modified?'changed '+$.timeago(modified):'' %></span>-->
-
-        <!--</div>-->
-
-        <!--</div>-->
-
-        <ul class="nav nav-tabs">
-            <li><a href="#" class="action-close"><i class="fa fa-fw fa-angle-left"></i></a></li>
-            <li><span style="line-height: 30px;"><%= modified?'changed '+$.timeago(modified):'' %></span></li>
-        </ul>
+        <% include navigation %>
 
         <div>
             <h3 class="field-title editable-simple"><%= title %></h3>
@@ -459,10 +468,7 @@
 
     <div class="col-lg-7">
 
-        <ul class="nav nav-tabs">
-            <li><a href="#" class="action-close"><i class="fa fa-fw fa-angle-left"></i></a></li>
-            <li><span style="line-height: 30px;"><%= modified?'changed '+$.timeago(modified):'' %></span></li>
-        </ul>
+        <% include navigation %>
 
         <div>
             <h3 class="field-title editable-simple"><%= title %></h3>
@@ -485,41 +491,61 @@
 <script type="text/template" id="pdf-editor">
 
     <div class="col-lg-7">
-        <div class="row" style="height: 32px; ">
+        <!--<div class="row" style="height: 32px; ">-->
 
-            <div class="btn-group input-group-sm pull-left">
+        <!--<div class="btn-group input-group-sm pull-left">-->
 
-                <button class="btn btn-default btn-sm action-close" title="Save">
-                    <i class="fa fa-fw fa-angle-left"></i>
-                    Save
-                </button>
+        <!--<button class="btn btn-default btn-sm action-close" title="Save">-->
+        <!--<i class="fa fa-fw fa-angle-left"></i>-->
+        <!--Save-->
+        <!--</button>-->
 
-                <!--<button class="btn btn-default btn-sm action-maximize" title="Maximize">-->
-                <!--<i class="fa fa-fw fa-angle-up"></i>-->
-                <!--</button>-->
+        <!--&lt;!&ndash;<button class="btn btn-default btn-sm action-maximize" title="Maximize">&ndash;&gt;-->
+        <!--&lt;!&ndash;<i class="fa fa-fw fa-angle-up"></i>&ndash;&gt;-->
+        <!--&lt;!&ndash;</button>&ndash;&gt;-->
 
-                <button class="btn btn-default btn-sm action-previous-page" style="margin-left: 140px"
-                        title="Previous Page">
-                    <i class="fa fa-fw fa-angle-left"></i>
-                </button>
+        <!--<button class="btn btn-default btn-sm action-previous-page" style="margin-left: 140px"-->
+        <!--title="Previous Page">-->
+        <!--<i class="fa fa-fw fa-angle-left"></i>-->
+        <!--</button>-->
 
-                <input type="text" class="form-control field-current-page"
-                       style="width:50px; display:inline-block; float: left; text-align: center;" value="1">
+        <!--<input type="text" class="form-control field-current-page"-->
+        <!--style="width:50px; display:inline-block; float: left; text-align: center;" value="1">-->
 
-                <span style="line-height: 30px; padding-left: 5px; padding-right: 5px; display: inline-block; float: left;">of <%= numberOfPages %></span>
+        <!--<span style="line-height: 30px; padding-left: 5px; padding-right: 5px; display: inline-block; float: left;">of <%= numberOfPages %></span>-->
 
-                <button class="btn btn-default btn-sm action-next-page" title="Next Page">
-                    <i class="fa fa-fw fa-angle-right"></i>
-                </button>
+        <!--<button class="btn btn-default btn-sm action-next-page" title="Next Page">-->
+        <!--<i class="fa fa-fw fa-angle-right"></i>-->
+        <!--</button>-->
 
-            </div>
+        <!--</div>-->
 
-            <div class="pull-right">
+        <!--<div class="pull-right">-->
 
-                <span style="line-height: 30px; "><%= modified?'changed '+$.timeago(modified):'' %></span>
+        <!--<span style="padding: 10px 15px; display: block;"><%= modified?'changed '+$.timeago(modified):'' %></span>-->
 
-            </div>
-        </div>
+        <!--</div>-->
+        <!--</div>-->
+
+        <ul class="nav nav-tabs">
+            <li><a href="#" class="action-close"><i class="fa fa-fw fa-angle-left"></i></a></li>
+
+            <li style="margin-left: 140px"><a href="#" class="action-previous-page"><i
+                    class="fa fa-fw fa-angle-left"></i></a></li>
+            <li><input type="text" class="form-control field-current-page"
+                       style="width:50px; display:inline-block; float: left; text-align: center;" value="1"></li>
+            <li>
+                <span style="padding: 10px 15px; display: block; display: inline-block; float: left;">of <%= numberOfPages %></span>
+            </li>
+
+            <li><a href="#" class="action-next-page"><i class="fa fa-fw fa-angle-right"></i></a></li>
+
+
+            <li class="pull-right"><span
+                    style="padding: 10px 15px; display: block;"><%= modified?'changed '+$.timeago(modified):'' %></span>
+            </li>
+        </ul>
+
 
         <div>
             <h3 class="field-title editable-simple"><%= title %></h3>
@@ -562,8 +588,8 @@
 
 <script type="text/template" id="document-in-folder-view">
 
-    <div class="doc doc-id-<%=uniqueHash %>">
-        <div style="float:left; margin-right: 15px;">
+    <div class="doc doc-id-<%=uniqueHash %> row">
+    <div style="float:left; margin-right: 15px;">
             <div class="thumb thumb-<%=title.substring(0,1).toLowerCase() %>"
                     ><%=title.substring(0,1).toUpperCase() %>
             </div>
