@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity(name = "User")
-@Table(name = "User")
+@Table(name = "notes_user")
 @NamedQueries({
         @NamedQuery(name = User.QUERY_BY_ID, query = "SELECT a FROM User a where a.username=:USERNAME"),
         @NamedQuery(name = User.QUERY_ALL, query = "SELECT a FROM User a")
