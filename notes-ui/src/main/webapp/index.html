@@ -361,9 +361,25 @@
                     </span>
         </a>
         </li>
-        <li class="pull-right"><span
+        <li><span
                 style="padding: 10px 15px; display: block;"><%= modified?'changed '+$.timeago(modified):'' %></span>
         </li>
+
+        <li class="pull-right dropdown">
+            <a class="dropdown-toggle" id="document-options" data-toggle="dropdown" href="#">
+                More <i class="fa fa-angle-down fa-fw"></i>
+            </a>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="document-options">
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="#"
+                                           class="action-attach-file">Add Attachment</a></li>
+                <li role="presentation" class="divider"></li>
+
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="#"
+                                           class="action-folder-delete">Delete Folder</a></li>
+
+            </ul>
+        </li>
+
     </ul>
 
 </script>
@@ -373,12 +389,8 @@
 
     <div class="col-lg-2">
 
-        <!-- header -->
-        <div style="height: 32px;" class="row">
-        </div>
-
         <!-- content -->
-        <div class="row" style="margin-top: 10px; padding-bottom:10px;">
+        <div style="margin-top: 10px; padding-bottom:10px; display:none">
             <h4>
                 <i class="fa fa-fw fa-paperclip"></i> Attachments
             </h4>
@@ -398,7 +410,7 @@
         <!--</table>-->
         <!--</div>-->
 
-        <div class="row" style="margin-top: 10px; padding-bottom:10px;">
+        <div style="margin-top: 10px; padding-bottom:10px;">
             <h4><i class="fa fa-fw fa-tag"></i> Tags</h4>
 
             <div class="document-tags" style="margin-bottom: 10px; line-height: 20px">
@@ -406,7 +418,7 @@
             </div>
 
             <div class="input-group">
-                <input type="text" class="form-control new-tag-value" placeholder="Add a new tag">
+                <input type="text" class="form-control new-tag-value" placeholder="Type..">
                   <span class="input-group-btn">
                     <button class="btn btn-default action-new-tag" type="button">Add</button>
                   </span>
@@ -423,15 +435,16 @@
 
             </div>
 
-            <div>
-                <h6 style="margin-bottom: 5px; line-height: 20px">Your network</h6>
+            <!-- Frequently used tags-->
+            <!--<div>-->
+            <!--<h6 style="margin-bottom: 5px; line-height: 20px">Your network</h6>-->
 
-                <div class="tags-network">
-                    <i class="fa fa-spinner fa-spin"></i>
-                    <!-- generated -->
-                </div>
+            <!--<div class="tags-network">-->
+            <!--<i class="fa fa-spinner fa-spin"></i>-->
+            <!--&lt;!&ndash; generated &ndash;&gt;-->
+            <!--</div>-->
 
-            </div>
+            <!--</div>-->
 
         </div>
 
@@ -442,9 +455,11 @@
 <script type="text/template" id="text-editor">
 
 
-    <div class="col-lg-7">
-
+    <div class="col-lg-9">
         <% include navigation %>
+    </div>
+
+    <div class="col-lg-7">
 
         <div>
             <h3 class="field-title editable-simple"><%= title %></h3>
@@ -465,10 +480,11 @@
 
 <script type="text/template" id="bookmark-editor">
 
+    <div class="col-lg-9">
+        <% include navigation %>
+    </div>
 
     <div class="col-lg-7">
-
-        <% include navigation %>
 
         <div>
             <h3 class="field-title editable-simple"><%= title %></h3>
@@ -491,41 +507,6 @@
 <script type="text/template" id="pdf-editor">
 
     <div class="col-lg-7">
-        <!--<div class="row" style="height: 32px; ">-->
-
-        <!--<div class="btn-group input-group-sm pull-left">-->
-
-        <!--<button class="btn btn-default btn-sm action-close" title="Save">-->
-        <!--<i class="fa fa-fw fa-angle-left"></i>-->
-        <!--Save-->
-        <!--</button>-->
-
-        <!--&lt;!&ndash;<button class="btn btn-default btn-sm action-maximize" title="Maximize">&ndash;&gt;-->
-        <!--&lt;!&ndash;<i class="fa fa-fw fa-angle-up"></i>&ndash;&gt;-->
-        <!--&lt;!&ndash;</button>&ndash;&gt;-->
-
-        <!--<button class="btn btn-default btn-sm action-previous-page" style="margin-left: 140px"-->
-        <!--title="Previous Page">-->
-        <!--<i class="fa fa-fw fa-angle-left"></i>-->
-        <!--</button>-->
-
-        <!--<input type="text" class="form-control field-current-page"-->
-        <!--style="width:50px; display:inline-block; float: left; text-align: center;" value="1">-->
-
-        <!--<span style="line-height: 30px; padding-left: 5px; padding-right: 5px; display: inline-block; float: left;">of <%= numberOfPages %></span>-->
-
-        <!--<button class="btn btn-default btn-sm action-next-page" title="Next Page">-->
-        <!--<i class="fa fa-fw fa-angle-right"></i>-->
-        <!--</button>-->
-
-        <!--</div>-->
-
-        <!--<div class="pull-right">-->
-
-        <!--<span style="padding: 10px 15px; display: block;"><%= modified?'changed '+$.timeago(modified):'' %></span>-->
-
-        <!--</div>-->
-        <!--</div>-->
 
         <ul class="nav nav-tabs">
             <li><a href="#" class="action-close"><i class="fa fa-fw fa-angle-left"></i></a></li>
@@ -589,7 +570,7 @@
 <script type="text/template" id="document-in-folder-view">
 
     <div class="doc doc-id-<%=uniqueHash %> row">
-    <div style="float:left; margin-right: 15px;">
+        <div style="float:left; margin-right: 15px;">
             <div class="thumb thumb-<%=title.substring(0,1).toLowerCase() %>"
                     ><%=title.substring(0,1).toUpperCase() %>
             </div>
@@ -597,7 +578,7 @@
         <div class="col-lg-10">
 
             <div class="row">
-                <a href="#doc:<%=id %>">
+                <a href="#doc:<%=id %>" title="<%=title %>">
                     <h4 style="display: inline-block; margin: 0; overflow: hidden; white-space: nowrap; ">
                         <%
                         if (typeof thumbnailUrl !== 'undefined') {
@@ -615,7 +596,7 @@
                         <%
                         }
                         %>
-                        <i class="fa fa-paperclip fa-fw" style="color: #808080"></i>
+                        <!--<i class="fa fa-paperclip fa-fw" style="color: #808080"></i>-->
 
                     </h4>
                 </a>

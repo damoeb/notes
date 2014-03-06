@@ -1,3 +1,4 @@
+- breadcrumbs prominenter, wie in idea, alles fett
 - treeview und suchergebnisse entsprechend der bilder in inspiration
 - eintraege in liste sollen markierbar sein
 - menue in docview wie in folderview, ganze breite und ganz rechts der "more" link
