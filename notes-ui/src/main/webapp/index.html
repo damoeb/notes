@@ -464,7 +464,19 @@
         <div>
             <h3 class="field-title editable-simple"><%= title %></h3>
 
-            <div style="margin-top: 10px; line-height:20px;" class="field-text editable-complex"><%= text %></div>
+            <div style="margin-top: 10px; line-height:20px; min-height: 100px;" class="field-text editable-complex">
+                <%
+                if (typeof text !== 'undefined' && text!==null && text.length!==0) {
+                %>
+                <%= text %>
+                <%
+                } else {
+                %>
+                Double-click to edit
+                <%
+                }
+                %>
+            </div>
 
         </div>
 
@@ -549,7 +561,10 @@
 <script type="text/template" id="breadcrumb-database">
     <li class="dropdown">
         <i class="fa fa-dot-circle-o fa-lg"></i>
-        <a class="dropdown-toggle" id="bc-db" data-toggle="dropdown" href="#" style="font-weight: bold;">Database</a>
+        <a class="dropdown-toggle" id="bc-db" data-toggle="dropdown" href="#" style="font-weight: bold;">
+            Database
+        </a>
+        <i class="fa fa-angle-right fa-fw"></i>
         <ul class="dropdown-menu" role="menu" aria-labelledby="bc-db">
             <li role="presentation"><a role="menuitem" tabindex="-1" href="#"
                                        onclick="notes.dialog.folder.newFolder(null)">Create Folder</a></li>
@@ -563,7 +578,32 @@
         <a href="#folder:<%= id %>">
             <%= name %>
         </a>
+        <i class="fa fa-angle-right fa-fw"></i>
     </li>
+</script>
+
+
+<script type="text/template" id="folder-in-tree">
+    <div class="level-<%=level %>">
+        <%
+        if (!leaf) {
+        %>
+        <a href="#"><i class="fa fa-fw fa-lg fa-caret-right toggle"></i></a>
+        <%
+        } else {
+        %>
+        <i class="fa fa-fw fa-lg toggle"></i>
+        <%
+        }
+        %>
+        <a href="#folder:<%=id %>" class="name"><%=name %></a>
+
+        <span class="pull-right"><%=documentCount %></span>
+    </div>
+
+    <ol class="children">
+        <!-- generated -->
+    </ol>
 </script>
 
 
@@ -604,8 +644,8 @@
                     <%=notes.util.formatDate(new Date(modified)) %>
                 </span>
             </div>
-            <div class="row" style="color:#666666; line-height: 16px; ">
-                <%=outline %>
+            <div class="row" style="color:#666666; line-height: 16px; max-height:48px; overflow:hidden">
+            <%=outline %>
             </div>
             <div class="row" style="margin-top: 5px">
                 <% for(var i=0; i < tags.length; i++) { %>

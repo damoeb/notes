@@ -12,7 +12,7 @@ $.widget('notes.breadcrumbs', {
     generate: function (folderId) {
         var $this = this;
 
-        var $breadcrumbs = $('<ol/>', {class: 'breadcrumb'});
+        var $breadcrumbs = $('<ol/>');
 
         $this.element.empty().append($breadcrumbs);
 
@@ -23,8 +23,9 @@ $.widget('notes.breadcrumbs', {
 
             while ($folder) {
 
+//                <i class="fa fa-angle-right"></i>
                 $breadcrumbs.prepend(
-                    $this._getBreadcrumbItem($folder, templateFolder)
+                    $(templateFolder($folder.getModel().attributes).trim())
                 );
 
                 $folder = $folder.getParent();
@@ -36,26 +37,7 @@ $.widget('notes.breadcrumbs', {
             _.template($('#breadcrumb-database').html())().trim()
         );
 
-
         return $breadcrumbs;
-    },
-
-    _getBreadcrumbItem: function ($folder, template) {
-        var $breadcrumb = $(template($folder.getModel().attributes).trim());
-//        $breadcrumb.find('.action-create').click(function () {
-//            notes.dialog.folder.newFolder($folder.getModel());
-//        });
-//        $breadcrumb.find('.action-delete').click(function () {
-//            // todo: implement
-//        });
-//        $breadcrumb.find('.action-rename').click(function () {
-//            notes.dialog.folder.rename($folder.getModel());
-//        });
-//        $breadcrumb.find('.action-open').click(function () {
-//            $('#document-list').documentList('refresh', $folder.getModel().get('id'));
-//        });
-
-        return $breadcrumb;
     }
 
 });

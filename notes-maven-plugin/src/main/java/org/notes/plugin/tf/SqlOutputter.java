@@ -98,7 +98,7 @@ public class SqlOutputter implements Outputter {
                 }
 
                 if (count++ % BULK_SIZE == 0) {
-                    fout.print("; insert into TermFrequency (frequency, term) values ");
+                    fout.print("; insert into TermFrequency (frequency, term, original) values ");
                     count = 1;
                 } else {
                     fout.print(",\n ");
@@ -115,6 +115,6 @@ public class SqlOutputter implements Outputter {
     }
 
     private String toSql(TermFrequency termFrequency) {
-        return String.format("(%s, '%s') ", termFrequency.getFrequency(), termFrequency.getTerm());
+        return String.format("(%s, '%s', '%s') ", termFrequency.getFrequency(), termFrequency.getTerm(), termFrequency.getOriginal());
     }
 }

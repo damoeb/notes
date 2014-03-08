@@ -149,31 +149,32 @@ body {
 #databases {
 
   ol {
-    background-image: url(../images/tree/tree-vertical.png);
-    background-repeat: repeat-y;
-    background-position: left top;
     margin: 0;
     padding: 0;
   }
 
   li {
-    background-image: url(../images/tree/tree-horizontal.png);
-    background-repeat: no-repeat;
-    background-position: left top;
     list-style: none;
     margin: 0;
-    line-height: 20px;
     padding: 0;
-    padding-left: 22px;
 
     &.active {
-      background-color: #999;
+      background-color: #efefef;
     }
     &.active > A {
       color: #fff;
       white-space: nowrap;
       text-decoration: none;
     }
+  }
+
+  @for $i from 1 through 10 {
+    .level-#{$i} {
+      padding-left: #{($i * 17)}px
+    }
+  }
+  .toggle {
+    color: #aeaeae;
   }
 }
 
@@ -188,3 +189,14 @@ body {
   }
 }
 
+#breadcrumbs {
+  ol {
+    list-style: none outside none;
+    margin-bottom: 20px;
+    padding: 8px 15px;
+  }
+  li {
+    display: inline-block;
+    padding: 3px 4px;
+  }
+}

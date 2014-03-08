@@ -34,7 +34,7 @@ $.widget('notes.bookmark', $.notes.basiceditor, {
             model.set('star', $star.attr('star') === 'true');
         };
 
-        $this._createParent();
+        $this._createParent($rendered);
 
     }
 });

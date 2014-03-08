@@ -4,13 +4,11 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
-import org.notes.common.model.FullText;
-import org.notes.common.model.Tag;
+import org.notes.common.model.*;
 import org.notes.core.interfaces.SessionData;
 import org.notes.core.interfaces.TagManager;
 import org.notes.core.model.BasicDocument;
 import org.notes.core.model.DefaultTag;
-import org.notes.core.util.TermUtils;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -108,8 +106,8 @@ public class TagManagerBean implements TagManager {
 
             @Override
             public int compare(String s1, String s2) {
-                Double tfidf1 = TermUtils.tfidf(s1, termFreqInDocument.get(s1), finalMaxTermFreq);
-                Double tfidf2 = TermUtils.tfidf(s2, termFreqInDocument.get(s2), finalMaxTermFreq);
+                Double tfidf1 = tfidf(s1, termFreqInDocument.get(s1), finalMaxTermFreq);
+                Double tfidf2 = tfidf(s2, termFreqInDocument.get(s2), finalMaxTermFreq);
                 if (tfidf1.equals(tfidf2)) {
                     return -1;
                 }
@@ -138,6 +136,33 @@ public class TagManagerBean implements TagManager {
         }
 
         return byName;
+    }
+
+    private Double tfidf(String term, Integer frequency, int maxTermFreq) {
+
+        double tf = 0.5 + (0.5 * frequency) / maxTermFreq;
+
+        double N = getTotalDocCount(); // Number Of Documents
+
+        double docsContainingT = getDocCountContainingTerm(term);
+
+        double idf = Math.log(N / docsContainingT);
+
+        return tf * idf;
+    }
+
+    private Double getDocCountContainingTerm(String term) {
+        Query query = em.createNamedQuery(TermFrequency.QUERY_BY_TERM);
+        query.setParameter("TERM", term);
+
+        return (Double) query.getSingleResult();
+    }
+
+    private Double getTotalDocCount() {
+        Query query = em.createNamedQuery(TermFrequencyProperties.QUERY_BY_KEY);
+        query.setParameter("KEY", TermFrequencyPropertiesKey.DOCUMENT_COUNT);
+
+        return (Double) query.getSingleResult();
     }
 
     private Map<String, Integer> getKeywordFreqMap(Collection<FullText> texts) {

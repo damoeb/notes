@@ -22,42 +22,23 @@ $.widget('notes.folder', {
         var $target = $self.element.empty();
         var model = $self.options.model;
 
-        $target.addClass('folder folder-' + model.get('id'));
+        var templateFolder = _.template($('#folder-in-tree').html());
 
-        var $label = $('<a/>', {
-            href: '#folder:' + model.get('id'),
-            text: model.get('name')
-        });
-        var $toggle = $('<i class="fa fa-caret-right fa-fw fa-lg"></i>');
+        $target.append($(templateFolder(model.attributes).trim()));
 
-        // -- Structure ------------------------------------------------------------------------------------------------
-
-        if (!model.get('leaf')) {
-            $target.append($('<a/>', {href: '#', class: 'toggle'}).append($toggle));
-        }
-        $target.append($label);
-        $target.append(' (' + model.get('documentCount') + ')');
-//        $target.append($('<span/>', {text: model.get('documentCount'), class: 'pull-right label label-default', style: 'font-size:90%; margin-top:2px;'}));
-
-
-        var $childrenLayer = $('<ol/>', {class: 'children'});
-
-        $target.append($childrenLayer);
-
-
-        $self.$childrenLayer = $childrenLayer;
-        $self.$toggle = $toggle;
+        $self.$childrenLayer = $target.find('.children');
+        $self.$toggle = $target.find('.toggle');
 
         //
         // -- Events ---------------------------------------------------------------------------------------------------
         //
 
-        $toggle.click(function () {
+        $self.$toggle.click(function () {
             //notes.router.navigate('folder/' + model.get('id'));
             $self.setExpanded(!model.get('expanded'));
         });
 
-        $label.click(function () {
+        $target.find('.name').click(function () {
             $self.loadDocuments();
         });
 

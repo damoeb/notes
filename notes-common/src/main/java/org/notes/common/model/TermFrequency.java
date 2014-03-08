@@ -9,16 +9,19 @@ import java.io.Serializable;
 @Entity(name = "TermFrequency")
 @Table(name = "TermFrequency")
 @NamedQueries({
-        @NamedQuery(name = TermFrequency.QUERY_BY_NAME, query = "SELECT a FROM TermFrequency a where a.term=:term")
+        @NamedQuery(name = TermFrequency.QUERY_BY_TERM, query = "SELECT a.frequency FROM TermFrequency a where a.term=:TERM")
 })
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class TermFrequency implements Serializable {
 
-    public static final String QUERY_BY_NAME = "TermFrequency.QUERY_BY_NAME";
+    public static final String QUERY_BY_TERM = "TermFrequency.QUERY_BY_TERM";
 
     @Id
     @Index(name = "termIdx")
     private String term;
+
+    @Basic
+    private String original;
 
     @Basic
     private Integer frequency;
@@ -27,6 +30,14 @@ public class TermFrequency implements Serializable {
 
     public TermFrequency() {
         // default
+    }
+
+    public String getOriginal() {
+        return original;
+    }
+
+    public void setOriginal(String original) {
+        this.original = original;
     }
 
     public String getTerm() {

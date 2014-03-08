@@ -224,7 +224,8 @@ public class WikiDumpParser {
         } else {
 
             TermFrequency tf = new TermFrequency();
-            tf.setTerm(term);
+            tf.setTerm(normed);
+            tf.setOriginal(term);
             tf.setFrequency(1);
 
             termFreqMap.put(normed, tf);

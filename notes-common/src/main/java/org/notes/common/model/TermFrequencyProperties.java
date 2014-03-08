@@ -8,7 +8,7 @@ import java.io.Serializable;
 @Entity(name = "TermFrequencyProperties")
 @Table(name = "TermFrequencyProperties")
 @NamedQueries({
-        @NamedQuery(name = TermFrequencyProperties.QUERY_BY_KEY, query = "SELECT a FROM TermFrequencyProperties a where a.key=:key")
+        @NamedQuery(name = TermFrequencyProperties.QUERY_BY_KEY, query = "SELECT a FROM TermFrequencyProperties a where a.key=:KEY")
 })
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class TermFrequencyProperties implements Serializable {

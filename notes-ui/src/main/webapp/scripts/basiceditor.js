@@ -9,10 +9,30 @@ $.widget('notes.basiceditor', {
         $('#folder-view').show();
     },
 
-    _createParent: function () {
+    _createParent: function ($rendered) {
         var $this = this;
 
         console.log('create parent');
+
+        console.log('link editor');
+
+        $rendered.find('.editable-simple').on('dblclick', function () {
+            $(this).keypress(function (e) {
+                var onEsc = e.which == 27;
+                var onEnter = e.which == 13;
+                if (onEsc || onEnter) {
+                    $(this).destroy();
+                }
+            }).summernote(SUMMERNOTE_SIMPLE_CFG);
+        });
+        $rendered.find('.editable-complex').on('dblclick', function () {
+            $(this).keypress(function (e) {
+                var onEsc = e.which == 27;
+                if (onEsc) {
+                    $(this).destroy();
+                }
+            }).summernote(SUMMERNOTE_COMPLEX_CFG);
+        });
 
         var $rendered = $this.element;
         $rendered.find('.action-close').unbind('click').click(function () {

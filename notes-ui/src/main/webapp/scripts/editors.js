@@ -52,24 +52,6 @@ $.widget('notes.editors', {
 
             $this.element.empty().append($content);
 
-
-            $('.editable-simple').on('dblclick', function () {
-                $(this).keypress(function (e) {
-                    var onEsc = e.which == 27;
-                    var onEnter = e.which == 13;
-                    if (onEsc || onEnter) {
-                        $(this).destroy();
-                    }
-                }).summernote(SUMMERNOTE_SIMPLE_CFG);
-            });
-            $('.editable-complex').on('dblclick', function () {
-                $(this).keypress(function (e) {
-                    var onEsc = e.which == 27;
-                    if (onEsc) {
-                        $(this).destroy();
-                    }
-                }).summernote(SUMMERNOTE_COMPLEX_CFG);
-            });
         });
     },
 

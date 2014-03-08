@@ -19,7 +19,7 @@ import java.util.Set;
 @NamedQueries({
         @NamedQuery(name = Folder.QUERY_BY_ID, query = "SELECT a FROM Folder a where a.id=:ID"),
         @NamedQuery(name = Folder.QUERY_CHILDREN, query = "SELECT new Folder(a.id, a.name, a.leaf, a.documentCount, a.modified, a.level, a.expanded) FROM Folder a WHERE a.parentId = :ID"),
-        @NamedQuery(name = Folder.QUERY_ROOT_FOLDERS, query = "SELECT new Folder(a.id, a.name, a.leaf, a.documentCount, a.modified, a.level, a.expanded) FROM Folder a WHERE a.databaseId = :DB_ID and a.owner = :OWNER and a.level = 0")
+        @NamedQuery(name = Folder.QUERY_ROOT_FOLDERS, query = "SELECT new Folder(a.id, a.name, a.leaf, a.documentCount, a.modified, a.level, a.expanded) FROM Folder a WHERE a.databaseId = :DB_ID and a.owner = :OWNER and a.level = 0 ORDER BY a.name")
 })
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class Folder extends Node {

@@ -4,6 +4,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.hibernate.annotations.Type;
 import org.notes.common.ForeignKey;
 import org.notes.common.interfaces.Harvestable;
 import org.notes.common.model.FileReference;
@@ -40,6 +41,7 @@ public class BookmarkDocument extends BasicDocument implements Harvestable {
     private String url;
 
     @Lob
+    @Type(type = "org.hibernate.type.TextType")
     private String text;
 
     public BookmarkDocument() {

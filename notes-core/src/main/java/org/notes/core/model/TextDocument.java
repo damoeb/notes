@@ -2,12 +2,12 @@ package org.notes.core.model;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.hibernate.annotations.Type;
 import org.notes.common.model.FullText;
 import org.notes.common.model.Kind;
 import org.notes.common.utils.TextUtils;
 
 import javax.persistence.Entity;
-import javax.persistence.Lob;
 import javax.persistence.Table;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -18,7 +18,7 @@ import java.util.List;
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class TextDocument extends BasicDocument {
 
-    @Lob
+    @Type(type = "org.hibernate.type.TextType")
     private String text;
 
 //  --------------------------------------------------------------------------------------------------------------------

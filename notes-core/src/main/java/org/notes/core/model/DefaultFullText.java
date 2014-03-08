@@ -1,6 +1,7 @@
 package org.notes.core.model;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.hibernate.annotations.Type;
 import org.notes.common.ForeignKey;
 import org.notes.common.model.FullText;
 
@@ -21,7 +22,7 @@ public class DefaultFullText implements FullText {
     private Long fileReferenceId;
 
     @JsonIgnore
-    @Lob
+    @Type(type = "org.hibernate.type.TextType")
     private String text;
 
 //  --------------------------------------------------------------------------------------------------------------------
