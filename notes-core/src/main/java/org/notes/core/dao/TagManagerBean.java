@@ -4,11 +4,12 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
-import org.notes.common.model.*;
+import org.notes.common.model.Tag;
 import org.notes.core.interfaces.SessionData;
 import org.notes.core.interfaces.TagManager;
 import org.notes.core.model.BasicDocument;
 import org.notes.core.model.DefaultTag;
+import org.notes.recommend.bean.TextEssence;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -17,7 +18,10 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import java.util.*;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 //@LocalBean
 @Stateless
@@ -32,6 +36,9 @@ public class TagManagerBean implements TagManager {
 
     @Inject
     private SessionData sessionData;
+
+    @Inject
+    private TextEssence textEssence;
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
@@ -71,9 +78,9 @@ public class TagManagerBean implements TagManager {
 
             List<Tag> recommendations = new LinkedList<>();
 
-            Collection<String> keywords = getBestKeywords(10, document.getTexts());
+            Map<String, Double> keywords = textEssence.getBestKeywords(10, document.getTexts());
 
-            for (final String kw : keywords) {
+            for (final String kw : keywords.keySet()) {
                 recommendations.add(new Tag() {
                     @Override
                     public String getName() {
@@ -87,128 +94,6 @@ public class TagManagerBean implements TagManager {
         } catch (Throwable t) {
             throw new NotesException("get recommendations", t);
         }
-    }
-
-    private Set<String> getBestKeywords(int num, Collection<FullText> texts) {
-
-        final Map<String, Integer> termFreqInDocument = getKeywordFreqMap(texts);
-
-        int maxTermFreq = 0;
-        for (Integer freq : termFreqInDocument.values()) {
-            if (freq > maxTermFreq) {
-                maxTermFreq = freq;
-            }
-        }
-
-        final int finalMaxTermFreq = maxTermFreq;
-
-        SortedSet<String> byScore = new TreeSet<>(new Comparator<String>() {
-
-            @Override
-            public int compare(String s1, String s2) {
-                Double tfidf1 = tfidf(s1, termFreqInDocument.get(s1), finalMaxTermFreq);
-                Double tfidf2 = tfidf(s2, termFreqInDocument.get(s2), finalMaxTermFreq);
-                if (tfidf1.equals(tfidf2)) {
-                    return -1;
-                }
-                return tfidf2.compareTo(tfidf1);
-            }
-        });
-
-        byScore.addAll(termFreqInDocument.keySet());
-
-        // order by name
-        SortedSet<String> byName = new TreeSet<>(new Comparator<String>() {
-
-            @Override
-            public int compare(String s1, String s2) {
-                return s2.compareTo(s1);
-            }
-        });
-
-        for (String kw : byScore) {
-
-            byName.add(kw);
-
-            if (byName.size() >= num) {
-                break;
-            }
-        }
-
-        return byName;
-    }
-
-    private Double tfidf(String term, Integer frequency, int maxTermFreq) {
-
-        double tf = 0.5 + (0.5 * frequency) / maxTermFreq;
-
-        double N = getTotalDocCount(); // Number Of Documents
-
-        double docsContainingT = getDocCountContainingTerm(term);
-
-        double idf = Math.log(N / docsContainingT);
-
-        return tf * idf;
-    }
-
-    private Double getDocCountContainingTerm(String term) {
-        Query query = em.createNamedQuery(TermFrequency.QUERY_BY_TERM);
-        query.setParameter("TERM", term);
-
-        return (Double) query.getSingleResult();
-    }
-
-    private Double getTotalDocCount() {
-        Query query = em.createNamedQuery(TermFrequencyProperties.QUERY_BY_KEY);
-        query.setParameter("KEY", TermFrequencyPropertiesKey.DOCUMENT_COUNT);
-
-        return (Double) query.getSingleResult();
-    }
-
-    private Map<String, Integer> getKeywordFreqMap(Collection<FullText> texts) {
-
-        final Map<String, Integer> keywordFreq = new HashMap<>(300);
-
-        for (FullText text : texts) {
-
-            StringTokenizer tokenizer = new StringTokenizer(text.getText(), " .,;:-+*?!'^\"/\\&<>()[]{}\n\t\r");
-
-            while (tokenizer.hasMoreTokens()) {
-                String keyword = tokenizer.nextToken();
-                // filter
-                if (!isKeyword(keyword)) {
-                    continue;
-                }
-                // stem
-                keyword = stem(keyword);
-
-                // stop words
-                if (isStopWord(keyword)) {
-                    continue;
-                }
-
-                if (!keywordFreq.containsKey(keyword)) {
-                    keywordFreq.put(keyword, 0);
-                }
-                keywordFreq.put(keyword, keywordFreq.get(keyword) + 1);
-            }
-        }
-
-        return keywordFreq;
-    }
-
-    private boolean isStopWord(String keyword) {
-        // todo use stop words
-        return false;
-    }
-
-    private String stem(String keyword) {
-        // todo implement stem
-        return keyword;
-    }
-
-    private boolean isKeyword(String token) {
-        return StringUtils.length(StringUtils.trim(token)) > 2;
     }
 
     @Override

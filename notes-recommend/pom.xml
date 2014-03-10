@@ -13,7 +13,7 @@
     <artifactId>notes-recommend</artifactId>
     <version>0.1</version>
     <!--packaging>ejb</packaging-->
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     <name>notes recommend</name>
 
     <properties>
@@ -164,7 +164,6 @@
     </dependencies>
 
     <build>
-        <finalName>notes-recommend.war</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -173,16 +172,6 @@
                 <configuration>
                     <source>1.7</source>
                     <target>1.7</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>2.1.1</version>
-                <configuration>
-                    <!-- Java EE 6 doesn't require web.xml, Maven needs to catch
-                   up! -->
-                    <failOnMissingWebXml>false</failOnMissingWebXml>
-
                 </configuration>
             </plugin>
         </plugins>

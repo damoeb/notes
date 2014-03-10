@@ -92,9 +92,12 @@ public class BasicDocument implements Document {
     @Basic
     private boolean star;
 
-    @Basic
     @Column(length = 1024)
     private String thumbnailUrl;
+
+    @JsonIgnore
+    @Column(length = 2048)
+    private String essenceJson;
 
     @JsonIgnore
     @Basic
@@ -117,6 +120,11 @@ public class BasicDocument implements Document {
     @JoinTable(name = "document2tag")
     @Access(AccessType.FIELD)
     private Set<Tag> tags = new HashSet<>(100);
+
+//  -- Transient -------------------------------------------------------------------------------------------------------
+
+    @Transient
+    private Map<String, Double> essence = null;
 
 //  --------------------------------------------------------------------------------------------------------------------
 
@@ -335,6 +343,33 @@ public class BasicDocument implements Document {
             } catch (IOException e) {
                 //
             }
+        }
+    }
+
+    @Override
+    public Map<String, Double> getEssence() {
+        if (essence == null && StringUtils.isNotBlank(essenceJson)) {
+            essence = new HashMap<>(100);
+            try {
+                Map<Object, Object> essenceTmp = new ObjectMapper().readValue(essenceJson, Map.class);
+                for (Object key : essenceTmp.keySet()) {
+                    this.essence.put((String) key, (Double) essenceTmp.get(key));
+                }
+            } catch (IOException e) {
+                //
+            }
+        }
+        return essence;
+    }
+
+    @Override
+    public void setEssence(Map<String, Double> essence) {
+        this.essence = essence;
+        try {
+            ObjectWriter ow = new ObjectMapper().writer();
+            this.essenceJson = ow.writeValueAsString(essence);
+        } catch (IOException e) {
+            //
         }
     }
 

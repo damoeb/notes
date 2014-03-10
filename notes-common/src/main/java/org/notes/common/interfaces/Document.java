@@ -8,6 +8,7 @@ import org.notes.common.model.Trigger;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Map;
 import java.util.Set;
 
 public interface Document extends Serializable {
@@ -42,6 +43,10 @@ public interface Document extends Serializable {
     boolean isStar();
 
     Set<Tag> getTags();
+
+    Map<String, Double> getEssence();
+
+    void setEssence(Map<String, Double> essence);
 
     String getUniqueHash();
 

@@ -7,5 +7,5 @@ public enum Trigger {
     HARVEST,
     HARVEST_FAILED,
     DELETE,
-    FINGERPRINT
+    ESSENCE
 }

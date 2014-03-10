@@ -77,7 +77,7 @@ public class IndexerScheduler {
                         indexTexts(document);
                     }
 
-                    document.setTrigger(Trigger.FINGERPRINT);
+                    document.setTrigger(Trigger.ESSENCE);
                     em.merge(document);
                     em.flush();
 

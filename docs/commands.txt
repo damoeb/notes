@@ -1,2 +1,2 @@
-Import Term Frequencies
+-- Import Term Frequencies
 sudo -u postgres psql notes < TermFrequency.out

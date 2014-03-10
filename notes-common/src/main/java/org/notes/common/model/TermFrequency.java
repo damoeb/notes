@@ -72,4 +72,12 @@ public class TermFrequency implements Serializable {
     public int hashCode() {
         return term.hashCode();
     }
+
+    @Override
+    public String toString() {
+        return "TermFrequency{" +
+                "term='" + term + '\'' +
+                ", original='" + original + '\'' +
+                '}';
+    }
 }
