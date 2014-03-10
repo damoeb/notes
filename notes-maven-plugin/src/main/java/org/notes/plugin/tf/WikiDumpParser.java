@@ -183,7 +183,7 @@ public class WikiDumpParser {
 
         documentCount++;
 
-        final StringTokenizer tokenizer = new StringTokenizer(text, " &\\_\"<>|!?=+–~-*/„“()’`´_#'°^@€%$§[]{}\n\t :,;.ˈ¹−…₂»«%¬”‘·∴ʿ‰″");
+        final StringTokenizer tokenizer = new StringTokenizer(text, " &\\_\"<>|!?=+–­~-*/„“()’`´_#'°^@€%$§[]{}\n\t :,;.ˈ¹−…₂»«%¬”‘·∴ʿ‰″");
 
         termsInDocument.clear();
 
@@ -236,11 +236,6 @@ public class WikiDumpParser {
     private static String normTerm(String term) {
         term = Normalizer.normalize(term, Normalizer.Form.NFD);
         return ASCII_PATTERN.matcher(term).replaceAll("").toLowerCase();
-    }
-
-    public static void main(String[] args) {
-        System.out.println(normTerm("Haus"));
-        System.out.println(normTerm("ParanáHaus"));
     }
 
 }

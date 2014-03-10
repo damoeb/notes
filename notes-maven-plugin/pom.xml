@@ -151,20 +151,6 @@
                     </pathToWikiDumpXml>
                     <!--<abortAfterDocCount>10000</abortAfterDocCount>-->
                 </configuration>
-                <!--<executions>-->
-                <!--<execution>-->
-                <!--<id>execute</id>-->
-                <!--&lt;!&ndash;<phase>package</phase>&ndash;&gt;-->
-                <!--<goals>-->
-                <!--<goal>term-frequency</goal>-->
-                <!--</goals>-->
-                <!--<configuration>-->
-                <!--<pathToWikiDumpXml>/home/damoeb/Downloads/dewiki-20140129-pages-articles-multistream.xml-->
-                <!--</pathToWikiDumpXml>-->
-                <!--<abortAfterDocCount>10000</abortAfterDocCount>-->
-                <!--</configuration>-->
-                <!--</execution>-->
-                <!--</executions>-->
             </plugin>
         </plugins>
     </build>
