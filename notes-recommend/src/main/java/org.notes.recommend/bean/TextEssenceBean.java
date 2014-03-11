@@ -47,9 +47,10 @@ public class TextEssenceBean implements TextEssence {
         for (String term : termFreqInDocument.keySet()) {
             Integer freq = termFreqInDocument.get(term);
 
-            Double tfidf = tfidf(term, freq, finalMaxTermFreq);
-            if (tfidf > 0) {
-                tfidfMap.put(term, tfidf);
+            try {
+                tfidfMap.put(term, tfidf(term, freq, finalMaxTermFreq));
+            } catch (IllegalArgumentException e) {
+                LOGGER.warn(e.getMessage());
             }
         }
 
@@ -111,9 +112,7 @@ public class TextEssenceBean implements TextEssence {
             return (Integer) query.getSingleResult();
 
         } catch (NoResultException e) {
-
-            LOGGER.warn("No results for term '" + term + "'");
-            return 0;
+            throw new IllegalArgumentException(String.format("Term '%s' does not exist", term));
         }
     }
 
