@@ -12,6 +12,7 @@ $.widget('notes.search', {
             $('#search-view').hide();
             $('#folder-view').show();
             $('#document-view').hide();
+            $('#document-and-folder-view').show();
         });
 
     },
@@ -29,8 +30,9 @@ $.widget('notes.search', {
         $this.rows = 100;
 
         $('#search-view').show();
-        $('#folder-view').hide();
-        $('#document-view').hide();
+//        $('#folder-view').hide();
+//        $('#document-view').hide();
+        $('#document-and-folder-view').hide();
 
         $this._query();
 

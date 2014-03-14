@@ -141,6 +141,7 @@ $.widget('notes.folder', {
 
         $('#document-view').hide();
         $('#folder-view').show();
+        $('#document-and-folder-view').show();
         $('#search-view').hide();
     }
 });

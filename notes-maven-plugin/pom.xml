@@ -149,7 +149,7 @@
                 <configuration>
                     <pathToWikiDumpXml>/home/damoeb/Downloads/dewiki-20140129-pages-articles-multistream.xml
                     </pathToWikiDumpXml>
-                    <abortAfterDocCount>4000000</abortAfterDocCount>
+                    <!--<abortAfterDocCount>4000000</abortAfterDocCount>-->
                     <minTermOccurrences>80</minTermOccurrences>
                 </configuration>
             </plugin>
