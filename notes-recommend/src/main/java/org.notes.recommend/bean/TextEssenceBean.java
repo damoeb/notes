@@ -7,6 +7,7 @@ import org.notes.common.model.FullText;
 import org.notes.common.model.TermFrequency;
 import org.notes.common.model.TermFrequencyProperties;
 import org.notes.common.model.TermFrequencyPropertiesKey;
+import org.notes.common.utils.TextUtils;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -107,7 +108,7 @@ public class TextEssenceBean implements TextEssence {
     private Integer getDocCountContainingTerm(String term) {
         try {
             Query query = em.createNamedQuery(TermFrequency.QUERY_BY_TERM);
-            query.setParameter("TERM", term.toLowerCase());
+            query.setParameter("TERM", TextUtils.toNormedAsciiTerm(term));
 
             return (Integer) query.getSingleResult();
 

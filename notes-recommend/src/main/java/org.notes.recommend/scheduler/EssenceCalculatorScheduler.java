@@ -46,7 +46,7 @@ public class EssenceCalculatorScheduler {
 
                     LOGGER.info("essence " + document.getId());
 
-                    document.setEssence(textEssence.getBestKeywords(50, document.getTexts()));
+//                    document.setEssence(textEssence.getBestKeywords(50, document.getTexts()));
 
                     document.setTrigger(null);
                     em.merge(document);

@@ -24,8 +24,17 @@ $.widget('notes.breadcrumbs', {
             while ($folder) {
 
 //                <i class="fa fa-angle-right"></i>
+                var $rendered = $(templateFolder($folder.getModel().attributes).trim());
+
+                $rendered.find('.action-folder-delete').click(function () {
+                    // todo: implement
+                });
+                $rendered.find('.action-folder-rename').click(function () {
+                    notes.dialog.folder.rename($folder.getModel());
+                });
+
                 $breadcrumbs.prepend(
-                    $(templateFolder($folder.getModel().attributes).trim())
+                    $rendered
                 );
 
                 $folder = $folder.getParent();

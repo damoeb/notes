@@ -15,6 +15,7 @@
         this.activeFolderId = function (id) {
             if (typeof id !== 'undefined') {
                 _activeFolderId = id;
+                new notes.model.Database({activeFolderId:id}).save()
             } else {
                 return _activeFolderId;
             }

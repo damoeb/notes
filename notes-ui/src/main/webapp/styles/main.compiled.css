@@ -5115,26 +5115,39 @@ body {
     color: #fff;
     white-space: nowrap;
     text-decoration: none; }
+#databases .level-0 {
+  padding-left: 0px;
+  line-height: 20px; }
 #databases .level-1 {
-  padding-left: 17px; }
+  padding-left: 17px;
+  line-height: 20px; }
 #databases .level-2 {
-  padding-left: 34px; }
+  padding-left: 34px;
+  line-height: 20px; }
 #databases .level-3 {
-  padding-left: 51px; }
+  padding-left: 51px;
+  line-height: 20px; }
 #databases .level-4 {
-  padding-left: 68px; }
+  padding-left: 68px;
+  line-height: 20px; }
 #databases .level-5 {
-  padding-left: 85px; }
+  padding-left: 85px;
+  line-height: 20px; }
 #databases .level-6 {
-  padding-left: 102px; }
+  padding-left: 102px;
+  line-height: 20px; }
 #databases .level-7 {
-  padding-left: 119px; }
+  padding-left: 119px;
+  line-height: 20px; }
 #databases .level-8 {
-  padding-left: 136px; }
+  padding-left: 136px;
+  line-height: 20px; }
 #databases .level-9 {
-  padding-left: 153px; }
+  padding-left: 153px;
+  line-height: 20px; }
 #databases .level-10 {
-  padding-left: 170px; }
+  padding-left: 170px;
+  line-height: 20px; }
 #databases .toggle {
   color: #aeaeae; }
 
@@ -5143,6 +5156,14 @@ body {
   padding: 2px;
   font-style: normal;
   font-weight: bold; }
+#search-view .document-score {
+  overflow: hidden;
+  background-color: #efefef; }
+  #search-view .document-score DIV {
+    min-width: 5%; }
+#search-view .search-info {
+  padding: 10px 15px;
+  display: block; }
 
 #breadcrumbs ol {
   list-style: none outside none;

@@ -1,13 +1,32 @@
 package org.notes.common.utils;
 
 import org.apache.commons.lang.StringUtils;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.ObjectWriter;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.safety.Cleaner;
 import org.jsoup.safety.Whitelist;
 import org.notes.common.configuration.Configuration;
+import org.notes.common.model.Tag;
+
+import java.io.IOException;
+import java.text.Normalizer;
+import java.util.Map;
+import java.util.Set;
+import java.util.regex.Pattern;
 
 public final class TextUtils {
+
+    private static final Pattern ASCII_PATTERN = Pattern.compile("[^\\p{ASCII}]");
+
+    public static String toNormedAsciiTerm(String term) {
+        term = Normalizer.normalize(term, Normalizer.Form.NFD);
+
+        // todo stemming
+
+        return ASCII_PATTERN.matcher(term).replaceAll("").toLowerCase();
+    }
 
     public static String toOutline(String first, String... more) {
         if (first == null) {
@@ -17,7 +36,7 @@ public final class TextUtils {
         int outlineSize = Configuration.Constants.OUTLINE_LENGTH;
         StringBuilder outline = new StringBuilder(outlineSize * 2);
 
-        outline.append(norm(first));
+        outline.append(normWhitespaces(first));
         outline.append(" ");
 
         for (String text : more) {
@@ -27,7 +46,7 @@ public final class TextUtils {
             if (outline.length() > outlineSize) {
                 break;
             }
-            String normalized = norm(text);
+            String normalized = normWhitespaces(text);
             outline.append(normalized);
             outline.append(" ");
         }
@@ -43,7 +62,24 @@ public final class TextUtils {
         return cleaned.body().text();
     }
 
-    private static String norm(String text) {
+    private static String normWhitespaces(String text) {
         return text.replaceAll("[\n\t\r ]+", " ");
+    }
+
+    public static String toJson(Object obj) {
+        try {
+            ObjectWriter ow = new ObjectMapper().writer();
+            return ow.writeValueAsString(obj);
+        } catch (IOException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+
+    public static Object fromJson(String jsonString, Class<?> clazz) {
+        try {
+            return new ObjectMapper().readValue(jsonString, clazz);
+        } catch (IOException e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 }

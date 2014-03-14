@@ -134,6 +134,7 @@ public class IndexerScheduler {
         doc.setField(SolrFields.OWNER, document.getOwner());
         doc.setField(SolrFields.UNIQUE_HASH, document.getUniqueHash());
         doc.setField(SolrFields.STAR, document.isStar());
+        doc.setField(SolrFields.TAG, document.getTags());
         return doc;
     }
 

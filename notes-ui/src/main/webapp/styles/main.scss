@@ -168,9 +168,10 @@ body {
     }
   }
 
-  @for $i from 1 through 10 {
+  @for $i from 0 through 10 {
     .level-#{$i} {
-      padding-left: #{($i * 17)}px
+      padding-left: #{($i * 17)}px;
+      line-height: 20px;
     }
   }
   .toggle {
@@ -186,6 +187,20 @@ body {
       font-style: normal;
       font-weight: bold;
     }
+  }
+
+  .document-score {
+    overflow:hidden;
+    background-color:#efefef;
+
+    DIV {
+      min-width: 5%;
+    }
+  }
+
+  .search-info {
+    padding: 10px 15px;
+    display: block;
   }
 }
 

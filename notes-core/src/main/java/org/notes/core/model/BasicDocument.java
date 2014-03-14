@@ -19,6 +19,7 @@ import org.notes.common.model.Tag;
 import org.notes.common.model.Trigger;
 import org.notes.common.service.CustomDateDeserializer;
 import org.notes.common.service.CustomDateSerializer;
+import org.notes.common.utils.TextUtils;
 
 import javax.persistence.*;
 import java.io.IOException;
@@ -337,12 +338,7 @@ public class BasicDocument implements Document {
         this.tags = tags;
 
         if (tags != null) {
-            try {
-                ObjectWriter ow = new ObjectMapper().writer();
-                this.tagsJson = ow.writeValueAsString(tags);
-            } catch (IOException e) {
-                //
-            }
+            this.tagsJson = TextUtils.toJson(tags);
         }
     }
 
@@ -350,13 +346,9 @@ public class BasicDocument implements Document {
     public Map<String, Double> getEssence() {
         if (essence == null && StringUtils.isNotBlank(essenceJson)) {
             essence = new HashMap<>(100);
-            try {
-                Map<Object, Object> essenceTmp = new ObjectMapper().readValue(essenceJson, Map.class);
-                for (Object key : essenceTmp.keySet()) {
-                    this.essence.put((String) key, (Double) essenceTmp.get(key));
-                }
-            } catch (IOException e) {
-                //
+            Map<Object, Object> essenceTmp = (Map<Object, Object>) TextUtils.fromJson(essenceJson, Map.class);
+            for (Object key : essenceTmp.keySet()) {
+                this.essence.put((String) key, (Double) essenceTmp.get(key));
             }
         }
         return essence;
@@ -365,12 +357,7 @@ public class BasicDocument implements Document {
     @Override
     public void setEssence(Map<String, Double> essence) {
         this.essence = essence;
-        try {
-            ObjectWriter ow = new ObjectMapper().writer();
-            this.essenceJson = ow.writeValueAsString(essence);
-        } catch (IOException e) {
-            //
-        }
+        this.essenceJson = TextUtils.toJson(essence);
     }
 
     @Override

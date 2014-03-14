@@ -226,7 +226,7 @@
                             Folder</a></li>
 
                         <li class="pull-right dropdown">
-                            <a class="dropdown-toggle" id="sprt-options" data-toggle="dropdown" href="#">
+                            <a class="dropdown-toggle" id="sort-options" data-toggle="dropdown" href="#">
                                 Sort <i class="fa fa-angle-down fa-fw"></i>
                             </a>
                             <ul class="dropdown-menu" role="menu" aria-labelledby="sort-options">
@@ -258,13 +258,36 @@
 
             <div id="search-view" class="col-lg-9" style="display: none">
 
-                <div class="row" style="height: 32px;">
-                    <!--All In Folder | All Notes PDFs Media-->
+                <div class="navbar">
+
+                    <ul class="nav nav-tabs">
+
+                        <li class="search-info"><span class="numFound">0</span> results (<span
+                                class="elapsedTime">0.00</span> seconds)</li>
+
+                        <li class="pull-right dropdown">
+                            <a class="dropdown-toggle" id="search-sort-options" data-toggle="dropdown" href="#">
+                                Sort <i class="fa fa-angle-down fa-fw"></i>
+                            </a>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="search-sort-options">
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="#"
+                                                           class="">By Date</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="pull-right dropdown">
+                            <a class="dropdown-toggle" id="search-options" data-toggle="dropdown" href="#">
+                                More <i class="fa fa-angle-down fa-fw"></i>
+                            </a>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="search-options">
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="#"
+                                                           class="action-save-search">Save Search</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+
                 </div>
 
-                <div style="margin-top: 5px; color: #999"><span class="numFound">0</span> results (<span
-                        class="elapsedTime">0.00</span> seconds)
-                </div>
                 <div class="hit-list" style="margin-top: 15px"><!-- generated --></div>
 
             </div>
@@ -662,27 +685,23 @@
 
 <script type="text/template" id="document-in-hits-view">
 
+    <!--<% if(numFoundInGroup>1) { %>-->
+    <!--<div style="color:#999">on <%=numFoundInGroup %> pages</div>-->
+    <!--<% } // if %>-->
+
     <div class="doc doc-id-<%=uniqueHash %> row">
-        <div class="col-lg-2">
-            <!--<img src="<%= notes.util.getThumbnailByType(kind) %>">-->
-            <div class="progress progress-striped" title="Score <%=parseInt(score * 100) %>%"
-                 style="margin-bottom: 5px;">
-                <div class="progress-bar progress-bar-success" role="progressbar"
-                     aria-valuenow="<%=parseInt(score * 100) %>" aria-valuemin="0" aria-valuemax="100"
-                     style="width: <%=parseInt(score * 100) %>%; min-width:5%">
-                    <span class="sr-only"><%=parseInt(score * 100) %>% score</span>
-                </div>
+        <div style="float:left; margin-right: 15px;">
+            <div class="thumb thumb-<%=title.substring(0,1).toLowerCase() %>"
+                    ><%=title.substring(0,1).toUpperCase() %>
             </div>
-            <% if(numFoundInGroup>1) { %>
-            <div style="color:#999">on <%=numFoundInGroup %> pages</div>
-            <% } // if %>
         </div>
         <div class="col-lg-10">
 
             <div class="row">
-                <a href="#doc:<%=id %>">
+                <a href="#doc:<%=id %>" title="<%=title %>">
                     <h4 style="display: inline-block; margin: 0; overflow: hidden; white-space: nowrap; ">
-                        <%=title.length > 80 ? title.substring(0, 80)+'...' : title %>
+
+                        <%=title.length > 65 ? title.substring(0, 65)+'...' : title %>
                         <%
                         if (star) {
                         %>
@@ -690,7 +709,7 @@
                         <%
                         }
                         %>
-                        <i class="fa fa-paperclip fa-fw" style="color: #808080"></i>
+                        <!--<i class="fa fa-paperclip fa-fw" style="color: #808080"></i>-->
 
                     </h4>
                 </a>
@@ -698,18 +717,34 @@
                     <%=notes.util.formatDate(new Date(modified)) %>
                 </span>
             </div>
-            <div class="row" style="color:#666666; line-height: 16px; ">
-
-                <% if(highlights.length>0) {
+            <div class="row" style="color:#666666; line-height: 16px; max-height:48px; overflow:hidden">
+                <% if(highlights.length > 0) {
                 for(var i=0; i + 1 < highlights.length; i++) { %>
-                <%=highlights[i] %>
+                <%= highlights[i] %>
                 ...
                 <% } // for %>
-                <%=highlights[highlights.length-1] %>
+                <%= highlights[highlights.length-1] %>
                 <% } // if %>
             </div>
+            <div class="row" style="margin-top: 5px">
+                <%
+                if (typeof thumbnailUrl !== 'undefined') {
+                for(var i=0; i < tags.length; i++) { %>
+
+                <a href="#tag:<%=tags[i].name %>" class="label label-default"><%=tags[i].name %></a>
+
+                <% } // for
+                } // if %>
+            </div>
+
+            <!-- score -->
+            <div class="ui-corner-all document-score row">
+                <div style="background-color: #666666; width: <%=parseInt(score * 100) %>%; height:7px"></div>
+            </div>
+
         </div>
     </div>
+
 
 </script>
 
