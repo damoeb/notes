@@ -1,3 +1,4 @@
+- tags probleme beim indexieren
 - 2 documents are not indexed yet
 - db: fix umlauts (works now)
 - treeview und suchergebnisse entsprechend der bilder in inspiration
@@ -14,7 +15,7 @@
 - improve treeview: colors, icons
 - tags redundanz entfernen, datenbank model verbessern
 - back knopf ist nicht noetig, da bereits durch browser funktion zurueck vorhanden
-- search: index wird geloescht am start
+- search: index wird geloescht am start: im standalone.cnf ist solr.data im /tmp folder
 - search: auf sidebar facetten anzeigen?
 - use uniqueHash instead of document id
 - viewer for unknown type

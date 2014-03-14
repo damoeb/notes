@@ -234,7 +234,7 @@ public class DocumentManagerBean implements DocumentManager {
     private void copyAttributes(BasicDocument source, BasicDocument target) throws NotesException {
         target.setTags(resolveTags(target.getTags(), source.getTags()));
         target.setStar(source.isStar());
-        target.setTitle(TextUtils.cleanHtml(source.getTitle()).replace("\n",""));
+        target.setTitle(TextUtils.cleanHtml(source.getTitle()).replace("\n", ""));
     }
 
     private boolean equals(BasicDocument a, BasicDocument b) {
@@ -271,7 +271,7 @@ public class DocumentManagerBean implements DocumentManager {
                 em.refresh(document);
             }
 
-//            Hibernate.initialize(document.getTags());
+            Hibernate.initialize(document.getTags());
 
             return document;
 

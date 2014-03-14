@@ -168,7 +168,6 @@
     </dependencies>
 
     <build>
-        <finalName>notes-common.jar</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

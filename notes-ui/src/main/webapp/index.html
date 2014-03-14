@@ -78,223 +78,212 @@
 
 <div id="content-view" style="display: none">
 
-    <div class="container" style="margin-left: 0;">
+<div class="container" style="margin-left: 0;">
 
-        <!-- CONTENT TOP -->
-        <div class="row"
-             style="background: none repeat scroll 0 0 #F1F1F1; border-bottom: 1px solid #e1e1e1; padding-top:8px; padding-bottom:8px;">
+<!-- CONTENT TOP -->
+<div class="row"
+     style="background: none repeat scroll 0 0 #F1F1F1; border-bottom: 1px solid #e1e1e1; padding-top:8px; padding-bottom:8px;">
 
-            <!-- LEFT -->
-            <div class="col-lg-3">
+    <!-- LEFT -->
+    <div class="col-lg-3">
 
+    </div>
+
+    <!-- CONTENT -->
+
+    <div class="col-lg-5">
+        <div class="input-group">
+            <div class="input-group-btn">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">All <span
+                        class="caret"></span></button>
+                <ul class="dropdown-menu">
+                    <li role="presentation" class="dropdown-header">Places</li>
+                    <li><a href="#">All Folders</a></li>
+                    <li><a href="#">Current Folder</a></li>
+
+                </ul>
             </div>
+            <!-- /btn-group -->
 
-            <!-- CONTENT -->
-
-            <div class="col-lg-5">
-                <div class="input-group">
-                    <div class="input-group-btn">
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">All <span
-                                class="caret"></span></button>
-                        <ul class="dropdown-menu">
-                            <li role="presentation" class="dropdown-header">Places</li>
-                            <li><a href="#">All Folders</a></li>
-                            <li><a href="#">Current Folder</a></li>
-
-                        </ul>
-                    </div>
-                    <!-- /btn-group -->
-
-                    <input id="search-input" class="form-control" type="text" name="query"
-                           placeholder="Search"/>
+            <input id="search-input" class="form-control" type="text" name="query"
+                   placeholder="Search"/>
                     <span class="input-group-btn">
                         <button id="action-search" class="btn btn-default" type="button">Go!</button>
                       </span>
-                </div>
-            </div>
+        </div>
+    </div>
 
-            <div class="col-lg-2">
+    <div class="col-lg-2">
 
-                <div class="btn-group dropdown">
-                    <button type="button" class="btn btn-default" data-toggle="modal"
-                            data-target="#create-document-modal">New
-                    </button>
+        <div class="btn-group dropdown">
+            <button type="button" class="btn btn-default" data-toggle="modal"
+                    data-target="#create-document-modal">New
+            </button>
 
-                    <div class="modal" id="create-document-modal" tabindex="-1" role="dialog" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal"
-                                            aria-hidden="true">&times;</button>
-                                    <h4 class="modal-title">New Document</h4>
-                                </div>
-                                <div class="modal-body">
-                                    <p><input name="name" type="text" placeholder="title of document"
-                                              id="new-document-title" class="form-control"></p>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-primary" data-dismiss="modal"
-                                            onclick="$('#editors').editors('newDocument', $('#new-document-title').val())">
-                                        Create
-                                    </button>
-                                </div>
-                            </div>
-                            <!-- /.modal-content -->
+            <div class="modal" id="create-document-modal" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"
+                                    aria-hidden="true">&times;</button>
+                            <h4 class="modal-title">New Document</h4>
                         </div>
-                        <!-- /.modal-dialog -->
+                        <div class="modal-body">
+                            <p><input name="name" type="text" placeholder="title of document"
+                                      id="new-document-title" class="form-control"></p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" data-dismiss="modal"
+                                    onclick="$('#editors').editors('newDocument', $('#new-document-title').val())">
+                                Create
+                            </button>
+                        </div>
                     </div>
-                    <!-- /.modal -->
-
-
-                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                        <span class="caret"></span>
-                        <span class="sr-only">Toggle Dropdown</span>
-                    </button>
-                    <ul class="dropdown-menu" role="menu" aria-labelledby="create-doc">
-                        <li role="presentation">
-                            <a role="menuitem" tabindex="-1" href="#" onclick="$('#create-document-modal').modal()">Document</a>
-                        </li>
-                        <li role="presentation" class="divider"></li>
-                        <li role="presentation">
-                            <a role="menuitem" tabindex="-1" href="#" onclick="$('#file-upload').click()">File</a>
-                        </li>
-                        <li role="presentation">
-                            <a role="menuitem" tabindex="-1" href="#" onclick="notes.dialog.document.bookmark()">Web</a>
-                        </li>
-                    </ul>
+                    <!-- /.modal-content -->
                 </div>
-
+                <!-- /.modal-dialog -->
             </div>
+            <!-- /.modal -->
 
-            <!-- RIGHT -->
-            <!--<div class="col-lg-2">-->
 
-            <!--<div class="pull-right dropdown">-->
-            <!--<button class="btn btn-default dropdown-toggle" type="button" id="settings" data-toggle="dropdown">-->
-            <!--<i class="fa fa-bars"></i>-->
-            <!--</button>-->
-            <!--<ul class="dropdown-menu" role="menu" aria-labelledby="settings">-->
-            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Export as Archive</a></li>-->
-            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#"-->
-            <!--onclick="notes.dialog.document.import()">Import Archive</a></li>-->
-            <!--<li role="presentation" class="divider"></li>-->
-            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="notes.core.logout()">Logout</a>-->
-            <!--</li>-->
-            <!--</ul>-->
-            <!--</div>-->
-
-            <!--</div>-->
-
-        </div>
-
-        <!-- CONTENT MAIN -->
-        <div class="row">
-            <div id="breadcrumbs" style="height: 32px; background-color: whitesmoke;">
-                <!-- generated --></div>
-        </div>
-
-        <div class="row">
-
-            <!-- LEFT -->
-            <div class="col-lg-3 sidebar" style="border-right: 1px solid #E2E2E2; min-height: 600px;">
-
-                <div id="databases"><!-- generated --></div>
-
-            </div>
-
-            <!-- CONTENT -->
-
-            <!-- DOCUMENT VIEW -->
-
-            <div id="document-view">
-
-                <div id="editors"><!-- generated --></div>
-
-            </div>
-
-            <!-- FOLDER VIEW -->
-
-            <div id="folder-view" class="col-lg-9" style="display: none">
-
-                <div class="navbar">
-
-                    <ul class="nav nav-tabs">
-                        <li><a href="#"><i class="fa fa-angle-up"></i></a></li>
-                        <li><a href="#"
-                               onclick="notes.dialog.folder.newFolder(new notes.model.Folder({id:notes.app.activeFolderId()}))">New
-                            Folder</a></li>
-
-                        <li class="pull-right dropdown">
-                            <a class="dropdown-toggle" id="sort-options" data-toggle="dropdown" href="#">
-                                Sort <i class="fa fa-angle-down fa-fw"></i>
-                            </a>
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="sort-options">
-                                <li role="presentation"><a role="menuitem" tabindex="-1" href="#"
-                                                           class="">By Date</a></li>
-                            </ul>
-                        </li>
-
-                        <li class="pull-right dropdown">
-                            <a class="dropdown-toggle" id="folder-options" data-toggle="dropdown" href="#">
-                                More <i class="fa fa-angle-down fa-fw"></i>
-                            </a>
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="folder-options">
-                                <li role="presentation"><a role="menuitem" tabindex="-1" href="#"
-                                                           class="action-folder-rename">Rename Folder</a></li>
-                                <li role="presentation"><a role="menuitem" tabindex="-1" href="#"
-                                                           class="action-folder-delete">Delete Folder</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-
-                </div>
-
-                <div id="document-list" style="margin-top: 5px"><!-- generated --></div>
-
-            </div>
-
-            <!-- SEARCH VIEW -->
-
-            <div id="search-view" class="col-lg-9" style="display: none">
-
-                <div class="navbar">
-
-                    <ul class="nav nav-tabs">
-
-                        <li class="search-info"><span class="numFound">0</span> results (<span
-                                class="elapsedTime">0.00</span> seconds)</li>
-
-                        <li class="pull-right dropdown">
-                            <a class="dropdown-toggle" id="search-sort-options" data-toggle="dropdown" href="#">
-                                Sort <i class="fa fa-angle-down fa-fw"></i>
-                            </a>
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="search-sort-options">
-                                <li role="presentation"><a role="menuitem" tabindex="-1" href="#"
-                                                           class="">By Date</a></li>
-                            </ul>
-                        </li>
-
-                        <li class="pull-right dropdown">
-                            <a class="dropdown-toggle" id="search-options" data-toggle="dropdown" href="#">
-                                More <i class="fa fa-angle-down fa-fw"></i>
-                            </a>
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="search-options">
-                                <li role="presentation"><a role="menuitem" tabindex="-1" href="#"
-                                                           class="action-save-search">Save Search</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-
-                </div>
-
-                <div class="hit-list" style="margin-top: 15px"><!-- generated --></div>
-
-            </div>
-
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                <span class="caret"></span>
+                <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="create-doc">
+                <li role="presentation">
+                    <a role="menuitem" tabindex="-1" href="#" onclick="$('#create-document-modal').modal()">Document</a>
+                </li>
+                <li role="presentation" class="divider"></li>
+                <li role="presentation">
+                    <a role="menuitem" tabindex="-1" href="#" onclick="$('#file-upload').click()">File</a>
+                </li>
+                <li role="presentation">
+                    <a role="menuitem" tabindex="-1" href="#" onclick="notes.dialog.document.bookmark()">Web</a>
+                </li>
+            </ul>
         </div>
 
     </div>
+
+    <!-- RIGHT -->
+    <!--<div class="col-lg-2">-->
+
+    <!--<div class="pull-right dropdown">-->
+    <!--<button class="btn btn-default dropdown-toggle" type="button" id="settings" data-toggle="dropdown">-->
+    <!--<i class="fa fa-bars"></i>-->
+    <!--</button>-->
+    <!--<ul class="dropdown-menu" role="menu" aria-labelledby="settings">-->
+    <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Export as Archive</a></li>-->
+    <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#"-->
+    <!--onclick="notes.dialog.document.import()">Import Archive</a></li>-->
+    <!--<li role="presentation" class="divider"></li>-->
+    <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="notes.core.logout()">Logout</a>-->
+    <!--</li>-->
+    <!--</ul>-->
+    <!--</div>-->
+
+    <!--</div>-->
+
+</div>
+
+<!-- CONTENT MAIN -->
+<div class="row">
+    <div id="breadcrumbs" style="height: 32px; background-color: whitesmoke;">
+        <!-- generated --></div>
+</div>
+
+<div class="row">
+
+    <!-- LEFT -->
+    <div class="col-lg-3 sidebar" style="border-right: 1px solid #E2E2E2; min-height: 600px;">
+
+        <div id="databases"><!-- generated --></div>
+
+    </div>
+
+    <!-- DOCUMENT VIEW -->
+
+    <div id="document-view">
+
+        <div id="editors"><!-- generated --></div>
+
+    </div>
+
+    <!-- FOLDER VIEW -->
+
+    <div id="folder-view" class="col-lg-9" style="display: none">
+
+        <div class="navbar">
+
+            <ul class="nav nav-tabs">
+                <li><a href="#"><i class="fa fa-angle-up"></i></a></li>
+                <li><a href="#"
+                       onclick="notes.dialog.folder.newFolder(new notes.model.Folder({id:notes.app.activeFolderId()}))">New
+                    Folder</a></li>
+
+                <li class="pull-right dropdown">
+                    <a class="dropdown-toggle" id="sort-options" data-toggle="dropdown" href="#">
+                        Sort <i class="fa fa-angle-down fa-fw"></i>
+                    </a>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="sort-options">
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#"
+                                                   class="">By Date</a></li>
+                    </ul>
+                </li>
+
+                <li class="pull-right dropdown">
+                    <a class="dropdown-toggle" id="folder-options" data-toggle="dropdown" href="#">
+                        More <i class="fa fa-angle-down fa-fw"></i>
+                    </a>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="folder-options">
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#"
+                                                   class="action-folder-rename">Rename Folder</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#"
+                                                   class="action-folder-delete">Delete Folder</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+        </div>
+
+        <div id="document-list" style="margin-top: 5px"><!-- generated --></div>
+
+    </div>
+
+    <!-- SEARCH VIEW -->
+
+    <div id="search-view" class="col-lg-9" style="display: none">
+
+        <div class="navbar">
+
+            <ul class="nav nav-tabs">
+
+                <li class="search-info"><span class="numFound">0</span> results (<span
+                        class="elapsedTime">0.00</span> seconds)
+                </li>
+
+                <li class="pull-right dropdown">
+                    <a class="dropdown-toggle" id="search-options" data-toggle="dropdown" href="#">
+                        More <i class="fa fa-angle-down fa-fw"></i>
+                    </a>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="search-options">
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#"
+                                                   class="action-save-search">Save Search</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+        </div>
+
+        <div class="hit-list" style="margin-top: 15px"><!-- generated --></div>
+
+    </div>
+
+</div>
+
+</div>
 
 </div>
 
@@ -477,7 +466,6 @@
 
 <script type="text/template" id="text-editor">
 
-
     <div class="col-lg-9">
         <% include navigation %>
     </div>
@@ -541,7 +529,7 @@
 
 <script type="text/template" id="pdf-editor">
 
-    <div class="col-lg-7">
+    <div class="col-lg-9">
 
         <ul class="nav nav-tabs">
             <li><a href="#" class="action-close"><i class="fa fa-fw fa-angle-left"></i></a></li>
@@ -562,6 +550,9 @@
             </li>
         </ul>
 
+    </div>
+
+    <div class="col-lg-7">
 
         <div>
             <h3 class="field-title editable-simple"><%= title %></h3>
@@ -668,7 +659,7 @@
                 </span>
             </div>
             <div class="row" style="color:#666666; line-height: 16px; max-height:48px; overflow:hidden">
-            <%=outline %>
+                <%=outline %>
             </div>
             <div class="row" style="margin-top: 5px">
                 <% for(var i=0; i < tags.length; i++) { %>
@@ -738,8 +729,8 @@
             </div>
 
             <!-- score -->
-            <div class="ui-corner-all document-score row">
-                <div style="background-color: #666666; width: <%=parseInt(score * 100) %>%; height:7px"></div>
+            <div class="ui-corner-all document-score row" title="Score <%=parseInt(score * 100) %>">
+                <div style="background-color: #666666; width: <%=parseInt(score * 100) %>%; height:5px;"></div>
             </div>
 
         </div>
