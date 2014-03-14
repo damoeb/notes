@@ -5,7 +5,6 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.ObjectWriter;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.hibernate.annotations.Index;
@@ -116,8 +115,8 @@ public class BasicDocument implements Document {
     @Index(name = "event_trigger_idx")
     private Trigger trigger;
 
-    @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, defaultImpl = DefaultTag.class)
-    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, targetEntity = DefaultTag.class)
+    @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, defaultImpl = StandardTag.class)
+    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, targetEntity = StandardTag.class)
     @JoinTable(name = "document2tag")
     @Access(AccessType.FIELD)
     private Set<Tag> tags = new HashSet<>(100);
@@ -153,7 +152,7 @@ public class BasicDocument implements Document {
         this.star = star;
         if (StringUtils.isNotBlank(tagsJson)) {
             try {
-                DefaultTag[] tags = new ObjectMapper().readValue(tagsJson, DefaultTag[].class);
+                StandardTag[] tags = new ObjectMapper().readValue(tagsJson, StandardTag[].class);
                 this.tags.addAll(Arrays.asList(tags));
             } catch (IOException e) {
                 //

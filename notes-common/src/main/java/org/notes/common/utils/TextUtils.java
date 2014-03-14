@@ -8,24 +8,18 @@ import org.jsoup.nodes.Document;
 import org.jsoup.safety.Cleaner;
 import org.jsoup.safety.Whitelist;
 import org.notes.common.configuration.Configuration;
-import org.notes.common.model.Tag;
 
 import java.io.IOException;
-import java.text.Normalizer;
-import java.util.Map;
-import java.util.Set;
-import java.util.regex.Pattern;
 
 public final class TextUtils {
 
-    private static final Pattern ASCII_PATTERN = Pattern.compile("[^\\p{ASCII}]");
+//    private static final Pattern ASCII_PATTERN = Pattern.compile("[^\\p{ASCII}]");
 
-    public static String toNormedAsciiTerm(String term) {
-        term = Normalizer.normalize(term, Normalizer.Form.NFD);
-
-        // todo stemming
-
-        return ASCII_PATTERN.matcher(term).replaceAll("").toLowerCase();
+    public static String normedTerm(String term) {
+//        term = Normalizer.normalize(term, Normalizer.Form.NFD);
+//
+//        return ASCII_PATTERN.matcher(term).replaceAll("").toLowerCase();
+        return StringUtils.lowerCase(term);
     }
 
     public static String toOutline(String first, String... more) {

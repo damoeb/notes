@@ -8,7 +8,7 @@ import org.apache.log4j.Logger;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
 import org.notes.core.interfaces.FileReferenceManager;
-import org.notes.core.model.DefaultFileReference;
+import org.notes.core.model.StandardFileReference;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
@@ -55,7 +55,7 @@ public class FileReferenceManagerBean implements FileReferenceManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public DefaultFileReference store(FileItem item) throws NotesException {
+    public StandardFileReference store(FileItem item) throws NotesException {
 
         try {
 
@@ -65,13 +65,13 @@ public class FileReferenceManagerBean implements FileReferenceManager {
 
             String checksum = getChecksum(item.getInputStream());
 
-            DefaultFileReference reference = find(checksum, item.getSize());
+            StandardFileReference reference = find(checksum, item.getSize());
 
             if (reference != null) {
                 return reference;
             }
 
-            reference = new DefaultFileReference();
+            reference = new StandardFileReference();
 
             // store
             File fileInRepo = getNewPath(checksum);
@@ -107,16 +107,16 @@ public class FileReferenceManagerBean implements FileReferenceManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public DefaultFileReference getFileReference(Long fileId) throws NotesException {
+    public StandardFileReference getFileReference(Long fileId) throws NotesException {
         try {
             if (fileId == null || fileId <= 0) {
                 throw new NotesException(String.format("Invalid file id '%s'", fileId));
             }
 
-            Query query = em.createNamedQuery(DefaultFileReference.QUERY_BY_ID);
+            Query query = em.createNamedQuery(StandardFileReference.QUERY_BY_ID);
             query.setParameter("ID", fileId);
 
-            List<DefaultFileReference> fileReferences = query.getResultList();
+            List<StandardFileReference> fileReferences = query.getResultList();
             if (fileReferences.isEmpty()) {
                 throw new NotesException(String.format("No file with id '%s' found", fileId));
             }
@@ -128,18 +128,18 @@ public class FileReferenceManagerBean implements FileReferenceManager {
         }
     }
 
-    private DefaultFileReference find(String checksum, long size) throws NotesException {
+    private StandardFileReference find(String checksum, long size) throws NotesException {
         try {
 
             if (StringUtils.isBlank(checksum)) {
                 throw new IllegalArgumentException("checksum is null");
             }
 
-            Query query = em.createNamedQuery(DefaultFileReference.QUERY_BY_CHECKSUM);
+            Query query = em.createNamedQuery(StandardFileReference.QUERY_BY_CHECKSUM);
             query.setParameter("CHECKSUM", checksum);
             query.setParameter("FILESIZE", size);
 
-            List<DefaultFileReference> list = (List<DefaultFileReference>) query.getResultList();
+            List<StandardFileReference> list = (List<StandardFileReference>) query.getResultList();
             if (list.isEmpty()) {
                 return null;
             }
@@ -163,21 +163,21 @@ public class FileReferenceManagerBean implements FileReferenceManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public DefaultFileReference storeTemporary(String pathToSnapshot) throws NotesException {
+    public StandardFileReference storeTemporary(String pathToSnapshot) throws NotesException {
         try {
 
             File resource = new File(pathToSnapshot);
 
             String checksum = getChecksum(new FileInputStream(resource));
 
-            DefaultFileReference reference = find(checksum, 0);
+            StandardFileReference reference = find(checksum, 0);
 
             if (reference != null) {
                 em.merge(reference); // update date
                 return reference;
             }
 
-            reference = new DefaultFileReference();
+            reference = new StandardFileReference();
 
             // store
             File fileInRepo = getNewPath(checksum);

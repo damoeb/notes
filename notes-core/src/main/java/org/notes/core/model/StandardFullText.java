@@ -9,7 +9,7 @@ import javax.persistence.*;
 
 @Entity(name = "FullTextOfFile")
 @Table(name = "FullTextOfFile")
-public class DefaultFullText implements FullText {
+public class StandardFullText implements FullText {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,11 +27,11 @@ public class DefaultFullText implements FullText {
 
 //  --------------------------------------------------------------------------------------------------------------------
 
-    public DefaultFullText() {
+    public StandardFullText() {
         //
     }
 
-    public DefaultFullText(Integer section, String text) {
+    public StandardFullText(Integer section, String text) {
         this.section = section;
         this.text = text;
     }

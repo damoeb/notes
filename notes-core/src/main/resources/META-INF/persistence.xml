@@ -8,7 +8,7 @@
     <persistence-unit name="primary">
         <jta-data-source>java:jboss/postgresDS</jta-data-source>
 
-        <class>org.notes.core.model.DefaultFileReference</class>
+        <class>org.notes.core.model.StandardFileReference</class>
         <class>org.notes.common.model.FullText</class>
         <class>org.notes.core.model.BasicDocument</class>
         <class>org.notes.core.model.TextDocument</class>

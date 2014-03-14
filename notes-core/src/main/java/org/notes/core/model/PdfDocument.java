@@ -31,7 +31,7 @@ public class PdfDocument extends BasicDocument implements Extractable {
 //  -- References ------------------------------------------------------------------------------------------------------
 
     @JsonIgnore
-    @ManyToOne(cascade = {}, fetch = FetchType.LAZY, optional = false, targetEntity = DefaultFileReference.class)
+    @ManyToOne(cascade = {}, fetch = FetchType.LAZY, optional = false, targetEntity = StandardFileReference.class)
     @JoinColumn(name = ForeignKey.FILE_REFERENCE_ID)
     private FileReference fileReference;
 
@@ -113,10 +113,10 @@ public class PdfDocument extends BasicDocument implements Extractable {
                 Set<FullText> fullTexts = new HashSet<>(extracted.size());
                 for (Integer page : extracted.keySet()) {
                     String text = extracted.get(page);
-                    fullTexts.add(new DefaultFullText(page, text));
+                    fullTexts.add(new StandardFullText(page, text));
                 }
 
-                ((DefaultFileReference) reference).setFullTexts(fullTexts);
+                ((StandardFileReference) reference).setFullTexts(fullTexts);
                 setNumberOfPages(result.getNumberOfPages());
 
                 long delta = System.currentTimeMillis() - time;

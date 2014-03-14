@@ -27,7 +27,7 @@ public class BookmarkDocument extends BasicDocument implements Harvestable {
 //  -- References ------------------------------------------------------------------------------------------------------
 
     @JsonIgnore
-    @OneToOne(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, optional = true, targetEntity = DefaultFileReference.class)
+    @OneToOne(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, optional = true, targetEntity = StandardFileReference.class)
     @JoinColumn(name = ForeignKey.FILE_REFERENCE_ID)
     private FileReference siteSnapshot;
 
@@ -105,7 +105,7 @@ public class BookmarkDocument extends BasicDocument implements Harvestable {
     @Override
     public Collection<FullText> getTexts() {
         List<FullText> list = new LinkedList<>();
-        list.add(new DefaultFullText(0, text));
+        list.add(new StandardFullText(0, text));
         return list;
     }
 }

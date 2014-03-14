@@ -5,11 +5,11 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.lang.math.NumberUtils;
 import org.notes.common.configuration.NotesInterceptors;
-import org.notes.core.model.DefaultFileReference;
 import org.notes.core.interfaces.DocumentManager;
 import org.notes.core.interfaces.FileReferenceManager;
 import org.notes.core.metric.ServiceMetric;
 import org.notes.core.model.PdfDocument;
+import org.notes.core.model.StandardFileReference;
 
 import javax.inject.Inject;
 import javax.servlet.ServletContext;
@@ -132,7 +132,7 @@ public class FileService {
 
         // Get requested file by path info.
 
-        DefaultFileReference reference;
+        StandardFileReference reference;
         try {
             if (!NumberUtils.isNumber(fileIdString)) {
                 throw new IllegalArgumentException("Invalid file id");

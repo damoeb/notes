@@ -1,11 +1,16 @@
 package org.notes.plugin.tf;
 
+import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.maven.plugin.logging.Log;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.safety.Cleaner;
 import org.jsoup.safety.Whitelist;
 import org.notes.common.model.TermFrequency;
+import org.notes.common.tokenizer.Language;
+import org.notes.common.tokenizer.TokenStreamProvider;
+import org.notes.common.utils.TextUtils;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
@@ -14,7 +19,6 @@ import javax.xml.stream.XMLStreamReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.Normalizer;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -23,7 +27,6 @@ public class WikiDumpParser {
     private static final int MAX_ELEMENTS = 0;
 
     private static final Pattern URL_PATTERN = Pattern.compile("http[s]?://[^ ]+");
-    private static final Pattern ASCII_PATTERN = Pattern.compile("[^\\p{ASCII}]");
 
     // ------------
 
@@ -51,17 +54,20 @@ public class WikiDumpParser {
     });
 
     private final Map<String, String> termsInDocument = new HashMap<>(1000);
+    private final Language lang;
 
     // ------------
 
     private long documentCount = 0;
+    private TokenStreamProvider streamProvider;
 
-    public WikiDumpParser(Integer minTermLength, Integer maxTermLength, String pathToWikiDumpXml, Integer logOnDocCount, Integer stopAfterDocCount, Log log) {
+    public WikiDumpParser(Integer minTermLength, Integer maxTermLength, String pathToWikiDumpXml, Integer logOnDocCount, Integer stopAfterDocCount, Language lang, Log log) {
         this.minTermLength = minTermLength;
         this.maxTermLength = maxTermLength;
         this.pathToWikiDumpXml = pathToWikiDumpXml;
         this.logOnDocCount = logOnDocCount;
         this.stopAfterDocCount = stopAfterDocCount;
+        this.lang = lang;
         this.log = log;
     }
 
@@ -183,30 +189,63 @@ public class WikiDumpParser {
 
         documentCount++;
 
-        final StringTokenizer tokenizer = new StringTokenizer(text, " &\\_\"<>|!?=+–­~-*/„“()’`´_#'°^@€%$§[]{}\n\t :,;.ˈ¹−…₂»«%¬”‘·∴ʿ‰″");
 
         termsInDocument.clear();
 
-        while (tokenizer.hasMoreTokens()) {
+        TokenStream tokenStream = null;
 
-            final String token = tokenizer.nextToken();
+        try {
 
-            if (token.length() < minTermLength) {
-                getLog().debug("'" + token + "' too short");
-                continue;
+            tokenStream = getStreamProvider().getTokenizer(text, getLang());
+
+            CharTermAttribute charTermAttr = tokenStream.getAttribute(CharTermAttribute.class);
+            tokenStream.reset();
+
+            while (tokenStream.incrementToken()) {
+                final String charTerm = charTermAttr.toString();
+
+                if (charTerm.length() < minTermLength) {
+                    getLog().debug("'" + charTerm + "' too short");
+                    continue;
+                }
+
+                if (charTerm.length() > maxTermLength) {
+                    getLog().debug("'" + charTerm + "' too long");
+                    continue;
+                }
+
+                termsInDocument.put(TextUtils.normedTerm(charTerm), charTerm);
             }
 
-            if (token.length() > maxTermLength) {
-                getLog().debug("'" + token + "' too long");
-                continue;
-            }
+            tokenStream.end();
 
-            termsInDocument.put(normTerm(token), token);
+        } catch (IOException e) {
+            getLog().error(e);
+        } finally {
+            if (tokenStream != null) {
+                try {
+                    tokenStream.close();
+                } catch (IOException e) {
+                    // ignore
+                }
+            }
         }
 
         for (String normed : termsInDocument.keySet()) {
             pushTerm(normed, termsInDocument.get(normed));
         }
+    }
+
+    public Language getLang() {
+        return lang;
+    }
+
+    private TokenStreamProvider getStreamProvider() {
+        if (streamProvider == null) {
+            streamProvider = new TokenStreamProvider();
+        }
+
+        return streamProvider;
     }
 
     private void pushTerm(final String normed, String term) throws InterruptedException {
@@ -232,10 +271,4 @@ public class WikiDumpParser {
             sortedTerms.add(tf);
         }
     }
-
-    private static String normTerm(String term) {
-        term = Normalizer.normalize(term, Normalizer.Form.NFD);
-        return ASCII_PATTERN.matcher(term).replaceAll("").toLowerCase();
-    }
-
 }

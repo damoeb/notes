@@ -8,7 +8,7 @@ import org.notes.common.model.Tag;
 import org.notes.core.interfaces.SessionData;
 import org.notes.core.interfaces.TagManager;
 import org.notes.core.model.BasicDocument;
-import org.notes.core.model.DefaultTag;
+import org.notes.core.model.StandardTag;
 import org.notes.recommend.bean.TextEssence;
 
 import javax.ejb.Stateless;
@@ -42,20 +42,20 @@ public class TagManagerBean implements TagManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public DefaultTag findOrCreate(String name) throws NotesException {
+    public StandardTag findOrCreate(String name) throws NotesException {
         try {
             if (StringUtils.isBlank(name)) {
                 throw new NotesException("name is null");
             }
 
-            Query query = em.createNamedQuery(DefaultTag.QUERY_BY_NAME);
+            Query query = em.createNamedQuery(StandardTag.QUERY_BY_NAME);
             query.setParameter("NAME", name);
             List results = query.getResultList();
             if (!results.isEmpty()) {
-                return (DefaultTag) results.get(0);
+                return (StandardTag) results.get(0);
             }
 
-            DefaultTag tag = new DefaultTag(name);
+            StandardTag tag = new StandardTag(name);
             em.persist(tag);
             em.flush();
             em.refresh(tag);
@@ -100,7 +100,7 @@ public class TagManagerBean implements TagManager {
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Collection<Tag> getTagNetwork() throws NotesException {
         try {
-            Query query = em.createNamedQuery(DefaultTag.QUERY_USER_NETWORK);
+            Query query = em.createNamedQuery(StandardTag.QUERY_USER_NETWORK);
             query.setMaxResults(5);
 
             query.setParameter("USER", sessionData.getUser().getUsername());

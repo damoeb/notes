@@ -308,9 +308,9 @@ public class DocumentManagerBean implements DocumentManager {
     private Set<Tag> resolveTags(Set<Tag> cached, Set<Tag> tags) throws NotesException {
         Set<Tag> resolved = new HashSet<>(tags.size());
 
-        Map<String, DefaultTag> cache = new HashMap<>();
+        Map<String, StandardTag> cache = new HashMap<>();
         for (Tag c : cached) {
-            cache.put(c.getName(), (DefaultTag) c);
+            cache.put(c.getName(), (StandardTag) c);
         }
 
         for (Tag t : tags) {

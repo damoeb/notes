@@ -7,6 +7,7 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.notes.common.tokenizer.Language;
 
 import java.util.regex.Pattern;
 
@@ -25,13 +26,13 @@ public class TermFrequencyGoal extends AbstractMojo {
      * maxTermLength
      */
     @Parameter
-    private Integer maxTermLength = 40;
+    private Integer maxTermLength = 20;
 
     /**
      * minTermOccurrences
      */
     @Parameter
-    private Integer minTermOccurrences = 4;
+    private Integer minTermOccurrences = 20;
 
     /**
      * pathToWikiDumpXml
@@ -58,6 +59,12 @@ public class TermFrequencyGoal extends AbstractMojo {
     private Integer abortAfterDocCount;
 
     /**
+     * language
+     */
+    @Parameter(defaultValue = "GERMAN")
+    private Language lang;
+
+    /**
      * logOnDocCount
      */
     @Parameter(defaultValue = "100000")
@@ -77,6 +84,7 @@ public class TermFrequencyGoal extends AbstractMojo {
         getLog().info("pathToWikiDumpXml: " + pathToWikiDumpXml);
         getLog().info("outputFileName: " + outputFileName);
         getLog().info("abortAfterDocCount: " + abortAfterDocCount);
+        getLog().info("language: " + lang);
 
         Output output = Output.fromString(outputType);
         if (output == null) {
@@ -84,7 +92,7 @@ public class TermFrequencyGoal extends AbstractMojo {
         }
         getLog().info("outputType: " + outputType);
 
-        WikiDumpParser parser = new WikiDumpParser(minTermLength, maxTermLength, pathToWikiDumpXml, logOnDocCount, abortAfterDocCount, getLog());
+        WikiDumpParser parser = new WikiDumpParser(minTermLength, maxTermLength, pathToWikiDumpXml, logOnDocCount, abortAfterDocCount, lang, getLog());
 
         Outputter outputter = getOutputterByType(output);
 

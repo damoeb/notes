@@ -2,20 +2,26 @@ package org.notes.recommend.bean;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.model.FullText;
 import org.notes.common.model.TermFrequency;
 import org.notes.common.model.TermFrequencyProperties;
 import org.notes.common.model.TermFrequencyPropertiesKey;
+import org.notes.common.tokenizer.Language;
+import org.notes.common.tokenizer.TokenStreamProvider;
 import org.notes.common.utils.TextUtils;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.io.IOException;
 import java.util.*;
 
 @Stateless
@@ -27,6 +33,9 @@ public class TextEssenceBean implements TextEssence {
 
     @PersistenceContext(unitName = "primary")
     private EntityManager em;
+
+    @Inject
+    private TokenStreamProvider tokenStreamProvider;
 
     @Override
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
@@ -108,7 +117,7 @@ public class TextEssenceBean implements TextEssence {
     private Integer getDocCountContainingTerm(String term) {
         try {
             Query query = em.createNamedQuery(TermFrequency.QUERY_BY_TERM);
-            query.setParameter("TERM", TextUtils.toNormedAsciiTerm(term));
+            query.setParameter("TERM", TextUtils.normedTerm(term));
 
             return (Integer) query.getSingleResult();
 
@@ -135,42 +144,34 @@ public class TextEssenceBean implements TextEssence {
 
         final Map<String, Integer> keywordFreq = new HashMap<>(300);
 
-        for (FullText text : texts) {
+        try {
+            for (FullText text : texts) {
 
-            StringTokenizer tokenizer = new StringTokenizer(text.getText(), " &\\_\"<>|!?=+–­~-*/„“()’`´_#'°^@€%$§[]{}\n\t :,;.ˈ¹−…₂»«%¬”‘·∴ʿ‰″");
+                TokenStream tokenStream = tokenStreamProvider.getTokenizer(text.getText(), Language.GERMAN);
 
-            while (tokenizer.hasMoreTokens()) {
-                String keyword = tokenizer.nextToken();
-                // filter
-                if (!isKeyword(keyword)) {
-                    continue;
+                CharTermAttribute charTermAttr = tokenStream.getAttribute(CharTermAttribute.class);
+
+                tokenStream.reset();
+
+                while (tokenStream.incrementToken()) {
+                    final String keyword = charTermAttr.toString();
+
+                    // filter
+                    if (!isKeyword(keyword)) {
+                        continue;
+                    }
+
+                    if (!keywordFreq.containsKey(keyword)) {
+                        keywordFreq.put(keyword, 0);
+                    }
+                    keywordFreq.put(keyword, keywordFreq.get(keyword) + 1);
                 }
-                // stem
-                keyword = stem(keyword);
-
-                // stop words
-                if (isStopWord(keyword)) {
-                    continue;
-                }
-
-                if (!keywordFreq.containsKey(keyword)) {
-                    keywordFreq.put(keyword, 0);
-                }
-                keywordFreq.put(keyword, keywordFreq.get(keyword) + 1);
             }
+        } catch (IOException e) {
+            LOGGER.error(e);
         }
 
         return keywordFreq;
-    }
-
-    private boolean isStopWord(String keyword) {
-        // todo use stop words
-        return false;
-    }
-
-    private String stem(String keyword) {
-        // todo implement stem
-        return keyword;
     }
 
     private boolean isKeyword(String token) {

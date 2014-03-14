@@ -17,11 +17,11 @@ import java.util.Set;
         uniqueConstraints = @UniqueConstraint(columnNames = {"checksum", "size", "contentType"})
 )
 @NamedQueries({
-        @NamedQuery(name = DefaultFileReference.QUERY_BY_ID, query = "SELECT a FROM File a where a.id=:ID"),
-        @NamedQuery(name = DefaultFileReference.QUERY_BY_CHECKSUM, query = "SELECT a FROM File a where a.checksum=:CHECKSUM and a.size=:FILESIZE")
+        @NamedQuery(name = StandardFileReference.QUERY_BY_ID, query = "SELECT a FROM File a where a.id=:ID"),
+        @NamedQuery(name = StandardFileReference.QUERY_BY_CHECKSUM, query = "SELECT a FROM File a where a.checksum=:CHECKSUM and a.size=:FILESIZE")
 })
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-public class DefaultFileReference implements FileReference {
+public class StandardFileReference implements FileReference {
 
     public static final String QUERY_BY_ID = "FileReference.QUERY_BY_ID";
     public static final String QUERY_BY_CHECKSUM = "FileReference.QUERY_BY_CHECKSUM";
@@ -45,7 +45,7 @@ public class DefaultFileReference implements FileReference {
     private String contentType;
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = DefaultFullText.class)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = StandardFullText.class)
     @JoinColumn(name = ForeignKey.FILE_REFERENCE_ID)
     private Set<FullText> fullTexts = new HashSet(50);
 
@@ -59,7 +59,7 @@ public class DefaultFileReference implements FileReference {
 
 //  --------------------------------------------------------------------------------------------------------------------
 
-    public DefaultFileReference() {
+    public StandardFileReference() {
         //
     }
 

@@ -46,7 +46,7 @@ public class TextDocument extends BasicDocument {
     @JsonIgnore
     public Collection<FullText> getTexts() {
         List<FullText> list = new LinkedList<>();
-        list.add(new DefaultFullText(0, text));
+        list.add(new StandardFullText(0, text));
         return list;
     }
 }
