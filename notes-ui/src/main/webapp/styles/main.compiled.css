@@ -5166,10 +5166,13 @@ body {
   padding: 10px 15px;
   display: block; }
 
-#breadcrumbs ol {
-  list-style: none outside none;
-  margin-bottom: 20px;
-  padding: 8px 15px; }
-#breadcrumbs li {
-  display: inline-block;
-  padding: 3px 4px; }
+.breadcrumbs {
+  height: 32px;
+  background-color: whitesmoke; }
+  .breadcrumbs ol {
+    list-style: none outside none;
+    margin-bottom: 20px;
+    padding: 8px 15px; }
+  .breadcrumbs li {
+    display: inline-block;
+    padding: 3px 4px; }
