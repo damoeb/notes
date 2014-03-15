@@ -205,7 +205,10 @@ body {
   }
 }
 
-#breadcrumbs {
+.breadcrumbs {
+  height: 32px;
+  background-color: whitesmoke;
+
   ol {
     list-style: none outside none;
     margin-bottom: 20px;

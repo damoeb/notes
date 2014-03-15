@@ -74,6 +74,7 @@
     <!--</div>-->
     <!--</div>-->
 </div>
+<!-- /init-view -->
 
 
 <div id="content-view" style="display: none">
@@ -111,7 +112,9 @@
                         <button id="action-search" class="btn btn-default" type="button">Go!</button>
                       </span>
         </div>
+        <!-- /input group -->
     </div>
+    <!-- /col-lg-5 -->
 
     <div class="col-lg-2">
 
@@ -164,39 +167,24 @@
                 </li>
             </ul>
         </div>
-
+        <!-- /dropdown -->
     </div>
-
-    <!-- RIGHT -->
-    <!--<div class="col-lg-2">-->
-
-    <!--<div class="pull-right dropdown">-->
-    <!--<button class="btn btn-default dropdown-toggle" type="button" id="settings" data-toggle="dropdown">-->
-    <!--<i class="fa fa-bars"></i>-->
-    <!--</button>-->
-    <!--<ul class="dropdown-menu" role="menu" aria-labelledby="settings">-->
-    <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Export as Archive</a></li>-->
-    <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#"-->
-    <!--onclick="notes.dialog.document.import()">Import Archive</a></li>-->
-    <!--<li role="presentation" class="divider"></li>-->
-    <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="notes.core.logout()">Logout</a>-->
-    <!--</li>-->
-    <!--</ul>-->
-    <!--</div>-->
-
-    <!--</div>-->
-
+    <!-- col-lg-2 -->
 </div>
+<!-- row content top-->
 
 <!-- CONTENT MAIN -->
-<div class="row">
-    <div id="breadcrumbs" style="height: 32px; background-color: whitesmoke;">
-        <!-- generated --></div>
-</div>
 
-<div class="row">
+<div id="document-and-folder-view">
 
-    <div id="document-and-folder-view">
+    <div class="row">
+        <div id="breadcrumbs" class="breadcrumbs">
+            <!-- generated -->
+        </div>
+        <!-- /breadcrumbs -->
+    </div>
+
+    <div class="row">
 
         <!-- LEFT -->
         <div class="col-lg-3 sidebar" style="border-right: 1px solid #E2E2E2; min-height: 600px;">
@@ -204,6 +192,7 @@
             <div id="databases"><!-- generated --></div>
 
         </div>
+        <!-- /sidebar -->
 
         <!-- DOCUMENT VIEW -->
 
@@ -212,6 +201,7 @@
             <div id="editors"><!-- generated --></div>
 
         </div>
+        <!-- /document view-->
 
         <!-- FOLDER VIEW -->
 
@@ -251,16 +241,41 @@
                     </ul>
 
                 </div>
+                <!-- /navbar -->
 
                 <div id="document-list" style="margin-top: 5px"><!-- generated --></div>
 
             </div>
+            <!-- /col-lg-9 -->
         </div>
+        <!-- /folder view -->
+    </div>
+    <!-- /row -->
+</div>
+<!-- /document and folder view -->
+
+<!-- SEARCH VIEW -->
+
+<div id="search-view" style="display: none">
+
+    <div class="row">
+        <div class="breadcrumbs">
+
+            <ol>
+                <li class="dropdown">
+                    <i class="fa fa-dot-circle-o fa-lg"></i>
+                    <a style="font-weight: bold;" href="#">
+                        Search
+                    </a>
+                    <i class="fa fa-angle-right fa-fw"></i>
+                </li>
+            </ol>
+
+        </div>
+        <!-- /breadcrumbs -->
     </div>
 
-    <!-- SEARCH VIEW -->
-
-    <div id="search-view" style="display: none">
+    <div class="row">
 
         <!-- LEFT -->
         <div class="col-lg-3 sidebar" style="border-right: 1px solid #E2E2E2; min-height: 600px;">
@@ -268,6 +283,7 @@
             <!--todo facettes-->
 
         </div>
+        <!-- /sidebar -->
 
         <div class="col-lg-9">
 
@@ -291,17 +307,22 @@
                 </ul>
 
             </div>
+            <!-- /navbar -->
 
             <div class="hit-list" style="margin-top: 15px"><!-- generated --></div>
 
         </div>
+        <!-- /col-lg-9 -->
     </div>
+    <!-- /row -->
 
 </div>
+<!-- /search view -->
+</div>
+<!-- /container -->
 
 </div>
-
-</div>
+<!-- /content-view -->
 
 <div id="dialog"></div>
 <!--<div id="bookmark-preview"-->
@@ -324,6 +345,7 @@
         </div>
     </div>
 </script>
+<!-- /recommendations -->
 
 <script type="text/template" id="fulltext">
 
@@ -352,6 +374,7 @@
     </div>
 
 </script>
+<!-- /fulltext -->
 
 <script type="text/template" id="essence">
 
@@ -375,6 +398,7 @@
     </div>
 
 </script>
+<!-- /essence -->
 
 <script type="text/template" id="navigation">
 
@@ -411,6 +435,7 @@
     </ul>
 
 </script>
+<!-- /navigation -->
 
 <!-- included in the other templates -->
 <script type="text/template" id="base-editor">
@@ -479,6 +504,7 @@
     </div>
 
 </script>
+<!-- /base editor -->
 
 <script type="text/template" id="text-editor">
 
@@ -516,6 +542,7 @@
     <% include base-editor %>
 
 </script>
+<!-- /text editor -->
 
 <script type="text/template" id="bookmark-editor">
 
@@ -541,6 +568,7 @@
     <% include base-editor %>
 
 </script>
+<!-- /bookmark editor -->
 
 
 <script type="text/template" id="pdf-editor">
@@ -587,6 +615,7 @@
     <% include base-editor %>
 
 </script>
+<!-- /pdf editor -->
 
 <script type="text/template" id="breadcrumb-database">
     <li class="dropdown">
@@ -601,6 +630,7 @@
         </ul>
     </li>
 </script>
+<!-- /breadcrumbs database -->
 
 
 <script type="text/template" id="breadcrumb-folder">
@@ -688,6 +718,7 @@
     </div>
 
 </script>
+<!-- /document in folder -->
 
 
 <script type="text/template" id="document-in-hits-view">
@@ -752,8 +783,8 @@
         </div>
     </div>
 
-
 </script>
+<!-- /document in hits-->
 
 
 <!-- build:js scripts/vendor.js -->
