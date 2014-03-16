@@ -4,7 +4,7 @@ import org.notes.common.cache.MethodCache;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.core.interfaces.DatabaseManager;
 import org.notes.core.metric.ServiceMetric;
-import org.notes.core.model.Database;
+import org.notes.core.model.StandardDatabase;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -23,11 +23,11 @@ public class DatabaseService {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse updateDatabase(
-            Database database,
+            StandardDatabase database,
             @PathParam("id") long databaseId
     ) throws Exception {
         try {
-            Database result = databaseManager.updateDatabase(databaseId, database);
+            StandardDatabase result = databaseManager.updateDatabase(databaseId, database);
             return NotesResponse.ok(result);
         } catch (Exception e) {
             return NotesResponse.error(e);
@@ -43,7 +43,7 @@ public class DatabaseService {
             @PathParam("id") long databaseId
     ) throws Exception {
         try {
-            Database database = databaseManager.getDatabase(databaseId);
+            StandardDatabase database = databaseManager.getDatabase(databaseId);
             return NotesResponse.ok(database);
 
         } catch (Exception e) {
@@ -88,7 +88,7 @@ public class DatabaseService {
     public NotesResponse getDatabases(
     ) throws Exception {
         try {
-            Database database = databaseManager.getDatabaseOfUser();
+            StandardDatabase database = databaseManager.getDatabaseOfUser();
             database.setDefaultFolder(null);
             database.setActiveFolder(null);
             return NotesResponse.ok(database);

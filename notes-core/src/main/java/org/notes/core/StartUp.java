@@ -2,7 +2,11 @@ package org.notes.core;
 
 import org.apache.log4j.Logger;
 import org.notes.common.configuration.Configuration;
-import org.notes.core.interfaces.*;
+import org.notes.common.interfaces.FolderManager;
+import org.notes.core.interfaces.AccountManager;
+import org.notes.core.interfaces.DatabaseManager;
+import org.notes.core.interfaces.DocumentManager;
+import org.notes.core.interfaces.UserManager;
 import org.notes.core.model.Account;
 import org.notes.core.model.AccountType;
 

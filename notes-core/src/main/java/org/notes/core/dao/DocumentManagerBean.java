@@ -8,7 +8,9 @@ import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
+import org.notes.common.interfaces.FolderManager;
 import org.notes.common.model.FileReference;
+import org.notes.common.model.Folder;
 import org.notes.common.model.Tag;
 import org.notes.common.model.Trigger;
 import org.notes.common.utils.TextUtils;
@@ -101,7 +103,7 @@ public class DocumentManagerBean implements DocumentManager {
 
         Session session = em.unwrap(Session.class);
 
-        Folder proxy = (Folder) session.load(Folder.class, inFolder.getId());
+        StandardFolder proxy = (StandardFolder) session.load(StandardFolder.class, inFolder.getId());
         if (proxy == null) {
             throw new NotesException(String.format("folder with id %s is null", document.getFolderId()));
         }
@@ -175,12 +177,12 @@ public class DocumentManagerBean implements DocumentManager {
             Session session = em.unwrap(Session.class);
 
             // update document count
-            Folder proxy = (Folder) session.load(Folder.class, document.getFolderId());
+            StandardFolder proxy = (StandardFolder) session.load(StandardFolder.class, document.getFolderId());
             proxy.setDocumentCount(proxy.getDocumentCount() - 1);
             em.merge(proxy);
 
             while (proxy.getParentId() != null) {
-                Folder parent = (Folder) session.load(Folder.class, proxy.getParentId());
+                StandardFolder parent = (StandardFolder) session.load(StandardFolder.class, proxy.getParentId());
                 parent.setDocumentCount(parent.getDocumentCount() - 1);
                 proxy = parent;
             }
@@ -342,6 +344,10 @@ public class DocumentManagerBean implements DocumentManager {
             } else {
                 LOGGER.info("in folder " + folderId);
                 inFolder = folderManager.getFolder(folderId);
+            }
+
+            if (inFolder == null) {
+                throw new IllegalArgumentException("Invalid folder " + folderId);
             }
 
             for (FileItem item : items) {

@@ -15,8 +15,8 @@
         <class>org.notes.core.model.User</class>
         <class>org.notes.core.model.Account</class>
         <class>org.notes.core.model.Attachment</class>
-        <class>org.notes.core.model.Database</class>
-        <class>org.notes.core.model.Folder</class>
+        <class>org.notes.core.model.StandardDatabase</class>
+        <class>org.notes.core.model.StandardFolder</class>
 
         <class>org.notes.common.model.TermFrequency</class>
         <class>org.notes.common.model.TermFrequencyProperties</class>
@@ -27,7 +27,7 @@
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
             <property name="hibernate.show_sql" value="false"/>
             <property name="hibernate.format_sql" value="true"/>
-            <property name="hibernate.hbm2ddl.auto" value="false"/>
+            <property name="hibernate.hbm2ddl.auto" value="create"/>
             <property name="hibernate.connection.autoReconnect" value="true"/>
 
             <!-- LOBs can cause problems with postgres -->

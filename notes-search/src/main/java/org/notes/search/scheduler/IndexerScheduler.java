@@ -12,12 +12,16 @@ import org.notes.common.configuration.Configuration;
 import org.notes.common.configuration.ConfigurationProperty;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.configuration.SolrFields;
+import org.notes.common.exceptions.NotesException;
 import org.notes.common.interfaces.Document;
+import org.notes.common.interfaces.FolderManager;
+import org.notes.common.model.Folder;
 import org.notes.common.model.FullText;
 import org.notes.common.model.Trigger;
 import org.notes.common.utils.TextUtils;
 
 import javax.ejb.*;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -41,6 +45,9 @@ public class IndexerScheduler {
 
     @PersistenceContext(unitName = "primary")
     private EntityManager em;
+
+    @Inject
+    private FolderManager folderManager;
 
     private HttpSolrServer solr;
 
@@ -125,7 +132,19 @@ public class IndexerScheduler {
     private SolrInputDocument getSolrDocument(Document document) {
         SolrInputDocument doc = new SolrInputDocument();
         doc.setField(SolrFields.DOCUMENT, document.getId());
-        doc.setField(SolrFields.FOLDER, document.getFolderId());
+
+        Long folderId = document.getFolderId();
+        try {
+            while (folderId != null) {
+                doc.setField(SolrFields.FOLDER, folderId);
+
+                Folder parent = folderManager.getFolder(folderId);
+                folderId = parent.getId();
+            }
+        } catch (NotesException e) {
+            LOGGER.error(e);
+        }
+
         doc.setField(SolrFields.MODIFIED, document.getModified());
         doc.setField(SolrFields.OUTLINE, document.getOutline());
         doc.setField(SolrFields.KIND, document.getKind());

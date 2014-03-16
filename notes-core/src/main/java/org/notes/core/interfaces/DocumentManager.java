@@ -2,7 +2,11 @@ package org.notes.core.interfaces;
 
 import org.apache.commons.fileupload.FileItem;
 import org.notes.common.exceptions.NotesException;
-import org.notes.core.model.*;
+import org.notes.common.model.Folder;
+import org.notes.core.model.BasicDocument;
+import org.notes.core.model.BookmarkDocument;
+import org.notes.core.model.PdfDocument;
+import org.notes.core.model.TextDocument;
 
 import javax.ejb.Local;
 import java.util.List;

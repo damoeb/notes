@@ -2,7 +2,7 @@ package org.notes.core.dao;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.notes.core.interfaces.SessionData;
-import org.notes.core.model.Database;
+import org.notes.core.model.StandardDatabase;
 import org.notes.core.model.User;
 
 import javax.enterprise.context.SessionScoped;
@@ -15,7 +15,7 @@ public class SessionDataBean implements SessionData {
 
     private User user;
 
-    private Set<Database> databases;
+    private Set<StandardDatabase> databases;
 
     @Override
     public User getUser() {
@@ -28,12 +28,12 @@ public class SessionDataBean implements SessionData {
     }
 
     @Override
-    public Set<Database> getDatabases() {
+    public Set<StandardDatabase> getDatabases() {
         return databases;
     }
 
     @Override
-    public void setDatabases(Set<Database> databases) {
+    public void setDatabases(Set<StandardDatabase> databases) {
         this.databases = databases;
     }
 }

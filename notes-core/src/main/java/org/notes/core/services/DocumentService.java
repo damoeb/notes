@@ -5,7 +5,7 @@ import org.notes.common.configuration.NotesInterceptors;
 import org.notes.core.interfaces.DocumentManager;
 import org.notes.core.metric.ServiceMetric;
 import org.notes.core.model.BasicDocument;
-import org.notes.core.model.Folder;
+import org.notes.core.model.StandardFolder;
 import org.notes.core.model.TextDocument;
 
 import javax.inject.Inject;
@@ -28,9 +28,9 @@ public class DocumentService {
             TextDocument document
     ) throws Exception {
 
-        Folder folder = null;
+        StandardFolder folder = null;
         if (document != null && document.getFolderId() != null) {
-            folder = new Folder(document.getFolderId());
+            folder = new StandardFolder(document.getFolderId());
         }
 
         return NotesResponse.ok(documentManager.createDocument(document, folder));

@@ -2,6 +2,8 @@ package org.notes.core.model;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.notes.common.model.Database;
+import org.notes.common.model.Folder;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -14,14 +16,14 @@ import java.util.Set;
 @Entity(name = "DDatabase")
 @Table(name = "DDatabase")
 @NamedQueries({
-        @NamedQuery(name = Database.QUERY_BY_ID, query = "SELECT a FROM DDatabase a where a.id=:ID"),
-        @NamedQuery(name = Database.QUERY_BY_USER, query = "SELECT a FROM DDatabase a where a.owner=:USER")
+        @NamedQuery(name = StandardDatabase.QUERY_BY_ID, query = "SELECT a FROM DDatabase a where a.id=:ID"),
+        @NamedQuery(name = StandardDatabase.QUERY_BY_USER, query = "SELECT a FROM DDatabase a where a.owner=:USER")
 })
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-public class Database extends Node {
+public class StandardDatabase extends Node implements Database {
 
-    public static final String QUERY_BY_ID = "Database.QUERY_BY_ID";
-    public static final String QUERY_BY_USER = "Database.QUERY_BY_USER";
+    public static final String QUERY_BY_ID = "StandardDatabase.QUERY_BY_ID";
+    public static final String QUERY_BY_USER = "StandardDatabase.QUERY_BY_USER";
     //
     public static final String FK_DATABASE_ID = "database_id";
     public static final String ACTIVE_FOLDER_ID = "active_folder_id";
@@ -30,12 +32,12 @@ public class Database extends Node {
 //  -- References ------------------------------------------------------------------------------------------------------
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, cascade = {})
-    @JoinColumn(name = Database.FK_DATABASE_ID)
+    @OneToMany(fetch = FetchType.LAZY, cascade = {}, targetEntity = StandardFolder.class)
+    @JoinColumn(name = StandardDatabase.FK_DATABASE_ID)
     private Set<Folder> folders = new HashSet(10);
 
     @JsonIgnore
-    @OneToOne(cascade = {}, fetch = FetchType.LAZY, optional = true)
+    @OneToOne(cascade = {}, fetch = FetchType.LAZY, optional = true, targetEntity = StandardFolder.class)
     @JoinColumn(name = ACTIVE_FOLDER_ID)
     private Folder activeFolder;
 
@@ -45,22 +47,22 @@ public class Database extends Node {
     @JsonIgnore
     @OneToOne(cascade = {}, fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = DEFAULT_FOLDER_ID)
-    private Folder defaultFolder;
+    private StandardFolder defaultFolder;
 
     @Column(insertable = false, updatable = false, name = DEFAULT_FOLDER_ID, nullable = true)
     private Long defaultFolderId;
 
 //  --------------------------------------------------------------------------------------------------------------------
 
-    public Database() {
+    public StandardDatabase() {
         // default
     }
 
-    public Database(long id) {
+    public StandardDatabase(long id) {
         setId(id);
     }
 
-    public Database(long id, int documentCount, Date modified) {
+    public StandardDatabase(long id, int documentCount, Date modified) {
         setId(id);
         setDocumentCount(documentCount);
         setModified(modified);
@@ -86,11 +88,11 @@ public class Database extends Node {
         this.activeFolderId = activeFolderId;
     }
 
-    public Folder getDefaultFolder() {
+    public StandardFolder getDefaultFolder() {
         return defaultFolder;
     }
 
-    public void setDefaultFolder(Folder defaultFolder) {
+    public void setDefaultFolder(StandardFolder defaultFolder) {
         this.defaultFolder = defaultFolder;
     }
 

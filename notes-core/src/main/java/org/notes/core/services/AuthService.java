@@ -5,7 +5,7 @@ import org.notes.common.configuration.NotesInterceptors;
 import org.notes.core.interfaces.AuthManager;
 import org.notes.core.interfaces.SessionData;
 import org.notes.core.metric.ServiceMetric;
-import org.notes.core.model.Database;
+import org.notes.core.model.StandardDatabase;
 import org.notes.core.model.User;
 
 import javax.inject.Inject;
@@ -60,7 +60,7 @@ public class AuthService {
             user.setDocuments(null);
             user.setDatabases(null);
 
-            for (Database d : settings.getDatabases()) {
+            for (StandardDatabase d : settings.getDatabases()) {
                 d.setActiveFolder(null);
             }
 
@@ -81,12 +81,12 @@ public class AuthService {
             }
 
             @Override
-            public Set<Database> getDatabases() {
+            public Set<StandardDatabase> getDatabases() {
                 return settings.getDatabases();
             }
 
             @Override
-            public void setDatabases(Set<Database> databases) {
+            public void setDatabases(Set<StandardDatabase> databases) {
             }
 
             @Override

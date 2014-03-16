@@ -3,6 +3,7 @@ package org.notes.core.model;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.notes.common.ForeignKey;
+import org.notes.common.model.Folder;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -13,20 +14,20 @@ import java.util.Set;
  * Belongs of a database, used to classify documents.
  */
 @Entity(name = "Folder")
-@Table(name = "Folder",
+@Table(name = "StandardFolder",
         uniqueConstraints = @UniqueConstraint(columnNames = {ForeignKey.USER, "level", "name"})
 )
 @NamedQueries({
-        @NamedQuery(name = Folder.QUERY_BY_ID, query = "SELECT a FROM Folder a where a.id=:ID"),
-        @NamedQuery(name = Folder.QUERY_CHILDREN, query = "SELECT new Folder(a.id, a.name, a.leaf, a.documentCount, a.modified, a.level, a.expanded) FROM Folder a WHERE a.parentId = :ID"),
-        @NamedQuery(name = Folder.QUERY_ROOT_FOLDERS, query = "SELECT new Folder(a.id, a.name, a.leaf, a.documentCount, a.modified, a.level, a.expanded) FROM Folder a WHERE a.databaseId = :DB_ID and a.owner = :OWNER and a.level = 0 ORDER BY a.name")
+        @NamedQuery(name = StandardFolder.QUERY_BY_ID, query = "SELECT a FROM Folder a where a.id=:ID"),
+        @NamedQuery(name = StandardFolder.QUERY_CHILDREN, query = "SELECT new Folder(a.id, a.name, a.leaf, a.documentCount, a.modified, a.level, a.expanded) FROM Folder a WHERE a.parentId = :ID"),
+        @NamedQuery(name = StandardFolder.QUERY_ROOT_FOLDERS, query = "SELECT new Folder(a.id, a.name, a.leaf, a.documentCount, a.modified, a.level, a.expanded) FROM Folder a WHERE a.databaseId = :DB_ID and a.owner = :OWNER and a.level = 0 ORDER BY a.name")
 })
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-public class Folder extends Node {
+public class StandardFolder extends Node implements Folder {
 
-    public static final String QUERY_BY_ID = "Folder.QUERY_BY_ID";
-    public static final String QUERY_CHILDREN = "Folder.QUERY_CHILDREN";
-    public static final String QUERY_ROOT_FOLDERS = "Folder.QUERY_ROOT_FOLDERS";
+    public static final String QUERY_BY_ID = "StandardFolder.QUERY_BY_ID";
+    public static final String QUERY_CHILDREN = "StandardFolder.QUERY_CHILDREN";
+    public static final String QUERY_ROOT_FOLDERS = "StandardFolder.QUERY_ROOT_FOLDERS";
 
     @Basic
     @Column(nullable = false)
@@ -50,7 +51,7 @@ public class Folder extends Node {
 //  -- References ------------------------------------------------------------------------------------------------------
 
     @JsonIgnore
-    @OneToOne(fetch = FetchType.LAZY, cascade = {})
+    @OneToOne(fetch = FetchType.LAZY, cascade = {}, targetEntity = StandardFolder.class)
     @JoinColumn(name = "parent_id")
     private Folder parent;
 
@@ -62,16 +63,16 @@ public class Folder extends Node {
     @JoinColumn(name = ForeignKey.FOLDER_ID)
     private Set<BasicDocument> documents = new HashSet(100);
 
-    @Column(updatable = false, insertable = false, nullable = true, name = Database.FK_DATABASE_ID)
+    @Column(updatable = false, insertable = false, nullable = true, name = StandardDatabase.FK_DATABASE_ID)
     private Long databaseId;
 
 //  --------------------------------------------------------------------------------------------------------------------
 
-    public Folder() {
+    public StandardFolder() {
         // default
     }
 
-    public Folder(long id, String name, boolean leaf, int documentCount, Date modified, int level, boolean expanded) {
+    public StandardFolder(long id, String name, boolean leaf, int documentCount, Date modified, int level, boolean expanded) {
         setId(id);
         setLeaf(leaf);
         setName(name);
@@ -81,7 +82,7 @@ public class Folder extends Node {
         setExpanded(expanded);
     }
 
-    public Folder(long id) {
+    public StandardFolder(long id) {
         setId(id);
         expanded = null;
         leaf = null;
@@ -97,6 +98,7 @@ public class Folder extends Node {
         this.documents = documents;
     }
 
+    @Override
     public Folder getParent() {
         return parent;
     }

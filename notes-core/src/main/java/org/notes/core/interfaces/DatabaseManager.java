@@ -1,8 +1,8 @@
 package org.notes.core.interfaces;
 
 import org.notes.common.exceptions.NotesException;
-import org.notes.core.model.Database;
-import org.notes.core.model.Folder;
+import org.notes.core.model.StandardDatabase;
+import org.notes.core.model.StandardFolder;
 import org.notes.core.model.User;
 
 import javax.ejb.Local;
@@ -11,17 +11,17 @@ import java.util.List;
 @Local
 public interface DatabaseManager {
 
-    Database createDatabase(Database database, User user) throws NotesException;
+    StandardDatabase createDatabase(StandardDatabase database, User user) throws NotesException;
 
-    Database getDatabase(long databaseId) throws NotesException;
+    StandardDatabase getDatabase(long databaseId) throws NotesException;
 
-    Database deleteDatabase(long databaseId) throws NotesException;
+    StandardDatabase deleteDatabase(long databaseId) throws NotesException;
 
-    Database updateDatabase(long databaseId, Database database) throws NotesException;
+    StandardDatabase updateDatabase(long databaseId, StandardDatabase database) throws NotesException;
 
-    Database getDatabaseOfUser() throws NotesException;
+    StandardDatabase getDatabaseOfUser() throws NotesException;
 
-    List<Folder> getFolders(long databaseId) throws NotesException;
+    List<StandardFolder> getFolders(long databaseId) throws NotesException;
 
-    void setDefaultFolder(Database database, Folder folder) throws NotesException;
+    void setDefaultFolder(StandardDatabase database, StandardFolder folder) throws NotesException;
 }

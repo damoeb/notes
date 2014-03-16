@@ -6,7 +6,7 @@ import org.notes.core.interfaces.DocumentManager;
 import org.notes.core.metric.ServiceMetric;
 import org.notes.core.model.BasicDocument;
 import org.notes.core.model.BookmarkDocument;
-import org.notes.core.model.Folder;
+import org.notes.core.model.StandardFolder;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -27,9 +27,9 @@ public class BookmarkService {
     public NotesResponse bookmark(BookmarkDocument bookmark) {
         try {
 
-            Folder folder = null;
+            StandardFolder folder = null;
             if (bookmark != null && bookmark.getFolderId() != null) {
-                folder = new Folder(bookmark.getFolderId());
+                folder = new StandardFolder(bookmark.getFolderId());
             }
 
             return NotesResponse.ok(documentManager.bookmark(bookmark, folder));

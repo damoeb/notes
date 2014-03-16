@@ -1,4 +1,11 @@
-- search: score is not valid (123)
+IN ARBEIT
+- back knopf ist nicht noetig, da bereits durch browser funktion zurueck vorhanden
+- search: auf sidebar facetten anzeigen?
+- search: jedes document soll die node ids ihrer parents idexiert bekommen, damit search-in-folder moeglich wird
+- search: auch tags indexieren
+
+OFFEN
+- search: score is not valid (e.g. 123)
 - tags probleme beim indexieren
 - when searching: 2 documents are not indexed yet
 - treeview und suchergebnisse entsprechend der bilder in inspiration
@@ -14,8 +21,6 @@
 - verlinken verbessern
 - improve treeview: colors, icons
 - tags redundanz entfernen, datenbank model verbessern
-- back knopf ist nicht noetig, da bereits durch browser funktion zurueck vorhanden
-- search: auf sidebar facetten anzeigen?
 - use uniqueHash instead of document id
 - viewer for unknown type
 - alle popups auf bootstrap
@@ -29,7 +34,7 @@
 - anzahl der directories auf 1 limitieren (backend)
 
 - new doc. popup with <choose folder>
-- suche + in node names, tags
+- suche auch in node names
 - document thumbnail?
 - triggers über JMS oder for document in separate table
 

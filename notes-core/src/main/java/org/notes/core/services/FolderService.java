@@ -2,11 +2,12 @@ package org.notes.core.services;
 
 import org.notes.common.cache.MethodCache;
 import org.notes.common.configuration.NotesInterceptors;
+import org.notes.common.interfaces.FolderManager;
+import org.notes.common.model.Folder;
 import org.notes.core.interfaces.DocumentManager;
-import org.notes.core.interfaces.FolderManager;
 import org.notes.core.metric.ServiceMetric;
-import org.notes.core.model.Database;
-import org.notes.core.model.Folder;
+import org.notes.core.model.StandardDatabase;
+import org.notes.core.model.StandardFolder;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -28,17 +29,16 @@ public class FolderService {
     @ServiceMetric
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse createFolder(
-            Folder folder
+            StandardFolder folder
     ) throws Exception {
         try {
-            // todo fix does not work for folder without parent
-            Folder parent;
+            StandardFolder parent;
             if (folder.getParentId() != null) {
-                parent = new Folder(folder.getParentId());
+                parent = new StandardFolder(folder.getParentId());
             } else {
                 parent = null;
             }
-            Folder result = folderManager.createFolder(folder, parent, new Database(folder.getDatabaseId()));
+            StandardFolder result = (StandardFolder) folderManager.createFolder(folder, parent, new StandardDatabase(folder.getDatabaseId()));
             result.setDocuments(null);
             return NotesResponse.ok(result);
         } catch (Exception e) {
@@ -52,7 +52,7 @@ public class FolderService {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse updateFolder(
-            Folder folder,
+            StandardFolder folder,
             @PathParam("id") long folderId
     ) throws Exception {
         try {

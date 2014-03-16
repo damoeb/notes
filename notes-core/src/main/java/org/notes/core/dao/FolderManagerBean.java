@@ -4,11 +4,13 @@ import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
+import org.notes.common.interfaces.FolderManager;
+import org.notes.common.model.Database;
+import org.notes.common.model.Folder;
 import org.notes.core.interfaces.DatabaseManager;
-import org.notes.core.interfaces.FolderManager;
 import org.notes.core.interfaces.UserManager;
-import org.notes.core.model.Database;
-import org.notes.core.model.Folder;
+import org.notes.core.model.StandardDatabase;
+import org.notes.core.model.StandardFolder;
 import org.notes.core.model.User;
 
 import javax.ejb.Stateless;
@@ -62,7 +64,7 @@ public class FolderManagerBean implements FolderManager {
             folder = _create(folder, parent, database);
 
             // use database as proxy
-            Database proxy = (Database) _getProxy(Database.class, database.getId());
+            Database proxy = (Database) _getProxy(StandardDatabase.class, database.getId());
             proxy.getFolders().add(folder);
 
             em.merge(proxy);
@@ -89,7 +91,7 @@ public class FolderManagerBean implements FolderManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public Folder getFolder(long folderId) throws NotesException {
+    public StandardFolder getFolder(long folderId) throws NotesException {
         try {
 
             // todo validate req
@@ -107,7 +109,7 @@ public class FolderManagerBean implements FolderManager {
     public List<Folder> getChildren(long folderId) throws NotesException {
         try {
 
-            Query query = em.createNamedQuery(Folder.QUERY_CHILDREN);
+            Query query = em.createNamedQuery(StandardFolder.QUERY_CHILDREN);
             query.setParameter("ID", folderId);
 
             return (List<Folder>) query.getResultList();
@@ -119,7 +121,7 @@ public class FolderManagerBean implements FolderManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public Folder deleteFolder(long folderId) throws NotesException {
+    public StandardFolder deleteFolder(long folderId) throws NotesException {
         try {
 
             return _delete(_get(folderId));
@@ -133,7 +135,7 @@ public class FolderManagerBean implements FolderManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public Folder updateFolder(long folderId, Folder newFolder) throws NotesException {
+    public StandardFolder updateFolder(long folderId, Folder newFolder) throws NotesException {
         try {
             if (newFolder == null) {
                 throw new NotesException("Folder is null");
@@ -143,7 +145,7 @@ public class FolderManagerBean implements FolderManager {
             check if parentId changed -> ..
               */
 
-            Folder folder = _get(folderId);
+            StandardFolder folder = _get(folderId);
             folder.setName(newFolder.getName());
             folder.setModified(new Date());
             folder.setExpanded(newFolder.isExpanded());
@@ -161,16 +163,16 @@ public class FolderManagerBean implements FolderManager {
 
     // -- Helper -- ----------------------------------------------------------------------------------------------------
 
-    private Folder _get(Long folderId) throws NotesException {
+    private StandardFolder _get(Long folderId) throws NotesException {
 
         if (folderId == null || folderId <= 0) {
             throw new NotesException(String.format("Invalid folder id '%s'", folderId));
         }
 
-        Query query = em.createNamedQuery(Folder.QUERY_BY_ID);
+        Query query = em.createNamedQuery(StandardFolder.QUERY_BY_ID);
         query.setParameter("ID", folderId);
 
-        List<Folder> folderList = query.getResultList();
+        List<StandardFolder> folderList = query.getResultList();
         if (folderList.isEmpty()) {
             throw new NotesException(String.format("No folder with id '%s' found", folderId));
         }
@@ -213,7 +215,7 @@ public class FolderManagerBean implements FolderManager {
 
     }
 
-    private Folder _delete(Folder folder) throws NotesException {
+    private StandardFolder _delete(StandardFolder folder) throws NotesException {
         if (folder == null) {
             throw new NotesException("Folder is null");
         }

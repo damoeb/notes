@@ -5,8 +5,8 @@ import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
 import org.notes.core.interfaces.DatabaseManager;
 import org.notes.core.interfaces.SessionData;
-import org.notes.core.model.Database;
-import org.notes.core.model.Folder;
+import org.notes.core.model.StandardDatabase;
+import org.notes.core.model.StandardFolder;
 import org.notes.core.model.User;
 
 import javax.ejb.Stateless;
@@ -35,10 +35,10 @@ public class DatabaseManagerBean implements DatabaseManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public Database createDatabase(Database database, User user) throws NotesException {
+    public StandardDatabase createDatabase(StandardDatabase database, User user) throws NotesException {
         try {
             if (database == null) {
-                throw new NotesException("Database is null");
+                throw new NotesException("StandardDatabase is null");
             }
             if (user == null) {
                 throw new NotesException("user is null");
@@ -70,7 +70,7 @@ public class DatabaseManagerBean implements DatabaseManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public Database getDatabase(long databaseId) throws NotesException {
+    public StandardDatabase getDatabase(long databaseId) throws NotesException {
         try {
             return _get(databaseId);
 
@@ -83,7 +83,7 @@ public class DatabaseManagerBean implements DatabaseManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public Database deleteDatabase(long databaseId) throws NotesException {
+    public StandardDatabase deleteDatabase(long databaseId) throws NotesException {
         try {
             return _delete(databaseId);
 
@@ -96,12 +96,12 @@ public class DatabaseManagerBean implements DatabaseManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public Database getDatabaseOfUser() throws NotesException {
+    public StandardDatabase getDatabaseOfUser() throws NotesException {
         try {
-            Query query = em.createNamedQuery(Database.QUERY_BY_USER);
+            Query query = em.createNamedQuery(StandardDatabase.QUERY_BY_USER);
             query.setParameter("USER", sessionData.getUser().getUsername());
 
-            return (Database) query.getSingleResult();
+            return (StandardDatabase) query.getSingleResult();
 
         } catch (Throwable t) {
             throw new NotesException("get database of user ", t);
@@ -110,9 +110,9 @@ public class DatabaseManagerBean implements DatabaseManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public List<Folder> getFolders(long databaseId) throws NotesException {
+    public List<StandardFolder> getFolders(long databaseId) throws NotesException {
         try {
-            Query query = em.createNamedQuery(Folder.QUERY_ROOT_FOLDERS);
+            Query query = em.createNamedQuery(StandardFolder.QUERY_ROOT_FOLDERS);
             query.setParameter("OWNER", sessionData.getUser().getUsername());
             query.setParameter("DB_ID", databaseId);
 
@@ -125,7 +125,7 @@ public class DatabaseManagerBean implements DatabaseManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void setDefaultFolder(Database database, Folder folder) throws NotesException {
+    public void setDefaultFolder(StandardDatabase database, StandardFolder folder) throws NotesException {
         try {
 
             if (database == null) {
@@ -150,7 +150,7 @@ public class DatabaseManagerBean implements DatabaseManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public Database updateDatabase(long databaseId, Database database) throws NotesException {
+    public StandardDatabase updateDatabase(long databaseId, StandardDatabase database) throws NotesException {
         try {
             if (database == null) {
                 throw new NotesException("database is null");
@@ -164,16 +164,16 @@ public class DatabaseManagerBean implements DatabaseManager {
 
     // -- Helper -- ----------------------------------------------------------------------------------------------------
 
-    private Database _get(Long databaseId) throws NotesException {
+    private StandardDatabase _get(Long databaseId) throws NotesException {
 
         if (databaseId == null || databaseId <= 0) {
             throw new NotesException(String.format("Invalid database id '%s'", databaseId));
         }
 
-        Query query = em.createNamedQuery(Database.QUERY_BY_ID);
+        Query query = em.createNamedQuery(StandardDatabase.QUERY_BY_ID);
         query.setParameter("ID", databaseId);
 
-        List<Database> databaseList = query.getResultList();
+        List<StandardDatabase> databaseList = query.getResultList();
         if (databaseList.isEmpty()) {
             throw new NotesException(String.format("No database with id '%s' found", databaseId));
         }
@@ -182,13 +182,13 @@ public class DatabaseManagerBean implements DatabaseManager {
 
     }
 
-    private Database _update(long databaseId, Database newDatabase) throws NotesException {
+    private StandardDatabase _update(long databaseId, StandardDatabase newDatabase) throws NotesException {
 
         if (newDatabase == null) {
             throw new NotesException("Database is null");
         }
 
-        Database database = _get(databaseId);
+        StandardDatabase database = _get(databaseId);
         database.setModified(new Date());
 
         em.merge(database);
@@ -199,8 +199,8 @@ public class DatabaseManagerBean implements DatabaseManager {
 
     }
 
-    private Database _delete(long databaseId) throws NotesException {
-        Database database = _get(databaseId);
+    private StandardDatabase _delete(long databaseId) throws NotesException {
+        StandardDatabase database = _get(databaseId);
         database.setDeleted(true);
         em.merge(database);
 

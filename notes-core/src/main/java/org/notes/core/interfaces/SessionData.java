@@ -1,6 +1,6 @@
 package org.notes.core.interfaces;
 
-import org.notes.core.model.Database;
+import org.notes.core.model.StandardDatabase;
 import org.notes.core.model.User;
 
 import java.io.Serializable;
@@ -10,9 +10,9 @@ public interface SessionData extends Serializable {
 
     User getUser();
 
-    Set<Database> getDatabases();
+    Set<StandardDatabase> getDatabases();
 
-    void setDatabases(Set<Database> databases);
+    void setDatabases(Set<StandardDatabase> databases);
 
     void setUser(User user);
 }

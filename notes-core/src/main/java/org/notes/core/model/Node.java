@@ -12,7 +12,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * Common base of Folder and Database
+ * Common base of StandardFolder and StandardDatabase
  */
 @MappedSuperclass
 public abstract class Node implements Serializable {

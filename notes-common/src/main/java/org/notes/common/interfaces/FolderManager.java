@@ -1,8 +1,8 @@
-package org.notes.core.interfaces;
+package org.notes.common.interfaces;
 
 import org.notes.common.exceptions.NotesException;
-import org.notes.core.model.Database;
-import org.notes.core.model.Folder;
+import org.notes.common.model.Database;
+import org.notes.common.model.Folder;
 
 import javax.ejb.Local;
 import java.util.List;

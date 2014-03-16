@@ -3,6 +3,7 @@ package org.notes.core.model;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.notes.common.ForeignKey;
+import org.notes.common.model.Folder;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -47,10 +48,10 @@ public class User implements Serializable {
     @JsonIgnore
     @OneToMany(cascade = {}, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = ForeignKey.USER)
-    private Set<Database> databases = new HashSet(100);
+    private Set<StandardDatabase> databases = new HashSet(100);
 
     @JsonIgnore
-    @OneToMany(cascade = {}, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(cascade = {}, fetch = FetchType.LAZY, orphanRemoval = true, targetEntity = StandardFolder.class)
     @JoinColumn(name = ForeignKey.USER)
     private Set<Folder> folders = new HashSet(100);
 
@@ -84,11 +85,11 @@ public class User implements Serializable {
         this.accountId = accountId;
     }
 
-    public Set<Database> getDatabases() {
+    public Set<StandardDatabase> getDatabases() {
         return databases;
     }
 
-    public void setDatabases(Set<Database> databases) {
+    public void setDatabases(Set<StandardDatabase> databases) {
         this.databases = databases;
     }
 

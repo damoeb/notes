@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
+import org.notes.common.interfaces.FolderManager;
 import org.notes.core.interfaces.*;
 import org.notes.core.model.*;
 import org.notes.core.util.PasswordHash;
@@ -102,9 +103,9 @@ public class AuthManagerBean implements AuthManager {
 
             user = userManager.createUser(user, account);
 
-            Database database = databaseManager.createDatabase(new Database(), user);
+            StandardDatabase database = databaseManager.createDatabase(new StandardDatabase(), user);
 
-            Folder folder = new Folder();
+            StandardFolder folder = new StandardFolder();
             folder.setName("Unsorted");
             folderManager.createFolder(folder, null, database);
 
