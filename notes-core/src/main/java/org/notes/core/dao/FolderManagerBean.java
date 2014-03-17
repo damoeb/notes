@@ -189,7 +189,7 @@ public class FolderManagerBean implements FolderManager {
 
         if (parent != null) {
 
-            if (parent.getLevel() >= 2) {
+            if (parent.getLevel() >= 5) {
                 throw new NotesException("Max folder depth reached.");
             }
 

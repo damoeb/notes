@@ -133,8 +133,8 @@ $.widget('notes.folder', {
 
         notes.app.activeFolderId(folderId);
 
-        $('#databases .folder.active').removeClass('active');
-        $('#databases .folder-' + $self.options.model.get('id')).addClass('active');
+        $('#databases .active').removeClass('active');
+        $self.element.addClass('active');
 
         // todo save document when closed
         $('#document-list').documentList('refresh', folderId);

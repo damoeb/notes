@@ -644,7 +644,7 @@
 
 
 <script type="text/template" id="folder-in-tree">
-    <div class="level-<%=level %>">
+    <div class="folder level-<%=level %>">
         <%
         if (!leaf) {
         %>
@@ -658,7 +658,7 @@
         %>
         <a href="#folder:<%=id %>" class="name"><%=name %></a>
 
-        <span class="pull-right"><%=documentCount %></span>
+        <span class="pull-right count"><%=documentCount %></span>
     </div>
 
     <ol class="children">

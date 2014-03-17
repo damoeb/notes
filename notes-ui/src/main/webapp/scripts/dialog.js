@@ -52,10 +52,33 @@ notes.dialog.folder = {
     newFolder: function (parentModel) {
 
         var $input = $('<input/>', {name: 'name', type: 'text'});
+        var $dialog = $('<div/>', {class: 'dialog'});
+
+        var submitFolder = function () {
+
+            $dialog.dialog('close');
+
+            var model = new notes.model.Folder({
+                name: $input.val(),
+                parentId: parentId,
+                databaseId: notes.app.databaseId()
+            });
+            model.save(null, {
+                success: function () {
+                    $('#databases').databases('reloadTree');
+                }
+            });
+        };
+
+        $input.keypress(function (e) {
+            if (e.which == 13) {
+                submitFolder();
+            }
+        });
 
         var parentId = parentModel !== null ? parentModel.get('id') : null;
 
-        $('<div/>', {class: 'dialog'}).append(
+        $dialog.append(
                 $('<div/>').append(
                     $input
                 )
@@ -65,18 +88,7 @@ notes.dialog.folder = {
                     {
                         text: 'Create',
                         click: function () {
-                            $(this).dialog('close');
-
-                            var model = new notes.model.Folder({
-                                name: $input.val(),
-                                parentId: parentId,
-                                databaseId: notes.app.databaseId()
-                            });
-                            model.save(null, {
-                                success: function () {
-                                    $('#databases').databases('reloadTree');
-                                }
-                            });
+                            submitFolder();
                         }
                     },
                     {
