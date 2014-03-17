@@ -5109,7 +5109,7 @@ body {
   list-style: none;
   margin: 0;
   padding: 0; }
-  #databases li.active {
+  #databases li.active > .folder {
     background-color: #efefef; }
   #databases li.active > A {
     color: #fff;
