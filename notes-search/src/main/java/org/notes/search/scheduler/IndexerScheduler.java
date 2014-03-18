@@ -133,6 +133,7 @@ public class IndexerScheduler {
         SolrInputDocument doc = new SolrInputDocument();
         doc.setField(SolrFields.DOCUMENT, document.getId());
 
+        // index containing folder nodes incl its parents
         Long folderId = document.getFolderId();
         try {
             while (folderId != null) {
@@ -151,7 +152,6 @@ public class IndexerScheduler {
         doc.setField(SolrFields.OWNER, document.getOwner());
         doc.setField(SolrFields.UNIQUE_HASH, document.getUniqueHash());
         doc.setField(SolrFields.STAR, document.isStar());
-        doc.setField(SolrFields.TAG, document.getTags());
         return doc;
     }
 

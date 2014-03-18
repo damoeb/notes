@@ -95,12 +95,12 @@
     <div class="col-lg-5">
         <div class="input-group">
             <div class="input-group-btn">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">All <span
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span id="search-context-label">All</span> <span
                         class="caret"></span></button>
                 <ul class="dropdown-menu">
                     <li role="presentation" class="dropdown-header">Places</li>
-                    <li><a href="#">All Folders</a></li>
-                    <li><a href="#">Current Folder</a></li>
+                    <li><a href="#" onclick="notes.app.searchContextOnly(false)">All Folders</a></li>
+                    <li><a href="#" onclick="notes.app.searchContextOnly(true)">Current Folder</a></li>
 
                 </ul>
             </div>
@@ -644,7 +644,7 @@
 
 
 <script type="text/template" id="folder-in-tree">
-    <div class="folder level-<%=level %>">
+    <div class="folder level-<%=level %> folder-<%=id %>">
         <%
         if (!leaf) {
         %>

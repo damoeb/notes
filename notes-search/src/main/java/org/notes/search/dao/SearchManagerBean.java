@@ -31,18 +31,22 @@ public class SearchManagerBean implements SearchManager {
     @ConfigurationProperty(value = Configuration.SOLR_SERVER, mandatory = true)
     private String solrUrl = "http://localhost:8080/solr-4.5.1";
 
+    /**
+     * {@inheritDoc}
+     *
+     */
     @Override
-    public SearchResponse query(long databaseId, String queryString, int start, int rows) throws NotesException {
+    public SearchResponse query(String queryString, Integer start, Integer rows, Long databaseId, Integer currentFolderId, Boolean contextOnly) throws NotesException {
         try {
 
             if (StringUtils.trim(queryString).length() < 3) {
                 throw new IllegalArgumentException("Too short query");
             }
 
-            if (start < 0) {
+            if (start == null || start < 0) {
                 start = 0;
             }
-            if (rows <= 0 || rows > 100) {
+            if (rows == null || rows <= 0 || rows > 100) {
                 rows = 100;
             }
 
@@ -65,9 +69,11 @@ public class SearchManagerBean implements SearchManager {
 
             query.setTimeAllowed(3000);
 
-            // todo add databaseId
+            // todo filter databaseId
+            // todo boost context currentFolderId, if set
 
 
+            // todo support raw query
             query.setQuery(String.format("+(title:%1$s^10 text:%1$s)", queryString));
             // docs https://wiki.apache.org/solr/FieldCollapsing
             query.add("group.field", "document");

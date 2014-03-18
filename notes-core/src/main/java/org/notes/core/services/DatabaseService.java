@@ -2,6 +2,7 @@ package org.notes.core.services;
 
 import org.notes.common.cache.MethodCache;
 import org.notes.common.configuration.NotesInterceptors;
+import org.notes.common.model.Database;
 import org.notes.core.interfaces.DatabaseManager;
 import org.notes.core.metric.ServiceMetric;
 import org.notes.core.model.StandardDatabase;
@@ -27,7 +28,7 @@ public class DatabaseService {
             @PathParam("id") long databaseId
     ) throws Exception {
         try {
-            StandardDatabase result = databaseManager.updateDatabase(databaseId, database);
+            Database result = databaseManager.updateDatabase(databaseId, database);
             return NotesResponse.ok(result);
         } catch (Exception e) {
             return NotesResponse.error(e);
@@ -43,7 +44,7 @@ public class DatabaseService {
             @PathParam("id") long databaseId
     ) throws Exception {
         try {
-            StandardDatabase database = databaseManager.getDatabase(databaseId);
+            Database database = databaseManager.getDatabase(databaseId);
             return NotesResponse.ok(database);
 
         } catch (Exception e) {

@@ -49,10 +49,12 @@ $.widget('notes.search', {
             '${query}': $this.query,
             '${start}': $this.start,
             '${database}': notes.app.databaseId(),
-            '${rows}': $this.rows
+            '${rows}': $this.rows,
+            '${context}': notes.app.activeFolderId(),
+            '${contextOnly}': notes.app.searchContextOnly()
         };
 
-        notes.util.jsonCall('GET', '/notes/rest/search/?query=${query}&database=${database}&start=${start}&rows=${rows}', params, null,
+        notes.util.jsonCall('GET', '/notes/rest/search/?query=${query}&database=${database}&start=${start}&rows=${rows}&context=${context}&contextOnly=${contextOnly}', params, null,
             function (result) {
                 console.log(result.docs.length + ' hits');
 

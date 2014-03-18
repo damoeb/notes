@@ -6,6 +6,7 @@ IN ARBEIT
 - tree: darstellung verbessern: colors, icons
 
 OFFEN
+- test login with >1 accounts
 - recommend module: verknüpfen
 - tree: active folder is not highlighted/working
 - ajax calls should show error-notification

@@ -113,7 +113,8 @@
 
             routes: {
                 'doc\::id': 'document',
-                'search/:query': 'search'   // #search/kiwis/p7
+                'folder\::id': 'folder',
+                'q\::query': 'search'   // #q:kiwis
             },
 
             search: function (query) {
@@ -126,8 +127,13 @@
             },
 
             document: function (docId) {
-                console.log('view doc ' + docId);
+                console.log('open doc ' + docId);
                 $('#editors').editors('editDocument', docId);
+            },
+
+            folder: function (folderId) {
+                console.log('open folder ' + folderId);
+                $('.folder-' + folderId).parent().folder('loadDocuments');
             }
         });
 
@@ -184,7 +190,7 @@
 
         $('#search-input').keypress(function (e) {
             if (e.which === 13) {
-                notes.router.navigate('search/' + $(this).val());
+                notes.router.navigate('search:' + $(this).val());
             }
         });
 

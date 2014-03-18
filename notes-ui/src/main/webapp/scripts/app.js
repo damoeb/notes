@@ -10,12 +10,14 @@
         var _defaultFolderId = 0;
         var _documentId = 0;
         var _databaseId = 0;
+        var _isContextOnly = false;
         var _descendants = {};
 
         this.activeFolderId = function (id) {
             if (typeof id !== 'undefined') {
                 _activeFolderId = id;
-                new notes.model.Database({activeFolderId:id}).save()
+                // todo sync activefolderid
+//                new notes.model.Database({activeFolderId:id}).save()
             } else {
                 return _activeFolderId;
             }
@@ -26,6 +28,21 @@
                 _defaultFolderId = id;
             } else {
                 return _defaultFolderId;
+            }
+        };
+
+        this.searchContextOnly = function (isContextOnly) {
+            if (typeof isContextOnly !== 'undefined') {
+                _isContextOnly = isContextOnly;
+
+                var label = 'All';
+                if(isContextOnly) {
+                    // todo show folder name
+                    label = 'Context';
+                }
+                $('#search-context-label').text(label);
+            } else {
+                return _isContextOnly;
             }
         };
 

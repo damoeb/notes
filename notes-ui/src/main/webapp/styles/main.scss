@@ -161,10 +161,8 @@ body {
     &.active > .folder {
       background-color: #efefef;
     }
-    &.active > A {
-      color: #fff;
-      white-space: nowrap;
-      text-decoration: none;
+    .count {
+      color: #bdbdbd;
     }
   }
 

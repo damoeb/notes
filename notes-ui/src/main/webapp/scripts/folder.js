@@ -38,9 +38,9 @@ $.widget('notes.folder', {
             $self.setExpanded(!model.get('expanded'));
         });
 
-        $target.find('.name').click(function () {
-            $self.loadDocuments();
-        });
+//        $target.find('.name').click(function () {
+//            $self.loadDocuments();
+//        });
 
         //
         // -- Triggers -------------------------------------------------------------------------------------------------
@@ -99,6 +99,9 @@ $.widget('notes.folder', {
             $self.childrenLoaded = true;
 
             if (folders) {
+
+                notes.util.sortJSONArrayASC(folders, 'name');
+
                 for (var i = 0; i < folders.length; i++) {
 
                     var $childFolder = $('<li/>')
