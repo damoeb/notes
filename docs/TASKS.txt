@@ -6,6 +6,7 @@ IN ARBEIT
 - tree: darstellung verbessern: colors, icons
 
 OFFEN
+- recommend module: verknüpfen
 - tree: active folder is not highlighted/working
 - ajax calls should show error-notification
 - search: score is not valid (e.g. 123)
