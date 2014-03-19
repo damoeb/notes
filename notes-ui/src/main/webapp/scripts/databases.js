@@ -7,6 +7,8 @@
 
     notes.databases = {
 
+        _databaseId: null,
+
         init: function () {
             this.reload();
         },
@@ -39,6 +41,14 @@
                 });
 
             });
+        },
+
+        id: function (id) {
+            if (typeof id !== 'undefined') {
+                this._databaseId = id;
+            } else {
+                return this._databaseId;
+            }
         }
     }
 })(notes);

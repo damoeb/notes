@@ -7,7 +7,6 @@
     notes.app = new function () {
 
         var _documentId = 0;
-        var _databaseId = 0;
         var _isContextOnly = false;
 
         this.searchContextOnly = function (isContextOnly) {
@@ -32,14 +31,6 @@
                 _documentId = id;
             } else {
                 return _documentId;
-            }
-        };
-
-        this.databaseId = function (id) {
-            if (typeof id !== 'undefined') {
-                _databaseId = id;
-            } else {
-                return _databaseId;
             }
         };
     };

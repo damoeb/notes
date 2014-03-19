@@ -69,7 +69,7 @@
 
             console.log('Hello ' + settings.user.username);
 
-            notes.app.databaseId(settings.databases[0].id);
+            notes.databases.id(settings.databases[0].id);
 
             notes.setup.ui();
             notes.setup.router();
@@ -88,21 +88,16 @@
 
     // -- Search -------------------------------------------------------------------------------------------------------
 
-    notes.search = function () {
-
-        var query = $('#search-input').val();
-
-        $('#search-view').search('refresh', query);
-    };
+    notes.queries.init();
 
     $('#search-input').keypress(function (e) {
         if (e.which == 13) {
-            notes.search();
+            notes.queries.find();
         }
     });
 
     $('#action-search').click(function (e) {
-        notes.search();
+        notes.queries.find();
     });
 
     // -- Routing ------------------------------------------------------------------------------------------------------
@@ -119,10 +114,7 @@
 
             search: function (query) {
                 console.log('search ' + query);
-                notes.search({
-                    query: query,
-                    databaseId: notes.app.databaseId()
-                });
+                notes.queries.find(query);
 
             },
 

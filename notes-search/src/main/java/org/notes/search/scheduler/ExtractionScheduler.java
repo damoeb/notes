@@ -28,7 +28,7 @@ public class ExtractionScheduler {
     @Schedule(second = "*/10", minute = "*", hour = "*", persistent = false, info = "Extracts text from PDFs")
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     @Lock(LockType.WRITE)
-    @AccessTimeout(0) // no concurrent access
+    @AccessTimeout(-1) // no concurrent access
     public void extract() {
         try {
             Query query = em.createNamedQuery(Document.QUERY_TRIGGER);

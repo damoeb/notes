@@ -30,7 +30,7 @@ public class EssenceCalculatorScheduler {
 
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     @Lock(LockType.WRITE)
-    @AccessTimeout(0) // no concurrent access
+    @AccessTimeout(-1) // no concurrent access
     @Schedule(second = "*/10", minute = "*", hour = "*", persistent = false)
     public void index() {
 

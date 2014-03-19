@@ -39,7 +39,7 @@ public class HarvestScheduler {
     @Schedule(second = "*/3", minute = "*", hour = "*", persistent = false)
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     @Lock(LockType.WRITE)
-    @AccessTimeout(0) // no concurrent access
+    @AccessTimeout(-1) // no concurrent access
     public void loop() {
         try {
             Query query = em.createNamedQuery(Document.QUERY_TRIGGER);
