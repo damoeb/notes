@@ -27,14 +27,26 @@ $.widget('notes.databases', {
 
         notes.util.jsonCall('GET', REST_SERVICE + '/database', null, null, function (database) {
 
-            var model = new notes.model.Database(database);
-
             var $tree = $('<ol/>', {class: 'tree'}).appendTo(
                 $target
             );
 
-            $self.$tree = $tree.tree({
-                databaseId: model.get('id')
+            notes.folders.defaultFolderId(database.defaultFolderId);
+
+            notes.util.jsonCall('GET', REST_SERVICE + '/database/${dbId}/roots', {'${dbId}': database.id}, null, function (folders) {
+
+                var rootFolders = folders;
+
+                if (rootFolders && rootFolders.length > 0) {
+
+                    $.each(rootFolders, function (index, rootFolder) {
+                        $('<li/>')
+                            .appendTo($tree)
+                            .folder({
+                                model: new notes.model.Folder(rootFolder)
+                            });
+                    });
+                }
             });
 
         });

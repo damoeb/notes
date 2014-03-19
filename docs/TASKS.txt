@@ -1,5 +1,5 @@
 IN ARBEIT
-- replace editors/databases/search widgetby static function
+- replace editors/databases/search widget by static function
   remove app, tree into databases
 - back knopf ist nicht noetig, da bereits durch browser funktion zurueck vorhanden
 - search: auf sidebar facetten anzeigen?
