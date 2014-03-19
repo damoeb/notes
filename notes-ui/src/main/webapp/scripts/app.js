@@ -35,6 +35,8 @@
             if (typeof isContextOnly !== 'undefined') {
                 _isContextOnly = isContextOnly;
 
+                console.log('ContextOnly ' + isContextOnly);
+
                 var label = 'All';
                 if(isContextOnly) {
                     // todo show folder name
