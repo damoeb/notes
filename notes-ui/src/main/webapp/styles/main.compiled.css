@@ -5110,10 +5110,13 @@ body {
   margin: 0;
   padding: 0; }
   #databases li.active > .folder {
-    background-color: #efefef; }
+    background-color: #3875d6;
+    color: #efefef; }
+    #databases li.active > .folder A {
+      color: #efefef; }
   #databases li .count {
     color: #bdbdbd;
-    padding-right: 2px; }
+    padding-right: 4px; }
 #databases .level-0 {
   padding-left: 0px;
   line-height: 20px; }
