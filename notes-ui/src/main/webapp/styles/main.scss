@@ -159,7 +159,11 @@ body {
     padding: 0;
 
     &.active > .folder {
-      background-color: #efefef;
+      background-color: #3875d6;
+      color: #efefef;
+      A {
+        color: #efefef;
+      }
     }
     .count {
       color: #bdbdbd;

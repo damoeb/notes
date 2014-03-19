@@ -8,6 +8,7 @@
     notes.queries = {
 
         _databaseId: null,
+        _isContextOnly: false,
 
         init: function () {
 
@@ -17,6 +18,23 @@
                 $('#document-view').hide();
                 $('#document-and-folder-view').show();
             });
+        },
+
+        contextOnly: function (isContextOnly) {
+            if (typeof isContextOnly !== 'undefined') {
+                this._isContextOnly = isContextOnly;
+
+                console.log('ContextOnly ' + isContextOnly);
+
+                var label = 'All';
+                if (isContextOnly) {
+                    // todo show folder name
+                    label = 'Context';
+                }
+                $('#search-context-label').text(label);
+            } else {
+                return this._isContextOnly;
+            }
         },
 
         find: function (query) {
