@@ -5111,10 +5111,9 @@ body {
   padding: 0; }
   #databases li.active > .folder {
     background-color: #efefef; }
-  #databases li.active > A {
-    color: #fff;
-    white-space: nowrap;
-    text-decoration: none; }
+  #databases li .count {
+    color: #bdbdbd;
+    padding-right: 2px; }
 #databases .level-0 {
   padding-left: 0px;
   line-height: 20px; }
