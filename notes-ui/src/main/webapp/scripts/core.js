@@ -128,7 +128,7 @@
 
             document: function (docId) {
                 console.log('open doc ' + docId);
-                $('#editors').editors('editDocument', docId);
+                notes.editors.edit(docId);
             },
 
             folder: function (folderId) {
@@ -156,8 +156,6 @@
             databaseId: notes.app.databaseId()
         });
 
-        $('#editors').editors();
-
         // -- Menu -- ------------------------------------------------------------------------------------------
 
         $('#import-document')
@@ -175,7 +173,7 @@
             .bind('fileuploadsubmit', function (e, data) {
 
                 data.formData = {
-                    folderId: notes.app.activeFolderId(),
+                    folderId: notes.folders.activeFolderId(),
                     documentId: notes.app.documentId()
                 };
             })

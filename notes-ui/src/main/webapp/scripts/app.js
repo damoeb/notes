@@ -6,30 +6,9 @@
 
     notes.app = new function () {
 
-        var _activeFolderId = 0;
-        var _defaultFolderId = 0;
         var _documentId = 0;
         var _databaseId = 0;
         var _isContextOnly = false;
-        var _descendants = {};
-
-        this.activeFolderId = function (id) {
-            if (typeof id !== 'undefined') {
-                _activeFolderId = id;
-                // todo sync activefolderid
-//                new notes.model.Database({activeFolderId:id}).save()
-            } else {
-                return _activeFolderId;
-            }
-        };
-
-        this.defaultFolderId = function (id) {
-            if (typeof id !== 'undefined') {
-                _defaultFolderId = id;
-            } else {
-                return _defaultFolderId;
-            }
-        };
 
         this.searchContextOnly = function (isContextOnly) {
             if (typeof isContextOnly !== 'undefined') {
@@ -38,7 +17,7 @@
                 console.log('ContextOnly ' + isContextOnly);
 
                 var label = 'All';
-                if(isContextOnly) {
+                if (isContextOnly) {
                     // todo show folder name
                     label = 'Context';
                 }
@@ -62,14 +41,6 @@
             } else {
                 return _databaseId;
             }
-        };
-
-        this.add$Folder = function ($folder) {
-            _descendants[$folder.getModel().get('id')] = $folder;
-        };
-
-        this.get$Folder = function (folderId) {
-            return _descendants[folderId];
         };
     };
 

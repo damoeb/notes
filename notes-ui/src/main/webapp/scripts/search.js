@@ -30,8 +30,6 @@ $.widget('notes.search', {
         $this.rows = 100;
 
         $('#search-view').show();
-//        $('#folder-view').hide();
-//        $('#document-view').hide();
         $('#document-and-folder-view').hide();
 
         $this._query();
@@ -50,7 +48,7 @@ $.widget('notes.search', {
             '${start}': $this.start,
             '${database}': notes.app.databaseId(),
             '${rows}': $this.rows,
-            '${context}': notes.app.activeFolderId(),
+            '${context}': notes.folders.activeFolderId(),
             '${contextOnly}': notes.app.searchContextOnly()
         };
 

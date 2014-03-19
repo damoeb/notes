@@ -5,10 +5,6 @@
 
 $.widget('notes.databases', {
 
-    options: {
-        databaseId: null
-    },
-
     _create: function () {
         var $self = this;
 
@@ -18,10 +14,6 @@ $.widget('notes.databases', {
     _init: function () {
         var $self = this;
         $self.$tree = null;
-    },
-
-    _getModel: function () {
-        return this.$tree.tree('getModel');
     },
 
     reloadTree: function () {
@@ -47,4 +39,6 @@ $.widget('notes.databases', {
 
         });
     }
+
+
 });

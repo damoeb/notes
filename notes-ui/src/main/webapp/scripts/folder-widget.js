@@ -51,11 +51,11 @@ $.widget('notes.folder', {
         }
 
         // active folder
-        if (notes.app.activeFolderId() === model.get('id')) {
+        if (notes.folders.activeFolderId() === model.get('id')) {
             $target.addClass('active');
         }
 
-        notes.app.add$Folder($self);
+        notes.folders.add$Folder($self);
     },
 
     setExpanded: function (expand) {
@@ -134,7 +134,7 @@ $.widget('notes.folder', {
 
         var folderId = $self.options.model.get('id');
 
-        notes.app.activeFolderId(folderId);
+        notes.folders.activeFolderId(folderId);
 
         $('#databases .active').removeClass('active');
         $self.element.addClass('active');

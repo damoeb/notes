@@ -126,7 +126,7 @@ notes.dialog.document = {
 
                             var bookmark = new notes.model.Bookmark({
                                 url: $input.val(),
-                                folderId: notes.app.activeFolderId()
+                                folderId: notes.folders.activeFolderId()
                             });
                             bookmark.save(null, {success: function () {
 //                            bookmark.save(null, {success: function (newmodel) {

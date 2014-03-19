@@ -17,7 +17,7 @@ $.widget('notes.breadcrumbs', {
         $this.element.empty().append($breadcrumbs);
 
         if (typeof folderId !== 'undefined') {
-            var $folder = notes.app.get$Folder(folderId);
+            var $folder = notes.folders.get$Folder(folderId);
 
             var templateFolder = _.template($('#breadcrumb-folder').html());
 

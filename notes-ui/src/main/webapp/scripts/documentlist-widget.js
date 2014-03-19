@@ -58,7 +58,7 @@ $.widget('notes.documentList', {
             $tmpl.addClass('active');
 
             // call editor
-            $('#editors').editors('editDocument', model.get('id'));
+            notes.editors.edit(model.get('id'));
 
         })
     }

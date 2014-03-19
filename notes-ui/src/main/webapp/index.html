@@ -95,7 +95,8 @@
     <div class="col-lg-5">
         <div class="input-group">
             <div class="input-group-btn">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span id="search-context-label">All</span> <span
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span
+                        id="search-context-label">All</span> <span
                         class="caret"></span></button>
                 <ul class="dropdown-menu">
                     <li role="presentation" class="dropdown-header">Places</li>
@@ -138,7 +139,7 @@
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                             <button type="button" class="btn btn-primary" data-dismiss="modal"
-                                    onclick="$('#editors').editors('newDocument', $('#new-document-title').val())">
+                                    onclick="notes.editors.create($('#new-document-title').val())">
                                 Create
                             </button>
                         </div>
@@ -214,7 +215,7 @@
                     <ul class="nav nav-tabs">
                         <li><a href="#"><i class="fa fa-angle-up"></i></a></li>
                         <li><a href="#"
-                               onclick="notes.dialog.folder.newFolder(new notes.model.Folder({id:notes.app.activeFolderId()}))">New
+                               onclick="notes.dialog.folder.newFolder(new notes.model.Folder({id:notes.folders.activeFolderId()}))">New
                             Folder</a></li>
 
                         <li class="pull-right dropdown">
@@ -907,18 +908,19 @@
 <script src="scripts/model.js"></script>
 <script src="scripts/dialog.js"></script>
 
-<script src="scripts/breadcrumbs.js"></script>
-<script src="scripts/documentlist.js"></script>
+<script src="scripts/breadcrumb-widget.js"></script>
+<script src="scripts/documentlist-widget.js"></script>
 
 <script src="scripts/editors.js"></script>
-<script src="scripts/basiceditor.js"></script>
-<script src="scripts/texteditor.js"></script>
-<script src="scripts/pdfeditor.js"></script>
-<script src="scripts/bookmark.js"></script>
+<script src="scripts/basiceditor-widget.js"></script>
+<script src="scripts/texteditor-widget.js"></script>
+<script src="scripts/pdfeditor-widget.js"></script>
+<script src="scripts/bookmarkeditor-widget.js"></script>
 
 <script src="scripts/tree.js"></script>
 <script src="scripts/databases.js"></script>
-<script src="scripts/folder.js"></script>
+<script src="scripts/folder-widget.js"></script>
+<script src="scripts/folders.js"></script>
 <script src="scripts/search.js"></script>
 
 <!-- endbuild -->

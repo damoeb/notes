@@ -1,4 +1,6 @@
 IN ARBEIT
+- replace editors/databases/search widgetby static function
+  remove app, tree into databases
 - back knopf ist nicht noetig, da bereits durch browser funktion zurueck vorhanden
 - search: auf sidebar facetten anzeigen?
 - search: jedes document soll die node ids ihrer parents idexiert bekommen, damit search-in-folder moeglich wird
@@ -6,6 +8,7 @@ IN ARBEIT
 - tree: darstellung verbessern: colors, icons
 
 OFFEN
+- use folders, databases or documents as helper class
 - test login with >1 accounts
 - recommend module: verknüpfen
 - tree: active folder is not highlighted/working
