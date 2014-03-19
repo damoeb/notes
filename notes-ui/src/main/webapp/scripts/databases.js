@@ -3,54 +3,42 @@
 
 'use strict';
 
-$.widget('notes.databases', {
+(function (notes) {
 
-    _create: function () {
-        var $self = this;
+    notes.databases = {
 
-        $self.reload();
-    },
+        init: function () {
+            this.reload();
+        },
 
-    _init: function () {
-        var $self = this;
-        $self.$tree = null;
-    },
+        reload: function () {
+            var $target = $('#databases');
 
-    reloadTree: function () {
-        this.$tree.tree('reload');
-    },
+            notes.util.jsonCall('GET', REST_SERVICE + '/database', null, null, function (database) {
 
-    reload: function () {
-        var $self = this;
+                var $tree = $('<ol/>', {class: 'tree'}).appendTo(
+                    $target
+                );
 
-        var $target = $self.element.empty();
+                notes.folders.defaultFolderId(database.defaultFolderId);
 
-        notes.util.jsonCall('GET', REST_SERVICE + '/database', null, null, function (database) {
+                notes.util.jsonCall('GET', REST_SERVICE + '/database/${dbId}/roots', {'${dbId}': database.id}, null, function (folders) {
 
-            var $tree = $('<ol/>', {class: 'tree'}).appendTo(
-                $target
-            );
+                    var rootFolders = folders;
 
-            notes.folders.defaultFolderId(database.defaultFolderId);
+                    if (rootFolders && rootFolders.length > 0) {
 
-            notes.util.jsonCall('GET', REST_SERVICE + '/database/${dbId}/roots', {'${dbId}': database.id}, null, function (folders) {
+                        $.each(rootFolders, function (index, rootFolder) {
+                            $('<li/>')
+                                .appendTo($tree)
+                                .folder({
+                                    model: new notes.model.Folder(rootFolder)
+                                });
+                        });
+                    }
+                });
 
-                var rootFolders = folders;
-
-                if (rootFolders && rootFolders.length > 0) {
-
-                    $.each(rootFolders, function (index, rootFolder) {
-                        $('<li/>')
-                            .appendTo($tree)
-                            .folder({
-                                model: new notes.model.Folder(rootFolder)
-                            });
-                    });
-                }
             });
-
-        });
+        }
     }
-
-
-});
+})(notes);

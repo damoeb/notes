@@ -65,7 +65,7 @@ notes.dialog.folder = {
             });
             model.save(null, {
                 success: function () {
-                    $('#databases').databases('reloadTree');
+                    notes.databases.reload();
                 }
             });
         };
