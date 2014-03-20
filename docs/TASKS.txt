@@ -1,6 +1,7 @@
 IN ARBEIT
 - back knopf ist nicht noetig, da bereits durch browser funktion zurueck vorhanden
 - routing: auch schon beim seiten laden, folder werden erst geladen, wenn tree geladen ist
++ leere folder blasser anzeigen
 - search: auf sidebar facetten anzeigen?
 - search: jedes document soll die node ids ihrer parents idexiert bekommen, damit search-in-folder moeglich wird
 - search: auch tags indexieren

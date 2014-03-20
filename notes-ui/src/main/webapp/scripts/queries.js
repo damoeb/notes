@@ -69,7 +69,7 @@
                 '${database}': notes.databases.id(),
                 '${rows}': rows,
                 '${context}': notes.folders.activeFolderId(),
-                '${contextOnly}': notes.app.searchContextOnly()
+                '${contextOnly}': notes.queries.contextOnly()
             };
 
             notes.util.jsonCall('GET', '/notes/rest/search/?query=${query}&database=${database}&start=${start}&rows=${rows}&context=${context}&contextOnly=${contextOnly}', params, null,

@@ -645,7 +645,15 @@
 
 
 <script type="text/template" id="folder-in-tree">
-    <div class="folder level-<%=level %> folder-<%=id %>">
+    <div class="folder level-<%=level %> folder-<%=id %>
+        <%
+        if (documentCount==0) {
+        %>
+        empty
+        <%
+        }
+        %>
+    ">
         <%
         if (!leaf) {
         %>
@@ -908,10 +916,10 @@
 <script src="scripts/documentlist-widget.js"></script>
 
 <script src="scripts/editors.js"></script>
-<script src="scripts/basiceditor-widget.js"></script>
-<script src="scripts/texteditor-widget.js"></script>
-<script src="scripts/pdfeditor-widget.js"></script>
-<script src="scripts/bookmarkeditor-widget.js"></script>
+<script src="scripts/editor-basic-widget.js"></script>
+<script src="scripts/editor-text-widget.js"></script>
+<script src="scripts/editor-pdf-widget.js"></script>
+<script src="scripts/editor-bookmark-widget.js"></script>
 
 <script src="scripts/databases.js"></script>
 <script src="scripts/folder-widget.js"></script>

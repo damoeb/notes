@@ -158,6 +158,11 @@ body {
     margin: 0;
     padding: 0;
 
+    //   dim empty folders
+    .empty > A.name {
+      color: #666666;
+    }
+
     &.active > .folder {
       background-color: #3875d6;
       color: #efefef;
