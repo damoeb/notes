@@ -5109,6 +5109,8 @@ body {
   list-style: none;
   margin: 0;
   padding: 0; }
+  #databases li .empty > A.name {
+    color: #666666; }
   #databases li.active > .folder {
     background-color: #3875d6;
     color: #efefef; }
