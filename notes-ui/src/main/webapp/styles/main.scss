@@ -158,6 +158,11 @@ body {
     margin: 0;
     padding: 0;
 
+    .dropping-document > A {
+      color: red !important;
+      text-decoration: underline;
+    }
+
     //   dim empty folders
     .empty > A.name {
       color: #666666;

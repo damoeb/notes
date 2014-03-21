@@ -43,24 +43,39 @@ $.widget('notes.documentList', {
             notes.util.sortJSONArrayDESC(documents, 'modified');
 
             $.each(documents, function (id, doc) {
-                $($this.template(doc).trim()).appendTo($target);
+                var $rendered = $($this.template(doc).trim()).appendTo($target);
+                $rendered.find('.thumb').draggable({
+                    cursor: 'move',
+                    cursorAt: { top: 5, left: -5 },
+                    helper: function () {
+                        return $('<i class="fa fa-file-o fa-lg"></i>');
+                    },
+                    opacity: 0.6
+                });
             });
         });
-    },
-
-    _render: function (model) {
-
-        return $(this.template(model.attributes).trim()).click(function () {
-
-            var $tmpl = $(this);
-
-            // highlight
-            $tmpl.addClass('active');
-
-            // call editor
-            notes.editors.edit(model.get('id'));
-
-        })
     }
+
+//    _render: function (model) {
+//
+//        return $(this.template(model.attributes).trim()).click(function () {
+//
+//            var $tmpl = $(this);
+//
+//            // highlight
+//            $tmpl.addClass('active');
+//
+//            // call editor
+//            notes.editors.edit(model.get('id'));
+//
+//        }).draggable({
+//            cursor: 'move',
+//            cursorAt: { top: 5, left: -5 },
+//            helper: function () {
+//                return $('<i class="fa fa-file-o fa-lg"></i>');
+//            },
+//            opacity: 0.6
+//        });
+//    }
 
 });

@@ -17,37 +17,70 @@ $.widget('notes.folder', {
         $self.childrenLoaded = false;
     },
     _init: function () {
-        var $self = this;
-        $self._reset();
-        var $target = $self.element.empty();
-        var model = $self.options.model;
+        var $this = this;
+        $this._reset();
+        var $target = $this.element.empty();
+        var model = $this.options.model;
 
         var templateFolder = _.template($('#folder-in-tree').html());
 
         $target.append($(templateFolder(model.attributes).trim()));
 
-        $self.$childrenLayer = $target.find('.children');
-        $self.$toggle = $target.find('.toggle');
+        $this.$childrenLayer = $target.find('.children');
+        $this.$toggle = $target.find('.toggle');
 
         //
         // -- Events ---------------------------------------------------------------------------------------------------
         //
 
-        $self.$toggle.click(function () {
+        $this.$toggle.click(function () {
             //notes.router.navigate('folder/' + model.get('id'));
-            $self.setExpanded(!model.get('expanded'));
+            $this.setExpanded(!model.get('expanded'));
+            $this._syncModel();
         });
 
-//        $target.find('.name').click(function () {
-//            $self.loadDocuments();
-//        });
+        /**
+         * Drap and Drop. This section will cause folder to expand if a droppable thing is hovered longer than <code>EXPAND_TIME</code>
+         */
+
+        var $folderOnly = $target.find('.folder');
+
+        var EXPAND_TIMEOUT = 1000;
+
+        if (!model.get('leaf')) {
+
+            var hover = false;
+            $folderOnly.mouseenter(function () {
+                hover = true;
+//                console.debug('in '+model.get('name'));
+                setTimeout(function () {
+                    if (hover && $folderOnly.hasClass('dropping-document') && !model.get('expanded')) {
+                        console.log('expand ' + model.get('name'));
+                        $this.setExpanded(true);
+                        $this._syncModel();
+                    }
+                }, EXPAND_TIMEOUT);
+            });
+            $folderOnly.mouseleave(function () {
+                hover = false;
+//                console.debug('out '+model.get('name'));
+            });
+        }
+
+        $folderOnly.droppable({hoverClass: 'dropping-document', drop: function (event, ui) {
+            var $document = $(ui.draggable);
+
+            console.log('drop in ' + model.get('name'));
+            notes.documents.moveTo($document, model);
+
+        }});
 
         //
         // -- Triggers -------------------------------------------------------------------------------------------------
         //
 
         if (model.get('expanded')) {
-            $self.setExpanded(true);
+            $this.setExpanded(true);
         }
 
         // active folder
@@ -55,9 +88,12 @@ $.widget('notes.folder', {
             $target.addClass('active');
         }
 
-        notes.folders.add$Folder($self);
+        notes.folders.add$Folder($this);
     },
 
+    _syncModel: function () {
+        this.options.model.save();
+    },
     setExpanded: function (expand) {
 
         var $self = this;
@@ -66,9 +102,7 @@ $.widget('notes.folder', {
             throw 'cannot expand folder, cause its a leaf';
         }
 
-        $self.options.model.set('expanded', expand).save();
-
-        var folderId = $self.options.model.get('id');
+        $self.options.model.set('expanded', expand);
 
         if (expand) {
 

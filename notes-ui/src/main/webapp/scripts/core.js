@@ -119,7 +119,7 @@
             },
 
             document: function (docId) {
-                console.log('open doc ' + docId);
+                console.log('open document #' + docId);
                 notes.editors.edit(docId);
             },
 
@@ -164,7 +164,7 @@
 
                 data.formData = {
                     folderId: notes.folders.activeFolderId(),
-                    documentId: notes.app.documentId()
+                    documentId: notes.documents.currentDocumentId()
                 };
             })
             .bind('fileuploaddone', function (e, xhr) {

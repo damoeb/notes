@@ -1,29 +1,26 @@
 IN ARBEIT
 - back knopf ist nicht noetig, da bereits durch browser funktion zurueck vorhanden
-- routing: auch schon beim seiten laden, folder werden erst geladen, wenn tree geladen ist
-+ leere folder blasser anzeigen
+- routing: folder nur laden, wenn sie auch angezeigt werden. bei suche nicht. auch schon beim seiten laden, folder werden erst geladen, wenn tree geladen ist
 - search: auf sidebar facetten anzeigen?
 - search: jedes document soll die node ids ihrer parents idexiert bekommen, damit search-in-folder moeglich wird
 - search: auch tags indexieren
 - tree: darstellung verbessern: colors, icons
 
 OFFEN
-- remove app.js
+- smart folder mit suchterm
+- pfad muss schon am anfang ausgewertet werden: wird er, aber ueberschrieben
+- verlinken zwischen docs
+- tags in folder anzeigen (smart folder using search)
 - test login with >1 accounts
 - recommend module: verknüpfen
-- tree: active folder is not highlighted/working
 - ajax calls should show error-notification
 - search: score is not valid (e.g. 123)
-- tags probleme beim indexieren
 - when searching: 2 documents are not indexed yet
 - treeview und suchergebnisse entsprechend der bilder in inspiration
 - eintraege in liste sollen markierbar sein?
 - drag and drop
 - active folder is not synced
 - BasicDocument, User referenzieren FingerPrint aus Array von Strings
-- navigation nur über pfad
-- pfad muss schon am anfang ausgewertet werden: wird er, aber ueberschrieben
-- verlinken verbessern
 - tags redundanz entfernen, datenbank model verbessern
 - use uniqueHash instead of document id
 - viewer for unknown type

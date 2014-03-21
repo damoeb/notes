@@ -19,7 +19,7 @@
             $('#document-and-folder-view').show();
             $('#search-view').hide();
 
-            notes.app.documentId(documentId);
+            notes.documents.currentDocumentId(documentId);
 
             notes.util.jsonCall('GET', REST_SERVICE + '/document/${documentId}', {'${documentId}': documentId}, null, function (document) {
 

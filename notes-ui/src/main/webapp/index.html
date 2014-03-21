@@ -646,15 +646,8 @@
 
 <script type="text/template" id="folder-in-tree">
     <div class="folder level-<%=level %> folder-<%=id %>
-        <%
-        if (documentCount==0) {
-        %>
-        empty
-        <%
-        }
-        %>
-    ">
-        <%
+        <% if (documentCount==0) { %>empty<% } %>">
+    <%
         if (!leaf) {
         %>
         <a href="#"><i class="fa fa-fw fa-lg fa-caret-right toggle"></i></a>
@@ -926,7 +919,7 @@
 <script src="scripts/folders.js"></script>
 <script src="scripts/queries.js"></script>
 
-<script src="scripts/app.js"></script>
+<script src="scripts/documents.js"></script>
 <script src="scripts/core.js"></script>
 <script src="scripts/model.js"></script>
 <script src="scripts/dialog.js"></script>
