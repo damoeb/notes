@@ -5109,6 +5109,9 @@ body {
   list-style: none;
   margin: 0;
   padding: 0; }
+  #databases li .dropping-document > A {
+    color: red !important;
+    text-decoration: underline; }
   #databases li .empty > A.name {
     color: #666666; }
   #databases li.active > .folder {
