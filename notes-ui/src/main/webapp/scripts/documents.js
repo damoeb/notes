@@ -40,11 +40,16 @@
             };
 
             var onSuccess = function () {
-                //todo refresh new and old folder
-                $('#folder-' + newFolderId).folder('incrDocumentCount');
-                $('#folder-' + oldFolderId).folder('decrDocumentCount');
-                // remove in list
-                noty({text: 'Moved to ' + notes.folders.get$Folder(newFolderId).getModel().get('name')});
+
+//              todo bad style to fetch parent first
+                $('.folder-' + newFolderId).parent().folder('updateDocCount', 1);
+                $('.folder-' + oldFolderId).parent().folder('updateDocCount', -1);
+
+                $('.document-' + document.id).remove();
+
+                var message = 'Moved to <a href="#folder:' + newFolderId + '">' + notes.folders.get$Folder(newFolderId).getModel().get('name') + '</a>';
+
+                noty({type: 'success', text: message});
             };
 
             var onError = function () {

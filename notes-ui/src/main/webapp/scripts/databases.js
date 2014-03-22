@@ -14,7 +14,7 @@
         },
 
         reload: function () {
-            var $target = $('#databases');
+            var $target = $('#databases').empty();
 
             notes.util.jsonCall('GET', REST_SERVICE + '/database', null, null, function (database) {
 

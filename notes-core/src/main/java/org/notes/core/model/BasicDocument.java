@@ -35,7 +35,7 @@ import java.util.*;
 @NamedQueries({
         @NamedQuery(name = Document.QUERY_BY_ID, query = "SELECT a FROM BasicDocument a where a.id=:ID"),
         @NamedQuery(name = Document.QUERY_TRIGGER, query = "SELECT a FROM BasicDocument a where a.trigger in (:TRIGGER)"),
-        @NamedQuery(name = BasicDocument.QUERY_IN_FOLDER, query = "SELECT new BasicDocument(a.id, a.uniqueHash, a.title, a.outline, a.kind, a.modified, a.star, a.thumbnailUrl, a.tagsJson) FROM BasicDocument a where a.folderId=:ID AND a.deleted=false")
+        @NamedQuery(name = BasicDocument.QUERY_IN_FOLDER, query = "SELECT new BasicDocument(a.id, a.uniqueHash, a.title, a.outline, a.kind, a.modified, a.star, a.thumbnailUrl, a.tagsJson, a.folderId) FROM BasicDocument a where a.folderId=:ID AND a.deleted=false")
 })
 @Inheritance(strategy = InheritanceType.JOINED)
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
@@ -141,7 +141,7 @@ public class BasicDocument implements Document {
         this.kind = kind;
     }
 
-    public BasicDocument(Long id, String uniqueHash, String title, String outline, Kind kind, Date modified, boolean star, String thumbnailUrl, String tagsJson) {
+    public BasicDocument(Long id, String uniqueHash, String title, String outline, Kind kind, Date modified, boolean star, String thumbnailUrl, String tagsJson, Long folderId) {
         this.id = id;
         this.uniqueHash = uniqueHash;
         this.title = title;
@@ -150,6 +150,7 @@ public class BasicDocument implements Document {
         this.modified = modified;
         this.thumbnailUrl = thumbnailUrl;
         this.star = star;
+        this.folderId = folderId;
         if (StringUtils.isNotBlank(tagsJson)) {
             try {
                 StandardTag[] tags = new ObjectMapper().readValue(tagsJson, StandardTag[].class);

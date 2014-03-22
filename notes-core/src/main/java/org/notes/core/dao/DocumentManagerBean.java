@@ -466,8 +466,49 @@ public class DocumentManagerBean implements DocumentManager {
     }
 
     @Override
-    public void moveTo(long documentId, long folderId) throws NotesException {
-        // todo implement
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void moveTo(Long documentId, Long toFolderId) throws NotesException {
+
+        try {
+
+            if (documentId == null) {
+                throw new IllegalArgumentException("documentId is null or empty");
+            }
+            if (toFolderId == null) {
+                throw new IllegalArgumentException("folderId is null or empty");
+            }
+
+            BasicDocument document = _get(documentId);
+
+//            todo check permissions
+
+            Long fromFolderId = document.getFolderId();
+
+            Session session = em.unwrap(Session.class);
+            StandardFolder fromFolderProxy = (StandardFolder) session.load(StandardFolder.class, fromFolderId);
+            if (fromFolderProxy == null) {
+                throw new IllegalArgumentException(String.format("folder with id %s is null", fromFolderId));
+            }
+
+            fromFolderProxy.getDocuments().remove(document);
+            fromFolderProxy.setDocumentCount(fromFolderProxy.getDocumentCount() - 1);
+            em.merge(fromFolderProxy);
+
+            StandardFolder toFolderProxy = (StandardFolder) session.load(StandardFolder.class, toFolderId);
+            if (toFolderProxy == null) {
+                throw new IllegalArgumentException(String.format("folder with id %s is null", toFolderId));
+            }
+
+            toFolderProxy.getDocuments().add(document);
+            toFolderProxy.setDocumentCount(toFolderProxy.getDocumentCount() + 1);
+            em.merge(toFolderProxy);
+
+//          todo re-index
+
+        } catch (Exception e) {
+            throw new NotesException(String.format("Cannot move document #%s to folder %s. Reason: %s", documentId, toFolderId, e.getMessage()));
+        }
+
     }
 
     private void validateUrl(String url) throws NotesException {

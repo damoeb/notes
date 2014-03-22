@@ -350,7 +350,7 @@
 
 <script type="text/template" id="fulltext">
 
-    <div class="panel-group" id="panel-fulltext" style="margin-top: 60px;">
+    <div class="panel-group" id="panel-fulltext" style="margin-top: 60px; display:none;">
         <div class="panel" style="box-shadow: none">
             <div class="panel-heading" style="background-color:none;">
                 <h4 class="panel-title">
@@ -671,7 +671,7 @@
 
 <script type="text/template" id="document-in-folder-view">
 
-    <div class="doc doc-id-<%=uniqueHash %> row">
+    <div class="doc document-<%=id %> row">
         <div style="float:left; margin-right: 15px;">
             <div class="thumb thumb-<%=title.substring(0,1).toLowerCase() %>"
                     ><%=title.substring(0,1).toUpperCase() %>
@@ -729,7 +729,7 @@
     <!--<div style="color:#999">on <%=numFoundInGroup %> pages</div>-->
     <!--<% } // if %>-->
 
-    <div class="doc doc-id-<%=uniqueHash %> row">
+    <div class="doc document-<%=id %> row">
         <div style="float:left; margin-right: 15px;">
             <div class="thumb thumb-<%=title.substring(0,1).toLowerCase() %>"
                     ><%=title.substring(0,1).toUpperCase() %>

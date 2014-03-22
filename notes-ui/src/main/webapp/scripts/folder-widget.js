@@ -88,16 +88,16 @@ $.widget('notes.folder', {
             $this.setExpanded(true);
         }
 
-        // active folder
-        if (notes.folders.activeFolderId() === model.get('id')) {
-            $target.addClass('active');
-        }
-
         notes.folders.add$Folder($this);
     },
 
     _syncModel: function () {
         this.options.model.save();
+    },
+    updateDocCount: function (delta) {
+        var model = this.options.model;
+        model.set('documentCount', model.get('documentCount') + delta);
+        this._init();
     },
     setExpanded: function (expand) {
 

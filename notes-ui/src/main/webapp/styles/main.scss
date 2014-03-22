@@ -168,7 +168,7 @@ body {
       color: #666666;
     }
 
-    &.active > .folder {
+    .folder.active {
       background-color: #3875d6;
       color: #efefef;
       A {
