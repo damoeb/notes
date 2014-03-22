@@ -17,6 +17,7 @@
         <module>notes-search</module>
         <module>notes-recommend</module>
         <module>notes-maven-plugin</module>
+        <module>notes-http-proxy</module>
     </modules>
 
 </project>
