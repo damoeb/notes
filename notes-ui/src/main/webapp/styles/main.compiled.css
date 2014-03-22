@@ -1,4 +1,4 @@
-/* normalize.css v2.1.3 | MIT License | git.io/normalize */
+/*! normalize.css v2.1.3 | MIT License | git.io/normalize */
 article,
 aside,
 details,
@@ -5114,10 +5114,10 @@ body {
     text-decoration: underline; }
   #databases li .empty > A.name {
     color: #666666; }
-  #databases li.active > .folder {
+  #databases li .folder.active {
     background-color: #3875d6;
     color: #efefef; }
-    #databases li.active > .folder A {
+    #databases li .folder.active A {
       color: #efefef; }
   #databases li .count {
     color: #bdbdbd;
