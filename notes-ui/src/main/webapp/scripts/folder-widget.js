@@ -24,17 +24,22 @@ $.widget('notes.folder', {
 
         var templateFolder = _.template($('#folder-in-tree').html());
 
-        $target.append($(templateFolder(model.attributes).trim()));
+        var $rendered = $(templateFolder(model.attributes).trim());
+        $target.append($rendered);
 
         $this.$childrenLayer = $target.find('.children');
         $this.$toggle = $target.find('.toggle');
+
+        // Lazy Loading: folder is already set active, but not yet loaded
+        if (notes.folders.activeFolderId() === model.get('id')) {
+            $rendered.addClass('active');
+        }
 
         //
         // -- Events ---------------------------------------------------------------------------------------------------
         //
 
         $this.$toggle.click(function () {
-            //notes.router.navigate('folder/' + model.get('id'));
             $this.setExpanded(!model.get('expanded'));
             $this._syncModel();
         });
@@ -68,10 +73,10 @@ $.widget('notes.folder', {
         }
 
         $folderOnly.droppable({hoverClass: 'dropping-document', drop: function (event, ui) {
-            var $document = $(ui.draggable);
+            var document = $(ui.draggable).data('document');
 
             console.log('drop in ' + model.get('name'));
-            notes.documents.moveTo($document, model);
+            notes.documents.moveTo(document, model);
 
         }});
 
@@ -161,24 +166,5 @@ $.widget('notes.folder', {
 
     getParent: function () {
         return this.options.parent;
-    },
-
-    loadDocuments: function () {
-        var $self = this;
-
-        var folderId = $self.options.model.get('id');
-
-        notes.folders.activeFolderId(folderId);
-
-        $('#databases .active').removeClass('active');
-        $self.element.addClass('active');
-
-        // todo save document when closed
-        $('#document-list').documentList('refresh', folderId);
-
-        $('#document-view').hide();
-        $('#folder-view').show();
-        $('#document-and-folder-view').show();
-        $('#search-view').hide();
     }
 });

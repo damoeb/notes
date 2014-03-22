@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
+import org.notes.common.interfaces.Document;
 import org.notes.common.interfaces.FolderManager;
 import org.notes.common.model.Database;
 import org.notes.common.model.Folder;
@@ -22,6 +23,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 //@LocalBean
@@ -116,6 +118,32 @@ public class FolderManagerBean implements FolderManager {
 
         } catch (Throwable t) {
             throw new NotesException("get children " + folderId, t);
+        }
+    }
+
+    @Override
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public List<Folder> getParents(Document document) throws NotesException {
+        try {
+
+            if (document == null) {
+                throw new IllegalArgumentException("document is null");
+            }
+
+            List<Folder> parents = new LinkedList<>();
+
+            Long folderId = document.getFolderId();
+            while (folderId != null) {
+
+                Folder parent = getFolder(folderId);
+                folderId = parent.getId();
+
+                parents.add(parent);
+            }
+
+            return parents;
+        } catch (Throwable t) {
+            throw new NotesException("getParents of " + document, t);
         }
     }
 

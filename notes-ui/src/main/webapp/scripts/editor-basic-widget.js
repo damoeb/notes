@@ -148,8 +148,9 @@ $.widget('notes.basiceditor', {
         var $tagsLayer = $this.element.find('.document-tags').empty();
 
         if (model.has('tags') && model.get('tags').length > 0) {
-            // todo sort tags
-            $.each(model.get('tags'), function (index, tag) {
+
+            var sortedTags = notes.util.sortJSONArrayASC(model.get('tags'), 'name');
+            $.each(sortedTags, function (index, tag) {
                 var $tag = $('<a/>', {href: '#', class: 'label label-default', title: 'Remove tag', text: tag.name}).click(function () {
                     $this.fnRemoveTag(tag.name);
                 });

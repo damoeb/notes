@@ -29,4 +29,6 @@ public interface DocumentManager {
     PdfDocument uploadDocument(List<FileItem> items) throws NotesException;
 
     BookmarkDocument bookmark(BookmarkDocument bookmark, Folder folder) throws NotesException;
+
+    void moveTo(long documentId, long folderId) throws NotesException;
 }

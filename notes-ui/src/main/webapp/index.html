@@ -647,7 +647,7 @@
 <script type="text/template" id="folder-in-tree">
     <div class="folder level-<%=level %> folder-<%=id %>
         <% if (documentCount==0) { %>empty<% } %>">
-    <%
+        <%
         if (!leaf) {
         %>
         <a href="#"><i class="fa fa-fw fa-lg fa-caret-right toggle"></i></a>
@@ -842,6 +842,7 @@
 <script src="bower_components/noty/js/noty/jquery.noty.js"></script>
 <script type="text/javascript">
     $(function () {
+        // todo dont't display full width
         $.noty.defaults = {
             layout: 'top',
             theme: 'defaultTheme',
@@ -855,7 +856,7 @@
                 easing: 'swing',
                 speed: 500 // opening & closing animation speed
             },
-            timeout: 1000, // delay for closing event. Set false for sticky notifications
+            timeout: 5000, // delay for closing event. Set false for sticky notifications
             force: false, // adds notification to the beginning of queue when set to true
             modal: false,
             maxVisible: 5, // you can set max visible notification for dismissQueue true option,

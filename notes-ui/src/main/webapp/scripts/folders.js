@@ -12,9 +12,14 @@
 
         activeFolderId: function (id) {
             if (typeof id !== 'undefined') {
-                this._activeFolderId = id;
-                // todo sync activefolderid
+                this._activeFolderId = parseInt(id);
+
+                console.log('active folder ' + id)
+                $('#databases .active').removeClass('active');
+                $('.folder-' + id).addClass('active');
+
 //                new notes.model.Database({activeFolderId:id}).save()
+                // todo sync activefolderid
             } else {
                 return this._activeFolderId;
             }
@@ -22,7 +27,7 @@
 
         defaultFolderId: function (id) {
             if (typeof id !== 'undefined') {
-                this._defaultFolderId = id;
+                this._defaultFolderId = parseInt(id);
             } else {
                 return this._defaultFolderId;
             }
@@ -34,6 +39,22 @@
 
         get$Folder: function (folderId) {
             return this._descendants[folderId];
+        },
+
+        open: function (folderId) {
+
+            // load documents
+            notes.documents.fetch(folderId);
+
+            // show in tree
+            var $folder = this.get$Folder(folderId);
+            if (typeof  $folder === 'undefined') {
+                console.log('Folder ' + folderId + ' does not exist');
+                // todo fetch missing tree nodes
+
+            } else {
+                // todo open folder
+            }
         }
     };
 

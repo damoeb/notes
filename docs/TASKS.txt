@@ -1,4 +1,5 @@
 IN ARBEIT
+- dropping doc style only via css mit :hover
 - back knopf ist nicht noetig, da bereits durch browser funktion zurueck vorhanden
 - routing: folder nur laden, wenn sie auch angezeigt werden. bei suche nicht. auch schon beim seiten laden, folder werden erst geladen, wenn tree geladen ist
 - search: auf sidebar facetten anzeigen?
@@ -7,6 +8,9 @@ IN ARBEIT
 - tree: darstellung verbessern: colors, icons
 
 OFFEN
+- let tree be scrollable
+- notifications fuer operationen move, save
+  errors must be closed manually, infos hide after 5 sec
 - smart folder mit suchterm
 - pfad muss schon am anfang ausgewertet werden: wird er, aber ueberschrieben
 - verlinken zwischen docs
@@ -17,8 +21,6 @@ OFFEN
 - search: score is not valid (e.g. 123)
 - when searching: 2 documents are not indexed yet
 - treeview und suchergebnisse entsprechend der bilder in inspiration
-- eintraege in liste sollen markierbar sein?
-- drag and drop
 - active folder is not synced
 - BasicDocument, User referenzieren FingerPrint aus Array von Strings
 - tags redundanz entfernen, datenbank model verbessern

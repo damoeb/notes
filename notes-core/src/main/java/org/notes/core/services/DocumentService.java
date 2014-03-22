@@ -62,6 +62,19 @@ public class DocumentService {
         return NotesResponse.ok(result);
     }
 
+    @PUT
+    @MethodCache
+    @ServiceMetric
+    @Path(value = "/move/{documentId}/{folderId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public NotesResponse moveDocument(
+            @PathParam("documentId") long documentId,
+            @PathParam("folderId") long folderId
+    ) throws Exception {
+        documentManager.moveTo(documentId, folderId);
+        return NotesResponse.ok();
+    }
+
     @GET
     @MethodCache
     @ServiceMetric

@@ -125,7 +125,7 @@
 
             folder: function (folderId) {
                 console.log('open folder ' + folderId);
-                $('.folder-' + folderId).parent().folder('loadDocuments');
+                notes.folders.open(folderId);
             }
         });
 

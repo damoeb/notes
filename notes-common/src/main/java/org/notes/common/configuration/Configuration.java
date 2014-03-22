@@ -31,6 +31,7 @@ public class Configuration {
     public static final String VERSION = "notes.version";
 
     public static final String SOLR_SERVER = "notes.solr.server-url";
+    public static final String SOLR_COMMIT_TIMEOUT = "notes.solr.commit-timeout";
 
     public static final String CMD_PHANTOM_JS = "notes.cmd.phantomjs";
     public static final String CMD_RASTERIZE_JS = "notes.cmd.rasterizejs";

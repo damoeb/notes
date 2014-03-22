@@ -79,7 +79,8 @@ public class DocumentManagerBean implements DocumentManager {
                 }
             }
 
-            document.setTrigger(Trigger.INDEX);
+//            document.setTrigger(Trigger.INDEX);
+            indexDocument(document);
 
             BasicDocument basicDocument = _createDocument(document, inFolder);
             Hibernate.initialize(basicDocument.getTags());
@@ -90,6 +91,44 @@ public class DocumentManagerBean implements DocumentManager {
         } catch (Throwable t) {
             throw new NotesException("add document", t);
         }
+    }
+
+    private void indexDocument(BasicDocument document) {
+////        String destinationName = "queue/test";
+////        Context ic = null;
+////        ConnectionFactory cf = null;
+//        Connection connection =  null;
+//
+//        try {
+////            ic = new InitialContext();
+////
+////            cf = (ConnectionFactory)ic.lookup("/ConnectionFactory");
+////            javax.jms.Queue queue = (javax.jms.Queue) ic.lookup(destinationName);
+//
+//            connection = cf.createConnection();
+//            javax.jms.Session session = connection.createSession(false, javax.jms.Session.AUTO_ACKNOWLEDGE);
+//            MessageProducer publisher = session.createProducer(queue);
+//
+//            connection.start();
+//
+//            TextMessage message = session.createTextMessage("Hello AS 7 !");
+//            publisher.send(message);
+//
+//        }
+//        catch (Exception exc) {
+//            exc.printStackTrace();
+//        }
+//        finally {
+//
+//
+//            if (connection != null)   {
+//                try {
+//                    connection.close();
+//                } catch (JMSException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
     }
 
     private BasicDocument _createDocument(BasicDocument document, Folder inFolder) throws NotesException {
@@ -215,7 +254,8 @@ public class DocumentManagerBean implements DocumentManager {
 
                 copyAttributes(ref, document);
 
-                document.setTrigger(Trigger.INDEX);
+//                document.setTrigger(Trigger.INDEX);
+                indexDocument(document);
 
                 em.merge(document);
                 em.flush();
@@ -266,7 +306,8 @@ public class DocumentManagerBean implements DocumentManager {
 
                 document.setText(ref.getText());
 
-                document.setTrigger(Trigger.INDEX);
+//                document.setTrigger(Trigger.INDEX);
+                indexDocument(document);
 
                 em.merge(document);
                 em.flush();
@@ -422,6 +463,11 @@ public class DocumentManagerBean implements DocumentManager {
         } catch (Throwable t) {
             throw new NotesException("bookmark failed: " + t.getMessage(), t);
         }
+    }
+
+    @Override
+    public void moveTo(long documentId, long folderId) throws NotesException {
+        // todo implement
     }
 
     private void validateUrl(String url) throws NotesException {
