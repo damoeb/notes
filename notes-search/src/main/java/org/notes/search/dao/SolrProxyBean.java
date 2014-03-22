@@ -24,16 +24,15 @@ import javax.ejb.TransactionAttributeType;
 @Stateless
 @NotesInterceptors
 @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-public class SearchManagerBean implements SearchManager {
+public class SolrProxyBean implements SearchManager {
 
-    private static final Logger LOGGER = Logger.getLogger(SearchManagerBean.class);
+    private static final Logger LOGGER = Logger.getLogger(SolrProxyBean.class);
 
     @ConfigurationProperty(value = Configuration.SOLR_SERVER, mandatory = true)
     private String solrUrl = "http://localhost:8080/solr-4.5.1";
 
     /**
      * {@inheritDoc}
-     *
      */
     @Override
     public SearchResponse query(String queryString, Integer start, Integer rows, Long databaseId, Integer currentFolderId, Boolean contextOnly) throws NotesException {
