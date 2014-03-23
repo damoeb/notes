@@ -149,7 +149,9 @@ $.widget('notes.basiceditor', {
 
         if (model.has('tags') && model.get('tags').length > 0) {
 
-            var sortedTags = notes.util.sortJSONArrayASC(model.get('tags'), 'name');
+            var sortedTags = model.get('tags');
+            notes.util.sortJSONArrayASC(sortedTags, 'name');
+
             $.each(sortedTags, function (index, tag) {
                 var $tag = $('<a/>', {href: '#', class: 'label label-default', title: 'Remove tag', text: tag.name}).click(function () {
                     $this.fnRemoveTag(tag.name);
