@@ -4,7 +4,6 @@ import org.apache.commons.fileupload.FileItem;
 import org.notes.common.exceptions.NotesException;
 import org.notes.common.model.Folder;
 import org.notes.core.model.BasicDocument;
-import org.notes.core.model.BookmarkDocument;
 import org.notes.core.model.PdfDocument;
 import org.notes.core.model.TextDocument;
 
@@ -27,8 +26,6 @@ public interface DocumentManager {
     BasicDocument updateTextDocument(TextDocument txtRef) throws NotesException;
 
     PdfDocument uploadDocument(List<FileItem> items) throws NotesException;
-
-    BookmarkDocument bookmark(BookmarkDocument bookmark, Folder folder) throws NotesException;
 
     void moveTo(Long documentId, Long folderId) throws NotesException;
 }

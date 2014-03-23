@@ -29,6 +29,7 @@
 
                 switch (document.kind.toLowerCase().trim()) {
                     case 'text':
+                    case 'bookmark':
                         console.log('edit text-document');
                         $content.texteditor({
                             model: new notes.model.TextDocument(document)
@@ -38,12 +39,6 @@
                         console.log('edit pdf-document');
                         $content.pdfeditor({
                             model: new notes.model.BasicDocument(document)
-                        });
-                        break;
-                    case 'bookmark':
-                        console.log('edit bookmark');
-                        $content.bookmark({
-                            model: new notes.model.Bookmark(document)
                         });
                         break;
                     default:

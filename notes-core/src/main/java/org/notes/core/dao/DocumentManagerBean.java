@@ -422,51 +422,6 @@ public class DocumentManagerBean implements DocumentManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public BookmarkDocument bookmark(BookmarkDocument ref, Folder inFolder) throws NotesException {
-
-        try {
-
-            LOGGER.info("bookmark document");
-
-            if (ref == null) {
-                throw new NotesException("bookmark is invalid");
-            }
-
-            validateUrl(ref.getUrl());
-
-            if (inFolder == null || inFolder.getId() == 0) {
-                inFolder = databaseManager.getDatabaseOfUser().getDefaultFolder();
-            } else {
-                if (!em.contains(inFolder)) {
-                    inFolder = folderManager.getFolder(inFolder.getId());
-                }
-            }
-
-            BookmarkDocument document = new BookmarkDocument();
-            document.setUrl(ref.getUrl());
-            document.setTitle(ref.getUrl());
-
-//            document.setTrigger(Trigger.HARVEST);
-
-            document = (BookmarkDocument) _createDocument(document, inFolder);
-
-//            extract text
-//            to pdf -> to tmp storage
-//            annotate/crop on client
-
-            Hibernate.initialize(document.getTags());
-
-            return document;
-
-        } catch (NotesException t) {
-            throw t;
-        } catch (Throwable t) {
-            throw new NotesException("bookmark failed: " + t.getMessage(), t);
-        }
-    }
-
-    @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void moveTo(Long documentId, Long toFolderId) throws NotesException {
 
         try {

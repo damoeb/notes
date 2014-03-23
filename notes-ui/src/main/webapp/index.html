@@ -139,8 +139,8 @@
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                             <button type="button" class="btn btn-primary" data-dismiss="modal"
-                                    onclick="notes.editors.create($('#new-document-title').val())">
-                                Continue
+                                    onclick="notes.documents.create($('#new-document-title').val())">
+                            Continue
                             </button>
                         </div>
                     </div>
@@ -163,41 +163,7 @@
                 <li role="presentation">
                     <a role="menuitem" tabindex="-1" href="#" onclick="$('#file-upload').click()">File</a>
                 </li>
-                <li role="presentation">
-                    <a role="menuitem" tabindex="-1" href="#" data-toggle="modal"
-                       data-target="#create-webclipping-modal">Web</a>
-                </li>
             </ul>
-
-            <div class="modal" id="create-webclipping-modal" tabindex="-1" role="dialog" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal"
-                                    aria-hidden="true">&times;</button>
-                            <h4 class="modal-title">Website</h4>
-                        </div>
-                        <div class="modal-body">
-                            <p><input name="name" type="text" placeholder="http://"
-                                      id="webclipping-url" class="form-control"></p>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-default" data-dismiss="modal"
-                                    onclick="notes.documents.bookmark($('#webclipping-url').val())">Entire page
-                            </button>
-                            <button type="button" class="btn btn-primary" data-dismiss="modal"
-                                    onclick="notes.documents.webclipper($('#webclipping-url').val())">
-                                Continue
-                            </button>
-                        </div>
-                    </div>
-                    <!-- /.modal-content -->
-                </div>
-                <!-- /.modal-dialog -->
-            </div>
-            <!-- /.modal -->
-
 
         </div>
         <!-- /dropdown -->
@@ -543,7 +509,7 @@
     <div class="col-lg-7">
 
         <div>
-            <h3 class="field-title editable-simple"><%= title %></h3>
+            <h4 class="field-title editable-simple"><%= title %></h4>
 
             <div style="margin-top: 10px; line-height:20px; min-height: 100px;" class="field-text editable-complex">
                 <%
@@ -571,32 +537,6 @@
 
 </script>
 <!-- /text editor -->
-
-<script type="text/template" id="bookmark-editor">
-
-    <div class="col-lg-9">
-        <% include navigation %>
-    </div>
-
-    <div class="col-lg-7">
-
-        <div>
-            <h3 class="field-title editable-simple"><%= title %></h3>
-
-            <div style="margin-top: 10px; line-height:20px;" class="field-url"><a href="<%= url %>"><%= url %></a></div>
-
-        </div>
-
-        <% include fulltext %>
-        <% include essence %>
-        <% include recommendations %>
-
-    </div>
-
-    <% include base-editor %>
-
-</script>
-<!-- /bookmark editor -->
 
 
 <script type="text/template" id="pdf-editor">
@@ -627,7 +567,7 @@
     <div class="col-lg-7">
 
         <div>
-            <h3 class="field-title editable-simple"><%= title %></h3>
+            <h4 class="field-title editable-simple"><%= title %></h4>
 
             <div class="pdf-container">
                 <!-- generated -->
@@ -940,7 +880,6 @@
 <script src="scripts/editor-basic-widget.js"></script>
 <script src="scripts/editor-text-widget.js"></script>
 <script src="scripts/editor-pdf-widget.js"></script>
-<script src="scripts/editor-bookmark-widget.js"></script>
 
 <script src="scripts/databases.js"></script>
 <script src="scripts/folder-widget.js"></script>

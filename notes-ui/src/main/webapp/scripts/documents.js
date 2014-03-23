@@ -16,14 +16,15 @@
             }
         },
 
-        bookmark: function (url) {
-            // redirect to patched website
-//            location.href = '/notes/rest/proxy/?url='+encodeURI(url);
-        },
+        create: function (titleOrUrl) {
 
-        webclipper: function (url) {
-            // redirect to patched website
-            location.href = '/notes/rest/proxy/?url=' + encodeURI(url);
+            var isUrl = titleOrUrl.indexOf('http://') == 0 || titleOrUrl.indexOf('https://') == 0;
+            if (isUrl) {
+                // redirect to patched website
+                location.href = '/notes/rest/proxy/?url=' + encodeURI(titleOrUrl);
+            } else {
+                notes.editors.create(titleOrUrl);
+            }
         },
 
         fetch: function (folderId) {

@@ -43,7 +43,11 @@ if (typeof window.jQuery === 'undefined') {
         },
         saveQuote: function () {
             // todo add site url to text
-            var document = {title: $('title').text(), text: this.getSelectionHtml()};
+            var document = {
+                title: $('title').text(),
+                text: this.getSelectionHtml(),
+                kind: 'BOOKMARK'
+            };
 
             // save doc
             $.ajax({

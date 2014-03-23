@@ -292,7 +292,7 @@ public class BasicDocument implements Document {
         return kind;
     }
 
-    protected void setKind(Kind kind) {
+    public void setKind(Kind kind) {
         this.kind = kind;
     }
 
