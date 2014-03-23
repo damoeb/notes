@@ -148,9 +148,6 @@
 
         // -- Menu -- ------------------------------------------------------------------------------------------
 
-        $('#import-document')
-            .click(notes.dialog.document.import);
-
         // todo if file is dropped to document and upload started -> block screen or other indicator
 //            var overallProgress = $('#fileupload').fileupload('progress');
 //            var activeUploads = $('#fileupload').fileupload('active');

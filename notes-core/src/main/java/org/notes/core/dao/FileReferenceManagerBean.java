@@ -2,7 +2,6 @@ package org.notes.core.dao;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.notes.common.configuration.NotesInterceptors;
@@ -18,7 +17,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -161,42 +159,42 @@ public class FileReferenceManagerBean implements FileReferenceManager {
         return DigestUtils.md5Hex(stream);
     }
 
-    @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public StandardFileReference storeTemporary(String pathToSnapshot) throws NotesException {
-        try {
-
-            File resource = new File(pathToSnapshot);
-
-            String checksum = getChecksum(new FileInputStream(resource));
-
-            StandardFileReference reference = find(checksum, 0);
-
-            if (reference != null) {
-                em.merge(reference); // update date
-                return reference;
-            }
-
-            reference = new StandardFileReference();
-
-            // store
-            File fileInRepo = getNewPath(checksum);
-            FileUtils.copyFile(resource, fileInRepo);
-
-            fileInRepo.setExecutable(false);
-
-            reference.setContentType("temp");
-            reference.setChecksum(checksum);
-            reference.setSize(0);
-            reference.setReference(fileInRepo.getAbsolutePath());
-
-            em.persist(reference);
-            em.flush();
-
-            return reference;
-
-        } catch (Throwable t) {
-            throw new NotesException("store failed: " + t.getMessage(), t);
-        }
-    }
+//    @Override
+//    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+//    public StandardFileReference storeTemporary(String pathToSnapshot) throws NotesException {
+//        try {
+//
+//            File resource = new File(pathToSnapshot);
+//
+//            String checksum = getChecksum(new FileInputStream(resource));
+//
+//            StandardFileReference reference = find(checksum, 0);
+//
+//            if (reference != null) {
+//                em.merge(reference); // update date
+//                return reference;
+//            }
+//
+//            reference = new StandardFileReference();
+//
+//            // store
+//            File fileInRepo = getNewPath(checksum);
+//            FileUtils.copyFile(resource, fileInRepo);
+//
+//            fileInRepo.setExecutable(false);
+//
+//            reference.setContentType("temp");
+//            reference.setChecksum(checksum);
+//            reference.setSize(0);
+//            reference.setReference(fileInRepo.getAbsolutePath());
+//
+//            em.persist(reference);
+//            em.flush();
+//
+//            return reference;
+//
+//        } catch (Throwable t) {
+//            throw new NotesException("store failed: " + t.getMessage(), t);
+//        }
+//    }
 }

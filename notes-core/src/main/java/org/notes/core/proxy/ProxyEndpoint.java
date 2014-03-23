@@ -1,5 +1,6 @@
 package org.notes.core.proxy;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -10,6 +11,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.parser.Tag;
 import org.notes.common.configuration.NotesInterceptors;
 
 import javax.servlet.ServletContext;
@@ -23,6 +25,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.util.Collections;
 
 @NotesInterceptors
 @Path("/proxy")
@@ -54,15 +57,20 @@ public class ProxyEndpoint {
         try {
             HttpGet httpget = new HttpGet(url);
 
-//            todo pass language
-//            Enumeration<String> headers = proxyRequest.getHeaderNames();
-//            while(headers.hasMoreElements()) {
-//                String headerName = headers.nextElement();
-//                if("cookie".equalsIgnoreCase(headerName)) {
-//                    continue;
-//                }
-//                httpget.setHeader(headerName, proxyRequest.getHeader(headerName));
-//            }
+            String[] forwardHeaders = new String[]{
+                    "user-agent", "accept-language", "user-agent", "accept"
+            };
+            for (String headerName : Collections.list(proxyRequest.getHeaderNames())) {
+                boolean forwardHeader = false;
+                for (String forwardHeaderName : forwardHeaders) {
+                    if (StringUtils.equalsIgnoreCase(forwardHeaderName, headerName)) {
+                        forwardHeader = true;
+                    }
+                }
+                if (forwardHeader) {
+                    httpget.setHeader(headerName, proxyRequest.getHeader(headerName));
+                }
+            }
 
             System.out.println("Executing request " + httpget.getRequestLine());
             HttpResponse response;
@@ -85,7 +93,7 @@ public class ProxyEndpoint {
 
                         // with proxy-prefix
                         for (Element a : document.select("a")) {
-                            a.attr("href", "/proxy/?url=" + URLEncoder.encode(a.absUrl("href"), "UTF-8"));
+                            a.attr("href", "/notes/rest/proxy/?url=" + URLEncoder.encode(a.absUrl("href"), "UTF-8"));
                         }
                         for (Element script : document.select("script")) {
                             script.attr("src", script.absUrl("src"));
@@ -93,6 +101,16 @@ public class ProxyEndpoint {
                         for (Element link : document.select("link")) {
                             link.attr("href", link.absUrl("href"));
                         }
+
+                        Element proxyTools = new Element(Tag.valueOf("script"), "");
+                        proxyTools.attr("src", "/ui/scripts/proxy-tools.js");
+
+                        // todo should be dynamically loaded
+                        Element jQuery = new Element(Tag.valueOf("script"), "");
+                        jQuery.attr("src", "/ui/bower_components/jquery/jquery.js");
+
+                        document.select("head").first().appendChild(jQuery).appendChild(proxyTools);
+
                         proxyResponse.getWriter().write(document.outerHtml());
 
                     } else {

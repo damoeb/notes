@@ -6,7 +6,6 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.hibernate.annotations.Type;
 import org.notes.common.ForeignKey;
-import org.notes.common.interfaces.Harvestable;
 import org.notes.common.model.FileReference;
 import org.notes.common.model.FullText;
 import org.notes.common.model.Kind;
@@ -20,7 +19,7 @@ import java.util.List;
 @Entity(name = "BookmarkDocument")
 @Table(name = "BookmarkDocument")
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-public class BookmarkDocument extends BasicDocument implements Harvestable {
+public class BookmarkDocument extends BasicDocument {
 
     private static final Logger LOGGER = Logger.getLogger(BookmarkDocument.class);
 
@@ -49,7 +48,6 @@ public class BookmarkDocument extends BasicDocument implements Harvestable {
         setKind(Kind.BOOKMARK);
     }
 
-    @Override
     public String getUrl() {
         return url;
     }
@@ -58,27 +56,22 @@ public class BookmarkDocument extends BasicDocument implements Harvestable {
         this.url = url;
     }
 
-    @Override
     public String getText() {
         return text;
     }
 
-    @Override
     public void setText(String fullText) {
         this.text = fullText;
     }
 
-    @Override
     public FileReference getSiteSnapshot() {
         return siteSnapshot;
     }
 
-    @Override
     public void setSiteSnapshot(FileReference siteSnapshot) {
         this.siteSnapshot = siteSnapshot;
     }
 
-    @Override
     public Long getSiteSnapshotId() {
         return siteSnapshotId;
     }

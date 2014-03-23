@@ -6,8 +6,10 @@ IN ARBEIT
 - search: jedes document soll die node ids ihrer parents idexiert bekommen, damit search-in-folder moeglich wird
 - search: auch tags indexieren
 - tree: darstellung verbessern: colors, icons
+- new document: enter title or url
 
 OFFEN
+- bookmark document is redundat. replace by textdoc and add (from http://) on bottom
 - let tree be scrollable
 - notifications fuer operationen move, save
   errors must be closed manually, infos hide after 5 sec

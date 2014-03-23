@@ -446,7 +446,7 @@ public class DocumentManagerBean implements DocumentManager {
             document.setUrl(ref.getUrl());
             document.setTitle(ref.getUrl());
 
-            document.setTrigger(Trigger.HARVEST);
+//            document.setTrigger(Trigger.HARVEST);
 
             document = (BookmarkDocument) _createDocument(document, inFolder);
 

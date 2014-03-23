@@ -16,6 +16,16 @@
             }
         },
 
+        bookmark: function (url) {
+            // redirect to patched website
+//            location.href = '/notes/rest/proxy/?url='+encodeURI(url);
+        },
+
+        webclipper: function (url) {
+            // redirect to patched website
+            location.href = '/notes/rest/proxy/?url=' + encodeURI(url);
+        },
+
         fetch: function (folderId) {
 
             notes.folders.activeFolderId(folderId);
