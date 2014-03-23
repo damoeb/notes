@@ -234,6 +234,8 @@ $.widget('notes.basiceditor', {
         if ($this.tagsChanged || !notes.util.equal(originalModel, $this.options.model.attributes)) {
             $this.getModel().save(null, {success: function () {
                 console.log('saved');
+
+                noty({type: 'success', text: 'Saved'});
                 $('#document-list').documentList('refresh', $this.getModel().get('folderId'));
             }});
         }

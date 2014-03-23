@@ -79,11 +79,8 @@
 
 <div id="content-view" style="display: none">
 
-<div class="container" style="margin-left: 0;">
-
 <!-- CONTENT TOP -->
-<div class="row"
-     style="background: none repeat scroll 0 0 #F1F1F1; border-bottom: 1px solid #e1e1e1; padding-top:8px; padding-bottom:8px;">
+<div class="header-row">
 
     <!-- LEFT -->
     <div class="col-lg-3">
@@ -140,7 +137,7 @@
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                             <button type="button" class="btn btn-primary" data-dismiss="modal"
                                     onclick="notes.documents.create($('#new-document-title').val())">
-                            Continue
+                                Continue
                             </button>
                         </div>
                     </div>
@@ -172,7 +169,10 @@
 </div>
 <!-- row content top-->
 
-<!-- CONTENT MAIN -->
+
+<div class="container center-block">
+
+    <!-- CONTENT MAIN -->
 
 <div id="document-and-folder-view">
 
@@ -370,30 +370,6 @@
 </script>
 <!-- /fulltext -->
 
-<script type="text/template" id="essence">
-
-    <div class="panel-group" id="panel-essence">
-        <div class="panel" style="box-shadow: none">
-            <div class="panel-heading" style="background-color:none;">
-                <h4 class="panel-title">
-                    <i class="fa fa-angle-down"></i>
-                    <a data-toggle="collapse" data-parent="#panel-fulltext" href="#collapse-essence">
-                        Essence
-                    </a>
-                </h4>
-            </div>
-            <div id="collapse-essence" class="panel-collapse collapse">
-                <div class="panel-body">
-                    <i class="fa fa-spinner fa-spin"></i>
-                    <!-- generated -->
-                </div>
-            </div>
-        </div>
-    </div>
-
-</script>
-<!-- /essence -->
-
 <script type="text/template" id="navigation">
 
     <ul class="nav nav-tabs">
@@ -458,14 +434,14 @@
         <!--</div>-->
 
         <div style="margin-top: 10px; padding-bottom:10px;">
-            <h4><i class="fa fa-fw fa-tag"></i> Tags</h4>
+            <h5><i class="fa fa-fw fa-tag"></i> Tags</h5>
 
             <div class="document-tags" style="margin-bottom: 10px; line-height: 20px">
                 <a href="#" class="label label-default" title="Remove tag">something</a>
             </div>
 
-            <div class="input-group">
-                <input type="text" class="form-control new-tag-value" placeholder="Type..">
+            <div class="input-group input-group-sm">
+            <input type="text" class="form-control new-tag-value" placeholder="Type..">
                   <span class="input-group-btn">
                     <button class="btn btn-default action-new-tag" type="button">Add</button>
                   </span>
@@ -528,7 +504,6 @@
         </div>
 
 
-        <% include essence %>
         <% include recommendations %>
 
     </div>
@@ -575,7 +550,6 @@
 
         </div>
 
-        <% include essence %>
         <% include recommendations %>
 
     </div>
@@ -648,8 +622,8 @@
 
             <div class="row">
                 <a href="#doc:<%=id %>" title="<%=title %>">
-                    <h4 style="display: inline-block; margin: 0; overflow: hidden; white-space: nowrap; ">
-                        <%
+                    <h5 style="display: inline-block; margin: 0; overflow: hidden; white-space: nowrap; ">
+                    <%
                         if (typeof thumbnailUrl !== 'undefined') {
                         %>
                         <!--<img src="<%= thumbnailUrl %>" style="max-height: 18px"/>-->
@@ -667,7 +641,7 @@
                         %>
                         <!--<i class="fa fa-paperclip fa-fw" style="color: #808080"></i>-->
 
-                    </h4>
+                    </h5>
                 </a>
                 <span class="pull-right">
                     <%=notes.util.formatDate(new Date(modified)) %>
@@ -706,9 +680,9 @@
 
             <div class="row">
                 <a href="#doc:<%=id %>" title="<%=title %>">
-                    <h4 style="display: inline-block; margin: 0; overflow: hidden; white-space: nowrap; ">
+                    <h5 style="display: inline-block; margin: 0; overflow: hidden; white-space: nowrap; ">
 
-                        <%=title.length > 65 ? title.substring(0, 65)+'...' : title %>
+                    <%=title.length > 65 ? title.substring(0, 65)+'...' : title %>
                         <%
                         if (star) {
                         %>
@@ -718,7 +692,7 @@
                         %>
                         <!--<i class="fa fa-paperclip fa-fw" style="color: #808080"></i>-->
 
-                    </h4>
+                    </h5>
                 </a>
                 <span class="pull-right">
                     <%=notes.util.formatDate(new Date(modified)) %>

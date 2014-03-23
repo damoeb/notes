@@ -32,16 +32,6 @@ notes.model = {
             tags: []
         },
         urlRoot: REST_SERVICE + '/document/text/'
-    }),
-
-    Bookmark: Backbone.Model.extend({
-        defaults: {
-            modified: null,
-            title: '',
-            star: false,
-            tags: []
-        },
-        urlRoot: REST_SERVICE + '/bookmark'
     })
 
 };
