@@ -5112,16 +5112,18 @@ body {
   #databases li .dropping-document > A {
     color: red !important;
     text-decoration: underline; }
-  #databases li .empty > A.name {
-    color: #666666; }
   #databases li .folder.active {
     background-color: #3875d6;
     color: #efefef; }
     #databases li .folder.active A {
       color: #efefef; }
   #databases li .count {
-    color: #bdbdbd;
+    color: #666666;
     padding-right: 4px; }
+  #databases li .empty > A.name {
+    color: #666666; }
+  #databases li .empty .count {
+    color: #bdbdbd; }
 #databases .level-0 {
   padding-left: 0px;
   line-height: 20px; }
