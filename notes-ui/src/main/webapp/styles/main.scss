@@ -163,11 +163,6 @@ body {
       text-decoration: underline;
     }
 
-    //   dim empty folders
-    .empty > A.name {
-      color: #666666;
-    }
-
     .folder.active {
       background-color: #3875d6;
       color: #efefef;
@@ -176,8 +171,18 @@ body {
       }
     }
     .count {
-      color: #bdbdbd;
+      color: #666666;
       padding-right: 4px;
+    }
+    //   dim empty folders
+    .empty {
+      & > A.name {
+        color: #666666;
+      }
+
+      .count {
+        color: #bdbdbd;
+      }
     }
   }
 
@@ -220,7 +225,6 @@ body {
 
 .breadcrumbs {
   height: 32px;
-  //  background-color: whitesmoke;
   border-bottom: 1px solid #efefef;
 
   ol {

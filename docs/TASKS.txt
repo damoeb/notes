@@ -1,11 +1,14 @@
 IN ARBEIT
+- delete documents/folders
 - routing: folder nur laden, wenn sie auch angezeigt werden. bei suche nicht. auch schon beim seiten laden, folder werden erst geladen, wenn tree geladen ist
+- document/folder loeschen
 - search: auf sidebar facetten anzeigen?
 - search: jedes document soll die node ids ihrer parents indexiert bekommen, damit search-in-folder moeglich wird
 - search: auch tags indexieren
 - tree: darstellung verbessern: colors, icons
 
 OFFEN
+- pdf is saved twice
 - click auf database zeigt dashboard an
 - database ist immer sichtbar, auch bei der suche
 - doc sidebar: wie sidebar.png (github)
