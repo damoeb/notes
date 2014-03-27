@@ -107,6 +107,8 @@
         var Router = Backbone.Router.extend({
 
             routes: {
+//                todo fix
+                '': 'dashboard',
                 'doc\::id': 'document',
                 'folder\::id': 'folder',
                 'q\::query': 'search'   // #q:kiwis
@@ -149,8 +151,8 @@
         // -- Menu -- ------------------------------------------------------------------------------------------
 
         // todo if file is dropped to document and upload started -> block screen or other indicator
-//            var overallProgress = $('#fileupload').fileupload('progress');
-//            var activeUploads = $('#fileupload').fileupload('active');
+//            var overallProgress = $('#file-upload').fileupload('progress');
+//            var activeUploads = $('#file-upload').fileupload('active');
 
         $('#file-upload').
             fileupload({
@@ -158,6 +160,8 @@
                 dataType: 'json'
             })
             .bind('fileuploadsubmit', function (e, data) {
+
+                $.blockUI();
 
                 data.formData = {
                     folderId: notes.folders.activeFolderId(),
@@ -170,6 +174,8 @@
                 var model = new notes.model.BasicDocument(xhr.result.result);
 
                 $('#document-list').documentList('refresh', model.get('folderId'));
+
+                $.unblockUI();
             });
 
 

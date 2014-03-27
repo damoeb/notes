@@ -111,6 +111,7 @@ $.widget('notes.pdfeditor', $.notes.basiceditor, {
             $this._destroy();
 
             $('#document-view').hide();
+            $('#dashboard-view').hide();
             $('#folder-view').show();
         });
     }

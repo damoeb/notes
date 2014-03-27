@@ -16,6 +16,11 @@
             }
         },
 
+        selectAll: function (trueOrFalse) {
+            // todo works only the first time
+            $('.document input[type="checkbox"]').attr('checked', trueOrFalse);
+        },
+
         create: function (titleOrUrl) {
 
             var isUrl = titleOrUrl.indexOf('http://') == 0 || titleOrUrl.indexOf('https://') == 0;
@@ -35,6 +40,7 @@
             $('#document-list').documentList('refresh', folderId);
 
             $('#document-view').hide();
+            $('#dashboard-view').hide();
             $('#folder-view').show();
             $('#document-and-folder-view').show();
             $('#search-view').hide();

@@ -41,20 +41,32 @@
             return this._descendants[folderId];
         },
 
+        createFolder: function () {
+//            todo check
+//            notes.dialog.folder.newFolder(new notes.model.Folder({id:notes.folders.activeFolderId()}))
+            notes.dialog.folder.newFolder(
+                new notes.model.Folder(
+                    {
+                        id: this.activeFolderId()
+                    }
+                )
+            );
+        },
+
         open: function (folderId) {
 
             // load documents
             notes.documents.fetch(folderId);
 
             // show in tree
-            var $folder = this.get$Folder(folderId);
-            if (typeof  $folder === 'undefined') {
-                console.log('Folder ' + folderId + ' does not exist');
-                // todo fetch missing tree nodes
-
-            } else {
-                // todo open folder
-            }
+//            var $folder = this.get$Folder(folderId);
+//            if (typeof  $folder === 'undefined') {
+//                console.log('Folder ' + folderId + ' does not exist');
+//                // todo fetch missing tree nodes
+//
+//            } else {
+//                // todo open folder
+//            }
         }
     };
 

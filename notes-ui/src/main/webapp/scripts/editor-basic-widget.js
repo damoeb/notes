@@ -7,6 +7,7 @@ $.widget('notes.basiceditor', {
 
         $('#document-view').hide();
         $('#folder-view').show();
+        $('#dashboard-view').hide();
     },
 
     _createParent: function ($rendered) {
@@ -41,6 +42,7 @@ $.widget('notes.basiceditor', {
             $this._destroy();
 
             $('#document-view').hide();
+            $('#dashboard-view').hide();
             $('#folder-view').show();
         });
 
@@ -168,6 +170,7 @@ $.widget('notes.basiceditor', {
             .documentList('refresh', $this.getModel().get('folderId'));
 
         $('#document-view').hide();
+        $('#dashboard-view').hide();
         $('#folder-view').show();
 
         $this.getModel().destroy();

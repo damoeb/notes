@@ -45,21 +45,54 @@ body {
   line-height: 25px;
 }
 
-.doc {
+@mixin thumb() {
+  cursor: move;
+  width: 70px;
+  height: 70px;
+  background-color: #BDBDBD;
+  color: white;
+  font-size: 38px;
+  text-align: center;
+  line-height: 65px;
+}
+
+.document {
   margin: 0 0 20px 0;
+
+  input[type=checkbox] {
+    display: none;
+  }
 
   .url {
     color: #006621;
     margin-bottom: 5px;
   }
+
+  // todo improve the following 3 rules with scss
+  input:checked + div {
+    .thumb {
+      display: none;
+    }
+    .thumb-check {
+      display: block;;
+    }
+  }
+
+  input + div {
+    .thumb {
+      display: block;
+    }
+    .thumb-check {
+      display: none;
+    }
+  }
+
   .thumb {
-    width: 70px;
-    height: 70px;
-    background-color: #BDBDBD;
-    color: white;
-    font-size: 38px;
-    text-align: center;
-    line-height: 65px;
+    @include thumb()
+  }
+  .thumb-check {
+    @include thumb();
+    background-color: rgba(59, 59, 59, 0.10);
   }
   .thumb-a {
     background-color: #FA5858;
@@ -163,25 +196,31 @@ body {
       text-decoration: underline;
     }
 
-    .folder.active {
-      background-color: #3875d6;
-      color: #efefef;
-      A {
-        color: #efefef;
-      }
-    }
     .count {
       color: #666666;
       padding-right: 4px;
     }
-    //   dim empty folders
-    .empty {
-      & > A.name {
-        color: #666666;
-      }
 
-      .count {
-        color: #bdbdbd;
+    .folder {
+      &.active,
+      &.active.empty {
+
+        background-color: #3875d6;
+        color: #efefef;
+        & > A.name {
+          color: #efefef;
+        }
+
+      }
+      //   dim empty folders
+      &.empty {
+        & > A.name {
+          color: #666666;
+        }
+
+        .count {
+          color: #bdbdbd;
+        }
       }
     }
   }
@@ -198,7 +237,7 @@ body {
 }
 
 #search-view {
-  .doc {
+  .document {
     em {
       background-color: yellow;
       padding: 2px;

@@ -15,6 +15,7 @@
             }
 
             $('#document-view').show();
+            $('#sashboard-view').hide();
             $('#folder-view').hide();
             $('#document-and-folder-view').show();
             $('#search-view').hide();
@@ -56,6 +57,7 @@
             var $this = $('#editors');
 
             $('#document-view').show();
+            $('#dashboard-view').hide();
             $('#folder-view').hide();
 
             var model = new notes.model.TextDocument({

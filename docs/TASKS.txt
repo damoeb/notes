@@ -8,6 +8,10 @@ IN ARBEIT
 - tree: darstellung verbessern: colors, icons
 
 OFFEN
+- no onclick stuff
+- store model in folders, not widget (multiple trees, avoid loading)
+- show move/trash links only if document is selected
+- New Folder link into More
 - pdf is saved twice
 - click auf database zeigt dashboard an
 - database ist immer sichtbar, auch bei der suche
