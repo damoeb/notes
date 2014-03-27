@@ -64,7 +64,7 @@
 
                 $('.document-' + document.id).remove();
 
-                var message = 'Moved to <a href="#folder:' + newFolderId + '">' + notes.folders.get$Folder(newFolderId).getModel().get('name') + '</a>';
+                var message = 'Moved to <a href="#folder:' + newFolderId + '">' + notes.folders.getFolderModel(newFolderId).get('name') + '</a>';
 
                 noty({type: 'success', text: message});
             };

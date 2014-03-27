@@ -88,7 +88,7 @@ $.widget('notes.folder', {
             $this.setExpanded(true);
         }
 
-        notes.folders.add$Folder($this);
+        notes.folders.storeFolderModel($this.getModel());
     },
 
     _syncModel: function () {

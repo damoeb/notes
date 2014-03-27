@@ -33,11 +33,11 @@
             }
         },
 
-        add$Folder: function ($folder) {
-            this._descendants[$folder.getModel().get('id')] = $folder;
+        storeFolderModel: function (model) {
+            this._descendants[model.get('id')] = model;
         },
 
-        get$Folder: function (folderId) {
+        getFolderModel: function (folderId) {
             return this._descendants[folderId];
         },
 

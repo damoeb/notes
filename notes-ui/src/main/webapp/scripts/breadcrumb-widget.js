@@ -16,10 +16,12 @@ $.widget('notes.breadcrumbs', {
 
         $this.element.empty().append($breadcrumbs);
 
-        if (typeof folderId !== 'undefined') {
-            var $folder = notes.folders.get$Folder(folderId);
+        var model = notes.folders.getFolderModel(folderId);
+        if (typeof model !== 'undefined') {
 
             var templateFolder = _.template($('#breadcrumb-folder').html());
+
+            var $folder = $('#databases .folder-' + model.get('id')).parent().data('notes-folder');
 
             while ($folder) {
 
