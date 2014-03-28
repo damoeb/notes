@@ -21,6 +21,7 @@
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.compiled.css -->
+    <!--<link rel="stylesheet" href="bower_components/sass-bootstrap/dist/css/bootstrap.min.css">-->
     <link rel="stylesheet" href="styles/main.compiled.css">
     <!-- endbuild -->
 
@@ -226,8 +227,37 @@
                                 class="fa fa-square-o"></i></a></li>
 
                         <!-- todo show only if documents selected -->
-                        <li><a href="#" title="Move" onclick="notes.documents.move()">Move</a></li>
-                        <li><a href="#" title="Trash" onclick="notes.documents.trash()">Trash</a></li>
+                        <li>
+                            <!--<a href="#" title="Move" onclick="notes.documents.moveSelected()">Move</a>-->
+                            <a href="#" title="Move" onclick="notes.documents.moveDialog()">Move</a>
+
+                            <div class="modal" id="move-documents" tabindex="-1" role="dialog" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal"
+                                                    aria-hidden="true">&times;</button>
+                                            <h4 class="modal-title">Move Documents</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            tree
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close
+                                            </button>
+                                            <button type="button" class="btn btn-primary" data-dismiss="modal">
+                                                Move
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <!-- /.modal-content -->
+                                </div>
+                                <!-- /.modal-dialog -->
+                            </div>
+                            <!-- /.modal -->
+
+                        </li>
+                        <li><a href="#" title="Trash" onclick="notes.documents.trashSelected()">Trash</a></li>
 
 
                         <li><a href="#"
@@ -635,7 +665,7 @@
     <div class="document document-<%=id %> row">
         <div style="float:left; margin-right: 15px;">
             <label>
-                <input type="checkbox">
+                <input type="checkbox" doc-id="<%=id %>">
 
                 <div>
                     <div class="thumb thumb-<%=title.substring(0,1).toLowerCase() %>"
@@ -851,6 +881,7 @@
 <script src="bower_components/noty/js/noty/layouts/top.js"></script>
 <script src="bower_components/noty/js/noty/themes/default.js"></script>
 
+
 <!-- editor -->
 <script src="bower_components/summernote/summernote-dist/summernote.min.js"></script>
 
@@ -1044,7 +1075,11 @@
 
 <script type="text/javascript">
 
-    $(document).ready(function () {
+    console.log('all resources loaded');
+
+    $(function () {
+
+        console.log('document ready');
 
         // -- Overwrites -------------------------------------------------------------------------------------------
         var fnCustomParse = function (data) {

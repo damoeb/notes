@@ -1,0 +1,67 @@
+$icon-font-path: "/bower_components/sass-bootstrap/fonts/";
+
+@import 'sass-bootstrap/lib/bootstrap';
+
+.notes-cmp {
+  font: 12px "Lucida Grande", Verdana, Arial, Helvetica, sans-serif;
+}
+
+.notes-ticker {
+  background-color: #6683B3;
+  background-image: linear-gradient(to bottom, #849FC2 0px, #6683B3 100%);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  color: #FFFFFF;
+  font-size: 13px;
+  font-weight: bold;
+  height: 29px;
+  text-decoration: none;
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+
+  z-index: 3000;
+  border: none;
+  margin: 0px;
+  padding: 6px;
+  width: 100%;
+  top: 0px;
+  left: 0px;
+  opacity: 1;
+  position: fixed;
+}
+
+.notes-taken {
+  opacity: 0.5;
+  background-color: black;
+}
+
+.notes-button {
+  border-radius: 2px;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  display: inline-block;
+  font-size: 11px;
+  font-weight: bold;
+  height: 28px;
+  line-height: normal;
+  outline: 0 none;
+  padding: 0 10px;
+  text-decoration: none;
+  vertical-align: middle;
+  white-space: nowrap;
+  word-wrap: normal;
+}
+
+.notes-snippet {
+  max-height: 300px;
+  color: #ffffff !important;
+  position: absolute;
+  display: none;
+  width: 250px;
+  background-color: black;
+  padding: 10px;
+  z-index: 300;
+}
+
+.notes-snippet A {
+  color: #efefef;
+  overflow: hidden;
+}

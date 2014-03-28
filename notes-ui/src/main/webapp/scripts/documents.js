@@ -16,9 +16,44 @@
             }
         },
 
-        selectAll: function (trueOrFalse) {
-            // todo works only the first time
-            $('.document input[type="checkbox"]').attr('checked', trueOrFalse);
+        trashSelected: function () {
+            var ids = this.getSelectedIds();
+
+            if (ids.length > 0) {
+                // on success
+                for (var i = 0; i < ids.length; i++) {
+                    $('.document-' + ids[i]).remove();
+                }
+            }
+        },
+
+        moveDialog: function () {
+
+            if (this.getSelectedIds().length > 0) {
+                // todo render tree
+                $('#move-documents-dialog').modal().find('.modal-body');
+            }
+
+        },
+
+        moveSelected: function (targetFolder) {
+            this.getSelectedIds();
+        },
+
+        getSelectedIds: function () {
+            var ids = [];
+            var $fields = $('.document input[type="checkbox"]:checked');
+            for (var i = 0; i < $fields.length; i++) {
+                ids.push(parseInt($($fields[i]).attr('doc-id')));
+            }
+            return ids;
+        },
+
+        selectAll: function (select) {
+            $('.document input[type="checkbox"]').removeAttr('checked');
+            if (select) {
+                $('.document input[type="checkbox"]').click();
+            }
         },
 
         create: function (titleOrUrl) {
@@ -74,18 +109,6 @@
             };
 
             notes.util.jsonCall('POST', REST_SERVICE + '/document/move/${doc}/${folderId}', params, null, onSuccess, onError);
-
-            // todo implement
-//                new notes.model.Document({
-//                    id: $draggable.data('documentId'),
-//                    folderId: model.get('id'),
-//                    event: 'MOVE'
-//                }).save(null, {
-//                        success: function () {
-//                            // refresh ui
-//                            $('#databases').databases('reloadTree');
-//                        }
-//                    });
         }
     };
 

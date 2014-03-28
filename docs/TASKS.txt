@@ -9,7 +9,6 @@ IN ARBEIT
 
 OFFEN
 - no onclick stuff
-- store model in folders, not widget (multiple trees, avoid loading)
 - show move/trash links only if document is selected
 - New Folder link into More
 - pdf is saved twice

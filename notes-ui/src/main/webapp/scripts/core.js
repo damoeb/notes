@@ -65,6 +65,8 @@
 
     notes.setup = function () {
 
+        console.log('running setup');
+
         var onSuccess = function (settings) {
 
             console.log('Hello ' + settings.user.username);

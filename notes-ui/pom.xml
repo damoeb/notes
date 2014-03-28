@@ -56,13 +56,13 @@
                 <version>1.7</version>
                 <executions>
                     <execution>
-                        <id>compile</id>
+                        <id>compile main.scss</id>
                         <phase>compile</phase>
                         <configuration>
-                            <target name="building">
+                            <target name="compile main.scss">
 
                                 <echo>
-                                    sass
+                                    sass main.scss
                                 </echo>
                                 <exec executable="cmd" dir="${project.basedir}"
                                       osfamily="windows" failonerror="true">
@@ -72,6 +72,30 @@
                                       osfamily="unix" failonerror="true">
                                     <arg value="-c"/>
                                     <arg line='"sass --load-path src/main/webapp/bower_components/ src/main/webapp/styles/main.scss src/main/webapp/styles/main.compiled.css"'/>
+                                </exec>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>compile proxy.scss</id>
+                        <phase>compile</phase>
+                        <configuration>
+                            <target name="compile proxy.scss">
+
+                                <echo>
+                                    sass proxy.scss
+                                </echo>
+                                <exec executable="cmd" dir="${project.basedir}"
+                                      osfamily="windows" failonerror="true">
+                                    <arg line="/c sass --load-path src/main/webapp/bower_components/ src/main/webapp/styles/proxy.scss src/main/webapp/styles/proxy.compiled.css"/>
+                                </exec>
+                                <exec executable="bash" dir="${project.basedir}"
+                                      osfamily="unix" failonerror="true">
+                                    <arg value="-c"/>
+                                    <arg line='"sass --load-path src/main/webapp/bower_components/ src/main/webapp/styles/proxy.scss src/main/webapp/styles/proxy.compiled.css"'/>
                                 </exec>
                             </target>
                         </configuration>
