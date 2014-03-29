@@ -7,24 +7,15 @@ $icon-font-path: "/bower_components/sass-bootstrap/fonts/";
 }
 
 .notes-ticker {
-  background-color: #6683B3;
-  background-image: linear-gradient(to bottom, #849FC2 0px, #6683B3 100%);
+  background-color: white;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-  color: #FFFFFF;
-  font-size: 13px;
-  font-weight: bold;
-  height: 29px;
-  text-decoration: none;
-  text-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
-
+  color: #666666;
+  height: 48px;
   z-index: 3000;
-  border: none;
-  margin: 0px;
-  padding: 6px;
   width: 100%;
-  top: 0px;
+  padding: 6px;
   left: 0px;
-  opacity: 1;
+  border-bottom: 1px solid #CCCCCC;
   position: fixed;
 }
 
@@ -52,13 +43,14 @@ $icon-font-path: "/bower_components/sass-bootstrap/fonts/";
 
 .notes-snippet {
   max-height: 300px;
-  color: #ffffff !important;
   position: absolute;
   display: none;
-  width: 250px;
-  background-color: black;
+  background-color: white;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
+  border: 1px solid #cccccc;
   padding: 10px;
   z-index: 300;
+  border-radius: 5px;
 }
 
 .notes-snippet A {

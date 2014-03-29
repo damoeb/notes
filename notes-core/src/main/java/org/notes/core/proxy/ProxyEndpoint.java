@@ -110,6 +110,7 @@ public class ProxyEndpoint {
 
                         Element head = document.select("head").first();
                         head.appendChild(getStyle("/ui/styles/proxy.compiled.css"));
+                        head.appendChild(getStyle("/ui/bower_components/font-awesome/css/font-awesome.min.css"));
                         head.appendChild(getScript("/ui/bower_components/modernizr/modernizr.js"));
                         head.appendChild(getScript("/ui/bower_components/jquery/dist/jquery.js"));
                         head.appendChild(getScript("/ui/bower_components/jquery-ui/ui/jquery-ui.js"));

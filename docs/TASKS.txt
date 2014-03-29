@@ -1,4 +1,5 @@
 IN ARBEIT
+- proxy: dont' improt bootstrap rules for body, only for notes context
 - delete documents/folders
 - routing: folder nur laden, wenn sie auch angezeigt werden. bei suche nicht. auch schon beim seiten laden, folder werden erst geladen, wenn tree geladen ist
 - document/folder loeschen

@@ -8,9 +8,11 @@ console.log('loading proxy-tools');
         init: function () {
             console.log('init proxy');
 
-//            $('body').append('<div id="notes-overlay" style="z-index: 1000; border: none; margin: 0px; padding: 0px; width: 100%; height: 100%; top: 0px; left: 0px; background-color: rgb(0, 0, 0); opacity: 0.6; cursor: wait; position: fixed; color: #ffffff">Please wait..</div>');
+            var $this = this;
 
-            $('body').prepend('<div class="notes-ticker" style="position: static">Web Clipping</a> <button class="notes-button">Done</button> This website is manipulated. <a href="/static/info.htm" style="color: white; text-decoration: underline;">More Information</a></div></div>');
+            $('body')
+                .prepend('<div style="height: 48px"></div>')
+                .prepend('<div class="notes-ticker" style="position: absolute;"><ul class="list-inline"><li style="padding:7px"><i class="fa fa-gear fa-fw"></i> Web Clipping</li><li><a href="/ui/" class="btn btn-primary">Done</a></li><li class="pull-right"><a class="btn btn-default" href="/some/static/info.htm">More Information</a></li></ul></div>');
 
             var elementPosition = $('.notes-ticker').offset();
 
@@ -18,49 +20,48 @@ console.log('loading proxy-tools');
                 if ($(window).scrollTop() > elementPosition.top) {
                     $('.notes-ticker').css('position', 'fixed').css('top', '0');
                 } else {
-                    $('.notes-ticker').css('position', 'static');
+                    $('.notes-ticker').css('position', 'absolute');
                 }
             });
 
-
-            var $this = this;
-
-            var $saveSnippet = $('<a href="#" style="color: white;">Save snippet...</a>').click(function () {
-                $this.saveSnippet()
-            });
-            var $snippetMenu = $('<div class="notes-snippet-menu notes-snippet"></div>').append($saveSnippet);
-            $('body').append($snippetMenu);
-
-            $('img').click(function () {
-                $(this).toggleClass('notes-taken');
-            }).parent('a').attr('href', '#');
-
-            setInterval(function () {
+            window.addEventListener("mouseup", function (event) {
+                console.log('mouseup');
                 var selection = notes.proxy.getSelection();
                 var hasSelection = selection !== false && selection.toString().trim().length > 0;
                 if (hasSelection) {
                     console.log('show snippet menu');
                     var $targetElement = $(notes.proxy.getSelection().anchorNode.parentElement);
-//                    var anchorOffset = $targetElement.offset();
-//                    var focusOffset = $(notes.proxy.getSelection().focusNode.parentElement).offset();
-//
-//                    var left = Math.min(anchorOffset.left, focusOffset.left);
-//                    var top = Math.max(0, Math.min(anchorOffset.top, focusOffset.top) - 35);
-//
-//                    $('.notes-snippet-menu').show().css({'top': top, left: left})
-                    $('.notes-snippet-menu').show().position({
+
+                    $('#notes-snippet-menu').show().position({
                         of: $targetElement,
                         my: 'left bottom',
                         at: 'left top'
                     });
 
+                } else {
+                    $('#notes-snippet-menu').hide();
                 }
-            }, 300);
+
+            });
+
+            var $saveSnippet = $('<button class="btn btn-primary"><i class="fa fa-save fa-fw"></i> Save snippet</button>').click(function () {
+                $this.saveSnippet();
+            });
+            var $snippetMenu = $('<div id="notes-snippet-menu" class="notes-snippet"></div>').append($saveSnippet);
+            $('body').append($snippetMenu);
+
+            $('img').click(function () {
+                $(this).toggleClass('notes-taken');
+            }).parent('a').attr('href', '#');
         },
         saveSnippet: function () {
-            var snippetMarker = $('.notes-snippet-menu').clone().removeClass('notes-snippet-menu').empty();
+            var snippetMarker = $('#notes-snippet-menu').hide().clone().show().removeClass('notes-snippet-menu').removeAttr('id');
 
-            snippetMarker.append(this.getSelectionHtml());
+            snippetMarker.find('button').html('<i class="fa fa-trash fa-fw"></i> Trash snippet').attr('title', this.getSelection()).click(function () {
+                snippetMarker.remove();
+            });
+
+//            snippetMarker.append(this.getSelection());
 
             $('body').append(snippetMarker);
         },
