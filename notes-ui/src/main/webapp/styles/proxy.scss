@@ -1,6 +1,10 @@
 $icon-font-path: "/bower_components/sass-bootstrap/fonts/";
 
-@import 'sass-bootstrap/lib/bootstrap';
+@import "sass-bootstrap/lib/variables";
+@import "sass-bootstrap/lib/mixins";
+@import "sass-bootstrap/lib/navs";
+@import "sass-bootstrap/lib/buttons";
+@import "sass-bootstrap/lib/type";
 
 .notes-cmp {
   font: 12px "Lucida Grande", Verdana, Arial, Helvetica, sans-serif;
@@ -10,18 +14,12 @@ $icon-font-path: "/bower_components/sass-bootstrap/fonts/";
   background-color: white;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
   color: #666666;
-  height: 48px;
   z-index: 3000;
   width: 100%;
-  padding: 6px;
   left: 0px;
+  padding: 6px 0;
   border-bottom: 1px solid #CCCCCC;
   position: fixed;
-}
-
-.notes-taken {
-  opacity: 0.5;
-  background-color: black;
 }
 
 .notes-button {
@@ -43,7 +41,6 @@ $icon-font-path: "/bower_components/sass-bootstrap/fonts/";
 
 .notes-snippet {
   max-height: 300px;
-  position: absolute;
   display: none;
   background-color: white;
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
@@ -51,6 +48,11 @@ $icon-font-path: "/bower_components/sass-bootstrap/fonts/";
   padding: 10px;
   z-index: 300;
   border-radius: 5px;
+}
+
+.notes-snippet-image {
+  opacity: 0.5;
+  background-color: black;
 }
 
 .notes-snippet A {

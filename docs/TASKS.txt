@@ -9,7 +9,6 @@ IN ARBEIT
 - tree: darstellung verbessern: colors, icons
 
 OFFEN
-- no onclick stuff
 - show move/trash links only if document is selected
 - New Folder link into More
 - pdf is saved twice

@@ -5,16 +5,21 @@ console.log('loading proxy-tools');
 (function (notes) {
 
     notes.proxy = {
+
         init: function () {
             console.log('init proxy');
 
             var $this = this;
 
+            // --
+
+            var $notesTicker = $('<div class="notes-ticker" style="position: absolute;"><ul class="list-inline" style="margin-bottom: 0"><li style="padding:7px"><i class="fa fa-gear fa-fw"></i> Web Clipping</li><li><a href="/ui/" class="btn btn-default">Cancel</a></li><li><a href="#" class="btn btn-primary notes-finalize-clipping" style="color: #ffffff">Save Selection</a></li><li class="pull-right"><a class="btn btn-default" href="/some/static/info.htm">More Information</a></li></ul></div>');
+
             $('body')
                 .prepend('<div style="height: 48px"></div>')
-                .prepend('<div class="notes-ticker" style="position: absolute;"><ul class="list-inline"><li style="padding:7px"><i class="fa fa-gear fa-fw"></i> Web Clipping</li><li><a href="/ui/" class="btn btn-primary">Done</a></li><li class="pull-right"><a class="btn btn-default" href="/some/static/info.htm">More Information</a></li></ul></div>');
+                .prepend($notesTicker);
 
-            var elementPosition = $('.notes-ticker').offset();
+            var elementPosition = $notesTicker.offset();
 
             $(window).scroll(function () {
                 if ($(window).scrollTop() > elementPosition.top) {
@@ -24,57 +29,75 @@ console.log('loading proxy-tools');
                 }
             });
 
-            window.addEventListener("mouseup", function (event) {
-                console.log('mouseup');
-                var selection = notes.proxy.getSelection();
-                var hasSelection = selection !== false && selection.toString().trim().length > 0;
-                if (hasSelection) {
-                    console.log('show snippet menu');
-                    var $targetElement = $(notes.proxy.getSelection().anchorNode.parentElement);
+//            window.addEventListener("mouseup", function (event) {
+//                console.log('mouseup');
+//                var selection = notes.proxy.getSelection();
+//                var hasSelection = selection !== false && selection.toString().trim().length > 0;
+//                if (hasSelection) {
+//                    console.log('show snippet menu');
+//                    var $targetElement = $(notes.proxy.getSelection().anchorNode.parentElement);
+//
+//                    $('#notes-snippet-menu').show().position({
+//                        of: $targetElement,
+//                        my: 'left bottom',
+//                        at: 'left top'
+//                    });
+//
+//                } else {
+//                    $('#notes-snippet-menu').hide();
+//                }
+//
+//            });
 
-                    $('#notes-snippet-menu').show().position({
-                        of: $targetElement,
-                        my: 'left bottom',
-                        at: 'left top'
-                    });
-
-                } else {
-                    $('#notes-snippet-menu').hide();
-                }
-
+            $notesTicker.find('.notes-finalize-clipping').click(function () {
+                $this.finalizeClipping();
             });
 
-            var $saveSnippet = $('<button class="btn btn-primary"><i class="fa fa-save fa-fw"></i> Save snippet</button>').click(function () {
-                $this.saveSnippet();
-            });
-            var $snippetMenu = $('<div id="notes-snippet-menu" class="notes-snippet"></div>').append($saveSnippet);
-            $('body').append($snippetMenu);
+//            var $saveSnippet = $('<button class="btn btn-primary"><i class="fa fa-save fa-fw"></i> Save snippet</button>').click(function () {
+//
+//                var $snippetMarker = $('#notes-snippet-menu').hide().clone()
+//                    .show()
+//                    .removeClass('notes-snippet-menu')
+//                    .removeClass('notes-snippet-saved')
+//                    .removeAttr('id')
+//                    .attr('data-selection', $this.getSelectionHtml());
+//
+//                $snippetMarker.find('button')
+//                    .html('<i class="fa fa-trash-o fa-fw"></i> Trash')
+//                    .attr('title', $this.getSelection())
+//                    .click(function () {
+//                        $snippetMarker.remove();
+//                    }
+//                );
+//                $('body').append($snippetMarker);
+//            });
+//
+//            var $snippetMenu = $('<div id="notes-snippet-menu" class="notes-snippet"></div>').append($saveSnippet);
+//            $('body').append($snippetMenu);
 
-            $('img').click(function () {
-                $(this).toggleClass('notes-taken');
-            }).parent('a').attr('href', '#');
         },
-        saveSnippet: function () {
-            var snippetMarker = $('#notes-snippet-menu').hide().clone().show().removeClass('notes-snippet-menu').removeAttr('id');
-
-            snippetMarker.find('button').html('<i class="fa fa-trash fa-fw"></i> Trash snippet').attr('title', this.getSelection()).click(function () {
-                snippetMarker.remove();
-            });
-
-//            snippetMarker.append(this.getSelection());
-
-            $('body').append(snippetMarker);
+        getURLParameter: function (name) {
+            return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [, ""])[1].replace(/\+/g, '%20')) || null;
         },
-        saveQuote: function () {
+        finalizeClipping: function () {
 
-            // todo add site url to text
-            // todo look for quotes on page
-            // todo show summary, and ask if one document per snippet
+            var $this = this;
+
+            var title = $('title').text();
+            var url = this.getURLParameter('url');
+
+//            $('.notes-snippet-saved').each(function(index, snippet) {
+//
+//                var text = $(snippet).attr('data-selection') + '<p>Seen on <a href="'+url+'">'+url+'</a></p>';
+            var text = this.getSelectionHtml() + '<p>--</p><p>Seen on <a href="' + url + '">' + url + '</a></p>';
+
             var document = {
-                title: $('title').text(),
-                text: this.getSelectionHtml(),
+                title: title,
+                text: text,
                 kind: 'BOOKMARK'
             };
+
+            console.log(document);
 
             // save doc
             $.ajax({
@@ -95,6 +118,7 @@ console.log('loading proxy-tools');
 
                 }
             });
+//            });
         },
         getSelectionHtml: function () {
             var html = "";
