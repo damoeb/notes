@@ -56,6 +56,14 @@ public final class TextUtils {
         return cleaned.body().text();
     }
 
+    public static String cleanHtmlRelaxed(String html) {
+
+        Cleaner cleaner = new Cleaner(Whitelist.relaxed());
+        Document cleaned = cleaner.clean(Jsoup.parse(html));
+
+        return cleaned.body().text();
+    }
+
     private static String normWhitespaces(String text) {
         return text.replaceAll("[\n\t\r ]+", " ");
     }

@@ -80,9 +80,11 @@ public class DocumentManagerBean implements DocumentManager {
             }
 
 //            document.setTrigger(Trigger.INDEX);
-            indexDocument(document);
 
             BasicDocument basicDocument = _createDocument(document, inFolder);
+
+            indexDocument(basicDocument);
+
             Hibernate.initialize(basicDocument.getTags());
             return (TextDocument) basicDocument;
 

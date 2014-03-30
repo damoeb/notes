@@ -16,28 +16,32 @@
             }
         },
 
-        trashSelected: function () {
-            var ids = this.getSelectedIds();
+        trash: function (ids) {
+
+            console.log(ids);
 
             if (ids.length > 0) {
                 // on success
                 for (var i = 0; i < ids.length; i++) {
                     $('.document-' + ids[i]).remove();
                 }
+
+                // todo refresh current folder
+
+
             }
+
         },
 
-        moveDialog: function () {
+        moveDialog: function (ids) {
 
-            if (this.getSelectedIds().length > 0) {
+            console.log(ids);
+
+            if (ids.length > 0) {
                 // todo render tree
                 $('#move-documents-dialog').modal().find('.modal-body');
             }
 
-        },
-
-        moveSelected: function (targetFolder) {
-            this.getSelectedIds();
         },
 
         getSelectedIds: function () {

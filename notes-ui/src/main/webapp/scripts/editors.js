@@ -15,7 +15,7 @@
             }
 
             $('#document-view').show();
-            $('#sashboard-view').hide();
+            $('#dashboard-view').hide();
             $('#folder-view').hide();
             $('#document-and-folder-view').show();
             $('#search-view').hide();

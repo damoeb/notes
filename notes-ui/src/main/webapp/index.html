@@ -155,11 +155,11 @@
             </button>
             <ul class="dropdown-menu" role="menu" aria-labelledby="create-doc">
                 <li role="presentation">
-                    <a role="menuitem" tabindex="-1" href="#" onclick="$('#create-document-modal').modal()">Document</a>
+                    <a role="menuitem" tabindex="-1" href="#" onclick="$('#create-document-modal').modal()">Text</a>
                 </li>
                 <li role="presentation" class="divider"></li>
                 <li role="presentation">
-                    <a role="menuitem" tabindex="-1" href="#" onclick="$('#file-upload').click()">File</a>
+                    <a role="menuitem" tabindex="-1" href="#" onclick="$('#file-upload').click()">Upload File</a>
                 </li>
             </ul>
 
@@ -228,11 +228,12 @@
 
                         <!-- todo show only if documents selected -->
                         <li>
-                            <!--<a href="#" title="Move" onclick="notes.documents.moveSelected()">Move</a>-->
-                            <a href="#" title="Move" onclick="notes.documents.moveDialog()">Move</a>
+                            <a href="#" title="Move selected documents"
+                               onclick="notes.documents.moveDialog(notes.documents.getSelectedIds())">Move</a>
 
-                            <div class="modal" id="move-documents" tabindex="-1" role="dialog" aria-hidden="true">
-                                <div class="modal-dialog">
+                            <div class="modal" id="move-documents-dialog" tabindex="-1" role="dialog"
+                                 aria-hidden="true">
+                            <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <button type="button" class="close" data-dismiss="modal"
@@ -257,11 +258,12 @@
                             <!-- /.modal -->
 
                         </li>
-                        <li><a href="#" title="Trash" onclick="notes.documents.trashSelected()">Trash</a></li>
+                        <li><a href="#" title="Trash selected documents"
+                               onclick="notes.documents.trash(notes.documents.getSelectedIds())">Trash</a></li>
 
 
                         <li><a href="#"
-                               onclick="notes.folders.createFolder()">New
+                               onclick="notes.folders.createFolder()" title="Create new child folder">New
                             Folder</a>
                         </li>
 
@@ -423,8 +425,8 @@
 <script type="text/template" id="navigation">
 
     <ul class="nav nav-tabs">
-        <li><a href="#" class="action-close"><i class="fa fa-fw fa-angle-left"></i></a></li>
-        <li><a href="#" class="action-star" star="<%=star %>">
+        <li><a href="#" class="action-close" title="Back & Save"><i class="fa fa-fw fa-angle-left"></i></a></li>
+        <li><a href="#" class="action-star" star="<%=star %>" title="Highlight">
                     <span class="pane-with-star <%=!star?'hidden':'' %>">
                         <i class="fa fa-star" style="color:red;"></i>
                     </span>
@@ -433,8 +435,14 @@
                     </span>
         </a>
         </li>
+        <li>
+            <a href="#" title="Move" onclick="notes.documents.moveDialog([<%= id %>])">Move</a>
+        </li>
+        <li><a href="#" title="Trash" onclick="notes.documents.trash([<%= id %>])">Trash</a></li>
+
+
         <li><span
-                style="padding: 10px 15px; display: block;"><%= modified?'changed '+$.timeago(modified):'' %></span>
+                style="padding: 10px 15px; display: block;" title="Time, this document has last been changed"><%= modified?'changed '+$.timeago(modified):'' %></span>
         </li>
 
         <li class="pull-right dropdown">
@@ -487,7 +495,7 @@
             <h5><i class="fa fa-fw fa-tag"></i> Tags</h5>
 
             <div class="document-tags" style="margin-bottom: 10px; line-height: 20px">
-                <a href="#" class="label label-default" title="Remove tag">something</a>
+                <a href="#" class="label label-default" title="Click to remove">something</a>
             </div>
 
             <div class="input-group input-group-sm">
@@ -669,10 +677,10 @@
 
                 <div>
                     <div class="thumb thumb-<%=title.substring(0,1).toLowerCase() %>"
-                            ><%=title.substring(0,1).toUpperCase() %>
+                         title="Select by clicking or drag'n drop to folder"><%=title.substring(0,1).toUpperCase() %>
                     </div>
-                    <div class="thumb-check">
-                        <i class="fa fa-check"></i>
+                    <div class="thumb-check" title="Click to unselect">
+                    <i class="fa fa-check"></i>
                     </div>
                 </div>
             </label>
@@ -1080,6 +1088,8 @@
     $(function () {
 
         console.log('document ready');
+
+        $(document).tooltip();
 
         // -- Overwrites -------------------------------------------------------------------------------------------
         var fnCustomParse = function (data) {
