@@ -8,7 +8,8 @@ IN ARBEIT
 
 OFFEN
 - activeFolderId, defaultFolderId,.. should only access the json, no explicit setters/getters
-- replace dialogs.js
+- special folders in bold
+- alle popups auf bootstrap (replace dialogs.js)
 - only save if there are changes
 - no notification for 'saved'
 - block closing if unsaved
@@ -16,7 +17,6 @@ OFFEN
 - delete folders only if not specialized (unsorted, trash)
 - in doc view show icon, date/time next to it (which is below title)
 - show move/trash links only if document is selected
-- New Folder link into More
 - pdf is saved twice
 - click auf database zeigt dashboard an
 - database ist immer sichtbar, auch bei der suche
@@ -34,7 +34,6 @@ OFFEN
 - treeview und suchergebnisse entsprechend der bilder in inspiration
 - active folder is not synced
 - tags redundanz entfernen, datenbank model verbessern
-- alle popups auf bootstrap
 
 - use uniqueHash instead of document id
 - attributes for document

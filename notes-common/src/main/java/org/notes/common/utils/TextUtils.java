@@ -50,6 +50,8 @@ public final class TextUtils {
 
     public static String cleanHtml(String html) {
 
+        // todo cleaner not necessary, .text() will only return text.
+
         Cleaner cleaner = new Cleaner(Whitelist.simpleText());
         Document cleaned = cleaner.clean(Jsoup.parse(html));
 
@@ -58,10 +60,10 @@ public final class TextUtils {
 
     public static String cleanHtmlRelaxed(String html) {
 
-        Cleaner cleaner = new Cleaner(Whitelist.basic());
+        Cleaner cleaner = new Cleaner(Whitelist.relaxed());
         Document cleaned = cleaner.clean(Jsoup.parse(html));
 
-        return cleaned.body().text();
+        return cleaned.body().html();
     }
 
     private static String normWhitespaces(String text) {
