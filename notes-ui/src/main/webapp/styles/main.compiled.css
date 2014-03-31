@@ -5123,62 +5123,62 @@ body {
 .editor {
   margin: 15px; }
 
-#databases ol {
+.database ol {
   margin: 0;
   padding: 0; }
-#databases li {
+.database li {
   list-style: none;
   margin: 0;
   padding: 0; }
-  #databases li .dropping-document > A {
+  .database li .dropping-document > A {
     color: red !important;
     text-decoration: underline; }
-  #databases li .count {
+  .database li .count {
     color: #666666;
     padding-right: 4px; }
-  #databases li .folder.active, #databases li .folder.active.empty {
+  .database li .folder.active, .database li .folder.active.empty {
     background-color: #3875d6;
     color: #efefef; }
-    #databases li .folder.active > A.name, #databases li .folder.active.empty > A.name {
+    .database li .folder.active > A.name, .database li .folder.active.empty > A.name {
       color: #efefef; }
-  #databases li .folder.empty > A.name {
+  .database li .folder.empty > A.name {
     color: #666666; }
-  #databases li .folder.empty .count {
+  .database li .folder.empty .count {
     color: #bdbdbd; }
-#databases .level-0 {
+.database .level-0 {
   padding-left: 0px;
   line-height: 20px; }
-#databases .level-1 {
+.database .level-1 {
   padding-left: 17px;
   line-height: 20px; }
-#databases .level-2 {
+.database .level-2 {
   padding-left: 34px;
   line-height: 20px; }
-#databases .level-3 {
+.database .level-3 {
   padding-left: 51px;
   line-height: 20px; }
-#databases .level-4 {
+.database .level-4 {
   padding-left: 68px;
   line-height: 20px; }
-#databases .level-5 {
+.database .level-5 {
   padding-left: 85px;
   line-height: 20px; }
-#databases .level-6 {
+.database .level-6 {
   padding-left: 102px;
   line-height: 20px; }
-#databases .level-7 {
+.database .level-7 {
   padding-left: 119px;
   line-height: 20px; }
-#databases .level-8 {
+.database .level-8 {
   padding-left: 136px;
   line-height: 20px; }
-#databases .level-9 {
+.database .level-9 {
   padding-left: 153px;
   line-height: 20px; }
-#databases .level-10 {
+.database .level-10 {
   padding-left: 170px;
   line-height: 20px; }
-#databases .toggle {
+.database .toggle {
   color: #aeaeae; }
 
 #search-view .document em {
