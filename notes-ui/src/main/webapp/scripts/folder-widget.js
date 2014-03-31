@@ -49,7 +49,7 @@ $.widget('notes.folder', {
         });
 
         if (typeof $this.options.onSelect !== 'undefined' && $this.options.onSelect !== null) {
-            $rendered.find('a').attr('href', '#').click(function () {
+            $rendered.find('a.name').attr('href', '#').click(function () {
                 $this.options.onSelect(model);
             });
         }
@@ -173,7 +173,9 @@ $.widget('notes.folder', {
         var $self = this;
         return {
             parent: $self,
-            model: new notes.model.Folder(data)
+            model: new notes.model.Folder(data),
+            onSelect: $self.options.onSelect,
+            sync: $self.options.sync
         };
     },
 
