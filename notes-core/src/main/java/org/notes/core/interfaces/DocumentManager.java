@@ -27,5 +27,5 @@ public interface DocumentManager {
 
     PdfDocument uploadDocument(List<FileItem> items) throws NotesException;
 
-    void moveTo(Long documentId, Long folderId) throws NotesException;
+    void moveTo(List<Long> documentId, Long folderId) throws NotesException;
 }

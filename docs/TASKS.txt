@@ -1,14 +1,20 @@
 IN ARBEIT
-- proxy: dont' improt bootstrap rules for body, only for notes context
 - delete documents/folders
 - routing: folder nur laden, wenn sie auch angezeigt werden. bei suche nicht. auch schon beim seiten laden, folder werden erst geladen, wenn tree geladen ist
-- document/folder loeschen
 - search: auf sidebar facetten anzeigen?
 - search: jedes document soll die node ids ihrer parents indexiert bekommen, damit search-in-folder moeglich wird
 - search: auch tags indexieren
 - tree: darstellung verbessern: colors, icons
 
 OFFEN
+- activeFolderId, defaultFolderId,.. should only access the json, no explicit setters/getters
+- replace dialogs.js
+- only save if there are changes
+- no notification for 'saved'
+- block closing if unsaved
+- implement service dao structure
+- delete folders only if not specialized (unsorted, trash)
+- in doc view show icon, date/time next to it (which is below title)
 - show move/trash links only if document is selected
 - New Folder link into More
 - pdf is saved twice

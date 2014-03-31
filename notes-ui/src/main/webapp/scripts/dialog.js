@@ -61,11 +61,11 @@ notes.dialog.folder = {
             var model = new notes.model.Folder({
                 name: $input.val(),
                 parentId: parentId,
-                databaseId: notes.databases.id()
+                databaseId: notes.folders.databaseId()
             });
             model.save(null, {
                 success: function () {
-                    notes.databases.reload();
+                    $('#databases').database('reload');
                 }
             });
         };
@@ -101,76 +101,3 @@ notes.dialog.folder = {
             }));
     }
 };
-//
-//notes.dialog.document = {
-//
-//    bookmark: function () {
-//
-//        var $input = $('<input/>', {name: 'name', type: 'text', value: 'http://' });
-//
-//        $('<div/>', {class: 'dialog'}).append(
-//                $('<div/>').append(
-//                    $input
-//                )
-//            ).dialog($.extend({}, notes.dialog.defaults, {
-//                title: 'From Web',
-//                open: function () {
-//                    $input.focus().select();
-//                },
-//                buttons: [
-//                    {
-//                        text: 'Bookmark',
-//                        click: function () {
-//
-//                            $(this).dialog('close');
-//
-//                            var bookmark = new notes.model.Bookmark({
-//                                url: $input.val(),
-//                                folderId: notes.folders.activeFolderId()
-//                            });
-//                            bookmark.save(null, {success: function () {
-////                            bookmark.save(null, {success: function (newmodel) {
-////                                var $pdfLayer = $('#bookmark-preview').show();
-////
-////                                var fetchModel = function () {
-////                                    bookmark.fetch({success: function () {
-////                                        if (bookmark.has('siteSnapshotId')) {
-////                                            console.info(bookmark.get('siteSnapshotId'));
-////
-////                                            var maxPos = {
-////                                                top: 93,
-////                                                left: 20
-////                                            };
-////
-////                                            var pdfConfig = {
-////                                                fileId: bookmark.get('siteSnapshotId'),
-////                                                page: 1,
-////                                                position: maxPos,
-////                                                layer: $pdfLayer.find('#bookmark-preview-pdf')
-////                                            };
-////
-////                                            pdfloader.loadPdf(pdfConfig);
-////
-////                                        } else {
-////                                            setTimeout(fetchModel, 2000);
-////                                        }
-////                                    }})
-////                                };
-////
-////                                setTimeout(fetchModel, 2000);
-//
-//                                // mark area
-//                                $('#document-list').documentList('refresh', bookmark.get('folderId'));
-//                            }});
-//                        }
-//                    },
-//                    {
-//                        text: 'Cancel',
-//                        click: function () {
-//                            $(this).dialog('close');
-//                        }
-//                    }
-//                ]
-//            }));
-//    }
-//};

@@ -189,7 +189,7 @@
         <!-- LEFT -->
         <div class="col-lg-3 sidebar" style="border-right: 1px solid #E2E2E2; min-height: 600px;">
 
-            <div id="databases"><!-- generated --></div>
+            <div id="databases" class="database"><!-- generated --></div>
 
         </div>
         <!-- /sidebar -->
@@ -238,16 +238,15 @@
                                         <div class="modal-header">
                                             <button type="button" class="close" data-dismiss="modal"
                                                     aria-hidden="true">&times;</button>
-                                            <h4 class="modal-title">Move Documents</h4>
+                                            <h4 class="modal-title">Choose Destination Folder</h4>
                                         </div>
                                         <div class="modal-body">
-                                            tree
+                                            <div class="database">
+                                                <!-- generated -->
+                                            </div>
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-default" data-dismiss="modal">Close
-                                            </button>
-                                            <button type="button" class="btn btn-primary" data-dismiss="modal">
-                                                Move
                                             </button>
                                         </div>
                                     </div>
@@ -436,9 +435,10 @@
         </a>
         </li>
         <li>
+            <!--todo move current document, don't use id-->
             <a href="#" title="Move" onclick="notes.documents.moveDialog([<%= id %>])">Move</a>
         </li>
-        <li><a href="#" title="Trash" onclick="notes.documents.trash([<%= id %>])">Trash</a></li>
+        <li><a href="#" title="Trash" onclick="notes.documents.trashOne(<%= id %>)">Trash</a></li>
 
 
         <li><span
@@ -1052,7 +1052,7 @@
 <script src="scripts/editor-text-widget.js"></script>
 <script src="scripts/editor-pdf-widget.js"></script>
 
-<script src="scripts/databases.js"></script>
+<script src="scripts/database-widget.js"></script>
 <script src="scripts/folder-widget.js"></script>
 <script src="scripts/folders.js"></script>
 <script src="scripts/queries.js"></script>

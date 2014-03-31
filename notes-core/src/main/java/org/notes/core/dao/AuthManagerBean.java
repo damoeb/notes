@@ -105,11 +105,17 @@ public class AuthManagerBean implements AuthManager {
 
             StandardDatabase database = databaseManager.createDatabase(new StandardDatabase(), user);
 
-            StandardFolder folder = new StandardFolder();
-            folder.setName("Unsorted");
-            folderManager.createFolder(folder, null, database);
+            StandardFolder unsorted = new StandardFolder();
+            unsorted.setName("Unsorted");
+            folderManager.createFolder(unsorted, null, database);
 
-            databaseManager.setDefaultFolder(database, folder);
+            databaseManager.setDefaultFolder(database, unsorted);
+
+            StandardFolder trash = new StandardFolder();
+            trash.setName("Trash");
+            folderManager.createFolder(trash, null, database);
+
+            databaseManager.setTrashFolder(database, trash);
 
             return user;
         } catch (NotesException t) {

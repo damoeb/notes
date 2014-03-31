@@ -7,7 +7,9 @@
     notes.folders = {
 
         _activeFolderId: 0,
+        _trashFolderId: 0,
         _defaultFolderId: 0,
+        _databaseId: 0,
         _descendants: {},
 
         activeFolderId: function (id) {
@@ -22,6 +24,23 @@
                 // todo sync activefolderid
             } else {
                 return this._activeFolderId;
+            }
+        },
+
+
+        databaseId: function (id) {
+            if (typeof id !== 'undefined') {
+                this._databaseId = id;
+            } else {
+                return this._databaseId;
+            }
+        },
+
+        trashFolderId: function (id) {
+            if (typeof id !== 'undefined') {
+                this._trashFolderId = parseInt(id);
+            } else {
+                return this._trashFolderId;
             }
         },
 

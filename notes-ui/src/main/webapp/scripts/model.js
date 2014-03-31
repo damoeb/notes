@@ -15,6 +15,7 @@ notes.model = {
 
     BasicDocument: Backbone.Model.extend({
         defaults: {
+            id: null,
             modified: null,
             title: '',
             star: false,
@@ -25,6 +26,7 @@ notes.model = {
 
     TextDocument: Backbone.Model.extend({
         defaults: {
+            id: null,
             modified: null,
             title: '',
             star: false,

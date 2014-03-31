@@ -16,34 +16,6 @@
             }
         },
 
-        trash: function (ids) {
-
-            console.log(ids);
-
-            if (ids.length > 0) {
-                // on success
-                for (var i = 0; i < ids.length; i++) {
-                    $('.document-' + ids[i]).remove();
-                }
-
-                // todo refresh current folder
-
-
-            }
-
-        },
-
-        moveDialog: function (ids) {
-
-            console.log(ids);
-
-            if (ids.length > 0) {
-                // todo render tree
-                $('#move-documents-dialog').modal().find('.modal-body');
-            }
-
-        },
-
         getSelectedIds: function () {
             var ids = [];
             var $fields = $('.document input[type="checkbox"]:checked');
@@ -85,34 +57,95 @@
             $('#search-view').hide();
         },
 
-        moveTo: function (document, folder) {
+        trashOne: function (id) {
+            console.log('trash one');
 
-            var newFolderId = folder.get('id');
-            var oldFolderId = document.folderId;
+            var callback = function (success) {
 
-            var params = {
-                '${doc}': document.id,
-                '${folderId}': newFolderId
+                if (success) {
+
+                    // show doc list
+                }
+            };
+
+            this._moveTo([id], notes.folders.trashFolderId(), callback);
+        },
+
+        trash: function (ids) {
+
+            console.log('trash selection');
+
+            var callback = function (success) {
+
+                if (success) {
+
+                }
+            };
+
+            this._moveTo(ids, notes.folders.trashFolderId(), callback);
+        },
+
+        moveDialog: function (ids) {
+
+            console.log(ids);
+
+            var $this = this;
+
+            if (ids.length > 0) {
+                // todo render tree
+                $('#move-documents-dialog').modal().find('.database').database({
+                    onSelect: function (model) {
+                        var toFolderId = model.get('id');
+                        console.log('select ' + toFolderId);
+                        $this.moveTo($this.getSelectedIds(), toFolderId);
+                        $('#move-documents-dialog').modal('hide');
+                    },
+                    sync: false
+                });
+            }
+
+        },
+
+        moveTo: function (documentIds, folderId) {
+
+            var callback = function (success) {
+                if (success) {
+//                    noty({type: 'success', text: 'Moved to <a href="#folder:' + newFolderId + '">' + notes.folders.getFolderModel(newFolderId).get('name') + '</a>'});
+                }
+            };
+
+            this._moveTo(documentIds, folderId, callback);
+        },
+
+        _moveTo: function (documentIds, folderId, callback) {
+
+            var newFolderId = folderId;
+            var oldFolderId = notes.folders.activeFolderId();
+
+            var payload = {
+                'documentIds': documentIds,
+                'toFolderId': newFolderId
             };
 
             var onSuccess = function () {
 
 //              todo bad style to fetch parent first
-                $('.folder-' + newFolderId).parent().folder('updateDocCount', 1);
-                $('.folder-' + oldFolderId).parent().folder('updateDocCount', -1);
+                $('.folder-' + newFolderId).parent().folder('updateDocCount', documentIds.length);
+                $('.folder-' + oldFolderId).parent().folder('updateDocCount', -documentIds.length);
 
-                $('.document-' + document.id).remove();
+                for (var i = 0; i < documentIds.length; i++) {
+                    $('.document-' + documentIds[i]).remove();
+                }
 
-                var message = 'Moved to <a href="#folder:' + newFolderId + '">' + notes.folders.getFolderModel(newFolderId).get('name') + '</a>';
-
-                noty({type: 'success', text: message});
+                callback(true);
             };
 
             var onError = function () {
+                callback(false);
                 noty({type: 'error', text: 'An error occurred'});
             };
 
-            notes.util.jsonCall('POST', REST_SERVICE + '/document/move/${doc}/${folderId}', params, null, onSuccess, onError);
+            notes.util.jsonCall('POST', REST_SERVICE + '/document/move', null, JSON.stringify(payload), onSuccess, onError);
         }
     };
 

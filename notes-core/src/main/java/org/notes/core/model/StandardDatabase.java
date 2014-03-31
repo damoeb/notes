@@ -28,6 +28,7 @@ public class StandardDatabase extends Node implements Database {
     public static final String FK_DATABASE_ID = "database_id";
     public static final String ACTIVE_FOLDER_ID = "active_folder_id";
     public static final String DEFAULT_FOLDER_ID = "default_folder_id";
+    public static final String TRASH_FOLDER_ID = "trash_folder_id";
 
 //  -- References ------------------------------------------------------------------------------------------------------
 
@@ -51,6 +52,14 @@ public class StandardDatabase extends Node implements Database {
 
     @Column(insertable = false, updatable = false, name = DEFAULT_FOLDER_ID, nullable = true)
     private Long defaultFolderId;
+
+    @JsonIgnore
+    @OneToOne(cascade = {}, fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = TRASH_FOLDER_ID)
+    private StandardFolder trashFolder;
+
+    @Column(insertable = false, updatable = false, name = TRASH_FOLDER_ID, nullable = true)
+    private Long trashFolderId;
 
 //  --------------------------------------------------------------------------------------------------------------------
 
@@ -102,5 +111,21 @@ public class StandardDatabase extends Node implements Database {
 
     public void setDefaultFolderId(Long defaultFolderId) {
         this.defaultFolderId = defaultFolderId;
+    }
+
+    public StandardFolder getTrashFolder() {
+        return trashFolder;
+    }
+
+    public void setTrashFolder(StandardFolder trashFolder) {
+        this.trashFolder = trashFolder;
+    }
+
+    public Long getTrashFolderId() {
+        return trashFolderId;
+    }
+
+    public void setTrashFolderId(Long trashFolderId) {
+        this.trashFolderId = trashFolderId;
     }
 }

@@ -58,7 +58,7 @@ public final class TextUtils {
 
     public static String cleanHtmlRelaxed(String html) {
 
-        Cleaner cleaner = new Cleaner(Whitelist.relaxed());
+        Cleaner cleaner = new Cleaner(Whitelist.basic());
         Document cleaned = cleaner.clean(Jsoup.parse(html));
 
         return cleaned.body().text();

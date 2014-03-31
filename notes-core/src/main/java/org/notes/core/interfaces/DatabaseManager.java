@@ -17,6 +17,8 @@ public interface DatabaseManager {
 
     StandardDatabase deleteDatabase(long databaseId) throws NotesException;
 
+    void setTrashFolder(StandardDatabase database, StandardFolder folder) throws NotesException;
+
     StandardDatabase updateDatabase(long databaseId, StandardDatabase database) throws NotesException;
 
     StandardDatabase getDatabaseOfUser() throws NotesException;

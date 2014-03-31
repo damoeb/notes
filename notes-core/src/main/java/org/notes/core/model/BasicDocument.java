@@ -35,7 +35,7 @@ import java.util.*;
 @NamedQueries({
         @NamedQuery(name = Document.QUERY_BY_ID, query = "SELECT a FROM BasicDocument a where a.id=:ID"),
         @NamedQuery(name = Document.QUERY_TRIGGER, query = "SELECT a FROM BasicDocument a where a.trigger in (:TRIGGER)"),
-        @NamedQuery(name = BasicDocument.QUERY_IN_FOLDER, query = "SELECT new BasicDocument(a.id, a.uniqueHash, a.title, a.outline, a.kind, a.modified, a.star, a.thumbnailUrl, a.tagsJson, a.folderId) FROM BasicDocument a where a.folderId=:ID AND a.deleted=false")
+        @NamedQuery(name = BasicDocument.QUERY_IN_FOLDER, query = "SELECT new BasicDocument(a.id, a.uniqueHash, a.title, a.outline, a.kind, a.modified, a.star, a.thumbnailUrl, a.tagsJson, a.folderId) FROM BasicDocument a where a.folderId=:ID")
 })
 @Inheritance(strategy = InheritanceType.JOINED)
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
@@ -98,10 +98,6 @@ public class BasicDocument implements Document {
     @JsonIgnore
     @Column(length = 2048)
     private String essenceJson;
-
-    @JsonIgnore
-    @Basic
-    private boolean deleted;
 
     @JsonIgnore
     @Basic
@@ -302,14 +298,6 @@ public class BasicDocument implements Document {
 
     public void setOutline(String outline) {
         this.outline = outline;
-    }
-
-    public boolean isDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
     }
 
     public Trigger getTrigger() {

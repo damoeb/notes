@@ -3,10 +3,14 @@
 
 'use strict';
 
+// todo ugliest widget ever
+
 $.widget('notes.folder', {
     options: {
         parent: null,
-        model: null
+        model: null,
+        onSelect: null,
+        sync: true
     },
     _create: function () {
         this._reset();
@@ -44,6 +48,13 @@ $.widget('notes.folder', {
             $this._syncModel();
         });
 
+        if (typeof $this.options.onSelect !== 'undefined' && $this.options.onSelect !== null) {
+            $rendered.find('a').attr('href', '#').click(function () {
+                $this.options.onSelect(model);
+            });
+        }
+
+
         /**
          * Drap and Drop. This section will cause folder to expand if a droppable thing is hovered longer than <code>EXPAND_TIME</code>
          */
@@ -76,7 +87,7 @@ $.widget('notes.folder', {
             var document = $(ui.draggable).data('document');
 
             console.log('drop in ' + model.get('name'));
-            notes.documents.moveTo(document, model);
+            notes.documents.moveTo([document.id], model.get('id'));
 
         }});
 
@@ -92,11 +103,13 @@ $.widget('notes.folder', {
     },
 
     _syncModel: function () {
-        this.options.model.save();
+        if (this.options.sync) {
+            this.options.model.save();
+        }
     },
     updateDocCount: function (delta) {
         var model = this.options.model;
-        model.set('documentCount', model.get('documentCount') + delta);
+        model.set('documentCount', Math.max(model.get('documentCount') + delta, 0));
         this._init();
     },
     setExpanded: function (expand) {

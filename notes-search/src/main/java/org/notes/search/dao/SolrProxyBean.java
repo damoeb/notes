@@ -59,6 +59,8 @@ public class SolrProxyBean implements SearchManager {
             query.setStart(start);
             query.setRows(rows);
 
+            // todo exclude trash folder
+
             // see http://wiki.apache.org/solr/HighlightingParameters
             query.setHighlightSnippets(3);
 

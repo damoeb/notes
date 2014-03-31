@@ -71,7 +71,10 @@
 
             console.log('Hello ' + settings.user.username);
 
-            notes.databases.id(settings.databases[0].id);
+            var database = settings.databases[0];
+            notes.folders.databaseId(database.id);
+            notes.folders.defaultFolderId(database.defaultFolderId);
+            notes.folders.trashFolderId(database.trashFolderId);
 
             notes.setup.ui();
             notes.setup.router();
@@ -143,12 +146,14 @@
 
     notes.setup.ui = function () {
 
+        console.log('setup ui');
+
         $('#init-view').remove();
         $('#content-view').show();
 
         // -- Side Navigation ----------------------------------------------------------------------------------
 
-        notes.databases.init();
+        $('#databases').database();
 
         // -- Menu -- ------------------------------------------------------------------------------------------
 

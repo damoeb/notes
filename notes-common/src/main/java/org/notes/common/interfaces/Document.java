@@ -32,8 +32,6 @@ public interface Document extends Serializable {
 
     Kind getKind();
 
-    boolean isDeleted();
-
     Trigger getTrigger();
 
     void setTrigger(Trigger trigger);

@@ -66,7 +66,7 @@
             var params = {
                 '${query}': query,
                 '${start}': start,
-                '${database}': notes.databases.id(),
+                '${database}': notes.folders.databaseId(),
                 '${rows}': rows,
                 '${context}': notes.folders.activeFolderId(),
                 '${contextOnly}': notes.queries.contextOnly()

@@ -26,8 +26,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.*;
 
 //@LocalBean
@@ -212,7 +210,6 @@ public class DocumentManagerBean implements DocumentManager {
             LOGGER.info("delete document");
 
             BasicDocument document = _get(documentId);
-            document.setDeleted(true);
             document.setTrigger(Trigger.DELETE);
 
             Session session = em.unwrap(Session.class);
@@ -228,7 +225,7 @@ public class DocumentManagerBean implements DocumentManager {
                 proxy = parent;
             }
 
-            em.merge(document);
+            em.remove(document);
 
             Hibernate.initialize(document.getTags());
 
@@ -424,61 +421,51 @@ public class DocumentManagerBean implements DocumentManager {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void moveTo(Long documentId, Long toFolderId) throws NotesException {
+    public void moveTo(List<Long> documentIds, Long toFolderId) throws NotesException {
 
         try {
 
-            if (documentId == null) {
+            if (documentIds == null || documentIds.isEmpty()) {
                 throw new IllegalArgumentException("documentId is null or empty");
             }
             if (toFolderId == null) {
                 throw new IllegalArgumentException("folderId is null or empty");
             }
 
-            BasicDocument document = _get(documentId);
+            for (Long documentId : documentIds) {
 
-//            todo check permissions
+                BasicDocument document = _get(documentId);
 
-            Long fromFolderId = document.getFolderId();
+                //            todo check permissions
 
-            Session session = em.unwrap(Session.class);
-            StandardFolder fromFolderProxy = (StandardFolder) session.load(StandardFolder.class, fromFolderId);
-            if (fromFolderProxy == null) {
-                throw new IllegalArgumentException(String.format("folder with id %s is null", fromFolderId));
+                Long fromFolderId = document.getFolderId();
+
+                Session session = em.unwrap(Session.class);
+                StandardFolder fromFolderProxy = (StandardFolder) session.load(StandardFolder.class, fromFolderId);
+                if (fromFolderProxy == null) {
+                    throw new IllegalArgumentException(String.format("folder with id %s is null", fromFolderId));
+                }
+
+                fromFolderProxy.getDocuments().remove(document);
+                fromFolderProxy.setDocumentCount(fromFolderProxy.getDocumentCount() - 1);
+                em.merge(fromFolderProxy);
+
+                StandardFolder toFolderProxy = (StandardFolder) session.load(StandardFolder.class, toFolderId);
+                if (toFolderProxy == null) {
+                    throw new IllegalArgumentException(String.format("folder with id %s is null", toFolderId));
+                }
+
+                toFolderProxy.getDocuments().add(document);
+                toFolderProxy.setDocumentCount(toFolderProxy.getDocumentCount() + 1);
+                em.merge(toFolderProxy);
+
+                //          todo re-index
+
             }
-
-            fromFolderProxy.getDocuments().remove(document);
-            fromFolderProxy.setDocumentCount(fromFolderProxy.getDocumentCount() - 1);
-            em.merge(fromFolderProxy);
-
-            StandardFolder toFolderProxy = (StandardFolder) session.load(StandardFolder.class, toFolderId);
-            if (toFolderProxy == null) {
-                throw new IllegalArgumentException(String.format("folder with id %s is null", toFolderId));
-            }
-
-            toFolderProxy.getDocuments().add(document);
-            toFolderProxy.setDocumentCount(toFolderProxy.getDocumentCount() + 1);
-            em.merge(toFolderProxy);
-
-//          todo re-index
-
         } catch (Exception e) {
-            throw new NotesException(String.format("Cannot move document #%s to folder %s. Reason: %s", documentId, toFolderId, e.getMessage()));
+            throw new NotesException(String.format("Cannot move document #%s to folder %s. Reason: %s", StringUtils.join(documentIds, ", "), toFolderId, e.getMessage()));
         }
 
-    }
-
-    private void validateUrl(String url) throws NotesException {
-
-        if (StringUtils.isBlank(url)) {
-            throw new NotesException("url is empty");
-        }
-
-        try {
-            new URL(url);
-        } catch (MalformedURLException e) {
-            throw new NotesException("url is invalid");
-        }
     }
 
     private String _getFieldValue(String fieldName, List<FileItem> items) throws NotesException {

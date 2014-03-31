@@ -65,13 +65,14 @@ public class DocumentService {
     @POST
     @MethodCache
     @ServiceMetric
-    @Path(value = "/move/{documentId}/{folderId}")
+    @Path(value = "/move")
     @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     public NotesResponse moveDocument(
-            @PathParam("documentId") Long documentId,
-            @PathParam("folderId") Long folderId
+            MoveDocumentParams payload
     ) throws Exception {
-        documentManager.moveTo(documentId, folderId);
+
+        documentManager.moveTo(payload.getDocumentIds(), payload.getToFolderId());
         return NotesResponse.ok();
     }
 
