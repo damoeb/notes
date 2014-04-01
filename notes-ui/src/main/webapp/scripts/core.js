@@ -31,12 +31,12 @@
 
         var onSuccess = function () {
             console.log('logged out');
-            noty({text: 'logged out'});
+            notes.messages.information('logged out');
         };
 
         var ontLogoutFailed = function () {
             console.log('logout failed');
-            noty({type: 'error', text: 'Logout failed'});
+            notes.messages.error('Logout failed');
         };
 
         notes.util.jsonCall('GET', REST_SERVICE + '/auth/logout', null, null, onSuccess, ontLogoutFailed);
@@ -51,7 +51,7 @@
 
         var ontRegFailed = function () {
             console.log('registration failed');
-            noty({type: 'error', text: 'Cannot register'});
+            notes.messages.error('Cannot register');
         };
 
         var payload = {

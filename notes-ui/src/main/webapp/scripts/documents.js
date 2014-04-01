@@ -102,12 +102,12 @@
 
         moveDialog: function (ids) {
 
-            console.log(ids);
+            console.log('move these ids: ' + ids);
 
             var $this = this;
 
             if (ids.length > 0) {
-                // todo render tree
+
                 var $modal = $('#move-documents-dialog').modal();
                 $modal.find('.database').database({
                     onSelect: function (model) {
@@ -126,7 +126,7 @@
 
             var callback = function (success) {
                 if (success) {
-//                    noty({type: 'success', text: 'Moved to <a href="#folder:' + newFolderId + '">' + notes.folders.getFolderModel(newFolderId).get('name') + '</a>'});
+                    notes.messages.success('Moved to <a href="#folder:' + newFolderId + '">' + notes.folders.getFolderModel(newFolderId).get('name') + '</a>');
                 }
             };
 
@@ -158,7 +158,7 @@
 
             var onError = function () {
                 callback(false);
-                noty({type: 'error', text: 'An error occurred'});
+                notes.messages.error('An error occurred');
             };
 
             notes.util.jsonCall('POST', REST_SERVICE + '/document/move', null, JSON.stringify(payload), onSuccess, onError);

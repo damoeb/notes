@@ -238,7 +238,7 @@ $.widget('notes.basiceditor', {
             $this.getModel().save(null, {success: function () {
                 console.log('saved');
 
-                noty({type: 'success', text: 'Saved'});
+                notes.messages.success('Saved');
                 $('#document-list').documentList('refresh', $this.getModel().get('folderId'));
             }});
         }
