@@ -118,44 +118,17 @@
     <div class="col-lg-2">
 
         <div class="btn-group dropdown">
-            <button type="button" class="btn btn-default" data-toggle="modal"
-                    data-target="#create-document-modal">New
+            <button type="button" class="btn btn-default" onclick="notes.documents.createDialog()">New
             </button>
-
-            <div class="modal" id="create-document-modal" tabindex="-1" role="dialog" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal"
-                                    aria-hidden="true">&times;</button>
-                            <h4 class="modal-title">New Document</h4>
-                        </div>
-                        <div class="modal-body">
-                            <p><input name="name" type="text" placeholder="Title or link"
-                                      id="new-document-title" class="form-control"></p>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary" data-dismiss="modal"
-                                    onclick="notes.documents.create($('#new-document-title').val())">
-                                Continue
-                            </button>
-                        </div>
-                    </div>
-                    <!-- /.modal-content -->
-                </div>
-                <!-- /.modal-dialog -->
-            </div>
-            <!-- /.modal -->
-
 
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                 <span class="caret"></span>
                 <span class="sr-only">Toggle Dropdown</span>
             </button>
+
             <ul class="dropdown-menu" role="menu" aria-labelledby="create-doc">
                 <li role="presentation">
-                    <a role="menuitem" tabindex="-1" href="#" onclick="$('#create-document-modal').modal()">Text</a>
+                    <a role="menuitem" tabindex="-1" href="#" onclick="notes.documents.createDialog()">Text</a>
                 </li>
                 <li role="presentation" class="divider"></li>
                 <li role="presentation">
@@ -231,38 +204,13 @@
                             <a href="#" title="Move selected documents"
                                onclick="notes.documents.moveDialog(notes.documents.getSelectedIds())">Move</a>
 
-                            <div class="modal" id="move-documents-dialog" tabindex="-1" role="dialog"
-                                 aria-hidden="true">
-                            <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal"
-                                                    aria-hidden="true">&times;</button>
-                                            <h4 class="modal-title">Choose Destination Folder</h4>
-                                        </div>
-                                        <div class="modal-body">
-                                            <div class="database">
-                                                <!-- generated -->
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <!-- /.modal-content -->
-                                </div>
-                                <!-- /.modal-dialog -->
-                            </div>
-                            <!-- /.modal -->
-
                         </li>
                         <li><a href="#" title="Trash selected documents"
                                onclick="notes.documents.trash(notes.documents.getSelectedIds())">Trash</a></li>
 
 
                         <li><a href="#"
-                               onclick="notes.folders.createFolder()" title="Create new child folder">New
+                               onclick="notes.folders.createFolderDialog(true)" title="Create new child folder">New
                             Folder</a>
                         </li>
 
@@ -283,7 +231,8 @@
                             </a>
                             <ul class="dropdown-menu" role="menu" aria-labelledby="folder-options">
                                 <li role="presentation"><a role="menuitem" tabindex="-1" href="#"
-                                                           class="action-folder-rename">Rename Folder</a></li>
+                                                           class="action-folder-rename"
+                                                           onclick="notes.folders.renameDialog()">Rename Folder</a></li>
                                 <li role="presentation"><a role="menuitem" tabindex="-1" href="#"
                                                            class="action-folder-delete">Delete Folder</a></li>
                             </ul>
@@ -373,6 +322,113 @@
 
 </div>
 <!-- /content-view -->
+
+
+<!-- modals -->
+
+<div class="modal" id="create-folder-dialog" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true">&times;</button>
+                <h4 class="modal-title">New Folder</h4>
+            </div>
+            <div class="modal-body">
+                <p><input name="name" type="text" class="folder-name form-control"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary submit" data-dismiss="modal">
+                    Create
+                </button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+
+<div class="modal" id="rename-folder-dialog" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Rename Folder</h4>
+            </div>
+            <div class="modal-body">
+                <p><input name="name" type="text" class="folder-name form-control"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary submit" data-dismiss="modal">
+                    Rename
+                </button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+<div class="modal" id="move-documents-dialog" tabindex="-1" role="dialog"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Choose Destination Folder</h4>
+            </div>
+            <div class="modal-body">
+                <div class="database">
+                    <!-- generated -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close
+                </button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+
+<div class="modal" id="create-document-dialog" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true">&times;</button>
+                <h4 class="modal-title">New Document</h4>
+            </div>
+            <div class="modal-body">
+                <p><input name="name" type="text" placeholder="Title or link"
+                          class="document-title form-control"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary submit" data-dismiss="modal">
+                    Continue
+                </button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+
+<!-- /modals -->
+
 
 <div id="dialog"></div>
 
@@ -626,7 +682,7 @@
         <i class="fa fa-angle-right fa-fw"></i>
         <ul class="dropdown-menu" role="menu" aria-labelledby="bc-db">
             <li role="presentation"><a role="menuitem" tabindex="-1" href="#"
-                                       onclick="notes.dialog.folder.newFolder(null)">Create Folder</a></li>
+                                       onclick="notes.folders.createFolderDialog(false)">Create Folder</a></li>
         </ul>
     </li>
 </script>
@@ -1060,7 +1116,6 @@
 <script src="scripts/documents.js"></script>
 <script src="scripts/core.js"></script>
 <script src="scripts/model.js"></script>
-<script src="scripts/dialog.js"></script>
 
 <!-- endbuild -->
 

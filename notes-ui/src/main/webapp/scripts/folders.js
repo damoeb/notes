@@ -60,16 +60,39 @@
             return this._descendants[folderId];
         },
 
-        createFolder: function () {
-//            todo check
-//            notes.dialog.folder.newFolder(new notes.model.Folder({id:notes.folders.activeFolderId()}))
-            notes.dialog.folder.newFolder(
-                new notes.model.Folder(
-                    {
-                        id: this.activeFolderId()
+        createFolderDialog: function (isChild) {
+
+            console.log('create folder');
+
+            var $this = this;
+
+            var $modal = $('#create-folder-dialog').modal();
+
+            var $name = $modal.find('.folder-name').val('').focus().select();
+
+            var parentId = isChild ? $this.activeFolderId() : null;
+
+            var fnSubmit = function () {
+
+                var model = new notes.model.Folder({
+                    name: $name.val(),
+                    parentId: parentId,
+                    databaseId: notes.folders.databaseId()
+                });
+                model.save(null, {
+                    success: function () {
+                        $('#databases').database('reload');
                     }
-                )
-            );
+                });
+
+                $modal.modal('hide');
+            };
+            $name.keypress(function (e) {
+                if (e.which == 13) {
+                    fnSubmit();
+                }
+            });
+            $modal.find('.submit').click(fnSubmit);
         },
 
         open: function (folderId) {
@@ -86,7 +109,36 @@
 //            } else {
 //                // todo open folder
 //            }
+        },
+
+        rename: function (folderId, name) {
+//            todo implement
+            console.log('Rename ' + folderId + ' to ' + name);
+        },
+
+        renameDialog: function () {
+
+            var $this = this;
+
+            var folderId = this.activeFolderId();
+
+            console.log('rename folder ' + folderId);
+
+            var $modal = $('#rename-folder-dialog').modal();
+            var $name = $modal.find('.folder-name').val($this.getFolderModel(folderId).get('name')).focus().select();
+
+            var fnSubmit = function () {
+                $this.rename(folderId, $name.val());
+                $modal.modal('hide');
+            };
+            $name.keypress(function (e) {
+                if (e.which == 13) {
+                    fnSubmit();
+                }
+            });
+            $modal.find('.submit').click(fnSubmit);
         }
+
     };
 
 })(notes);

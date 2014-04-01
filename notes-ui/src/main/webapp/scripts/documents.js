@@ -85,6 +85,21 @@
             this._moveTo(ids, notes.folders.trashFolderId(), callback);
         },
 
+        createDialog: function () {
+            var $modal = $('#create-document-dialog').modal();
+            var $title = $modal.find('.document-title').val('').focus();
+            var fnSubmit = function () {
+                notes.documents.create($title.val());
+                $modal.modal('hide');
+            };
+            $title.keypress(function (e) {
+                if (e.which == 13) {
+                    fnSubmit();
+                }
+            });
+            $modal.find('.submit').click(fnSubmit);
+        },
+
         moveDialog: function (ids) {
 
             console.log(ids);
@@ -93,12 +108,13 @@
 
             if (ids.length > 0) {
                 // todo render tree
-                $('#move-documents-dialog').modal().find('.database').database({
+                var $modal = $('#move-documents-dialog').modal();
+                $modal.find('.database').database({
                     onSelect: function (model) {
                         var toFolderId = model.get('id');
                         console.log('select ' + toFolderId);
                         $this.moveTo($this.getSelectedIds(), toFolderId);
-                        $('#move-documents-dialog').modal('hide');
+                        $modal.modal('hide');
                     },
                     sync: false
                 });

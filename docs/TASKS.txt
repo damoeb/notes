@@ -7,9 +7,9 @@ IN ARBEIT
 - tree: darstellung verbessern: colors, icons
 
 OFFEN
+- suche mit autosuggest, alte queries speichern
 - activeFolderId, defaultFolderId,.. should only access the json, no explicit setters/getters
 - special folders in bold
-- alle popups auf bootstrap (replace dialogs.js)
 - only save if there are changes
 - no notification for 'saved'
 - block closing if unsaved
