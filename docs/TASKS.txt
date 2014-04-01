@@ -11,7 +11,6 @@ OFFEN
 - suche mit autosuggest, alte queries speichern
 - activeFolderId, defaultFolderId,.. should only access the json, no explicit setters/getters
 - special folders in bold
-- only save if there are changes
 - block closing if unsaved
 - implement service dao structure
 - delete folders only if not specialized (unsorted, trash)

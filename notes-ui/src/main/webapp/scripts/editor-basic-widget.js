@@ -15,6 +15,8 @@ $.widget('notes.basiceditor', {
 
         console.log('create parent');
 
+        $this.tagsChanged = false;
+
         console.log('link editor');
 
         $rendered.find('.editable-simple').on('dblclick', function () {

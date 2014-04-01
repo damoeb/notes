@@ -138,8 +138,14 @@
                         }
                         break;
                     default:
-                        if (y[p] !== x[p]) {
-                            return false;
+                        if (typeof(y[p]) === 'string' && typeof(x[p]) === 'string') {
+                            if (y[p].trim() !== x[p].trim()) {
+                                return false;
+                            }
+                        } else {
+                            if (y[p] !== x[p]) {
+                                return false;
+                            }
                         }
                 }
             }
