@@ -8,18 +8,18 @@
     <persistence-unit name="primary">
         <jta-data-source>java:jboss/postgresDS</jta-data-source>
 
-        <class>org.notes.core.model.StandardFileReference</class>
-        <class>org.notes.common.model.FullText</class>
-        <class>org.notes.core.model.BasicDocument</class>
-        <class>org.notes.core.model.TextDocument</class>
-        <class>org.notes.core.model.User</class>
-        <class>org.notes.core.model.Account</class>
-        <class>org.notes.core.model.Attachment</class>
-        <class>org.notes.core.model.StandardDatabase</class>
-        <class>org.notes.core.model.StandardFolder</class>
+        <class>org.notes.core.domain.StandardFileReference</class>
+        <class>org.notes.common.domain.FullText</class>
+        <class>org.notes.core.domain.BasicDocument</class>
+        <class>org.notes.core.domain.TextDocument</class>
+        <class>org.notes.core.domain.User</class>
+        <class>org.notes.core.domain.Account</class>
+        <class>org.notes.core.domain.Attachment</class>
+        <class>org.notes.core.domain.StandardDatabase</class>
+        <class>org.notes.core.domain.StandardFolder</class>
 
-        <class>org.notes.common.model.TermFrequency</class>
-        <class>org.notes.common.model.TermFrequencyProperties</class>
+        <class>org.notes.common.domain.TermFrequency</class>
+        <class>org.notes.common.domain.TermFrequencyProperties</class>
 
         <class>org.notes.core.text.FingerPrint</class>
 

@@ -2,8 +2,8 @@ package org.notes.plugin.tf;
 
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.maven.plugin.logging.Log;
-import org.notes.common.model.TermFrequency;
-import org.notes.common.model.TermFrequencyPropertiesKey;
+import org.notes.common.domain.TermFrequency;
+import org.notes.common.domain.TermFrequencyPropertiesKey;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;

@@ -2,13 +2,11 @@ package org.notes.core;
 
 import org.apache.log4j.Logger;
 import org.notes.common.configuration.Configuration;
-import org.notes.common.interfaces.FolderManager;
-import org.notes.core.interfaces.AccountManager;
-import org.notes.core.interfaces.DatabaseManager;
-import org.notes.core.interfaces.DocumentManager;
-import org.notes.core.interfaces.UserManager;
-import org.notes.core.model.Account;
-import org.notes.core.model.AccountType;
+import org.notes.common.services.FolderService;
+import org.notes.core.services.AccountService;
+import org.notes.core.services.DatabaseService;
+import org.notes.core.services.DocumentService;
+import org.notes.core.services.UserService;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -27,19 +25,19 @@ public class StartUp {
     private boolean initialized = false;
 
     @Inject
-    private DatabaseManager databaseManager;
+    private DatabaseService databaseService;
 
     @Inject
-    private FolderManager folderManager;
+    private FolderService folderService;
 
     @Inject
-    private DocumentManager documentManager;
+    private DocumentService documentService;
 
     @Inject
-    private UserManager userManager;
+    private UserService userService;
 
     @Inject
-    private AccountManager accountManager;
+    private AccountService accountService;
 
     public StartUp() {
         //
@@ -57,10 +55,10 @@ public class StartUp {
 
                 try {
 
-                    Account a = new Account();
-                    a.setType(AccountType.BASIC);
-                    a.setQuota(1000l);
-                    a = accountManager.createAccount(a);
+//                    Account a = new Account();
+//                    a.setType(AccountType.BASIC);
+//                    a.setQuota(1000l);
+//                    a = accountService.createAccount(a);
 
                 } catch (Exception e) {
                     e.printStackTrace();

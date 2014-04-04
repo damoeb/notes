@@ -12,12 +12,12 @@ import org.notes.common.configuration.Configuration;
 import org.notes.common.configuration.ConfigurationProperty;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.configuration.SolrFields;
+import org.notes.common.domain.Document;
+import org.notes.common.domain.Folder;
+import org.notes.common.domain.FullText;
+import org.notes.common.domain.Trigger;
 import org.notes.common.exceptions.NotesException;
-import org.notes.common.interfaces.Document;
-import org.notes.common.interfaces.FolderManager;
-import org.notes.common.model.Folder;
-import org.notes.common.model.FullText;
-import org.notes.common.model.Trigger;
+import org.notes.common.services.FolderService;
 import org.notes.common.utils.TextUtils;
 
 import javax.ejb.*;
@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Set;
 
 //@LocalBean
+@Deprecated
 @Singleton
 @NotesInterceptors
 @TransactionAttribute(TransactionAttributeType.NEVER)
@@ -47,7 +48,7 @@ public class IndexerScheduler {
     private EntityManager em;
 
     @Inject
-    private FolderManager folderManager;
+    private FolderService folderService;
 
     private HttpSolrServer solr;
 
@@ -139,7 +140,7 @@ public class IndexerScheduler {
             while (folderId != null) {
                 doc.setField(SolrFields.FOLDER, folderId);
 
-                Folder parent = folderManager.getFolder(folderId);
+                Folder parent = folderService.getFolder(folderId);
                 folderId = parent.getId();
             }
         } catch (NotesException e) {

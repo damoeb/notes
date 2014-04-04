@@ -7,7 +7,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.safety.Cleaner;
 import org.jsoup.safety.Whitelist;
-import org.notes.common.model.TermFrequency;
+import org.notes.common.domain.TermFrequency;
 import org.notes.common.tokenizer.Language;
 import org.notes.common.tokenizer.TokenStreamProvider;
 import org.notes.common.utils.TextUtils;

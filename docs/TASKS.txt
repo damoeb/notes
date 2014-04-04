@@ -7,7 +7,6 @@ IN ARBEIT
 - tree: darstellung verbessern: colors, icons
 
 OFFEN
-- jms http://www.jboss.org/jdf/quickstarts/jboss-as-quickstart/helloworld-jms/
 - suche mit autosuggest, alte queries speichern
 - activeFolderId, defaultFolderId,.. should only access the json, no explicit setters/getters
 - special folders in bold

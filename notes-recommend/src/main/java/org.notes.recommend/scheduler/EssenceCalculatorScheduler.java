@@ -2,9 +2,9 @@ package org.notes.recommend.scheduler;
 
 import org.apache.log4j.Logger;
 import org.notes.common.configuration.NotesInterceptors;
-import org.notes.common.interfaces.Document;
-import org.notes.common.model.Trigger;
-import org.notes.recommend.bean.TextEssence;
+import org.notes.common.domain.Document;
+import org.notes.common.domain.Trigger;
+import org.notes.recommend.service.TextEssence;
 
 import javax.ejb.*;
 import javax.inject.Inject;

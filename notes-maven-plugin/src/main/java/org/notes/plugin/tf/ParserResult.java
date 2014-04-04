@@ -1,6 +1,6 @@
 package org.notes.plugin.tf;
 
-import org.notes.common.model.TermFrequency;
+import org.notes.common.domain.TermFrequency;
 
 import java.util.SortedSet;
 

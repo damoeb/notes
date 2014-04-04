@@ -2,10 +2,10 @@ package org.notes.search.scheduler;
 
 import org.apache.log4j.Logger;
 import org.notes.common.configuration.NotesInterceptors;
+import org.notes.common.domain.Document;
+import org.notes.common.domain.Extractable;
+import org.notes.common.domain.Trigger;
 import org.notes.common.exceptions.NotesException;
-import org.notes.common.interfaces.Document;
-import org.notes.common.interfaces.Extractable;
-import org.notes.common.model.Trigger;
 
 import javax.ejb.*;
 import javax.persistence.EntityManager;
@@ -14,6 +14,7 @@ import javax.persistence.Query;
 import java.util.Arrays;
 import java.util.List;
 
+@Deprecated
 @Singleton
 @ConcurrencyManagement(ConcurrencyManagementType.CONTAINER)
 @NotesInterceptors

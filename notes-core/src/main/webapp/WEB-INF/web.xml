@@ -4,7 +4,7 @@
 
     <filter>
         <filter-name>BridgeFilter</filter-name>
-        <filter-class>org.notes.core.request.RequestPropertyBridgeFilter</filter-class>
+        <filter-class>org.notes.core.endpoints.request.RequestPropertyBridgeFilter</filter-class>
     </filter>
 
     <filter-mapping>

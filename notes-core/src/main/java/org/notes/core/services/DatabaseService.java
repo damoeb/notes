@@ -1,100 +1,29 @@
 package org.notes.core.services;
 
-import org.notes.common.cache.MethodCache;
-import org.notes.common.configuration.NotesInterceptors;
-import org.notes.common.model.Database;
-import org.notes.core.interfaces.DatabaseManager;
-import org.notes.core.metric.ServiceMetric;
-import org.notes.core.model.StandardDatabase;
+import org.notes.common.exceptions.NotesException;
+import org.notes.core.domain.StandardDatabase;
+import org.notes.core.domain.StandardFolder;
+import org.notes.core.domain.User;
 
-import javax.inject.Inject;
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
+import javax.ejb.Local;
+import java.util.List;
 
-@NotesInterceptors
-@Path("/database")
-public class DatabaseService {
+@Local
+public interface DatabaseService {
 
-    @Inject
-    private DatabaseManager databaseManager;
+    StandardDatabase createDatabase(StandardDatabase database, User user) throws NotesException;
 
-    @PUT
-    @MethodCache
-    @ServiceMetric
-    @Path("/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public NotesResponse updateDatabase(
-            StandardDatabase database,
-            @PathParam("id") long databaseId
-    ) throws Exception {
-        try {
-            Database result = databaseManager.updateDatabase(databaseId, database);
-            return NotesResponse.ok(result);
-        } catch (Exception e) {
-            return NotesResponse.error(e);
-        }
-    }
+    StandardDatabase getDatabase(long databaseId) throws NotesException;
 
-    @GET
-    @MethodCache
-    @ServiceMetric
-    @Path("/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public NotesResponse getDatabase(
-            @PathParam("id") long databaseId
-    ) throws Exception {
-        try {
-            Database database = databaseManager.getDatabase(databaseId);
-            return NotesResponse.ok(database);
+    StandardDatabase deleteDatabase(long databaseId) throws NotesException;
 
-        } catch (Exception e) {
-            return NotesResponse.error(e);
-        }
-    }
+    void setTrashFolder(StandardDatabase database, StandardFolder folder) throws NotesException;
 
-    @GET
-    @MethodCache
-    @ServiceMetric
-    @Path("/{id}/roots")
-    @Produces(MediaType.APPLICATION_JSON)
-    public NotesResponse getRootFoldersInDatabase(
-            @PathParam("id") long databaseId
-    ) throws Exception {
-        try {
-            return NotesResponse.ok(databaseManager.getFolders(databaseId));
+    StandardDatabase updateDatabase(long databaseId, StandardDatabase database) throws NotesException;
 
-        } catch (Exception e) {
-            return NotesResponse.error(e);
-        }
-    }
+    StandardDatabase getDatabaseOfUser() throws NotesException;
 
-    @DELETE
-    @MethodCache
-    @ServiceMetric
-    @Produces(MediaType.APPLICATION_JSON)
-    public NotesResponse deleteDatabase(
-            @PathParam("id") long databaseId
-    ) throws Exception {
-        try {
-            return NotesResponse.ok(databaseManager.deleteDatabase(databaseId));
-        } catch (Exception e) {
-            return NotesResponse.error(e);
-        }
-    }
+    List<StandardFolder> getFolders(long databaseId) throws NotesException;
 
-    @GET
-    @MethodCache
-    @ServiceMetric
-    @Produces(MediaType.APPLICATION_JSON)
-    public NotesResponse getDatabases(
-    ) throws Exception {
-        try {
-            StandardDatabase database = databaseManager.getDatabaseOfUser();
-            database.setDefaultFolder(null);
-            database.setActiveFolder(null);
-            return NotesResponse.ok(database);
-        } catch (Exception e) {
-            return NotesResponse.error(e);
-        }
-    }
+    void setDefaultFolder(StandardDatabase database, StandardFolder folder) throws NotesException;
 }

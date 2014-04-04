@@ -1,64 +1,19 @@
 package org.notes.core.services;
 
-import org.notes.common.cache.MethodCache;
-import org.notes.common.configuration.NotesInterceptors;
-import org.notes.core.interfaces.DocumentManager;
-import org.notes.core.interfaces.TagManager;
-import org.notes.core.metric.ServiceMetric;
-import org.notes.core.model.TextDocument;
+import org.notes.common.domain.Tag;
+import org.notes.common.exceptions.NotesException;
+import org.notes.core.domain.BasicDocument;
+import org.notes.core.domain.StandardTag;
 
-import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
+import javax.ejb.Local;
+import java.util.Collection;
 
-@NotesInterceptors
-@Path("/tag")
-public class TagService {
+@Local
+public interface TagService {
 
-//  --------------------------------------------------------------------------------------------------------------------
+    StandardTag findOrCreate(String name) throws NotesException;
 
-    @Inject
-    private TagManager tagManager;
-    @Inject
-    private DocumentManager documentManager;
+    Collection<Tag> getRecommendations(BasicDocument document) throws NotesException;
 
-    @GET
-    @ServiceMetric
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path(value = "/recommend/{documentId}")
-    public NotesResponse getRecommendations(@PathParam("documentId") long documentId) {
-        try {
-            return NotesResponse.ok(tagManager.getRecommendations(documentManager.getDocument(documentId)));
-        } catch (Throwable t) {
-            return NotesResponse.error(t);
-        }
-    }
-
-    @GET
-    @ServiceMetric
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path(value = "/recommend")
-    public NotesResponse getRecommendations(TextDocument document) {
-        try {
-            return NotesResponse.ok(tagManager.getRecommendations(document));
-        } catch (Throwable t) {
-            return NotesResponse.error(t);
-        }
-    }
-
-    @GET
-    @MethodCache
-    @ServiceMetric
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path(value = "/network")
-    public NotesResponse getNetwork() {
-        try {
-            return NotesResponse.ok(tagManager.getTagNetwork());
-        } catch (Throwable t) {
-            return NotesResponse.error(t);
-        }
-    }
+    Collection<Tag> getTagNetwork() throws NotesException;
 }
