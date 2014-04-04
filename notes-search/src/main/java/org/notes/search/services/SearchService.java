@@ -1,11 +1,11 @@
 package org.notes.search.services;
 
+import org.notes.common.domain.Document;
 import org.notes.common.exceptions.NotesException;
 import org.notes.search.domain.SearchResponse;
 
 import javax.ejb.Local;
 
-// todo rename to solrservice
 @Local
 public interface SearchService {
 
@@ -22,5 +22,13 @@ public interface SearchService {
      * @throws NotesException
      */
     SearchResponse query(String queryString, Integer start, Integer rows, Long databaseId, Integer currentFolderId, Boolean contextOnly) throws NotesException;
+
+    /**
+     * Have document indexed
+     *
+     * @param document
+     * @throws NotesException
+     */
+    void index(Document document) throws NotesException;
 
 }

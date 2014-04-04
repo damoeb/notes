@@ -126,7 +126,7 @@
 
             var callback = function (success) {
                 if (success) {
-                    notes.messages.success('Moved to <a href="#folder:' + newFolderId + '">' + notes.folders.getFolderModel(newFolderId).get('name') + '</a>');
+                    notes.messages.success('Moved to <a href="#folder:' + folderId + '">' + notes.folders.getFolderModel(folderId).get('name') + '</a>');
                 }
             };
 

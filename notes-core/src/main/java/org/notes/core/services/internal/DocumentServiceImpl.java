@@ -46,7 +46,7 @@ public class DocumentServiceImpl implements DocumentService {
     private ConnectionFactory connectionFactory;
 
     @Resource(mappedName = "java:jboss/exported/jms/queue/test")
-    private Queue queue;
+    private Queue indexJobQueue;
 
     @Inject
     private FolderService folderService;
@@ -109,11 +109,11 @@ public class DocumentServiceImpl implements DocumentService {
 
             connection = connectionFactory.createConnection();
             javax.jms.Session session = connection.createSession(false, javax.jms.Session.AUTO_ACKNOWLEDGE);
-            MessageProducer publisher = session.createProducer(queue);
+            MessageProducer publisher = session.createProducer(indexJobQueue);
 
             connection.start();
 
-            LOGGER.info("send index message");
+            LOGGER.info("trigger index " + document.getId());
             ObjectMessage message = session.createObjectMessage(document);
             publisher.send(message);
 

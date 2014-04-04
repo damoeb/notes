@@ -1,24 +1,21 @@
 package org.notes.search.messaging;
 
 import org.apache.log4j.Logger;
+import org.notes.common.domain.Document;
+import org.notes.common.exceptions.NotesException;
+import org.notes.search.services.SearchService;
 
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.MessageDriven;
+import javax.inject.Inject;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
-import javax.jms.TextMessage;
+import javax.jms.ObjectMessage;
 
 /**
  * Created by damoeb on 4/4/14.
  */
-//@MessageDriven(mappedName="java:jboss/exported/jms/queue/test", activationConfig =  {
-//        @ActivationConfigProperty(propertyName = "acknowledgeMode", propertyValue = "Auto-acknowledge"),
-////        @ActivationConfigProperty(propertyName = "useJNDI", propertyValue = "true"),
-////        @ActivationConfigProperty(propertyName = "destination", propertyValue = "java:jboss/exported/jms/topic/test"),
-////        java:jboss/exported/jms/topic/test
-//        @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue")
-//})
 @MessageDriven(
         name = "IndexMDB",
         activationConfig = {
@@ -36,13 +33,18 @@ public class IndexDocumentMessageBean implements MessageListener {
 
     private static final Logger LOGGER = Logger.getLogger(IndexDocumentMessageBean.class);
 
+    @Inject
+    private SearchService searchService;
 
     @Override
     public void onMessage(Message message) {
         try {
-            LOGGER.info("consume " + ((TextMessage) message).getText());
 
-        } catch (JMSException e) {
+            ObjectMessage obj = (ObjectMessage) message;
+
+            searchService.index((Document) obj.getObject());
+
+        } catch (JMSException | NotesException e) {
             LOGGER.error(e);
         }
     }
