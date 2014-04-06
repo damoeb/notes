@@ -99,7 +99,7 @@ public class DatabaseServiceImpl implements DatabaseService {
     public StandardDatabase getDatabaseOfUser() throws NotesException {
         try {
             Query query = em.createNamedQuery(StandardDatabase.QUERY_BY_USER);
-            query.setParameter("USER", sessionData.getUser().getUsername());
+            query.setParameter("USERNAME", sessionData.getUser().getUsername());
 
             return (StandardDatabase) query.getSingleResult();
 
@@ -113,7 +113,7 @@ public class DatabaseServiceImpl implements DatabaseService {
     public List<StandardFolder> getFolders(long databaseId) throws NotesException {
         try {
             Query query = em.createNamedQuery(StandardFolder.QUERY_ROOT_FOLDERS);
-            query.setParameter("OWNER", sessionData.getUser().getUsername());
+            query.setParameter("USERNAME", sessionData.getUser().getUsername());
             query.setParameter("DB_ID", databaseId);
 
             return query.getResultList();

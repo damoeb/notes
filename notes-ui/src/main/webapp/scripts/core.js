@@ -78,6 +78,7 @@
 
             notes.setup.ui();
             notes.setup.router();
+            notes.queries.init();
 
         };
 
@@ -92,8 +93,6 @@
     };
 
     // -- Search -------------------------------------------------------------------------------------------------------
-
-    notes.queries.init();
 
     $('#search-input').keypress(function (e) {
         if (e.which == 13) {
@@ -116,7 +115,7 @@
                 '': 'dashboard',
                 'doc\::id': 'document',
                 'folder\::id': 'folder',
-                'q\::query': 'search'   // #q:kiwis
+                'search\::query': 'search'   // #q:kiwis
             },
 
             search: function (query) {

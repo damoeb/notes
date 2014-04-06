@@ -26,7 +26,9 @@ $.widget('notes.basiceditor', {
                 if (onEsc || onEnter) {
                     $(this).destroy();
                 }
-            }).summernote(SUMMERNOTE_SIMPLE_CFG);
+            });
+
+            // todo add form-control
         });
         $rendered.find('.editable-complex').on('dblclick', function () {
             $(this).keypress(function (e) {

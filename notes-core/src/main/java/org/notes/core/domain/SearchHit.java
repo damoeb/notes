@@ -1,4 +1,4 @@
-package org.notes.search.domain;
+package org.notes.core.domain;
 
 import org.apache.solr.common.SolrDocument;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
@@ -13,7 +13,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class DocumentHit {
+public class SearchHit {
 
     private final Float score;
 
@@ -30,7 +30,7 @@ public class DocumentHit {
     private Long numFoundInGroup;
     private final Long section;
 
-    public DocumentHit(SolrDocument solrDocument, Map<String, List<String>> highlights) {
+    public SearchHit(SolrDocument solrDocument, Map<String, List<String>> highlights) {
 
         this.id = (Long) solrDocument.getFirstValue(SolrFields.DOCUMENT);
         this.modified = (Date) solrDocument.getFirstValue(SolrFields.MODIFIED);

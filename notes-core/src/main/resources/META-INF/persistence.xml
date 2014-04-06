@@ -8,8 +8,9 @@
     <persistence-unit name="primary">
         <jta-data-source>java:jboss/postgresDS</jta-data-source>
 
-        <class>org.notes.core.domain.StandardFileReference</class>
         <class>org.notes.common.domain.FullText</class>
+        <class>org.notes.core.domain.SearchQuery</class>
+        <class>org.notes.core.domain.StandardFileReference</class>
         <class>org.notes.core.domain.BasicDocument</class>
         <class>org.notes.core.domain.TextDocument</class>
         <class>org.notes.core.domain.User</class>
@@ -17,6 +18,7 @@
         <class>org.notes.core.domain.Attachment</class>
         <class>org.notes.core.domain.StandardDatabase</class>
         <class>org.notes.core.domain.StandardFolder</class>
+        <class>org.notes.core.domain.SmartFolder</class>
 
         <class>org.notes.common.domain.TermFrequency</class>
         <class>org.notes.common.domain.TermFrequencyProperties</class>

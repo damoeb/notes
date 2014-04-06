@@ -1,4 +1,4 @@
-package org.notes.search.domain;
+package org.notes.core.domain;
 
 import org.apache.solr.client.solrj.response.Group;
 import org.apache.solr.client.solrj.response.GroupCommand;
@@ -16,7 +16,7 @@ public class SearchResponse {
     private final long elapsedTime;
     private long numFound;
     private long start;
-    private List<DocumentHit> docs;
+    private List<SearchHit> docs;
 
     public SearchResponse(QueryResponse response) {
         Map<String, Map<String, List<String>>> highlighting = response.getHighlighting();
@@ -36,7 +36,7 @@ public class SearchResponse {
 
                     start = list.getStart();
 
-                    DocumentHit hit = new DocumentHit(solrDocument, highlighting.get(id));
+                    SearchHit hit = new SearchHit(solrDocument, highlighting.get(id));
                     hit.setNumFoundInGroup(list.getNumFound());
                     docs.add(hit);
                 }
@@ -56,7 +56,7 @@ public class SearchResponse {
         return start;
     }
 
-    public List<DocumentHit> getDocs() {
+    public List<SearchHit> getDocs() {
         return docs;
     }
 

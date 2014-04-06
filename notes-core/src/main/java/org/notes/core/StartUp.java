@@ -3,6 +3,8 @@ package org.notes.core;
 import org.apache.log4j.Logger;
 import org.notes.common.configuration.Configuration;
 import org.notes.common.services.FolderService;
+import org.notes.core.domain.Account;
+import org.notes.core.domain.AccountType;
 import org.notes.core.services.AccountService;
 import org.notes.core.services.DatabaseService;
 import org.notes.core.services.DocumentService;
@@ -55,10 +57,10 @@ public class StartUp {
 
                 try {
 
-//                    Account a = new Account();
-//                    a.setType(AccountType.BASIC);
-//                    a.setQuota(1000l);
-//                    a = accountService.createAccount(a);
+                    Account a = new Account();
+                    a.setType(AccountType.BASIC);
+                    a.setQuota(1000l);
+                    a = accountService.createAccount(a);
 
                 } catch (Exception e) {
                     e.printStackTrace();

@@ -103,7 +103,7 @@ public class TagServiceImpl implements TagService {
             Query query = em.createNamedQuery(StandardTag.QUERY_USER_NETWORK);
             query.setMaxResults(5);
 
-            query.setParameter("USER", sessionData.getUser().getUsername());
+            query.setParameter("USERNAME", sessionData.getUser().getUsername());
             return query.getResultList();
 
         } catch (Throwable t) {

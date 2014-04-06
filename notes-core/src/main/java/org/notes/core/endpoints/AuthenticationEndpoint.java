@@ -22,7 +22,7 @@ import java.util.Set;
 
 @NotesInterceptors
 @Path("/auth")
-public class AuthEndpoint {
+public class AuthenticationEndpoint {
 
     public static final String USER_SETTINGS_SESSION_KEY = "user-settings";
 

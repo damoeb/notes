@@ -1,9 +1,9 @@
-package org.notes.search.messaging;
+package org.notes.core.messaging;
 
 import org.apache.log4j.Logger;
 import org.notes.common.domain.Document;
 import org.notes.common.exceptions.NotesException;
-import org.notes.search.services.SearchService;
+import org.notes.core.services.SearchService;
 
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.MessageDriven;

@@ -33,11 +33,9 @@ public class Configuration {
     public static final String SOLR_SERVER = "notes.solr.server-url";
     public static final String SOLR_COMMIT_TIMEOUT = "notes.solr.commit-timeout";
 
-    public static final String CMD_PHANTOM_JS = "notes.cmd.phantomjs";
-    public static final String CMD_RASTERIZE_JS = "notes.cmd.rasterizejs";
-
     public static final class Constants {
         public static final int OUTLINE_LENGTH = 1024;
+        public static final int URL_LENGTH = 256;
     }
 
     private static Configuration getInstance() {

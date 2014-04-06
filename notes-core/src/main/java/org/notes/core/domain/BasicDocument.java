@@ -59,6 +59,10 @@ public class BasicDocument implements Document {
     private String outline;
 
     @Basic
+    @Column(length = Configuration.Constants.URL_LENGTH)
+    private String url;
+
+    @Basic
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Kind kind;
@@ -274,6 +278,11 @@ public class BasicDocument implements Document {
 
     public String getOwner() {
         return owner;
+    }
+
+    @Override
+    public String getUrl() {
+        return null;
     }
 
     protected void setOwner(String owner) {

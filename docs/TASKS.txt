@@ -1,5 +1,4 @@
 IN ARBEIT
-- delete documents/folders
 - routing: folder nur laden, wenn sie auch angezeigt werden. bei suche nicht. auch schon beim seiten laden, folder werden erst geladen, wenn tree geladen ist
 - search: auf sidebar facetten anzeigen?
 - search: jedes document soll die node ids ihrer parents indexiert bekommen, damit search-in-folder moeglich wird
@@ -7,20 +6,21 @@ IN ARBEIT
 - tree: darstellung verbessern: colors, icons
 
 OFFEN
+- remove all empty # links
+- special folders in special color
+- neue dokumente in weiss, alte in grau
+- implement service dao structure
+  delete documents/folders
+  delete folders only if not specialized (unsorted, trash)
 - suche mit autosuggest, alte queries speichern
 - activeFolderId, defaultFolderId,.. should only access the json, no explicit setters/getters
-- special folders in bold
 - block closing if unsaved
-- implement service dao structure
-- delete folders only if not specialized (unsorted, trash)
 - in doc view show icon, date/time next to it (which is below title)
 - show move/trash links only if document is selected
-- pdf is saved twice
 - click auf database zeigt dashboard an
 - database ist immer sichtbar, auch bei der suche
 - doc sidebar: wie sidebar.png (github)
 - let tree be scrollable
-  errors must be closed manually, infos hide after 5 sec
 - smart folder mit suchterm
 - verlinken zwischen docs
 - tags in folder anzeigen (smart folder using search)

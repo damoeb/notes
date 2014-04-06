@@ -25,6 +25,8 @@ public interface Document extends Serializable {
 
     String getOwner();
 
+    String getUrl();
+
     Kind getKind();
 
     Trigger getTrigger();

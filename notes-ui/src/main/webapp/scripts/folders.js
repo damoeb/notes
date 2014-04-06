@@ -27,7 +27,6 @@
             }
         },
 
-
         databaseId: function (id) {
             if (typeof id !== 'undefined') {
                 this._databaseId = id;

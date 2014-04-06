@@ -13,15 +13,16 @@ import java.util.Set;
 /**
  * Belongs of a database, used to classify documents.
  */
-@Entity(name = "Folder")
+@Entity(name = "StandardFolder")
 @Table(name = "StandardFolder",
         uniqueConstraints = @UniqueConstraint(columnNames = {ForeignKey.USER, "level", "name"})
 )
 @NamedQueries({
-        @NamedQuery(name = StandardFolder.QUERY_BY_ID, query = "SELECT a FROM Folder a where a.id=:ID"),
-        @NamedQuery(name = StandardFolder.QUERY_CHILDREN, query = "SELECT new Folder(a.id, a.name, a.leaf, a.documentCount, a.modified, a.level, a.expanded) FROM Folder a WHERE a.parentId = :ID"),
-        @NamedQuery(name = StandardFolder.QUERY_ROOT_FOLDERS, query = "SELECT new Folder(a.id, a.name, a.leaf, a.documentCount, a.modified, a.level, a.expanded) FROM Folder a WHERE a.databaseId = :DB_ID and a.owner = :OWNER and a.level = 0 ORDER BY a.name")
+        @NamedQuery(name = StandardFolder.QUERY_BY_ID, query = "SELECT a FROM StandardFolder a where a.id=:ID"),
+        @NamedQuery(name = StandardFolder.QUERY_CHILDREN, query = "SELECT new StandardFolder(a.id, a.name, a.leaf, a.documentCount, a.modified, a.level, a.expanded, a.specialized) FROM StandardFolder a WHERE a.parentId = :ID"),
+        @NamedQuery(name = StandardFolder.QUERY_ROOT_FOLDERS, query = "SELECT new StandardFolder(a.id, a.name, a.leaf, a.documentCount, a.modified, a.level, a.expanded, a.specialized) FROM StandardFolder a WHERE a.databaseId = :DB_ID and a.owner = :USERNAME and a.level = 0 ORDER BY a.name")
 })
+@Inheritance(strategy = InheritanceType.JOINED)
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class StandardFolder extends Node implements Folder {
 
@@ -48,6 +49,12 @@ public class StandardFolder extends Node implements Folder {
     @Basic
     private Boolean expanded = false;
 
+    /**
+     * true, if not leaf and child nodes are shown
+     */
+    @Basic
+    private Boolean specialized = false;
+
 //  -- References ------------------------------------------------------------------------------------------------------
 
     @JsonIgnore
@@ -72,7 +79,7 @@ public class StandardFolder extends Node implements Folder {
         // default
     }
 
-    public StandardFolder(long id, String name, boolean leaf, int documentCount, Date modified, int level, boolean expanded) {
+    public StandardFolder(long id, String name, boolean leaf, int documentCount, Date modified, int level, boolean expanded, boolean specialized) {
         setId(id);
         setLeaf(leaf);
         setName(name);
@@ -80,6 +87,7 @@ public class StandardFolder extends Node implements Folder {
         setModified(modified);
         setLevel(level);
         setExpanded(expanded);
+        setSpecialized(specialized);
     }
 
     public StandardFolder(long id) {
@@ -153,5 +161,13 @@ public class StandardFolder extends Node implements Folder {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Boolean isSpecialized() {
+        return specialized;
+    }
+
+    public void setSpecialized(Boolean smart) {
+        this.specialized = smart;
     }
 }

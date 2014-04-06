@@ -1,4 +1,4 @@
-package org.notes.search.services.internal;
+package org.notes.core.services.internal;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.client.HttpClient;
@@ -20,14 +20,18 @@ import org.notes.common.domain.FullText;
 import org.notes.common.exceptions.NotesException;
 import org.notes.common.services.FolderService;
 import org.notes.common.utils.TextUtils;
-import org.notes.search.domain.SearchResponse;
-import org.notes.search.services.SearchService;
+import org.notes.core.domain.SearchResponse;
+import org.notes.core.domain.SessionData;
+import org.notes.core.services.QueryService;
+import org.notes.core.services.SearchService;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -40,15 +44,21 @@ public class SolrServiceImpl implements SearchService {
     private static final Logger LOGGER = Logger.getLogger(SolrServiceImpl.class);
 
     @ConfigurationProperty(value = Configuration.SOLR_COMMIT_TIMEOUT, mandatory = true)
-    private static final int commitWithinMs = 3000;
+    private int commitWithinMs;
 
     @ConfigurationProperty(value = Configuration.SOLR_SERVER, mandatory = true)
-    private String solrUrl = "http://localhost:8080/solr-4.5.1";
+    private String solrUrl;
 
     // --
 
     @Inject
     private FolderService folderService;
+
+    @Inject
+    private QueryService queryService;
+
+    @Inject
+    private SessionData sessionData;
 
     // --
 
@@ -58,7 +68,7 @@ public class SolrServiceImpl implements SearchService {
      * {@inheritDoc}
      */
     @Override
-    public SearchResponse query(String queryString, Integer start, Integer rows, Long databaseId, Integer currentFolderId, Boolean contextOnly) throws NotesException {
+    public SearchResponse query(String queryString, Integer start, Integer rows, Long databaseId, Integer currentFolderId) throws NotesException {
         try {
 
             if (StringUtils.trim(queryString).length() < 3) {
@@ -71,6 +81,8 @@ public class SolrServiceImpl implements SearchService {
             if (rows == null || rows <= 0 || rows > 100) {
                 rows = 100;
             }
+
+            queryService.log(queryString);
 
             SolrServer server = getSolrServer();
 
@@ -107,7 +119,7 @@ public class SolrServiceImpl implements SearchService {
 
             // todo facets
 
-            // a hits can be an attachment or folder too
+            // a hits can be an attachment
 
             QueryResponse response = server.query(query);
 
@@ -200,6 +212,14 @@ public class SolrServiceImpl implements SearchService {
         doc.setField(SolrFields.KIND, document.getKind());
         doc.setField(SolrFields.OWNER, document.getOwner());
         doc.setField(SolrFields.UNIQUE_HASH, document.getUniqueHash());
+        String url = document.getUrl();
+        if (StringUtils.isNotBlank(url)) {
+            try {
+                doc.setField(SolrFields.DOMAIN, new URL(url).getHost());
+            } catch (MalformedURLException e) {
+                LOGGER.warn(String.format("url %s is invalid.", url));
+            }
+        }
         doc.setField(SolrFields.STAR, document.isStar());
         return doc;
     }

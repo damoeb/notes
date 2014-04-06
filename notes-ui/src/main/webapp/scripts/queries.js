@@ -8,7 +8,7 @@
     notes.queries = {
 
         _databaseId: null,
-        _isContextOnly: false,
+        _history: null,
 
         init: function () {
 
@@ -18,22 +18,46 @@
                 $('#document-view').hide();
                 $('#document-and-folder-view').show();
             });
+            this.loadQueryHistory();
         },
 
-        contextOnly: function (isContextOnly) {
-            if (typeof isContextOnly !== 'undefined') {
-                this._isContextOnly = isContextOnly;
+        loadQueryHistory: function () {
 
-                console.log('ContextOnly ' + isContextOnly);
+            var $this = this;
 
-                var label = 'All';
-                if (isContextOnly) {
-                    // todo show folder name
-                    label = 'Context';
-                }
-                $('#search-context-label').text(label);
+            var onSuccess = function (history) {
+                $this.history(history);
+            };
+
+            var onError = function () {
+                console.error('Cannot load query-history');
+            };
+
+            notes.util.jsonCall('GET', REST_SERVICE + '/search/history', null, null, onSuccess, onError);
+        },
+
+        history: function (queries) {
+
+            if (typeof queries !== 'undefined') {
+
+                this._history = notes.util.sortJSONArrayDESC(queries, 'lastUsed');
+
+                console.log('logged queries: ' + queries.length);
+
+                var $target = $('#search-history').empty();
+                var $this = this;
+
+                $.each(queries, function (index, query) {
+
+                    var $el = $('<a href="#"/>').text(query.query).click(function () {
+                        $this.find(query.query);
+                    });
+                    $target.append($('<li/>').append($el));
+                });
+
+
             } else {
-                return this._isContextOnly;
+                return this._history;
             }
         },
 
@@ -68,11 +92,10 @@
                 '${start}': start,
                 '${database}': notes.folders.databaseId(),
                 '${rows}': rows,
-                '${context}': notes.folders.activeFolderId(),
-                '${contextOnly}': notes.queries.contextOnly()
+                '${context}': notes.folders.activeFolderId()
             };
 
-            notes.util.jsonCall('GET', '/notes/rest/search/?query=${query}&database=${database}&start=${start}&rows=${rows}&context=${context}&contextOnly=${contextOnly}', params, null,
+            notes.util.jsonCall('GET', '/notes/rest/search/?query=${query}&database=${database}&start=${start}&rows=${rows}&context=${context}', params, null,
                 function (result) {
                     console.log(result.docs.length + ' hits');
 
@@ -84,6 +107,8 @@
                     });
                 }
             );
+
+            this.loadQueryHistory();
 
         }
 

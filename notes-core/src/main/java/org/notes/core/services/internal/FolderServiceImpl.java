@@ -168,15 +168,12 @@ public class FolderServiceImpl implements FolderService {
             if (newFolder == null) {
                 throw new NotesException("Folder is null");
             }
-            /*
-            todo
-            check if parentId changed -> ..
-              */
 
             StandardFolder folder = _get(folderId);
             folder.setName(newFolder.getName());
             folder.setModified(new Date());
             folder.setExpanded(newFolder.isExpanded());
+
             em.merge(folder);
             em.flush();
             em.refresh(folder);
