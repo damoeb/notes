@@ -92,18 +92,6 @@
         notes.util.jsonCall('GET', REST_SERVICE + '/auth/settings', null, null, onSuccess, onNotLoggedIn);
     };
 
-    // -- Search -------------------------------------------------------------------------------------------------------
-
-    $('#search-input').keypress(function (e) {
-        if (e.which == 13) {
-            notes.queries.find();
-        }
-    });
-
-    $('#action-search').click(function (e) {
-        notes.queries.find();
-    });
-
     // -- Routing ------------------------------------------------------------------------------------------------------
 
     notes.setup.router = function () {

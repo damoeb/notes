@@ -12,7 +12,7 @@ import java.util.Date;
 @Table(name = "SearchQuery")
 @NamedQueries({
         @NamedQuery(name = SearchQuery.QUERY_LATEST, query = "SELECT a FROM SearchQuery a where a.username=:USERNAME"),
-        @NamedQuery(name = SearchQuery.QUERY_BY_QUERY, query = "SELECT a FROM SearchQuery a where a.username=:USERNAME AND a.query=:QUERY")
+        @NamedQuery(name = SearchQuery.QUERY_BY_QUERY, query = "SELECT a FROM SearchQuery a where a.username=:USERNAME AND a.value=:QUERY")
 })
 @Inheritance(strategy = InheritanceType.JOINED)
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
@@ -27,7 +27,7 @@ public class SearchQuery {
     private long id;
 
     @Column(nullable = false)
-    private String query;
+    private String value;
 
     @Column(nullable = false)
     private int useCount;
@@ -61,12 +61,12 @@ public class SearchQuery {
         this.id = id;
     }
 
-    public String getQuery() {
-        return query;
+    public String getValue() {
+        return value;
     }
 
-    public void setQuery(String query) {
-        this.query = query;
+    public void setValue(String value) {
+        this.value = value;
     }
 
     public User getUser() {

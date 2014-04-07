@@ -55,4 +55,17 @@ public class SearchEndpoint {
         }
     }
 
+    @GET
+    @MethodCache
+    @ServiceMetric
+    @Path("/suggest")
+    @Produces(MediaType.APPLICATION_JSON)
+    public NotesResponse suggest(@QueryParam("query") String query) throws Exception {
+        try {
+            return NotesResponse.ok(queryService.suggest(query));
+        } catch (Exception e) {
+            return NotesResponse.error(e);
+        }
+    }
+
 }

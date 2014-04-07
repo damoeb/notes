@@ -98,6 +98,10 @@ public class StandardFolder extends Node implements Folder {
         documentCount = null;
     }
 
+    public StandardFolder(String name) {
+        this.name = name;
+    }
+
     public Set<BasicDocument> getDocuments() {
         return documents;
     }

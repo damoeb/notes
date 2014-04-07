@@ -108,15 +108,25 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
             StandardDatabase database = databaseService.createDatabase(new StandardDatabase(), user);
 
-            StandardFolder unsorted = new StandardFolder();
-            unsorted.setName("Unsorted");
+            StandardFolder unsorted = new StandardFolder("Unsorted");
             folderService.createFolder(unsorted, null, database);
 
             databaseService.setDefaultFolder(database, unsorted);
 
-            StandardFolder trash = new StandardFolder();
-            trash.setName("Trash");
+            StandardFolder trash = new StandardFolder("Trash");
             folderService.createFolder(trash, null, database);
+
+
+            // see http://sourcesofinsight.com/build-a-personal-knowledge-base-of-success-stories-insight-and-action-to-improve-your-success/
+
+            folderService.createFolder(new StandardFolder("Patterns"), null, database);
+            folderService.createFolder(new StandardFolder("People"), null, database);
+            folderService.createFolder(new StandardFolder("Principles"), null, database);
+            folderService.createFolder(new StandardFolder("Questions"), null, database);
+            folderService.createFolder(new StandardFolder("Techniques"), null, database);
+            folderService.createFolder(new StandardFolder("To-do"), null, database);
+            folderService.createFolder(new StandardFolder("Ideas"), null, database);
+            folderService.createFolder(new StandardFolder("Tasks"), null, database);
 
             databaseService.setTrashFolder(database, trash);
 

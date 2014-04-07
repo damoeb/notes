@@ -16,6 +16,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 //@LocalBean
@@ -86,10 +87,15 @@ public class QueryServiceImpl implements QueryService {
             query.setLastUsed(new Date());
             query.setUseCount(1);
             query.setUser(sessionData.getUser());
-            query.setQuery(queryString);
+            query.setValue(queryString);
 
             em.persist(query);
         }
+    }
+
+    @Override
+    public List<SearchQuery> suggest(String query) {
+        return new LinkedList<SearchQuery>();
     }
 
 }

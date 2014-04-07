@@ -8,9 +8,16 @@
     notes.queries = {
 
         _databaseId: null,
-        _history: null,
 
         init: function () {
+
+            var $this = this;
+
+            $('#search-input').autosuggest();
+
+            $('#action-search').unbind('click').click(function (e) {
+                $this.find();
+            });
 
             $('#search-view').find('.action-close').unbind('click').click(function () {
                 $('#search-view').hide();
@@ -18,47 +25,6 @@
                 $('#document-view').hide();
                 $('#document-and-folder-view').show();
             });
-            this.loadQueryHistory();
-        },
-
-        loadQueryHistory: function () {
-
-            var $this = this;
-
-            var onSuccess = function (history) {
-                $this.history(history);
-            };
-
-            var onError = function () {
-                console.error('Cannot load query-history');
-            };
-
-            notes.util.jsonCall('GET', REST_SERVICE + '/search/history', null, null, onSuccess, onError);
-        },
-
-        history: function (queries) {
-
-            if (typeof queries !== 'undefined') {
-
-                this._history = notes.util.sortJSONArrayDESC(queries, 'lastUsed');
-
-                console.log('logged queries: ' + queries.length);
-
-                var $target = $('#search-history').empty();
-                var $this = this;
-
-                $.each(queries, function (index, query) {
-
-                    var $el = $('<a href="#"/>').text(query.query).click(function () {
-                        $this.find(query.query);
-                    });
-                    $target.append($('<li/>').append($el));
-                });
-
-
-            } else {
-                return this._history;
-            }
         },
 
         find: function (query) {
@@ -107,9 +73,6 @@
                     });
                 }
             );
-
-            this.loadQueryHistory();
-
         }
 
     }
