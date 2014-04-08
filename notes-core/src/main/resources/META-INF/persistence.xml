@@ -31,6 +31,8 @@
             <property name="hibernate.format_sql" value="true"/>
             <property name="hibernate.hbm2ddl.auto" value="false"/>
             <property name="hibernate.connection.autoReconnect" value="true"/>
+            <!--<property name="hibernate.transaction.factory_class" value="org.hibernate.transaction.JDBCTransactionFactory" />-->
+            <!--<property name="hibernate.transaction.factory_class" value="org.hibernate.transaction.JTATransactionFactory"/>-->
 
             <!-- LOBs can cause problems with postgres -->
             <property name="hibernate.jdbc.use_streams_for_binary" value="false"/>

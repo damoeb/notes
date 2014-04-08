@@ -29,7 +29,6 @@ import java.util.List;
 //@LocalBean
 @Stateless
 @NotesInterceptors
-@TransactionAttribute(TransactionAttributeType.NEVER)
 public class FolderServiceImpl implements FolderService {
 
     private static final Logger LOGGER = Logger.getLogger(FolderServiceImpl.class);
@@ -51,11 +50,11 @@ public class FolderServiceImpl implements FolderService {
     public Folder createFolder(Folder folder, Folder parent, Database database) throws NotesException {
         try {
             if (folder == null) {
-                throw new NotesException("folder is null");
+                throw new IllegalArgumentException("folder is null");
             }
 
             if (database == null) {
-                throw new NotesException("database is null");
+                throw new IllegalArgumentException("database is null");
             }
 
             if (!em.contains(database)) {
@@ -78,10 +77,10 @@ public class FolderServiceImpl implements FolderService {
 
             return folder;
 
-        } catch (NotesException e) {
-            throw e;
         } catch (Throwable t) {
-            throw new NotesException("create folder", t);
+            String message = String.format("Cannot run createFolder, folder=%s, parent=%s, database:%s. Reason: %s", folder, parent, database, t.getMessage());
+            LOGGER.error(message, t);
+            throw new NotesException(message, t);
         }
     }
 
@@ -96,10 +95,10 @@ public class FolderServiceImpl implements FolderService {
             // todo validate req
             return _get(folderId);
 
-        } catch (NotesException e) {
-            throw e;
         } catch (Throwable t) {
-            throw new NotesException("get folder " + folderId, t);
+            String message = String.format("Cannot run getFolder, folderId=%s. Reason: %s", folderId, t.getMessage());
+            LOGGER.error(message, t);
+            throw new NotesException(message, t);
         }
     }
 
@@ -117,7 +116,9 @@ public class FolderServiceImpl implements FolderService {
             return (List<Folder>) query.getResultList();
 
         } catch (Throwable t) {
-            throw new NotesException("get children " + folderId, t);
+            String message = String.format("Cannot run getChildren, folderId=%s. Reason: %s", folderId, t.getMessage());
+            LOGGER.error(message, t);
+            throw new NotesException(message, t);
         }
     }
 
@@ -145,8 +146,11 @@ public class FolderServiceImpl implements FolderService {
             }
 
             return parents;
+
         } catch (Throwable t) {
-            throw new NotesException("getParents of " + document, t);
+            String message = String.format("Cannot run getParents, document=%s. Reason: %s", document, t.getMessage());
+            LOGGER.error(message, t);
+            throw new NotesException(message, t);
         }
     }
 
@@ -160,10 +164,10 @@ public class FolderServiceImpl implements FolderService {
 
             return _delete(_get(folderId));
 
-        } catch (NotesException e) {
-            throw e;
         } catch (Throwable t) {
-            throw new NotesException("delete folder " + folderId, t);
+            String message = String.format("Cannot run deleteFolder, folderId=%s. Reason: %s", folderId, t.getMessage());
+            LOGGER.error(message, t);
+            throw new NotesException(message, t);
         }
     }
 
@@ -190,26 +194,28 @@ public class FolderServiceImpl implements FolderService {
             return folder;
 
         } catch (Throwable t) {
-            throw new NotesException("update folder: " + t.getMessage(), t);
+            String message = String.format("Cannot run updateFolder, folderId=%s, newFolder=%s. Reason: %s", folderId, newFolder, t.getMessage());
+            LOGGER.error(message, t);
+            throw new NotesException(message, t);
         }
     }
 
 
     // -- Internal
 
-    private Object _getProxy(Class<? extends Object> clazz, Serializable id) throws NotesException {
+    private Object _getProxy(Class<? extends Object> clazz, Serializable id) {
         Session session = em.unwrap(Session.class);
         Object proxy = session.load(clazz, id);
         if (proxy == null) {
-            throw new NotesException(String.format("Proxy object with id %s is null", id));
+            throw new IllegalArgumentException(String.format("Proxy object with id %s is null", id));
         }
         return proxy;
     }
 
-    private StandardFolder _get(Long folderId) throws NotesException {
+    private StandardFolder _get(Long folderId) {
 
         if (folderId == null || folderId <= 0) {
-            throw new NotesException(String.format("Invalid folder id '%s'", folderId));
+            throw new IllegalArgumentException(String.format("Invalid folder id '%s'", folderId));
         }
 
         Query query = em.createNamedQuery(StandardFolder.QUERY_BY_ID);
@@ -217,23 +223,23 @@ public class FolderServiceImpl implements FolderService {
 
         List<StandardFolder> folderList = query.getResultList();
         if (folderList.isEmpty()) {
-            throw new NotesException(String.format("No folder with id '%s' found", folderId));
+            throw new IllegalArgumentException(String.format("No folder with id '%s' found", folderId));
         }
 
         return folderList.get(0);
 
     }
 
-    private Folder _create(Folder folder, Folder parent, Database database) throws NotesException {
+    private Folder _create(Folder folder, Folder parent, Database database) {
 
         if (folder == null) {
-            throw new NotesException("Folder is null");
+            throw new IllegalArgumentException("Folder is null");
         }
 
         if (parent != null) {
 
             if (parent.getLevel() >= 5) {
-                throw new NotesException("Max folder depth reached.");
+                throw new IllegalArgumentException("Max folder depth reached.");
             }
 
             parent.setLeaf(false);
@@ -258,12 +264,12 @@ public class FolderServiceImpl implements FolderService {
 
     }
 
-    private StandardFolder _delete(StandardFolder folder) throws NotesException {
+    private StandardFolder _delete(StandardFolder folder) {
         if (folder == null) {
-            throw new NotesException("Folder is null");
+            throw new IllegalArgumentException("Folder is null");
         }
         if (folder.getId() <= 0) {
-            throw new NotesException("Folder Id is invalid");
+            throw new IllegalArgumentException("Folder Id is invalid");
         }
 
         folder = _get(folder.getId());

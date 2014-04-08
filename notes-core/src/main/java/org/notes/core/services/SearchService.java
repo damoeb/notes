@@ -2,9 +2,11 @@ package org.notes.core.services;
 
 import org.notes.common.domain.Document;
 import org.notes.common.exceptions.NotesException;
+import org.notes.core.domain.SearchQuery;
 import org.notes.core.domain.SearchResponse;
 
 import javax.ejb.Local;
+import java.util.List;
 
 @Local
 public interface SearchService {
@@ -30,4 +32,6 @@ public interface SearchService {
      */
     void index(Document document) throws NotesException;
 
+
+    List<SearchQuery> suggest(String query) throws NotesException;
 }

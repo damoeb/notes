@@ -1,9 +1,11 @@
 package org.notes.core.domain;
 
+import org.apache.solr.common.SolrDocument;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.notes.common.ForeignKey;
+import org.notes.common.configuration.SolrFields;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -51,6 +53,11 @@ public class SearchQuery {
 
     public SearchQuery() {
         //
+    }
+
+    public SearchQuery(SolrDocument document) {
+        this.value = (String) document.getFieldValue(SolrFields.QUERY);
+        // todo more fields
     }
 
     public long getId() {

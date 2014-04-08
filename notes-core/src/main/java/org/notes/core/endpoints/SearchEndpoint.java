@@ -64,7 +64,7 @@ public class SearchEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse suggest(@QueryParam("query") String query) {
         try {
-            return NotesResponse.ok(queryService.suggest(query));
+            return NotesResponse.ok(searchService.suggest(query));
         } catch (Throwable t) {
             return NotesResponse.error(t);
         }

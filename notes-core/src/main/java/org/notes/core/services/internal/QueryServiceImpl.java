@@ -16,13 +16,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 
 //@LocalBean
 @Stateless
 @NotesInterceptors
-@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+@TransactionAttribute(TransactionAttributeType.NEVER)
 public class QueryServiceImpl implements QueryService {
 
     private static final Logger LOGGER = Logger.getLogger(QueryServiceImpl.class);
@@ -61,7 +60,7 @@ public class QueryServiceImpl implements QueryService {
             return query.getResultList();
 
         } catch (Throwable t) {
-            String message = String.format("Cannot get query history. Reason: %s", t.getMessage());
+            String message = String.format("Cannot run history. Reason: %s", t.getMessage());
             LOGGER.error(message, t);
             throw new NotesException(message);
         }
@@ -74,37 +73,37 @@ public class QueryServiceImpl implements QueryService {
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void log(String queryString) throws NotesException {
 
-        SearchQuery query;
         try {
 
-            Query findExisting = em.createNamedQuery(SearchQuery.QUERY_BY_QUERY);
-            findExisting.setParameter("USERNAME", sessionData.getUser().getUsername());
-            findExisting.setParameter("QUERY", queryString);
-            query = (SearchQuery) findExisting.getSingleResult();
+            SearchQuery query;
 
-            query.setLastUsed(new Date());
-            query.setUseCount(query.getUseCount() + 1);
+            try {
 
-            em.merge(query);
+                Query findExisting = em.createNamedQuery(SearchQuery.QUERY_BY_QUERY);
+                findExisting.setParameter("USERNAME", sessionData.getUser().getUsername());
+                findExisting.setParameter("QUERY", queryString);
+                query = (SearchQuery) findExisting.getSingleResult();
+
+                query.setLastUsed(new Date());
+                query.setUseCount(query.getUseCount() + 1);
+
+                em.merge(query);
+
+            } catch (Exception e) {
+
+                query = new SearchQuery();
+                query.setLastUsed(new Date());
+                query.setUseCount(1);
+                query.setUser(sessionData.getUser());
+                query.setValue(queryString);
+
+                em.persist(query);
+            }
 
         } catch (Throwable t) {
-
-            query = new SearchQuery();
-            query.setLastUsed(new Date());
-            query.setUseCount(1);
-            query.setUser(sessionData.getUser());
-            query.setValue(queryString);
-
-            em.persist(query);
+            String message = String.format("Cannot run log, queryString=%s. Reason: %s", queryString, t.getMessage());
+            LOGGER.error(message, t);
+            throw new NotesException(message);
         }
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<SearchQuery> suggest(String query) {
-        return new LinkedList<SearchQuery>();
-    }
-
 }

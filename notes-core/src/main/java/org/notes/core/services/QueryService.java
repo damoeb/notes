@@ -18,5 +18,4 @@ public interface QueryService {
 
     void log(String query) throws NotesException;
 
-    List<SearchQuery> suggest(String query);
 }

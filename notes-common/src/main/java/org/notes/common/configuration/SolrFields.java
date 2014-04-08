@@ -16,4 +16,6 @@ public class SolrFields {
     public static final String STAR = "star";
     public static final String TITLE_STORED_ONLY = "title_stored_only";
     public static final String TAG = "tag";
+    public static final String QUERY = "query";
+    public static final String USE_COUNT = "use-count";
 }

@@ -64,7 +64,7 @@ public class DocumentServiceImpl implements DocumentService {
      * {@inheritDoc}
      */
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public TextDocument createDocument(TextDocument document, Folder inFolder) throws NotesException {
 
         try {
@@ -101,7 +101,7 @@ public class DocumentServiceImpl implements DocumentService {
      * {@inheritDoc}
      */
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public List<BasicDocument> getDocumentsInFolder(Long folderId) throws NotesException {
         try {
             if (folderId == null || folderId <= 0) {
@@ -125,7 +125,7 @@ public class DocumentServiceImpl implements DocumentService {
      * {@inheritDoc}
      */
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public BasicDocument getDocument(long documentId) throws NotesException {
         try {
 
@@ -146,7 +146,7 @@ public class DocumentServiceImpl implements DocumentService {
      * {@inheritDoc}
      */
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public BasicDocument deleteDocument(long documentId) throws NotesException {
         try {
 
@@ -183,7 +183,7 @@ public class DocumentServiceImpl implements DocumentService {
      * {@inheritDoc}
      */
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public BasicDocument updateBasicDocument(BasicDocument ref) throws NotesException {
         try {
 
@@ -219,7 +219,7 @@ public class DocumentServiceImpl implements DocumentService {
      * {@inheritDoc}
      */
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public BasicDocument updateTextDocument(TextDocument ref) throws NotesException {
         try {
 
@@ -259,7 +259,7 @@ public class DocumentServiceImpl implements DocumentService {
      * {@inheritDoc}
      */
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public PdfDocument uploadDocument(List<FileItem> items) throws NotesException {
         try {
             FileReference reference = null;
@@ -315,7 +315,7 @@ public class DocumentServiceImpl implements DocumentService {
      * {@inheritDoc}
      */
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void moveTo(List<Long> documentIds, Long toFolderId) throws NotesException {
 
         try {

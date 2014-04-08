@@ -42,6 +42,14 @@
             <scope>compile</scope>
         </dependency>
 
+        <!-- Solr -->
+        <dependency>
+            <groupId>org.apache.solr</groupId>
+            <artifactId>solr-solrj</artifactId>
+            <version>4.5.1</version>
+        </dependency>
+
+
         <dependency>
             <groupId>javax.enterprise</groupId>
             <artifactId>cdi-api</artifactId>

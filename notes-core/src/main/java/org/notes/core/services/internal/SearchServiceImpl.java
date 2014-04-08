@@ -10,6 +10,8 @@ import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrServer;
 import org.apache.solr.client.solrj.impl.XMLResponseParser;
 import org.apache.solr.client.solrj.response.QueryResponse;
+import org.apache.solr.common.SolrDocument;
+import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
 import org.notes.common.configuration.Configuration;
 import org.notes.common.configuration.ConfigurationProperty;
@@ -20,6 +22,7 @@ import org.notes.common.domain.FullText;
 import org.notes.common.exceptions.NotesException;
 import org.notes.common.services.FolderService;
 import org.notes.common.utils.TextUtils;
+import org.notes.core.domain.SearchQuery;
 import org.notes.core.domain.SearchResponse;
 import org.notes.core.domain.SessionData;
 import org.notes.core.services.QueryService;
@@ -33,15 +36,17 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 //@LocalBean
 @Stateless
 @NotesInterceptors
-@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-public class SolrServiceImpl implements SearchService {
+@TransactionAttribute(TransactionAttributeType.NEVER)
+public class SearchServiceImpl implements SearchService {
 
-    private static final Logger LOGGER = Logger.getLogger(SolrServiceImpl.class);
+    private static final Logger LOGGER = Logger.getLogger(SearchServiceImpl.class);
 
     @ConfigurationProperty(value = Configuration.SOLR_COMMIT_TIMEOUT, mandatory = true)
     private int commitWithinMs;
@@ -68,6 +73,7 @@ public class SolrServiceImpl implements SearchService {
      * {@inheritDoc}
      */
     @Override
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public SearchResponse query(String queryString, Integer start, Integer rows, Long databaseId, Integer currentFolderId) throws NotesException {
         try {
 
@@ -130,11 +136,38 @@ public class SolrServiceImpl implements SearchService {
         }
     }
 
+    @Override
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public List<SearchQuery> suggest(String queryString) throws NotesException {
+        try {
+
+            SolrQuery query = new SolrQuery("query:" + queryString);
+            query.setFields(SolrFields.ID, SolrFields.QUERY, SolrFields.USE_COUNT);
+            query.setStart(0);
+            query.setRows(10);
+            query.setSort(SolrFields.USE_COUNT, SolrQuery.ORDER.desc);
+
+            SolrServer server = getSolrServer();
+            QueryResponse response = server.query(query);
+            SolrDocumentList results = response.getResults();
+
+            List<SearchQuery> suggestions = new LinkedList<>();
+            for (SolrDocument document : results) {
+                suggestions.add(new SearchQuery(document));
+            }
+
+            return suggestions;
+
+        } catch (Throwable t) {
+            throw new NotesException("query suggestion aborted: " + t.getMessage(), t);
+        }
+    }
 
     /**
      * {@inheritDoc}
      */
     @Override
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void index(Document document) throws NotesException {
         try {
 
@@ -156,8 +189,34 @@ public class SolrServiceImpl implements SearchService {
         }
     }
 
-
     // -- Internal
+
+
+    private void toGlobalLog(String queryString) throws SolrServerException, IOException {
+
+        // todo should be done via logs
+
+        SolrQuery query = new SolrQuery("query:" + queryString);
+        query.setFields(SolrFields.ID, SolrFields.QUERY, SolrFields.USE_COUNT);
+        query.setStart(0);
+        query.setRows(1);
+
+        SolrServer server = getSolrServer();
+        QueryResponse response = server.query(query);
+        SolrDocumentList results = response.getResults();
+
+        if (results.getNumFound() == 0) {
+
+            SolrInputDocument input = new SolrInputDocument();
+            input.addField(SolrFields.QUERY, queryString);
+            input.addField(SolrFields.USE_COUNT, 1);
+            server.add(input);
+
+        } else {
+//            SolrDocument existing = results.get(0);
+            // todo update use count
+        }
+    }
 
     private void indexDocument(SolrInputDocument solrDocument, Document document) throws IOException, SolrServerException, NotesException {
         // todo update document http://wiki.apache.org/solr/UpdateXmlMessages#Optional_attributes_for_.22field.22
@@ -204,7 +263,6 @@ public class SolrServiceImpl implements SearchService {
         SolrInputDocument doc = new SolrInputDocument();
         doc.setField(SolrFields.DOCUMENT, document.getId());
 
-//        todo implement
 //        List<Folder> parentFolders = folderService.getParents(document);
 //
 //        for (Folder parent : parentFolders) {
