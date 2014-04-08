@@ -63,7 +63,7 @@ public class StartUp {
                     a = accountService.createAccount(a);
 
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    LOGGER.error("cannot initialize db. Reason: " + e.getMessage());
                 }
 
             }

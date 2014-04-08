@@ -7,6 +7,7 @@ import org.apache.commons.lang.math.NumberUtils;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.core.domain.PdfDocument;
 import org.notes.core.domain.StandardFileReference;
+import org.notes.core.endpoints.internal.NotesResponse;
 import org.notes.core.metric.ServiceMetric;
 import org.notes.core.services.DocumentService;
 import org.notes.core.services.FileReferenceService;

@@ -1,9 +1,6 @@
-package org.notes.core.services.internal;
+package org.notes.core.domain;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.notes.core.domain.SessionData;
-import org.notes.core.domain.StandardDatabase;
-import org.notes.core.domain.User;
 
 import javax.enterprise.context.SessionScoped;
 import java.util.Set;
@@ -11,7 +8,7 @@ import java.util.Set;
 @SessionScoped
 //@StatefulTimeout(unit = TimeUnit.MINUTES, value = 30)
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-public class SessionDataImpl implements SessionData {
+public class StandardSessionData implements SessionData {
 
     private User user;
 

@@ -43,6 +43,9 @@ public class FolderServiceImpl implements FolderService {
     @Inject
     private DatabaseService databaseService;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Folder createFolder(Folder folder, Folder parent, Database database) throws NotesException {
@@ -82,15 +85,9 @@ public class FolderServiceImpl implements FolderService {
         }
     }
 
-    private Object _getProxy(Class<? extends Object> clazz, Serializable id) throws NotesException {
-        Session session = em.unwrap(Session.class);
-        Object proxy = session.load(clazz, id);
-        if (proxy == null) {
-            throw new NotesException(String.format("Proxy object with id %s is null", id));
-        }
-        return proxy;
-    }
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public StandardFolder getFolder(long folderId) throws NotesException {
@@ -106,6 +103,9 @@ public class FolderServiceImpl implements FolderService {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public List<Folder> getChildren(long folderId) throws NotesException {
@@ -121,6 +121,9 @@ public class FolderServiceImpl implements FolderService {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public List<Folder> getParents(Document document) throws NotesException {
@@ -147,6 +150,9 @@ public class FolderServiceImpl implements FolderService {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public StandardFolder deleteFolder(long folderId) throws NotesException {
@@ -161,6 +167,9 @@ public class FolderServiceImpl implements FolderService {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public StandardFolder updateFolder(long folderId, Folder newFolder) throws NotesException {
@@ -186,7 +195,16 @@ public class FolderServiceImpl implements FolderService {
     }
 
 
-    // -- Helper -- ----------------------------------------------------------------------------------------------------
+    // -- Internal
+
+    private Object _getProxy(Class<? extends Object> clazz, Serializable id) throws NotesException {
+        Session session = em.unwrap(Session.class);
+        Object proxy = session.load(clazz, id);
+        if (proxy == null) {
+            throw new NotesException(String.format("Proxy object with id %s is null", id));
+        }
+        return proxy;
+    }
 
     private StandardFolder _get(Long folderId) throws NotesException {
 
@@ -254,5 +272,4 @@ public class FolderServiceImpl implements FolderService {
 
         return folder;
     }
-
 }

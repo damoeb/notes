@@ -15,5 +15,5 @@ public interface TagService {
 
     Collection<Tag> getRecommendations(BasicDocument document) throws NotesException;
 
-    Collection<Tag> getTagNetwork() throws NotesException;
+    Collection<Tag> getUsersTagNetwork() throws NotesException;
 }

@@ -134,6 +134,7 @@ public class SolrServiceImpl implements SearchService {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void index(Document document) throws NotesException {
         try {
 
@@ -154,6 +155,9 @@ public class SolrServiceImpl implements SearchService {
             throw new NotesException(message);
         }
     }
+
+
+    // -- Internal
 
     private void indexDocument(SolrInputDocument solrDocument, Document document) throws IOException, SolrServerException, NotesException {
         // todo update document http://wiki.apache.org/solr/UpdateXmlMessages#Optional_attributes_for_.22field.22

@@ -47,15 +47,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Inject
     private SessionData sessionData;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public SessionData authenticate(String username, String password) throws NotesException {
         try {
 
-            NotesException ex = new NotesException("User or password is invalid");
-
             if (StringUtils.isBlank(username) || StringUtils.isBlank(password)) {
-                throw ex;
+                throw new IllegalArgumentException("User or password is empty");
             }
 
             Query query = em.createNamedQuery(User.QUERY_BY_ID);
@@ -66,7 +67,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             boolean authorized = PasswordHash.validatePassword(password, user.getPasswordHash());
 
             if (!authorized) {
-                throw ex;
+                throw new IllegalArgumentException("User or password is invalid or unknown");
             }
 
             sessionData.setUser(user);
@@ -75,26 +76,29 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
             return sessionData;
 
-        } catch (NotesException t) {
-            throw t;
         } catch (Throwable t) {
-            throw new NotesException(String.format("authenticate %s", username), t);
+            String message = String.format("Cannot run authenticate, user=%s. Reason: %s", username, t.getMessage());
+            LOGGER.error(message, t);
+            throw new NotesException(message, t);
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @TransactionAttribute(TransactionAttributeType.NEVER)
     public User register(String username, String password, String email) throws NotesException {
         try {
 
             if (StringUtils.isBlank(username)) {
-                throw new NotesException("username is null");
+                throw new IllegalArgumentException("username is null");
             }
             if (StringUtils.isBlank(password)) {
-                throw new NotesException("password is too short");
+                throw new IllegalArgumentException("password is too short");
             }
             if (StringUtils.isBlank(email)) {
-                throw new NotesException("email is null");
+                throw new IllegalArgumentException("email is null");
             }
 
             User user = new User();
@@ -131,10 +135,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             databaseService.setTrashFolder(database, trash);
 
             return user;
-        } catch (NotesException t) {
-            throw t;
+
         } catch (Throwable t) {
-            throw new NotesException("register user", t);
+            String message = String.format("Cannot run register, username=%s, email=%s. Reason: %s", username, email, t.getMessage());
+            LOGGER.error(message, t);
+            throw new NotesException(message, t);
+
         }
     }
 }

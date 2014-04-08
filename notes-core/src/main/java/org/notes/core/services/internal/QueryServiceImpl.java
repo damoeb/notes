@@ -40,6 +40,9 @@ public class QueryServiceImpl implements QueryService {
 
     // --
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public List<SearchQuery> history() throws NotesException {
@@ -64,6 +67,9 @@ public class QueryServiceImpl implements QueryService {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void log(String queryString) throws NotesException {
@@ -93,6 +99,9 @@ public class QueryServiceImpl implements QueryService {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<SearchQuery> suggest(String query) {
         return new LinkedList<SearchQuery>();

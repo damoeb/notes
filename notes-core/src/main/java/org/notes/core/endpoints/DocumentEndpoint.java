@@ -5,6 +5,7 @@ import org.notes.common.configuration.NotesInterceptors;
 import org.notes.core.domain.BasicDocument;
 import org.notes.core.domain.StandardFolder;
 import org.notes.core.domain.TextDocument;
+import org.notes.core.endpoints.internal.NotesResponse;
 import org.notes.core.endpoints.request.MoveDocumentParams;
 import org.notes.core.metric.ServiceMetric;
 import org.notes.core.services.DocumentService;
@@ -26,15 +27,19 @@ public class DocumentEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     @Path(value = "/text")
     public NotesResponse createTextDocument(
-            TextDocument document
-    ) throws Exception {
+            TextDocument document) {
 
-        StandardFolder folder = null;
-        if (document != null && document.getFolderId() != null) {
-            folder = new StandardFolder(document.getFolderId());
+        try {
+            StandardFolder folder = null;
+            if (document != null && document.getFolderId() != null) {
+                folder = new StandardFolder(document.getFolderId());
+            }
+
+            return NotesResponse.ok(documentService.createDocument(document, folder));
+
+        } catch (Throwable t) {
+            return NotesResponse.error(t);
         }
-
-        return NotesResponse.ok(documentService.createDocument(document, folder));
     }
 
     @PUT
@@ -44,10 +49,15 @@ public class DocumentEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse updateTextDocument(
             TextDocument document,
-            @PathParam("id") long documentId
-    ) throws Exception {
-        BasicDocument result = documentService.updateTextDocument(document);
-        return NotesResponse.ok(result);
+            @PathParam("id") long documentId) {
+
+        try {
+            BasicDocument result = documentService.updateTextDocument(document);
+            return NotesResponse.ok(result);
+
+        } catch (Throwable t) {
+            return NotesResponse.error(t);
+        }
     }
 
     @PUT
@@ -57,10 +67,15 @@ public class DocumentEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse updateBasicDocument(
             BasicDocument document,
-            @PathParam("id") long documentId
-    ) throws Exception {
-        BasicDocument result = documentService.updateBasicDocument(document);
-        return NotesResponse.ok(result);
+            @PathParam("id") long documentId) {
+
+        try {
+            BasicDocument result = documentService.updateBasicDocument(document);
+            return NotesResponse.ok(result);
+
+        } catch (Throwable t) {
+            return NotesResponse.error(t);
+        }
     }
 
     @POST
@@ -70,11 +85,14 @@ public class DocumentEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public NotesResponse moveDocument(
-            MoveDocumentParams payload
-    ) throws Exception {
+            MoveDocumentParams payload) {
+        try {
+            documentService.moveTo(payload.getDocumentIds(), payload.getToFolderId());
+            return NotesResponse.ok();
 
-        documentService.moveTo(payload.getDocumentIds(), payload.getToFolderId());
-        return NotesResponse.ok();
+        } catch (Throwable t) {
+            return NotesResponse.error(t);
+        }
     }
 
     @GET
@@ -83,10 +101,11 @@ public class DocumentEndpoint {
     @Path(value = "/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse getAnyDocument(
-            @PathParam("id") long documentId
-    ) {
+            @PathParam("id") long documentId) {
+
         try {
             return NotesResponse.ok(documentService.getDocument(documentId));
+
         } catch (Throwable t) {
             return NotesResponse.error(t);
         }
@@ -99,7 +118,12 @@ public class DocumentEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse deleteDocument(
             @PathParam("id") long documentId
-    ) throws Exception {
-        return NotesResponse.ok(documentService.deleteDocument(documentId));
+    ) {
+        try {
+            return NotesResponse.ok(documentService.deleteDocument(documentId));
+
+        } catch (Throwable t) {
+            return NotesResponse.error(t);
+        }
     }
 }

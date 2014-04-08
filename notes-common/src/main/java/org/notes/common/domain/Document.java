@@ -13,8 +13,6 @@ public interface Document extends Serializable {
 
     long getId();
 
-    String getThumbnailUrl();
-
     String getTitle();
 
     Date getCreated();
@@ -28,10 +26,6 @@ public interface Document extends Serializable {
     String getUrl();
 
     Kind getKind();
-
-    Trigger getTrigger();
-
-    void setTrigger(Trigger trigger);
 
     String getOutline();
 

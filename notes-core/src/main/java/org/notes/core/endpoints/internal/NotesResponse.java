@@ -1,4 +1,4 @@
-package org.notes.core.endpoints;
+package org.notes.core.endpoints.internal;
 
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;

@@ -10,13 +10,11 @@ import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.domain.FileReference;
 import org.notes.common.domain.Folder;
 import org.notes.common.domain.Tag;
-import org.notes.common.domain.Trigger;
 import org.notes.common.exceptions.NotesException;
 import org.notes.common.services.FolderService;
 import org.notes.common.utils.TextUtils;
 import org.notes.core.domain.*;
 import org.notes.core.services.*;
-import org.notes.search.scheduler.ExtractionScheduler;
 
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
@@ -26,7 +24,6 @@ import javax.inject.Inject;
 import javax.jms.*;
 import javax.jms.Queue;
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.*;
@@ -58,14 +55,14 @@ public class DocumentServiceImpl implements DocumentService {
     private FileReferenceService fileReferenceService;
 
     @Inject
-    private ExtractionScheduler extractionScheduler;
-
-    @Inject
     private UserService userService;
 
     @Inject
     private TagService tagService;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public TextDocument createDocument(TextDocument document, Folder inFolder) throws NotesException {
@@ -75,7 +72,7 @@ public class DocumentServiceImpl implements DocumentService {
             LOGGER.info("create text-document");
 
             if (document == null) {
-                throw new NotesException("document is null");
+                throw new IllegalArgumentException("document is null");
             }
 
             if (inFolder == null || inFolder.getId() == 0) {
@@ -86,8 +83,6 @@ public class DocumentServiceImpl implements DocumentService {
                 }
             }
 
-//            document.setTrigger(Trigger.INDEX);
-
             BasicDocument basicDocument = _createDocument(document, inFolder);
 
             indexDocument(basicDocument);
@@ -95,85 +90,22 @@ public class DocumentServiceImpl implements DocumentService {
             Hibernate.initialize(basicDocument.getTags());
             return (TextDocument) basicDocument;
 
-        } catch (NotesException e) {
-            throw e;
         } catch (Throwable t) {
-            throw new NotesException("add document", t);
+            String message = String.format("Cannot run createDocument document=%s, inFolder=%s. Reason: %s", document, inFolder, t.getMessage());
+            LOGGER.error(message, t);
+            throw new NotesException(message, t);
         }
     }
 
-    private void indexDocument(BasicDocument document) {
-        Connection connection = null;
-
-        try {
-
-            connection = connectionFactory.createConnection();
-            javax.jms.Session session = connection.createSession(false, javax.jms.Session.AUTO_ACKNOWLEDGE);
-            MessageProducer publisher = session.createProducer(indexJobQueue);
-
-            connection.start();
-
-            LOGGER.info("trigger index " + document.getId());
-            ObjectMessage message = session.createObjectMessage(document);
-            publisher.send(message);
-
-            publisher.close();
-
-        } catch (Exception e) {
-            LOGGER.error(e);
-        } finally {
-
-
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (JMSException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    private BasicDocument _createDocument(BasicDocument document, Folder inFolder) throws NotesException {
-
-        document.validate();
-
-        em.persist(document);
-
-        User user = userService.getUser(inFolder.getOwner());
-        user.getDocuments().add(document);
-
-        Session session = em.unwrap(Session.class);
-
-        StandardFolder proxy = (StandardFolder) session.load(StandardFolder.class, inFolder.getId());
-        if (proxy == null) {
-            throw new NotesException(String.format("folder with id %s is null", document.getFolderId()));
-        }
-
-        proxy.getDocuments().add(document);
-        proxy.setDocumentCount(proxy.getDocumentCount() + 1);
-        em.merge(user);
-        em.merge(proxy);
-        em.flush();
-
-        em.refresh(document);
-
-        document.setUniqueHash(getUniqueHash(document));
-        em.merge(document);
-
-        return document;
-    }
-
-    private String getUniqueHash(BasicDocument document) {
-        return Long.toHexString(document.getId() * 1000000 + System.nanoTime() % 1000000);
-    }
-
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public List<BasicDocument> getDocumentsInFolder(Long folderId) throws NotesException {
         try {
             if (folderId == null || folderId <= 0) {
-                throw new NotesException(String.format("Invalid folder id '%s'", folderId));
+                throw new IllegalArgumentException(String.format("Invalid folder id '%s'", folderId));
             }
 
             Query query = em.createNamedQuery(BasicDocument.QUERY_IN_FOLDER);
@@ -181,13 +113,17 @@ public class DocumentServiceImpl implements DocumentService {
 
             return (List<BasicDocument>) query.getResultList();
 
-        } catch (NotesException e) {
-            throw e;
         } catch (Throwable t) {
-            throw new NotesException("get documents of " + folderId, t);
+            String message = String.format("Cannot run getDocumentsInFolder folderId=%s. Reason: %s", folderId, t.getMessage());
+            LOGGER.error(message, t);
+            throw new NotesException(message, t);
         }
     }
 
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public BasicDocument getDocument(long documentId) throws NotesException {
@@ -199,21 +135,23 @@ public class DocumentServiceImpl implements DocumentService {
             Hibernate.initialize(document.getTags());
             return document;
 
-        } catch (NoResultException t) {
-            throw new NotesException("document '" + documentId + "' does not exist");
         } catch (Throwable t) {
-            throw new NotesException("get document failed: " + t.getMessage(), t);
+            String message = String.format("Cannot run getDocument documentId=%s, Reason: %s", documentId, t.getMessage());
+            LOGGER.error(message, t);
+            throw new NotesException(message, t);
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public BasicDocument deleteDocument(long documentId) throws NotesException {
         try {
-            LOGGER.info("delete document");
 
             BasicDocument document = _get(documentId);
-            document.setTrigger(Trigger.DELETE);
+//          todo replace through mdb  document.setTrigger(Trigger.DELETE);
 
             Session session = em.unwrap(Session.class);
 
@@ -235,16 +173,19 @@ public class DocumentServiceImpl implements DocumentService {
             return document;
 
         } catch (Throwable t) {
-            throw new NotesException("delete document failed: " + t.getMessage(), t);
+            String message = String.format("Cannot run deleteDocument documentId=%s, Reason: %s", documentId, t.getMessage());
+            LOGGER.error(message, t);
+            throw new NotesException(message, t);
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public BasicDocument updateBasicDocument(BasicDocument ref) throws NotesException {
         try {
-
-            LOGGER.info("update document");
 
             if (ref == null) {
                 throw new IllegalArgumentException("document is null");
@@ -256,7 +197,6 @@ public class DocumentServiceImpl implements DocumentService {
 
                 copyAttributes(ref, document);
 
-//                document.setTrigger(Trigger.INDEX);
                 indexDocument(document);
 
                 em.merge(document);
@@ -268,32 +208,20 @@ public class DocumentServiceImpl implements DocumentService {
 
             return document;
 
-        } catch (NotesException t) {
-            throw t;
         } catch (Throwable t) {
-            throw new NotesException("update document failed: " + t.getMessage(), t);
+            String message = String.format("Cannot run updateBasicDocument document=%s, Reason: %s", ref, t.getMessage());
+            LOGGER.error(message, t);
+            throw new NotesException(message, t);
         }
     }
 
-    private void copyAttributes(BasicDocument source, BasicDocument target) throws NotesException {
-        target.setTags(resolveTags(target.getTags(), source.getTags()));
-        target.setStar(source.isStar());
-        target.setTitle(TextUtils.cleanHtml(source.getTitle()).replace("\n", ""));
-    }
-
-    private boolean equals(BasicDocument a, BasicDocument b) {
-        boolean similarTitle = StringUtils.equals(b.getTitle(), a.getTitle());
-        boolean similarStarState = b.isStar() == a.isStar();
-
-        return similarTitle && equalsTags(b.getTags(), a.getTags()) && similarStarState;
-    }
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public BasicDocument updateTextDocument(TextDocument ref) throws NotesException {
         try {
-
-            LOGGER.info("update text-document");
 
             if (ref == null) {
                 throw new IllegalArgumentException("document is null");
@@ -320,61 +248,20 @@ public class DocumentServiceImpl implements DocumentService {
 
             return document;
 
-        } catch (NotesException t) {
-            throw t;
         } catch (Throwable t) {
-            throw new NotesException("update text-document failed: " + t.getMessage(), t);
+            String message = String.format("Cannot run updateTextDocument document=%s, Reason: %s", ref, t.getMessage());
+            LOGGER.error(message, t);
+            throw new NotesException(message, t);
         }
     }
 
-    private boolean equalsTags(Set<? extends Tag> a, Set<? extends Tag> b) {
-        if (a == null && b == null) {
-            return true;
-        }
-        if (a == null) {
-            return false;
-        }
-        if (a.isEmpty() && b.isEmpty()) {
-            return true;
-        }
-        if (a.size() != b.size()) {
-            return false;
-        }
-
-        for (Tag t : a) {
-            if (!b.contains(t)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    private Set<Tag> resolveTags(Set<Tag> cached, Set<Tag> tags) throws NotesException {
-        Set<Tag> resolved = new HashSet<>(tags.size());
-
-        Map<String, StandardTag> cache = new HashMap<>();
-        for (Tag c : cached) {
-            cache.put(c.getName(), (StandardTag) c);
-        }
-
-        for (Tag t : tags) {
-            if (cache.containsKey(t.getName())) {
-                resolved.add(cache.get(t.getName()));
-            } else {
-                resolved.add(tagService.findOrCreate(t.getName()));
-            }
-        }
-
-        return resolved;
-    }
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public PdfDocument uploadDocument(List<FileItem> items) throws NotesException {
         try {
-            LOGGER.info("upload document");
-
             FileReference reference = null;
             String title = null;
 
@@ -413,15 +300,20 @@ public class DocumentServiceImpl implements DocumentService {
             PdfDocument document = new PdfDocument();
             document.setTitle(title);
             document.setFileReference(reference);
-            document.setTrigger(Trigger.EXTRACT_PDF);
+//          todo replace with mdb document.setTrigger(Trigger.EXTRACT_PDF);
 
             return (PdfDocument) _createDocument(document, inFolder);
 
         } catch (Throwable t) {
-            throw new NotesException("upload document failed: " + t.getMessage(), t);
+            String message = String.format("Cannot run uploadDocument. Reason: %s", t.getMessage());
+            LOGGER.error(message, t);
+            throw new NotesException(message, t);
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void moveTo(List<Long> documentIds, Long toFolderId) throws NotesException {
@@ -465,10 +357,133 @@ public class DocumentServiceImpl implements DocumentService {
                 //          todo re-index
 
             }
-        } catch (Exception e) {
-            throw new NotesException(String.format("Cannot move document #%s to folder %s. Reason: %s", StringUtils.join(documentIds, ", "), toFolderId, e.getMessage()));
+        } catch (Throwable t) {
+            String message = String.format("Cannot run moveTo. documentIds=%s, folderId=%s. Reason: %s", StringUtils.join(documentIds, ", "), toFolderId, t.getMessage());
+            LOGGER.error(message, t);
+            throw new NotesException(message, t);
         }
 
+    }
+
+    // -- Internal
+
+    private void indexDocument(BasicDocument document) throws JMSException {
+        Connection connection = null;
+
+        try {
+
+            connection = connectionFactory.createConnection();
+            javax.jms.Session session = connection.createSession(false, javax.jms.Session.AUTO_ACKNOWLEDGE);
+            MessageProducer publisher = session.createProducer(indexJobQueue);
+
+            connection.start();
+
+            LOGGER.info("trigger index " + document.getId());
+            ObjectMessage message = session.createObjectMessage(document);
+            publisher.send(message);
+
+            publisher.close();
+
+        } finally {
+
+
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (JMSException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private BasicDocument _createDocument(BasicDocument document, Folder inFolder) throws NotesException {
+
+        document.validate();
+
+        em.persist(document);
+
+        User user = userService.getUser(inFolder.getOwner());
+        user.getDocuments().add(document);
+
+        Session session = em.unwrap(Session.class);
+
+        StandardFolder proxy = (StandardFolder) session.load(StandardFolder.class, inFolder.getId());
+        if (proxy == null) {
+            throw new IllegalArgumentException(String.format("folder with id %s is null", document.getFolderId()));
+        }
+
+        proxy.getDocuments().add(document);
+        proxy.setDocumentCount(proxy.getDocumentCount() + 1);
+        em.merge(user);
+        em.merge(proxy);
+        em.flush();
+
+        em.refresh(document);
+
+        document.setUniqueHash(getUniqueHash(document));
+        em.merge(document);
+
+        return document;
+    }
+
+    private String getUniqueHash(BasicDocument document) {
+        return Long.toHexString(document.getId() * 1000000 + System.nanoTime() % 1000000);
+    }
+
+    private void copyAttributes(BasicDocument source, BasicDocument target) throws NotesException {
+        target.setTags(resolveTags(target.getTags(), source.getTags()));
+        target.setStar(source.isStar());
+        target.setTitle(TextUtils.cleanHtml(source.getTitle()).replace("\n", ""));
+    }
+
+    private boolean equals(BasicDocument a, BasicDocument b) {
+        boolean similarTitle = StringUtils.equals(b.getTitle(), a.getTitle());
+        boolean similarStarState = b.isStar() == a.isStar();
+
+        return similarTitle && equalsTags(b.getTags(), a.getTags()) && similarStarState;
+    }
+
+    private boolean equalsTags(Set<? extends Tag> a, Set<? extends Tag> b) {
+        if (a == null && b == null) {
+            return true;
+        }
+        if (a == null) {
+            return false;
+        }
+        if (a.isEmpty() && b.isEmpty()) {
+            return true;
+        }
+        if (a.size() != b.size()) {
+            return false;
+        }
+
+        for (Tag t : a) {
+            if (!b.contains(t)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private Set<Tag> resolveTags(Set<Tag> cached, Set<Tag> tags) throws NotesException {
+        Set<Tag> resolved = new HashSet<>(tags.size());
+
+        Map<String, StandardTag> cache = new HashMap<>();
+        for (Tag c : cached) {
+            cache.put(c.getName(), (StandardTag) c);
+        }
+
+        for (Tag t : tags) {
+            if (cache.containsKey(t.getName())) {
+                resolved.add(cache.get(t.getName()));
+            } else {
+                resolved.add(tagService.findOrCreate(t.getName()));
+            }
+        }
+
+        return resolved;
     }
 
     private String _getFieldValue(String fieldName, List<FileItem> items) throws NotesException {

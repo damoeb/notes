@@ -5,6 +5,7 @@ import org.notes.common.configuration.NotesInterceptors;
 import org.notes.core.domain.SessionData;
 import org.notes.core.domain.StandardDatabase;
 import org.notes.core.domain.User;
+import org.notes.core.endpoints.internal.NotesResponse;
 import org.notes.core.endpoints.request.AuthParams;
 import org.notes.core.metric.ServiceMetric;
 import org.notes.core.services.AuthenticationService;
@@ -36,12 +37,13 @@ public class AuthenticationEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse register(
             AuthParams auth
-    ) throws Exception {
+    ) {
         try {
             User user = authenticationService.register(auth.getUsername(), auth.getPassword(), auth.getEmail());
             return NotesResponse.ok(user);
-        } catch (Exception e) {
-            return NotesResponse.error(e);
+
+        } catch (Throwable t) {
+            return NotesResponse.error(t);
         }
     }
 
@@ -53,7 +55,7 @@ public class AuthenticationEndpoint {
     public NotesResponse login(
             AuthParams auth,
             @Context HttpServletRequest request
-    ) throws Exception {
+    ) {
         try {
             SessionData settings = authenticationService.authenticate(auth.getUsername(), auth.getPassword());
             User user = settings.getUser();
@@ -69,10 +71,60 @@ public class AuthenticationEndpoint {
 
             request.getSession().setAttribute(USER_SETTINGS_SESSION_KEY, settings);
             return NotesResponse.ok(settings);
-        } catch (Exception e) {
-            return NotesResponse.error(e);
+
+        } catch (Throwable t) {
+            return NotesResponse.error(t);
         }
     }
+
+    @GET
+    @MethodCache
+    @ServiceMetric
+    @Path("/logout")
+    public NotesResponse logout(
+            @Context HttpServletRequest request
+    ) {
+        try {
+            HttpSession session = request.getSession();
+            if (session == null) {
+                return NotesResponse.error(new IllegalAccessException("no session found"));
+            } else {
+                session.invalidate();
+                return NotesResponse.ok();
+            }
+
+        } catch (Throwable t) {
+            return NotesResponse.error(t);
+        }
+    }
+
+    @GET
+    @MethodCache
+    @ServiceMetric
+    @Path("/settings")
+    @Produces(MediaType.APPLICATION_JSON)
+    public NotesResponse settings(
+            @Context HttpServletRequest request
+    ) {
+        try {
+            HttpSession session = request.getSession();
+            if (session == null) {
+                return NotesResponse.error(new IllegalAccessException("no session found"));
+            } else {
+                SessionData settings = (SessionData) session.getAttribute(USER_SETTINGS_SESSION_KEY);
+                if (settings == null) {
+                    return NotesResponse.error(new IllegalAccessException("user not logged in"));
+                }
+
+                return NotesResponse.ok(settings);
+            }
+
+        } catch (Throwable t) {
+            return NotesResponse.error(t);
+        }
+    }
+
+    // --
 
     private SessionData getDomObjSession(final SessionData settings) {
         return new SessionData() {
@@ -94,52 +146,5 @@ public class AuthenticationEndpoint {
             public void setUser(User user) {
             }
         };
-    }
-
-    @GET
-    @MethodCache
-    @ServiceMetric
-    @Path("/logout")
-    public NotesResponse logout(
-            @Context HttpServletRequest request
-    ) throws Exception {
-        try {
-            HttpSession session = request.getSession();
-            if (session == null) {
-                return NotesResponse.error(new IllegalAccessException("no session found"));
-            } else {
-                session.invalidate();
-                return NotesResponse.ok();
-            }
-
-        } catch (Exception e) {
-            return NotesResponse.error(e);
-        }
-    }
-
-    @GET
-    @MethodCache
-    @ServiceMetric
-    @Path("/settings")
-    @Produces(MediaType.APPLICATION_JSON)
-    public NotesResponse settings(
-            @Context HttpServletRequest request
-    ) throws Exception {
-        try {
-            HttpSession session = request.getSession();
-            if (session == null) {
-                return NotesResponse.error(new IllegalAccessException("no session found"));
-            } else {
-                SessionData settings = (SessionData) session.getAttribute(USER_SETTINGS_SESSION_KEY);
-                if (settings == null) {
-                    return NotesResponse.error(new IllegalAccessException("user not logged in"));
-                }
-
-                return NotesResponse.ok(settings);
-            }
-
-        } catch (Exception e) {
-            return NotesResponse.error(e);
-        }
     }
 }

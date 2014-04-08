@@ -10,7 +10,10 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.hibernate.annotations.Index;
 import org.notes.common.ForeignKey;
 import org.notes.common.configuration.Configuration;
-import org.notes.common.domain.*;
+import org.notes.common.domain.Document;
+import org.notes.common.domain.FullText;
+import org.notes.common.domain.Kind;
+import org.notes.common.domain.Tag;
 import org.notes.common.endpoints.CustomDateDeserializer;
 import org.notes.common.endpoints.CustomDateSerializer;
 import org.notes.common.exceptions.NotesException;
@@ -30,8 +33,7 @@ import java.util.*;
 )
 @NamedQueries({
         @NamedQuery(name = Document.QUERY_BY_ID, query = "SELECT a FROM BasicDocument a where a.id=:ID"),
-        @NamedQuery(name = Document.QUERY_TRIGGER, query = "SELECT a FROM BasicDocument a where a.trigger in (:TRIGGER)"),
-        @NamedQuery(name = BasicDocument.QUERY_IN_FOLDER, query = "SELECT new BasicDocument(a.id, a.uniqueHash, a.title, a.outline, a.kind, a.modified, a.star, a.thumbnailUrl, a.tagsJson, a.folderId) FROM BasicDocument a where a.folderId=:ID")
+        @NamedQuery(name = BasicDocument.QUERY_IN_FOLDER, query = "SELECT new BasicDocument(a.id, a.uniqueHash, a.title, a.outline, a.kind, a.modified, a.star, a.tagsJson, a.folderId) FROM BasicDocument a where a.folderId=:ID")
 })
 @Inheritance(strategy = InheritanceType.JOINED)
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
@@ -92,9 +94,6 @@ public class BasicDocument implements Document {
     @Basic
     private boolean star;
 
-    @Column(length = 1024)
-    private String thumbnailUrl;
-
     @JsonIgnore
     @Column(length = 2048)
     private String essenceJson;
@@ -104,12 +103,6 @@ public class BasicDocument implements Document {
     private String tagsJson;
 
 //  -- References ------------------------------------------------------------------------------------------------------
-
-    @JsonIgnore
-    @Enumerated(EnumType.STRING)
-    @Column(name = "event_trigger", nullable = true)
-    @Index(name = "event_trigger_idx")
-    private Trigger trigger;
 
     @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, defaultImpl = StandardTag.class)
     @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, targetEntity = StandardTag.class)
@@ -137,14 +130,13 @@ public class BasicDocument implements Document {
         this.kind = kind;
     }
 
-    public BasicDocument(Long id, String uniqueHash, String title, String outline, Kind kind, Date modified, boolean star, String thumbnailUrl, String tagsJson, Long folderId) {
+    public BasicDocument(Long id, String uniqueHash, String title, String outline, Kind kind, Date modified, boolean star, String tagsJson, Long folderId) {
         this.id = id;
         this.uniqueHash = uniqueHash;
         this.title = title;
         this.outline = outline;
         this.kind = kind;
         this.modified = modified;
-        this.thumbnailUrl = thumbnailUrl;
         this.star = star;
         this.folderId = folderId;
         if (StringUtils.isNotBlank(tagsJson)) {
@@ -235,15 +227,6 @@ public class BasicDocument implements Document {
         this.id = id;
     }
 
-    @Override
-    public String getThumbnailUrl() {
-        return thumbnailUrl;
-    }
-
-    public void setThumbnailUrl(String thumbnailUrl) {
-        this.thumbnailUrl = thumbnailUrl;
-    }
-
     public String getTitle() {
         return title;
     }
@@ -303,14 +286,6 @@ public class BasicDocument implements Document {
 
     public void setOutline(String outline) {
         this.outline = outline;
-    }
-
-    public Trigger getTrigger() {
-        return trigger;
-    }
-
-    public void setTrigger(Trigger trigger) {
-        this.trigger = trigger;
     }
 
     @Override

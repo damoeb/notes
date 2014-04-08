@@ -2,7 +2,7 @@ package org.notes.core.metric;
 
 import org.apache.log4j.Logger;
 import org.notes.common.configuration.NotesInterceptors;
-import org.notes.core.endpoints.NotesResponse;
+import org.notes.core.endpoints.internal.NotesResponse;
 
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;

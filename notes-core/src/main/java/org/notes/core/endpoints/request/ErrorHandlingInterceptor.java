@@ -3,7 +3,7 @@ package org.notes.core.endpoints.request;
 import org.apache.log4j.Logger;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
-import org.notes.core.endpoints.NotesResponse;
+import org.notes.core.endpoints.internal.NotesResponse;
 
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;

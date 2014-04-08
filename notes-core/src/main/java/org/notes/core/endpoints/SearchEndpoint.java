@@ -2,6 +2,7 @@ package org.notes.core.endpoints;
 
 import org.notes.common.cache.MethodCache;
 import org.notes.common.configuration.NotesInterceptors;
+import org.notes.core.endpoints.internal.NotesResponse;
 import org.notes.core.metric.ServiceMetric;
 import org.notes.core.services.QueryService;
 import org.notes.core.services.SearchService;
@@ -32,13 +33,13 @@ public class SearchEndpoint {
             @QueryParam("databaseId") Long databaseId,
             @QueryParam("start") Integer start,
             @QueryParam("rows") Integer rows,
-            @QueryParam("context") Integer currentFolderId
+            @QueryParam("context") Integer currentFolderId) {
 
-    ) throws Exception {
         try {
             return NotesResponse.ok(searchService.query(query, start, rows, databaseId, currentFolderId));
-        } catch (Exception e) {
-            return NotesResponse.error(e);
+
+        } catch (Throwable t) {
+            return NotesResponse.error(t);
         }
     }
 
@@ -47,11 +48,12 @@ public class SearchEndpoint {
     @ServiceMetric
     @Path("/history")
     @Produces(MediaType.APPLICATION_JSON)
-    public NotesResponse history() throws Exception {
+    public NotesResponse history() {
         try {
             return NotesResponse.ok(queryService.history());
-        } catch (Exception e) {
-            return NotesResponse.error(e);
+
+        } catch (Throwable t) {
+            return NotesResponse.error(t);
         }
     }
 
@@ -60,11 +62,11 @@ public class SearchEndpoint {
     @ServiceMetric
     @Path("/suggest")
     @Produces(MediaType.APPLICATION_JSON)
-    public NotesResponse suggest(@QueryParam("query") String query) throws Exception {
+    public NotesResponse suggest(@QueryParam("query") String query) {
         try {
             return NotesResponse.ok(queryService.suggest(query));
-        } catch (Exception e) {
-            return NotesResponse.error(e);
+        } catch (Throwable t) {
+            return NotesResponse.error(t);
         }
     }
 

@@ -23,7 +23,7 @@ public interface DatabaseService {
 
     StandardDatabase getDatabaseOfUser() throws NotesException;
 
-    List<StandardFolder> getFolders(long databaseId) throws NotesException;
+    List<StandardFolder> getRootFolders(long databaseId) throws NotesException;
 
     void setDefaultFolder(StandardDatabase database, StandardFolder folder) throws NotesException;
 }

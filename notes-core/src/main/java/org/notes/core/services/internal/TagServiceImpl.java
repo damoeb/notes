@@ -40,12 +40,15 @@ public class TagServiceImpl implements TagService {
     @Inject
     private TextEssence textEssence;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public StandardTag findOrCreate(String name) throws NotesException {
         try {
             if (StringUtils.isBlank(name)) {
-                throw new NotesException("name is null");
+                throw new IllegalArgumentException("name is null");
             }
 
             Query query = em.createNamedQuery(StandardTag.QUERY_BY_NAME);
@@ -62,13 +65,16 @@ public class TagServiceImpl implements TagService {
 
             return tag;
 
-        } catch (NotesException e) {
-            throw e;
         } catch (Throwable t) {
-            throw new NotesException("create folder", t);
+            String message = String.format("Cannot run findOrCreate, name=%s. Reason: %s", name, t.getMessage());
+            LOGGER.error(message, t);
+            throw new NotesException(message, t);
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Collection<Tag> getRecommendations(BasicDocument document) throws NotesException {
         try {
@@ -92,13 +98,18 @@ public class TagServiceImpl implements TagService {
             return recommendations;
 
         } catch (Throwable t) {
-            throw new NotesException("get recommendations", t);
+            String message = String.format("Cannot run getRecommendations, document=%s. Reason: %s", document, t.getMessage());
+            LOGGER.error(message, t);
+            throw new NotesException(message, t);
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public Collection<Tag> getTagNetwork() throws NotesException {
+    public Collection<Tag> getUsersTagNetwork() throws NotesException {
         try {
             Query query = em.createNamedQuery(StandardTag.QUERY_USER_NETWORK);
             query.setMaxResults(5);
@@ -107,7 +118,9 @@ public class TagServiceImpl implements TagService {
             return query.getResultList();
 
         } catch (Throwable t) {
-            throw new NotesException("get tag-network", t);
+            String message = String.format("Cannot run getUsersTagNetwork. Reason: %s", t.getMessage());
+            LOGGER.error(message, t);
+            throw new NotesException(message, t);
         }
     }
 }

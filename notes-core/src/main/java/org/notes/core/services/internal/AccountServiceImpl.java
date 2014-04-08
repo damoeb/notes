@@ -32,7 +32,7 @@ public class AccountServiceImpl implements AccountService {
         try {
 
             if (type == null) {
-                throw new NotesException(String.format("Invalid account type"));
+                throw new IllegalArgumentException(String.format("Invalid account type"));
             }
 
             Query query = em.createNamedQuery(Account.QUERY_BY_TYPE);
@@ -45,10 +45,10 @@ public class AccountServiceImpl implements AccountService {
 
             return accountList.get(0);
 
-        } catch (NotesException t) {
-            throw t;
         } catch (Throwable t) {
-            throw new NotesException("get account by id", t);
+            String message = String.format("Cannot run getAccount, type=%s. Reason: %s", type, t.getMessage());
+            LOGGER.error(message, t);
+            throw new NotesException(message, t);
         }
     }
 
@@ -58,7 +58,7 @@ public class AccountServiceImpl implements AccountService {
         try {
 
             if (account == null) {
-                throw new NotesException("account is null");
+                throw new IllegalArgumentException("account is null");
             }
 
             em.persist(account);
@@ -67,10 +67,11 @@ public class AccountServiceImpl implements AccountService {
 
             return account;
 
-        } catch (NotesException t) {
-            throw t;
         } catch (Throwable t) {
-            throw new NotesException("create account", t);
+            String message = String.format("Cannot run createAccount, account=%s. Reason: %s", account, t.getMessage());
+            LOGGER.error(message, t);
+            throw new NotesException(message, t);
+
         }
     }
 }

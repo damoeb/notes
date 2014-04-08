@@ -36,13 +36,16 @@ public class UserServiceImpl implements UserService {
     @Inject
     private DatabaseService databaseService;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public User getUser(String username) throws NotesException {
         try {
 
             if (StringUtils.isBlank(username)) {
-                throw new NotesException(String.format("Invalid username '%s'", username));
+                throw new IllegalArgumentException(String.format("Invalid username '%s'", username));
             }
 
             Query query = em.createNamedQuery(User.QUERY_BY_ID);
@@ -50,18 +53,21 @@ public class UserServiceImpl implements UserService {
 
             List<User> userList = query.getResultList();
             if (userList.isEmpty()) {
-                throw new NotesException(String.format("No user '%s' found", username));
+                throw new IllegalArgumentException(String.format("No user '%s' found", username));
             }
 
             return userList.get(0);
 
-        } catch (NotesException t) {
-            throw t;
         } catch (Throwable t) {
-            throw new NotesException(String.format("get user %s", username), t);
+            String message = String.format("Cannot run getUser, username=%s. Reason: %s", username, t.getMessage());
+            LOGGER.error(message, t);
+            throw new NotesException(message, t);
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public User deleteUser(String username) throws NotesException {
@@ -72,24 +78,27 @@ public class UserServiceImpl implements UserService {
 
             return user;
 
-        } catch (NotesException t) {
-            throw t;
         } catch (Throwable t) {
-            throw new NotesException(String.format("get user %s", username), t);
+            String message = String.format("Cannot run deleteUser, username=%s. Reason: %s", username, t.getMessage());
+            LOGGER.error(message, t);
+            throw new NotesException(message, t);
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public User createUser(User newUser, Account account) throws NotesException {
         try {
 
             if (newUser == null) {
-                throw new NotesException("user is null");
+                throw new IllegalArgumentException("user is null");
             }
 
             if (account == null) {
-                throw new NotesException("account is null");
+                throw new IllegalArgumentException("account is null");
             }
 
             if (!em.contains(account)) {
@@ -105,10 +114,10 @@ public class UserServiceImpl implements UserService {
 
             return newUser;
 
-        } catch (NotesException t) {
-            throw t;
         } catch (Throwable t) {
-            throw new NotesException("create user", t);
+            String message = String.format("Cannot run createUser, newUser=%s, account=%s. Reason: %s", newUser, account, t.getMessage());
+            LOGGER.error(message, t);
+            throw new NotesException(message, t);
         }
     }
 }

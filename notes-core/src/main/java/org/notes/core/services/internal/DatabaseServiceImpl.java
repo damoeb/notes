@@ -33,15 +33,18 @@ public class DatabaseServiceImpl implements DatabaseService {
     @Inject
     private SessionData sessionData;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public StandardDatabase createDatabase(StandardDatabase database, User user) throws NotesException {
         try {
             if (database == null) {
-                throw new NotesException("StandardDatabase is null");
+                throw new IllegalArgumentException("StandardDatabase is null");
             }
             if (user == null) {
-                throw new NotesException("user is null");
+                throw new IllegalArgumentException("user is null");
             }
 
             if (!em.contains(user)) {
@@ -61,39 +64,49 @@ public class DatabaseServiceImpl implements DatabaseService {
 
             return database;
 
-        } catch (NotesException e) {
-            throw e;
         } catch (Throwable t) {
-            throw new NotesException("create database", t);
+            String message = String.format("Cannot run createDatabase, database=%s, user=%s. Reason: %s", database, user, t.getMessage());
+            LOGGER.error(message, t);
+            throw new NotesException(message, t);
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public StandardDatabase getDatabase(long databaseId) throws NotesException {
         try {
             return _get(databaseId);
 
-        } catch (NotesException e) {
-            throw e;
         } catch (Throwable t) {
-            throw new NotesException("get database " + databaseId, t);
+            String message = String.format("Cannot run getDatabase, databaseId=%s. Reason: %s", databaseId, t.getMessage());
+            LOGGER.error(message, t);
+            throw new NotesException(message, t);
+
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public StandardDatabase deleteDatabase(long databaseId) throws NotesException {
         try {
             return _delete(databaseId);
 
-        } catch (NotesException e) {
-            throw e;
         } catch (Throwable t) {
-            throw new NotesException("delete database " + databaseId, t);
+            String message = String.format("Cannot run deleteDatabase, databaseId=%s. Reason: %s", databaseId, t.getMessage());
+            LOGGER.error(message, t);
+            throw new NotesException(message, t);
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public StandardDatabase getDatabaseOfUser() throws NotesException {
@@ -104,13 +117,18 @@ public class DatabaseServiceImpl implements DatabaseService {
             return (StandardDatabase) query.getSingleResult();
 
         } catch (Throwable t) {
-            throw new NotesException("get database of user ", t);
+            String message = String.format("Cannot run getDatabaseOfUser. Reason: %s", t.getMessage());
+            LOGGER.error(message, t);
+            throw new NotesException(message, t);
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public List<StandardFolder> getFolders(long databaseId) throws NotesException {
+    public List<StandardFolder> getRootFolders(long databaseId) throws NotesException {
         try {
             Query query = em.createNamedQuery(StandardFolder.QUERY_ROOT_FOLDERS);
             query.setParameter("USERNAME", sessionData.getUser().getUsername());
@@ -119,10 +137,15 @@ public class DatabaseServiceImpl implements DatabaseService {
             return query.getResultList();
 
         } catch (Throwable t) {
-            throw new NotesException("get folders " + databaseId, t);
+            String message = String.format("Cannot run getRootFolders, databaseId=%s. Reason: %s", databaseId, t.getMessage());
+            LOGGER.error(message, t);
+            throw new NotesException(message, t);
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void setDefaultFolder(StandardDatabase database, StandardFolder folder) throws NotesException {
@@ -143,10 +166,15 @@ public class DatabaseServiceImpl implements DatabaseService {
             em.merge(database);
 
         } catch (Throwable t) {
-            throw new NotesException("set default folder", t);
+            String message = String.format("Cannot run setDefaultFolder, database=%s, folder=%s. Reason: %s", database, folder, t.getMessage());
+            LOGGER.error(message, t);
+            throw new NotesException(message, t);
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void setTrashFolder(StandardDatabase database, StandardFolder folder) throws NotesException {
@@ -167,31 +195,38 @@ public class DatabaseServiceImpl implements DatabaseService {
             em.merge(database);
 
         } catch (Throwable t) {
-            throw new NotesException("set trash folder", t);
+            String message = String.format("Cannot run setTrashFolder, database=%s, folder=%s. Reason: %s", database, folder, t.getMessage());
+            LOGGER.error(message, t);
+            throw new NotesException(message, t);
         }
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public StandardDatabase updateDatabase(long databaseId, StandardDatabase database) throws NotesException {
         try {
             if (database == null) {
-                throw new NotesException("database is null");
+                throw new IllegalArgumentException("database is null");
             }
             return _update(databaseId, database);
 
         } catch (Throwable t) {
-            throw new NotesException("update database " + database.getId(), t);
+            String message = String.format("Cannot run updateDatabase, databaseId=%s, database=%s. Reason: %s", databaseId, database, t.getMessage());
+            LOGGER.error(message, t);
+            throw new NotesException(message, t);
         }
     }
 
-    // -- Helper -- ----------------------------------------------------------------------------------------------------
+    // -- Internal
 
-    private StandardDatabase _get(Long databaseId) throws NotesException {
+    private StandardDatabase _get(Long databaseId) {
 
         if (databaseId == null || databaseId <= 0) {
-            throw new NotesException(String.format("Invalid database id '%s'", databaseId));
+            throw new IllegalArgumentException(String.format("Invalid database id '%s'", databaseId));
         }
 
         Query query = em.createNamedQuery(StandardDatabase.QUERY_BY_ID);
@@ -199,17 +234,17 @@ public class DatabaseServiceImpl implements DatabaseService {
 
         List<StandardDatabase> databaseList = query.getResultList();
         if (databaseList.isEmpty()) {
-            throw new NotesException(String.format("No database with id '%s' found", databaseId));
+            throw new IllegalArgumentException(String.format("No database with id '%s' found", databaseId));
         }
 
         return databaseList.get(0);
 
     }
 
-    private StandardDatabase _update(long databaseId, StandardDatabase newDatabase) throws NotesException {
+    private StandardDatabase _update(long databaseId, StandardDatabase newDatabase) {
 
         if (newDatabase == null) {
-            throw new NotesException("Database is null");
+            throw new IllegalArgumentException("Database is null");
         }
 
         StandardDatabase database = _get(databaseId);
@@ -223,7 +258,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 
     }
 
-    private StandardDatabase _delete(long databaseId) throws NotesException {
+    private StandardDatabase _delete(long databaseId) {
         StandardDatabase database = _get(databaseId);
         database.setDeleted(true);
         em.merge(database);
