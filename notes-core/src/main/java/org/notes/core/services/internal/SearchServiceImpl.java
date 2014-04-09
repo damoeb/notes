@@ -230,6 +230,7 @@ public class SearchServiceImpl implements SearchService {
 
 //        todo implement
 //        doc.addField(SolrFields.TAG, document.getTagsJson());
+        // jeder tag einzelln, fuer facettierung
 
         getSolrServer().deleteByQuery(String.format("%s:%s", SolrFields.DOCUMENT, document.getId()));
         getSolrServer().add(solrDocument, commitWithinMs);
@@ -263,6 +264,7 @@ public class SearchServiceImpl implements SearchService {
         SolrInputDocument doc = new SolrInputDocument();
         doc.setField(SolrFields.DOCUMENT, document.getId());
 
+//        todo fix
 //        List<Folder> parentFolders = folderService.getParents(document);
 //
 //        for (Folder parent : parentFolders) {

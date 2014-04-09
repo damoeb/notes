@@ -120,11 +120,14 @@
         <field name="kind" type="string" indexed="true" stored="true"/>
         <field name="owner" type="string" indexed="true" stored="true"/>
         <field name="uniqueHash" type="string" indexed="true" stored="true"/>
-        <field name="star" type="boolean" indexed="true" stored="true"/>
         <field name="text" type="text_general" indexed="true" stored="true"/>
         <field name="outline" type="text_general" indexed="false" stored="true"/>
-        <field name="tag" type="text_general" indexed="true" stored="true" multiValued="true"/>
         <field name="section" type="long" indexed="true" stored="true"/>
+
+        <field name="star" type="boolean" indexed="true" stored="true"/>
+
+        <!--<field name="tags" type="text_general" indexed="true" stored="true"/>-->
+        <field name="tag" type="text_general" indexed="true" stored="true" multiValued="true"/>
 
 
         <!--<field name="sku" type="text_en_splitting_tight" indexed="true" stored="true" omitNorms="true"/>-->
@@ -150,18 +153,6 @@
             "content_type": From the HTTP headers of incoming stream
             "resourcename": From SolrCell request param resource.name
         -->
-        <!--<field name="title" type="text_general" indexed="true" stored="true" multiValued="true"/>-->
-        <!--<field name="subject" type="text_general" indexed="true" stored="true"/>-->
-        <!--<field name="description" type="text_general" indexed="true" stored="true"/>-->
-        <!--<field name="comments" type="text_general" indexed="true" stored="true"/>-->
-        <!--<field name="author" type="text_general" indexed="true" stored="true"/>-->
-        <!--<field name="keywords" type="text_general" indexed="true" stored="true"/>-->
-        <!--<field name="category" type="text_general" indexed="true" stored="true"/>-->
-        <!--<field name="resourcename" type="text_general" indexed="true" stored="true"/>-->
-        <!--<field name="url" type="text_general" indexed="true" stored="true"/>-->
-        <!--<field name="content_type" type="string" indexed="true" stored="true" multiValued="true"/>-->
-        <!--<field name="last_modified" type="date" indexed="true" stored="true"/>-->
-        <!--<field name="links" type="string" indexed="true" stored="true" multiValued="true"/>-->
 
         <!--&lt;!&ndash; Main body of document extracted by SolrCell.-->
         <!--NOTE: This field is not indexed by default, since it is also copied to "text"-->
@@ -204,6 +195,8 @@
         <!--EXAMPLE:  name="*_i" will match any field ending in _i (like myid_i, z_i)-->
         <!--RESTRICTION: the glob-like pattern in the name attribute must have-->
         <!--a "*" only at the start or the end.  &ndash;&gt;-->
+
+        <dynamicField name="facet_*" type="string" indexed="true" stored="true"/>
 
         <!--<dynamicField name="*_i" type="int" indexed="true" stored="true"/>-->
         <!--<dynamicField name="*_is" type="int" indexed="true" stored="true" multiValued="true"/>-->
@@ -285,6 +278,13 @@
 
     <!--&lt;!&ndash; Copy the price into a currency enabled field (default USD) &ndash;&gt;-->
     <!--<copyField source="price" dest="price_c"/>-->
+
+    <!-- Facettes -->
+    <copyField source="owner" dest="facet_owner"/>
+    <copyField source="tag" dest="facet_tag"/>
+    <copyField source="kind" dest="facet_kind"/>
+    <copyField source="modified" dest="facet_modified"/>
+
 
     <!-- Text fields from SolrCell to search by default in our catch-all field -->
     <!--<copyField source="title" dest="text"/>-->

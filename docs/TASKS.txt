@@ -4,7 +4,7 @@ IN ARBEIT
 - search: jedes document soll die node ids ihrer parents indexiert bekommen, damit search-in-folder moeglich wird
 - search: auch tags indexieren
 - tree: darstellung verbessern: colors, icons
-- schema fuer query logging/suggestion anpassen
+- schema fuer query logging/suggestion/facettes anpassen
 
 OFFEN
 - remove all empty # links
