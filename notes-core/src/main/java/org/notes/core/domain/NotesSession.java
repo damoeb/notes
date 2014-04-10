@@ -3,7 +3,7 @@ package org.notes.core.domain;
 import java.io.Serializable;
 import java.util.Set;
 
-public interface SessionData extends Serializable {
+public interface NotesSession extends Serializable {
 
     User getUser();
 

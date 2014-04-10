@@ -45,14 +45,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private FolderService folderService;
 
     @Inject
-    private SessionData sessionData;
+    private NotesSession notesSession;
 
     /**
      * {@inheritDoc}
      */
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public SessionData authenticate(String username, String password) throws NotesException {
+    public NotesSession authenticate(String username, String password) throws NotesException {
         try {
 
             if (StringUtils.isBlank(username) || StringUtils.isBlank(password)) {
@@ -70,11 +70,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 throw new IllegalArgumentException("User or password is invalid or unknown");
             }
 
-            sessionData.setUser(user);
+            notesSession.setUser(user);
             Hibernate.initialize(user.getDatabases());
-            sessionData.setDatabases(user.getDatabases());
+            notesSession.setDatabases(user.getDatabases());
 
-            return sessionData;
+            return notesSession;
 
         } catch (Throwable t) {
             String message = String.format("Cannot run authenticate, user=%s. Reason: %s", username, t.getMessage());

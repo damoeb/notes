@@ -4,7 +4,8 @@ import org.notes.common.cache.MethodCache;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.core.domain.TextDocument;
 import org.notes.core.endpoints.internal.NotesResponse;
-import org.notes.core.metric.ServiceMetric;
+import org.notes.core.interceptors.Bouncer;
+import org.notes.core.metric.PerformanceLogger;
 import org.notes.core.services.DocumentService;
 import org.notes.core.services.TagService;
 
@@ -28,8 +29,9 @@ public class TagEndpoint {
     private DocumentService documentService;
 
     @GET
-    @ServiceMetric
+    @PerformanceLogger
     @Produces(MediaType.APPLICATION_JSON)
+    @Bouncer
     @Path(value = "/recommend/{documentId}")
     public NotesResponse getRecommendations(@PathParam("documentId") long documentId) {
         try {
@@ -41,8 +43,9 @@ public class TagEndpoint {
     }
 
     @GET
-    @ServiceMetric
+    @PerformanceLogger
     @Produces(MediaType.APPLICATION_JSON)
+    @Bouncer
     @Path(value = "/recommend")
     public NotesResponse getRecommendations(TextDocument document) {
         try {
@@ -55,8 +58,9 @@ public class TagEndpoint {
 
     @GET
     @MethodCache
-    @ServiceMetric
+    @PerformanceLogger
     @Produces(MediaType.APPLICATION_JSON)
+    @Bouncer
     @Path(value = "/network")
     public NotesResponse getNetwork() {
         try {

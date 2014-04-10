@@ -7,7 +7,8 @@ import org.notes.common.services.FolderService;
 import org.notes.core.domain.StandardDatabase;
 import org.notes.core.domain.StandardFolder;
 import org.notes.core.endpoints.internal.NotesResponse;
-import org.notes.core.metric.ServiceMetric;
+import org.notes.core.interceptors.Bouncer;
+import org.notes.core.metric.PerformanceLogger;
 import org.notes.core.services.DocumentService;
 
 import javax.inject.Inject;
@@ -27,7 +28,8 @@ public class FolderEndpoint {
 
     @POST
     @MethodCache
-    @ServiceMetric
+    @PerformanceLogger
+    @Bouncer
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse createFolder(
             StandardFolder folder) {
@@ -50,7 +52,8 @@ public class FolderEndpoint {
 
     @PUT
     @MethodCache
-    @ServiceMetric
+    @PerformanceLogger
+    @Bouncer
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse updateFolder(
@@ -68,7 +71,8 @@ public class FolderEndpoint {
     // todo not used
     @GET
     @MethodCache
-    @ServiceMetric
+    @PerformanceLogger
+    @Bouncer
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse getFolder(
@@ -84,7 +88,8 @@ public class FolderEndpoint {
 
     @GET
     @MethodCache
-    @ServiceMetric
+    @PerformanceLogger
+    @Bouncer
     @Path("/{id}/children")
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse getChildren(
@@ -101,7 +106,8 @@ public class FolderEndpoint {
 
     @GET
     @MethodCache
-    @ServiceMetric
+    @PerformanceLogger
+    @Bouncer
     @Path("/{id}/documents")
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse getDocumentsInFolder(
@@ -116,7 +122,8 @@ public class FolderEndpoint {
 
     @DELETE
     @MethodCache
-    @ServiceMetric
+    @PerformanceLogger
+    @Bouncer
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse deleteFolder(

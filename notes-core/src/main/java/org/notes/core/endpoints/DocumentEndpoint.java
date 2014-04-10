@@ -7,7 +7,8 @@ import org.notes.core.domain.StandardFolder;
 import org.notes.core.domain.TextDocument;
 import org.notes.core.endpoints.internal.NotesResponse;
 import org.notes.core.endpoints.request.MoveDocumentParams;
-import org.notes.core.metric.ServiceMetric;
+import org.notes.core.interceptors.Bouncer;
+import org.notes.core.metric.PerformanceLogger;
 import org.notes.core.services.DocumentService;
 
 import javax.inject.Inject;
@@ -23,7 +24,8 @@ public class DocumentEndpoint {
 
     @POST
     @MethodCache
-    @ServiceMetric
+    @PerformanceLogger
+    @Bouncer
     @Produces(MediaType.APPLICATION_JSON)
     @Path(value = "/text")
     public NotesResponse createTextDocument(
@@ -44,7 +46,8 @@ public class DocumentEndpoint {
 
     @PUT
     @MethodCache
-    @ServiceMetric
+    @PerformanceLogger
+    @Bouncer
     @Path(value = "/text/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse updateTextDocument(
@@ -62,7 +65,8 @@ public class DocumentEndpoint {
 
     @PUT
     @MethodCache
-    @ServiceMetric
+    @PerformanceLogger
+    @Bouncer
     @Path(value = "/basic/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse updateBasicDocument(
@@ -80,7 +84,8 @@ public class DocumentEndpoint {
 
     @POST
     @MethodCache
-    @ServiceMetric
+    @PerformanceLogger
+    @Bouncer
     @Path(value = "/move")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -97,7 +102,8 @@ public class DocumentEndpoint {
 
     @GET
     @MethodCache
-    @ServiceMetric
+    @PerformanceLogger
+    @Bouncer
     @Path(value = "/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse getAnyDocument(
@@ -113,7 +119,8 @@ public class DocumentEndpoint {
 
     @DELETE
     @MethodCache
-    @ServiceMetric
+    @PerformanceLogger
+    @Bouncer
     @Path(value = "/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse deleteDocument(

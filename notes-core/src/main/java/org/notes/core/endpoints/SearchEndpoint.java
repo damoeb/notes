@@ -3,7 +3,8 @@ package org.notes.core.endpoints;
 import org.notes.common.cache.MethodCache;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.core.endpoints.internal.NotesResponse;
-import org.notes.core.metric.ServiceMetric;
+import org.notes.core.interceptors.Bouncer;
+import org.notes.core.metric.PerformanceLogger;
 import org.notes.core.services.QueryService;
 import org.notes.core.services.SearchService;
 
@@ -26,7 +27,8 @@ public class SearchEndpoint {
 
     @GET
     @MethodCache
-    @ServiceMetric
+    @PerformanceLogger
+    @Bouncer
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse search(
             @QueryParam("query") String query,
@@ -45,7 +47,8 @@ public class SearchEndpoint {
 
     @GET
     @MethodCache
-    @ServiceMetric
+    @PerformanceLogger
+    @Bouncer
     @Path("/history")
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse history() {
@@ -59,7 +62,8 @@ public class SearchEndpoint {
 
     @GET
     @MethodCache
-    @ServiceMetric
+    @PerformanceLogger
+    @Bouncer
     @Path("/suggest")
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse suggest(@QueryParam("query") String query) {

@@ -14,6 +14,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Tag;
 import org.notes.common.configuration.NotesInterceptors;
+import org.notes.core.interceptors.Bouncer;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -47,6 +48,7 @@ public class ProxyEndpoint {
      * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse).
      */
     @GET
+    @Bouncer
     public void doGet(@Context HttpServletRequest request, @Context HttpServletResponse response, @Context ServletContext context, @QueryParam("url") String url)
             throws ServletException, IOException {
         // Process request with content.

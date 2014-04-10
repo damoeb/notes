@@ -3,7 +3,7 @@ package org.notes.core.services.internal;
 import org.apache.log4j.Logger;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
-import org.notes.core.domain.SessionData;
+import org.notes.core.domain.NotesSession;
 import org.notes.core.domain.StandardDatabase;
 import org.notes.core.domain.StandardFolder;
 import org.notes.core.domain.User;
@@ -31,7 +31,7 @@ public class DatabaseServiceImpl implements DatabaseService {
     private EntityManager em;
 
     @Inject
-    private SessionData sessionData;
+    private NotesSession notesSession;
 
     /**
      * {@inheritDoc}
@@ -113,7 +113,7 @@ public class DatabaseServiceImpl implements DatabaseService {
         try {
 
             Query query = em.createNamedQuery(StandardDatabase.QUERY_BY_USER);
-            query.setParameter("USERNAME", sessionData.getUser().getUsername());
+            query.setParameter("USERNAME", notesSession.getUser().getUsername());
 
             return (StandardDatabase) query.getSingleResult();
 
@@ -132,7 +132,7 @@ public class DatabaseServiceImpl implements DatabaseService {
     public List<StandardFolder> getRootFolders(long databaseId) throws NotesException {
         try {
             Query query = em.createNamedQuery(StandardFolder.QUERY_ROOT_FOLDERS);
-            query.setParameter("USERNAME", sessionData.getUser().getUsername());
+            query.setParameter("USERNAME", notesSession.getUser().getUsername());
             query.setParameter("DB_ID", databaseId);
 
             return query.getResultList();

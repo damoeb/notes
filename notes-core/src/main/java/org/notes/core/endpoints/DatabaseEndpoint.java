@@ -5,7 +5,8 @@ import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.domain.Database;
 import org.notes.core.domain.StandardDatabase;
 import org.notes.core.endpoints.internal.NotesResponse;
-import org.notes.core.metric.ServiceMetric;
+import org.notes.core.interceptors.Bouncer;
+import org.notes.core.metric.PerformanceLogger;
 import org.notes.core.services.DatabaseService;
 
 import javax.inject.Inject;
@@ -21,7 +22,8 @@ public class DatabaseEndpoint {
 
     @PUT
     @MethodCache
-    @ServiceMetric
+    @PerformanceLogger
+    @Bouncer
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse updateDatabase(
@@ -38,7 +40,8 @@ public class DatabaseEndpoint {
 
     @GET
     @MethodCache
-    @ServiceMetric
+    @PerformanceLogger
+    @Bouncer
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse getDatabase(
@@ -55,7 +58,8 @@ public class DatabaseEndpoint {
 
     @GET
     @MethodCache
-    @ServiceMetric
+    @PerformanceLogger
+    @Bouncer
     @Path("/{id}/roots")
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse getRootFoldersInDatabase(
@@ -72,7 +76,8 @@ public class DatabaseEndpoint {
 
     @DELETE
     @MethodCache
-    @ServiceMetric
+    @PerformanceLogger
+    @Bouncer
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse deleteDatabase(
             @PathParam("id") long databaseId
@@ -86,7 +91,8 @@ public class DatabaseEndpoint {
 
     @GET
     @MethodCache
-    @ServiceMetric
+    @PerformanceLogger
+    @Bouncer
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse getDatabases(
     ) {

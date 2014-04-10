@@ -8,7 +8,7 @@ import java.util.Set;
 @SessionScoped
 //@StatefulTimeout(unit = TimeUnit.MINUTES, value = 30)
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-public class StandardSessionData implements SessionData {
+public class StandardNotesSession implements NotesSession {
 
     private User user;
 

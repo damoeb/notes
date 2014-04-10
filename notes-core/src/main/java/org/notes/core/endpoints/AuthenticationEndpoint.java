@@ -2,12 +2,13 @@ package org.notes.core.endpoints;
 
 import org.notes.common.cache.MethodCache;
 import org.notes.common.configuration.NotesInterceptors;
-import org.notes.core.domain.SessionData;
+import org.notes.core.domain.NotesSession;
 import org.notes.core.domain.StandardDatabase;
 import org.notes.core.domain.User;
 import org.notes.core.endpoints.internal.NotesResponse;
 import org.notes.core.endpoints.request.AuthParams;
-import org.notes.core.metric.ServiceMetric;
+import org.notes.core.interceptors.Bouncer;
+import org.notes.core.metric.PerformanceLogger;
 import org.notes.core.services.AuthenticationService;
 
 import javax.inject.Inject;
@@ -32,7 +33,7 @@ public class AuthenticationEndpoint {
 
     @POST
     @MethodCache
-    @ServiceMetric
+    @PerformanceLogger
     @Path("/register")
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse register(
@@ -49,7 +50,7 @@ public class AuthenticationEndpoint {
 
     @POST
     @MethodCache
-    @ServiceMetric
+    @PerformanceLogger
     @Path("/login")
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse login(
@@ -57,7 +58,7 @@ public class AuthenticationEndpoint {
             @Context HttpServletRequest request
     ) {
         try {
-            SessionData settings = authenticationService.authenticate(auth.getUsername(), auth.getPassword());
+            NotesSession settings = authenticationService.authenticate(auth.getUsername(), auth.getPassword());
             User user = settings.getUser();
             user.setFolders(null);
             user.setDocuments(null);
@@ -79,7 +80,7 @@ public class AuthenticationEndpoint {
 
     @GET
     @MethodCache
-    @ServiceMetric
+    @PerformanceLogger
     @Path("/logout")
     public NotesResponse logout(
             @Context HttpServletRequest request
@@ -100,7 +101,8 @@ public class AuthenticationEndpoint {
 
     @GET
     @MethodCache
-    @ServiceMetric
+    @PerformanceLogger
+    @Bouncer
     @Path("/settings")
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse settings(
@@ -111,7 +113,7 @@ public class AuthenticationEndpoint {
             if (session == null) {
                 return NotesResponse.error(new IllegalAccessException("no session found"));
             } else {
-                SessionData settings = (SessionData) session.getAttribute(USER_SETTINGS_SESSION_KEY);
+                NotesSession settings = (NotesSession) session.getAttribute(USER_SETTINGS_SESSION_KEY);
                 if (settings == null) {
                     return NotesResponse.error(new IllegalAccessException("user not logged in"));
                 }
@@ -126,8 +128,8 @@ public class AuthenticationEndpoint {
 
     // --
 
-    private SessionData getDomObjSession(final SessionData settings) {
-        return new SessionData() {
+    private NotesSession getDomObjSession(final NotesSession settings) {
+        return new NotesSession() {
             @Override
             public User getUser() {
                 return settings.getUser();

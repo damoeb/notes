@@ -16,7 +16,7 @@ public class MetricInterceptor {
 
     @AroundInvoke
     public Object injectCaching(InvocationContext invocationContext) throws Exception {
-        if (invocationContext.getMethod().isAnnotationPresent(ServiceMetric.class)) {
+        if (invocationContext.getMethod().isAnnotationPresent(PerformanceLogger.class)) {
 
             long from = System.nanoTime();
 

@@ -6,7 +6,7 @@ import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.domain.Tag;
 import org.notes.common.exceptions.NotesException;
 import org.notes.core.domain.BasicDocument;
-import org.notes.core.domain.SessionData;
+import org.notes.core.domain.NotesSession;
 import org.notes.core.domain.StandardTag;
 import org.notes.core.services.TagService;
 import org.notes.recommend.service.TextEssence;
@@ -35,7 +35,7 @@ public class TagServiceImpl implements TagService {
     private EntityManager em;
 
     @Inject
-    private SessionData sessionData;
+    private NotesSession notesSession;
 
     @Inject
     private TextEssence textEssence;
@@ -114,7 +114,7 @@ public class TagServiceImpl implements TagService {
             Query query = em.createNamedQuery(StandardTag.QUERY_USER_NETWORK);
             query.setMaxResults(5);
 
-            query.setParameter("USERNAME", sessionData.getUser().getUsername());
+            query.setParameter("USERNAME", notesSession.getUser().getUsername());
             return query.getResultList();
 
         } catch (Throwable t) {

@@ -4,8 +4,8 @@ import org.apache.log4j.Logger;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
 import org.notes.common.services.FolderService;
+import org.notes.core.domain.NotesSession;
 import org.notes.core.domain.SearchQuery;
-import org.notes.core.domain.SessionData;
 import org.notes.core.services.QueryService;
 
 import javax.ejb.Stateless;
@@ -35,7 +35,7 @@ public class QueryServiceImpl implements QueryService {
     private FolderService folderService;
 
     @Inject
-    private SessionData sessionData;
+    private NotesSession notesSession;
 
     // --
 
@@ -47,14 +47,14 @@ public class QueryServiceImpl implements QueryService {
     public List<SearchQuery> history() throws NotesException {
         try {
 
-            if (sessionData == null) {
+            if (notesSession == null) {
                 throw new IllegalArgumentException("No session data found");
             }
 
-            LOGGER.info("history of user " + sessionData.getUser().getUsername());
+            LOGGER.info("history of user " + notesSession.getUser().getUsername());
 
             Query query = em.createNamedQuery(SearchQuery.QUERY_LATEST);
-            query.setParameter("USERNAME", sessionData.getUser().getUsername());
+            query.setParameter("USERNAME", notesSession.getUser().getUsername());
             query.setMaxResults(10);
 
             return query.getResultList();
@@ -80,7 +80,7 @@ public class QueryServiceImpl implements QueryService {
             try {
 
                 Query findExisting = em.createNamedQuery(SearchQuery.QUERY_BY_QUERY);
-                findExisting.setParameter("USERNAME", sessionData.getUser().getUsername());
+                findExisting.setParameter("USERNAME", notesSession.getUser().getUsername());
                 findExisting.setParameter("QUERY", queryString);
                 query = (SearchQuery) findExisting.getSingleResult();
 
@@ -94,7 +94,7 @@ public class QueryServiceImpl implements QueryService {
                 query = new SearchQuery();
                 query.setLastUsed(new Date());
                 query.setUseCount(1);
-                query.setUser(sessionData.getUser());
+                query.setUser(notesSession.getUser());
                 query.setValue(queryString);
 
                 em.persist(query);

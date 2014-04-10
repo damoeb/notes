@@ -8,7 +8,8 @@ import org.notes.common.configuration.NotesInterceptors;
 import org.notes.core.domain.PdfDocument;
 import org.notes.core.domain.StandardFileReference;
 import org.notes.core.endpoints.internal.NotesResponse;
-import org.notes.core.metric.ServiceMetric;
+import org.notes.core.interceptors.Bouncer;
+import org.notes.core.metric.PerformanceLogger;
 import org.notes.core.services.DocumentService;
 import org.notes.core.services.FileReferenceService;
 
@@ -50,9 +51,10 @@ public class FileEndpoint {
     }
 
     @POST
-    @ServiceMetric
+    @PerformanceLogger
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
+    @Bouncer
     @Path(value = "/upload")
     public NotesResponse upload(@Context HttpServletRequest request) {
         try {
@@ -95,7 +97,8 @@ public class FileEndpoint {
      */
 
     @HEAD
-    @ServiceMetric
+    @PerformanceLogger
+    @Bouncer
     @Path("/{fileId}")
     public void doHead(@Context HttpServletRequest request, @Context HttpServletResponse response, @Context ServletContext context, @PathParam("fileId") String fileId)
             throws ServletException, IOException {
@@ -109,6 +112,7 @@ public class FileEndpoint {
      * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse).
      */
     @GET
+    @Bouncer
     @Path("/{fileId}")
     public void doGet(@Context HttpServletRequest request, @Context HttpServletResponse response, @Context ServletContext context, @PathParam("fileId") String fileId)
             throws ServletException, IOException {

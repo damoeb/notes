@@ -23,9 +23,9 @@ import org.notes.common.domain.FullText;
 import org.notes.common.exceptions.NotesException;
 import org.notes.common.services.FolderService;
 import org.notes.common.utils.TextUtils;
+import org.notes.core.domain.NotesSession;
 import org.notes.core.domain.SearchQuery;
 import org.notes.core.domain.SearchResponse;
-import org.notes.core.domain.SessionData;
 import org.notes.core.services.QueryService;
 import org.notes.core.services.SearchService;
 import org.notes.core.services.SearchServiceRemote;
@@ -65,7 +65,7 @@ public class SearchServiceImpl implements SearchService, SearchServiceRemote {
     private QueryService queryService;
 
     @Inject
-    private SessionData sessionData;
+    private NotesSession notesSession;
 
     // --
 
