@@ -25,31 +25,48 @@
 
         <class>org.notes.core.text.FingerPrint</class>
 
+        <!--http://docs.jboss.org/hibernate/core/3.3/reference/en/html/session-configuration.html-->
+
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
             <property name="hibernate.show_sql" value="false"/>
             <property name="hibernate.format_sql" value="true"/>
             <property name="hibernate.hbm2ddl.auto" value="false"/>
             <property name="hibernate.connection.autoReconnect" value="true"/>
+
             <!--<property name="hibernate.transaction.factory_class" value="org.hibernate.transaction.JDBCTransactionFactory" />-->
-            <!--<property name="hibernate.transaction.factory_class" value="org.hibernate.transaction.JTATransactionFactory"/>-->
+            <!--&lt;!&ndash;<property name="hibernate.transaction.factory_class" value="org.hibernate.transaction.JTATransactionFactory"/>&ndash;&gt;-->
 
-            <!-- LOBs can cause problems with postgres -->
-            <property name="hibernate.jdbc.use_streams_for_binary" value="false"/>
+            <!--&lt;!&ndash; Enable Hibernate's automatic session context management &ndash;&gt;-->
+            <!--&lt;!&ndash;<property name="hibernate.current_session_context_class" value="thread" />&ndash;&gt;-->
+            <!--<property name="hibernate.c3p0.min_size" value="5" />-->
+            <!--<property name="hibernate.c3p0.max_size" value="20" />-->
+            <!--<property name="hibernate.c3p0.timeout" value="1800" />-->
+            <!--<property name="hibernate.c3p0.max_statements" value="50" />-->
+            <!--<property name="hibernate.connection.release_mode" value="after_transaction" />-->
 
-            <!--<property name="hibernate.hbm2ddl.import_files" value="import.sql" />-->
+            <!--<property name="hibernate.transaction.auto_close_session" value="true" />-->
+            <!--<property name="hibernate.transaction.manager_lookup_class" value="org.hibernate.transaction.JBossTransactionManagerLookup" />-->
 
-            <!--<property name="hibernate.ejb.naming_strategy" value="org.notes.common.CustomNamingStrategy"/>-->
 
-            <!--<property name="min-pool" value=""></property>-->
-            <!-- Needed to recreate EntityManagerFactory -->
-            <property name="hibernate.transaction.jta.platform"
-                      value="org.hibernate.service.jta.platform.internal.JBossAppServerJtaPlatform"/>
+            <!--&lt;!&ndash;<property name="current_session_context_class" value="thread" />&ndash;&gt;-->
 
-            <!--&lt;!&ndash; hibernate second level cache &ndash;&gt;-->
-            <!--<property name="hibernate.cache.use_second_level_cache" value="true" />-->
-            <!--<property name="hibernate.cache.use_query_cache" value="true" />-->
-            <!--<property name="hibernate.cache.region.factory_class" value="net.sf.ehcache.hibernate.EhCacheRegionFactory" />-->
+            <!--&lt;!&ndash; LOBs can cause problems with postgres &ndash;&gt;-->
+            <!--<property name="hibernate.jdbc.use_streams_for_binary" value="false"/>-->
+
+            <!--&lt;!&ndash;<property name="hibernate.hbm2ddl.import_files" value="import.sql" />&ndash;&gt;-->
+
+            <!--&lt;!&ndash;<property name="hibernate.ejb.naming_strategy" value="org.notes.common.CustomNamingStrategy"/>&ndash;&gt;-->
+
+            <!--&lt;!&ndash;<property name="min-pool" value=""></property>&ndash;&gt;-->
+            <!--&lt;!&ndash; Needed to recreate EntityManagerFactory &ndash;&gt;-->
+            <!--<property name="hibernate.transaction.jta.platform"-->
+            <!--value="org.hibernate.service.jta.platform.internal.JBossAppServerJtaPlatform"/>-->
+
+            <!--&lt;!&ndash;&lt;!&ndash; hibernate second level cache &ndash;&gt;&ndash;&gt;-->
+            <!--&lt;!&ndash;<property name="hibernate.cache.use_second_level_cache" value="true" />&ndash;&gt;-->
+            <!--&lt;!&ndash;<property name="hibernate.cache.use_query_cache" value="true" />&ndash;&gt;-->
+            <!--&lt;!&ndash;<property name="hibernate.cache.region.factory_class" value="net.sf.ehcache.hibernate.EhCacheRegionFactory" />&ndash;&gt;-->
 
         </properties>
     </persistence-unit>

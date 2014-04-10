@@ -25,7 +25,7 @@ public class TokenStreamProvider {
 
     }
 
-    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public TokenStream getTokenizer(String text, Language lang) {
 
         if (lang == null) {

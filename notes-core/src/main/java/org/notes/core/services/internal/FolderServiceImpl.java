@@ -19,7 +19,8 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceUnit;
 import javax.persistence.Query;
 import java.io.Serializable;
 import java.util.Date;
@@ -29,12 +30,13 @@ import java.util.List;
 //@LocalBean
 @Stateless
 @NotesInterceptors
+@TransactionAttribute(TransactionAttributeType.NEVER)
 public class FolderServiceImpl implements FolderService {
 
     private static final Logger LOGGER = Logger.getLogger(FolderServiceImpl.class);
 
-    @PersistenceContext(unitName = "primary")
-    private EntityManager em;
+    @PersistenceUnit(unitName = "primary")
+    private EntityManagerFactory emf;
 
     @Inject
     private UserService userService;
@@ -48,7 +50,10 @@ public class FolderServiceImpl implements FolderService {
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Folder createFolder(Folder folder, Folder parent, Database database) throws NotesException {
+        EntityManager em = null;
+
         try {
+            em = emf.createEntityManager();
             if (folder == null) {
                 throw new IllegalArgumentException("folder is null");
             }
@@ -57,18 +62,16 @@ public class FolderServiceImpl implements FolderService {
                 throw new IllegalArgumentException("database is null");
             }
 
-            if (!em.contains(database)) {
-                database = databaseService.getDatabase(database.getId());
-            }
+            database = databaseService.getDatabase(database.getId());
 
             if (parent != null && !em.contains(parent)) {
-                parent = _get(parent.getId());
+                parent = _get(em, parent.getId());
             }
 
-            folder = _create(folder, parent, database);
+            folder = _create(em, folder, parent, database);
 
             // use database as proxy
-            Database proxy = (Database) _getProxy(StandardDatabase.class, database.getId());
+            Database proxy = (Database) _getProxy(em, StandardDatabase.class, database.getId());
             proxy.getFolders().add(folder);
 
             em.merge(proxy);
@@ -81,6 +84,10 @@ public class FolderServiceImpl implements FolderService {
             String message = String.format("Cannot run createFolder, folder=%s, parent=%s, database:%s. Reason: %s", folder, parent, database, t.getMessage());
             LOGGER.error(message, t);
             throw new NotesException(message, t);
+        } finally {
+            if (em != null) {
+                em.close();
+            }
         }
     }
 
@@ -90,15 +97,22 @@ public class FolderServiceImpl implements FolderService {
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public StandardFolder getFolder(long folderId) throws NotesException {
+        EntityManager em = null;
+
         try {
+            em = emf.createEntityManager();
 
             // todo validate req
-            return _get(folderId);
+            return _get(em, folderId);
 
         } catch (Throwable t) {
             String message = String.format("Cannot run getFolder, folderId=%s. Reason: %s", folderId, t.getMessage());
             LOGGER.error(message, t);
             throw new NotesException(message, t);
+        } finally {
+            if (em != null) {
+                em.close();
+            }
         }
     }
 
@@ -108,7 +122,10 @@ public class FolderServiceImpl implements FolderService {
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public List<Folder> getChildren(long folderId) throws NotesException {
+        EntityManager em = null;
+
         try {
+            em = emf.createEntityManager();
 
             Query query = em.createNamedQuery(StandardFolder.QUERY_CHILDREN);
             query.setParameter("ID", folderId);
@@ -119,6 +136,10 @@ public class FolderServiceImpl implements FolderService {
             String message = String.format("Cannot run getChildren, folderId=%s. Reason: %s", folderId, t.getMessage());
             LOGGER.error(message, t);
             throw new NotesException(message, t);
+        } finally {
+            if (em != null) {
+                em.close();
+            }
         }
     }
 
@@ -126,9 +147,12 @@ public class FolderServiceImpl implements FolderService {
      * {@inheritDoc}
      */
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public List<Folder> getParents(Document document) throws NotesException {
+        EntityManager em = null;
+
         try {
+            em = emf.createEntityManager();
 
             if (document == null) {
                 throw new IllegalArgumentException("document is null");
@@ -137,12 +161,18 @@ public class FolderServiceImpl implements FolderService {
             List<Folder> parents = new LinkedList<>();
 
             Long folderId = document.getFolderId();
-            while (folderId != null) {
+            while (true) {
 
-                Folder parent = getFolder(folderId);
+                Folder folder = _get(em, folderId);
+                Folder parent = folder.getParent();
+
+                if (parent == null) {
+                    break;
+                }
+
                 folderId = parent.getId();
 
-                parents.add(parent);
+                parents.add(folder);
             }
 
             return parents;
@@ -151,6 +181,10 @@ public class FolderServiceImpl implements FolderService {
             String message = String.format("Cannot run getParents, document=%s. Reason: %s", document, t.getMessage());
             LOGGER.error(message, t);
             throw new NotesException(message, t);
+        } finally {
+            if (em != null) {
+                em.close();
+            }
         }
     }
 
@@ -160,14 +194,21 @@ public class FolderServiceImpl implements FolderService {
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public StandardFolder deleteFolder(long folderId) throws NotesException {
-        try {
+        EntityManager em = null;
 
-            return _delete(_get(folderId));
+        try {
+            em = emf.createEntityManager();
+
+            return _delete(em, _get(em, folderId));
 
         } catch (Throwable t) {
             String message = String.format("Cannot run deleteFolder, folderId=%s. Reason: %s", folderId, t.getMessage());
             LOGGER.error(message, t);
             throw new NotesException(message, t);
+        } finally {
+            if (em != null) {
+                em.close();
+            }
         }
     }
 
@@ -177,12 +218,16 @@ public class FolderServiceImpl implements FolderService {
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public StandardFolder updateFolder(long folderId, Folder newFolder) throws NotesException {
+        EntityManager em = null;
+
         try {
+            em = emf.createEntityManager();
+
             if (newFolder == null) {
                 throw new NotesException("Folder is null");
             }
 
-            StandardFolder folder = _get(folderId);
+            StandardFolder folder = _get(em, folderId);
             folder.setName(newFolder.getName());
             folder.setModified(new Date());
             folder.setExpanded(newFolder.isExpanded());
@@ -197,13 +242,17 @@ public class FolderServiceImpl implements FolderService {
             String message = String.format("Cannot run updateFolder, folderId=%s, newFolder=%s. Reason: %s", folderId, newFolder, t.getMessage());
             LOGGER.error(message, t);
             throw new NotesException(message, t);
+        } finally {
+            if (em != null) {
+                em.close();
+            }
         }
     }
 
 
     // -- Internal
 
-    private Object _getProxy(Class<? extends Object> clazz, Serializable id) {
+    private Object _getProxy(EntityManager em, Class<? extends Object> clazz, Serializable id) {
         Session session = em.unwrap(Session.class);
         Object proxy = session.load(clazz, id);
         if (proxy == null) {
@@ -212,7 +261,7 @@ public class FolderServiceImpl implements FolderService {
         return proxy;
     }
 
-    private StandardFolder _get(Long folderId) {
+    private StandardFolder _get(EntityManager em, Long folderId) {
 
         if (folderId == null || folderId <= 0) {
             throw new IllegalArgumentException(String.format("Invalid folder id '%s'", folderId));
@@ -230,7 +279,7 @@ public class FolderServiceImpl implements FolderService {
 
     }
 
-    private Folder _create(Folder folder, Folder parent, Database database) {
+    private Folder _create(EntityManager em, Folder folder, Folder parent, Database database) {
 
         if (folder == null) {
             throw new IllegalArgumentException("Folder is null");
@@ -256,7 +305,7 @@ public class FolderServiceImpl implements FolderService {
         em.flush();
         em.refresh(folder);
 
-        User user = (User) _getProxy(User.class, database.getOwner());
+        User user = (User) _getProxy(em, User.class, database.getOwner());
         user.getFolders().add(folder);
         em.merge(user);
 
@@ -264,7 +313,7 @@ public class FolderServiceImpl implements FolderService {
 
     }
 
-    private StandardFolder _delete(StandardFolder folder) {
+    private StandardFolder _delete(EntityManager em, StandardFolder folder) {
         if (folder == null) {
             throw new IllegalArgumentException("Folder is null");
         }
@@ -272,7 +321,6 @@ public class FolderServiceImpl implements FolderService {
             throw new IllegalArgumentException("Folder Id is invalid");
         }
 
-        folder = _get(folder.getId());
         folder.setDeleted(true);
         em.merge(folder);
 

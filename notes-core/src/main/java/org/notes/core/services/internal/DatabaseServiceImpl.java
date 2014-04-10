@@ -111,6 +111,7 @@ public class DatabaseServiceImpl implements DatabaseService {
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public StandardDatabase getDatabaseOfUser() throws NotesException {
         try {
+
             Query query = em.createNamedQuery(StandardDatabase.QUERY_BY_USER);
             query.setParameter("USERNAME", sessionData.getUser().getUsername());
 

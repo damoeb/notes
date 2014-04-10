@@ -1,7 +1,10 @@
 package org.notes.common.cache;
 
 
-import org.infinispan.configuration.cache.*;
+import org.infinispan.configuration.cache.ConfigurationBuilder;
+import org.infinispan.configuration.cache.EvictionConfigurationBuilder;
+import org.infinispan.configuration.cache.ExpirationConfigurationBuilder;
+import org.infinispan.configuration.cache.TransactionConfigurationBuilder;
 import org.infinispan.eviction.EvictionStrategy;
 import org.infinispan.manager.DefaultCacheManager;
 import org.infinispan.manager.EmbeddedCacheManager;

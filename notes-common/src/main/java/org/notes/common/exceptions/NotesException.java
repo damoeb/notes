@@ -1,5 +1,8 @@
 package org.notes.common.exceptions;
 
+import javax.ejb.ApplicationException;
+
+@ApplicationException(rollback = true)
 public class NotesException extends Exception {
 
     private NotesStatus status;

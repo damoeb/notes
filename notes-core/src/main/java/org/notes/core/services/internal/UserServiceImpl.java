@@ -15,7 +15,8 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceUnit;
 import javax.persistence.Query;
 import java.util.List;
 
@@ -27,8 +28,8 @@ public class UserServiceImpl implements UserService {
 
     private static final Logger LOGGER = Logger.getLogger(UserServiceImpl.class);
 
-    @PersistenceContext(unitName = "primary")
-    private EntityManager em;
+    @PersistenceUnit(unitName = "primary")
+    private EntityManagerFactory emf;
 
     @Inject
     private AccountService accountService;
@@ -42,7 +43,10 @@ public class UserServiceImpl implements UserService {
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public User getUser(String username) throws NotesException {
+        EntityManager em = null;
+
         try {
+            em = emf.createEntityManager();
 
             if (StringUtils.isBlank(username)) {
                 throw new IllegalArgumentException(String.format("Invalid username '%s'", username));
@@ -62,6 +66,10 @@ public class UserServiceImpl implements UserService {
             String message = String.format("Cannot run getUser, username=%s. Reason: %s", username, t.getMessage());
             LOGGER.error(message, t);
             throw new NotesException(message, t);
+        } finally {
+            if (em != null) {
+                em.close();
+            }
         }
     }
 
@@ -71,7 +79,10 @@ public class UserServiceImpl implements UserService {
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public User deleteUser(String username) throws NotesException {
+        EntityManager em = null;
+
         try {
+            em = emf.createEntityManager();
 
             User user = getUser(username);
             em.remove(user);
@@ -82,6 +93,10 @@ public class UserServiceImpl implements UserService {
             String message = String.format("Cannot run deleteUser, username=%s. Reason: %s", username, t.getMessage());
             LOGGER.error(message, t);
             throw new NotesException(message, t);
+        } finally {
+            if (em != null) {
+                em.close();
+            }
         }
     }
 
@@ -91,7 +106,10 @@ public class UserServiceImpl implements UserService {
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public User createUser(User newUser, Account account) throws NotesException {
+        EntityManager em = null;
+
         try {
+            em = emf.createEntityManager();
 
             if (newUser == null) {
                 throw new IllegalArgumentException("user is null");
@@ -118,6 +136,11 @@ public class UserServiceImpl implements UserService {
             String message = String.format("Cannot run createUser, newUser=%s, account=%s. Reason: %s", newUser, account, t.getMessage());
             LOGGER.error(message, t);
             throw new NotesException(message, t);
+
+        } finally {
+            if (em != null) {
+                em.close();
+            }
         }
     }
 }

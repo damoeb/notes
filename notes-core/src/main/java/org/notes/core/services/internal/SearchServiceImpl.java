@@ -18,6 +18,7 @@ import org.notes.common.configuration.ConfigurationProperty;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.configuration.SolrFields;
 import org.notes.common.domain.Document;
+import org.notes.common.domain.Folder;
 import org.notes.common.domain.FullText;
 import org.notes.common.exceptions.NotesException;
 import org.notes.common.services.FolderService;
@@ -27,6 +28,7 @@ import org.notes.core.domain.SearchResponse;
 import org.notes.core.domain.SessionData;
 import org.notes.core.services.QueryService;
 import org.notes.core.services.SearchService;
+import org.notes.core.services.SearchServiceRemote;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -44,7 +46,7 @@ import java.util.Set;
 @Stateless
 @NotesInterceptors
 @TransactionAttribute(TransactionAttributeType.NEVER)
-public class SearchServiceImpl implements SearchService {
+public class SearchServiceImpl implements SearchService, SearchServiceRemote {
 
     private static final Logger LOGGER = Logger.getLogger(SearchServiceImpl.class);
 
@@ -73,7 +75,7 @@ public class SearchServiceImpl implements SearchService {
      * {@inheritDoc}
      */
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public SearchResponse query(String queryString, Integer start, Integer rows, Long databaseId, Integer currentFolderId) throws NotesException {
         try {
 
@@ -137,7 +139,7 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public List<SearchQuery> suggest(String queryString) throws NotesException {
         try {
 
@@ -167,7 +169,7 @@ public class SearchServiceImpl implements SearchService {
      * {@inheritDoc}
      */
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void index(Document document) throws NotesException {
         try {
 
@@ -264,12 +266,11 @@ public class SearchServiceImpl implements SearchService {
         SolrInputDocument doc = new SolrInputDocument();
         doc.setField(SolrFields.DOCUMENT, document.getId());
 
-//        todo fix
-//        List<Folder> parentFolders = folderService.getParents(document);
-//
-//        for (Folder parent : parentFolders) {
-//            doc.setField(SolrFields.FOLDER, parent.getId());
-//        }
+        List<Folder> parentFolders = folderService.getParents(document);
+
+        for (Folder parent : parentFolders) {
+            doc.setField(SolrFields.FOLDER, parent.getId());
+        }
 
         doc.setField(SolrFields.MODIFIED, document.getModified());
         doc.setField(SolrFields.OUTLINE, document.getOutline());

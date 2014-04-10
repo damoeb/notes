@@ -38,7 +38,7 @@ public class TextEssenceBean implements TextEssence {
     private TokenStreamProvider tokenStreamProvider;
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Map<String, Double> getBestKeywords(int num, Collection<FullText> texts) {
 
         final Map<String, Integer> termFreqInDocument = getKeywordFreqMap(texts);
@@ -96,7 +96,7 @@ public class TextEssenceBean implements TextEssence {
     }
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Double tfidf(String term, Integer frequency, int maxTermFreq) {
 
         double tf = 0.5 + (0.5 * frequency) / maxTermFreq;

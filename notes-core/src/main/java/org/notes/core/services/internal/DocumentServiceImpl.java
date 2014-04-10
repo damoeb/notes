@@ -24,7 +24,8 @@ import javax.inject.Inject;
 import javax.jms.*;
 import javax.jms.Queue;
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceUnit;
 import javax.persistence.Query;
 import java.util.*;
 
@@ -36,8 +37,8 @@ public class DocumentServiceImpl implements DocumentService {
 
     private static final Logger LOGGER = Logger.getLogger(DocumentServiceImpl.class);
 
-    @PersistenceContext(unitName = "primary")
-    private EntityManager em;
+    @PersistenceUnit(unitName = "primary")
+    private EntityManagerFactory emf;
 
     @Resource(mappedName = "java:/ConnectionFactory")
     private ConnectionFactory connectionFactory;
@@ -67,7 +68,10 @@ public class DocumentServiceImpl implements DocumentService {
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public TextDocument createDocument(TextDocument document, Folder inFolder) throws NotesException {
 
+        EntityManager em = null;
+
         try {
+            em = emf.createEntityManager();
 
             LOGGER.info("create text-document");
 
@@ -78,12 +82,11 @@ public class DocumentServiceImpl implements DocumentService {
             if (inFolder == null || inFolder.getId() == 0) {
                 inFolder = databaseService.getDatabaseOfUser().getDefaultFolder();
             } else {
-                if (!em.contains(inFolder)) {
-                    inFolder = folderService.getFolder(inFolder.getId());
-                }
+                inFolder = folderService.getFolder(inFolder.getId());
             }
 
-            BasicDocument basicDocument = _createDocument(document, inFolder);
+
+            BasicDocument basicDocument = _createDocument(em, document, inFolder);
 
             indexDocument(basicDocument);
 
@@ -94,6 +97,10 @@ public class DocumentServiceImpl implements DocumentService {
             String message = String.format("Cannot run createDocument document=%s, inFolder=%s. Reason: %s", document, inFolder, t.getMessage());
             LOGGER.error(message, t);
             throw new NotesException(message, t);
+        } finally {
+            if (em != null) {
+                em.close();
+            }
         }
     }
 
@@ -101,9 +108,13 @@ public class DocumentServiceImpl implements DocumentService {
      * {@inheritDoc}
      */
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public List<BasicDocument> getDocumentsInFolder(Long folderId) throws NotesException {
+        EntityManager em = null;
+
         try {
+            em = emf.createEntityManager();
+
             if (folderId == null || folderId <= 0) {
                 throw new IllegalArgumentException(String.format("Invalid folder id '%s'", folderId));
             }
@@ -117,6 +128,10 @@ public class DocumentServiceImpl implements DocumentService {
             String message = String.format("Cannot run getDocumentsInFolder folderId=%s. Reason: %s", folderId, t.getMessage());
             LOGGER.error(message, t);
             throw new NotesException(message, t);
+        } finally {
+            if (em != null) {
+                em.close();
+            }
         }
     }
 
@@ -125,9 +140,12 @@ public class DocumentServiceImpl implements DocumentService {
      * {@inheritDoc}
      */
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public BasicDocument getDocument(long documentId) throws NotesException {
+        EntityManager em = null;
+
         try {
+            em = emf.createEntityManager();
 
             Query query = em.createNamedQuery(BasicDocument.QUERY_BY_ID);
             query.setParameter("ID", documentId);
@@ -139,6 +157,10 @@ public class DocumentServiceImpl implements DocumentService {
             String message = String.format("Cannot run getDocument documentId=%s, Reason: %s", documentId, t.getMessage());
             LOGGER.error(message, t);
             throw new NotesException(message, t);
+        } finally {
+            if (em != null) {
+                em.close();
+            }
         }
     }
 
@@ -146,11 +168,15 @@ public class DocumentServiceImpl implements DocumentService {
      * {@inheritDoc}
      */
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public BasicDocument deleteDocument(long documentId) throws NotesException {
-        try {
+        EntityManager em = null;
 
-            BasicDocument document = _get(documentId);
+        try {
+            em = emf.createEntityManager();
+
+
+            BasicDocument document = _get(documentId, em);
 //          todo replace through mdb  document.setTrigger(Trigger.DELETE);
 
             Session session = em.unwrap(Session.class);
@@ -176,6 +202,10 @@ public class DocumentServiceImpl implements DocumentService {
             String message = String.format("Cannot run deleteDocument documentId=%s, Reason: %s", documentId, t.getMessage());
             LOGGER.error(message, t);
             throw new NotesException(message, t);
+        } finally {
+            if (em != null) {
+                em.close();
+            }
         }
     }
 
@@ -183,15 +213,19 @@ public class DocumentServiceImpl implements DocumentService {
      * {@inheritDoc}
      */
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public BasicDocument updateBasicDocument(BasicDocument ref) throws NotesException {
+        EntityManager em = null;
+
         try {
+            em = emf.createEntityManager();
+
 
             if (ref == null) {
                 throw new IllegalArgumentException("document is null");
             }
 
-            BasicDocument document = _get(ref.getId());
+            BasicDocument document = _get(ref.getId(), em);
 
             if (!equals(ref, document)) {
 
@@ -212,6 +246,10 @@ public class DocumentServiceImpl implements DocumentService {
             String message = String.format("Cannot run updateBasicDocument document=%s, Reason: %s", ref, t.getMessage());
             LOGGER.error(message, t);
             throw new NotesException(message, t);
+        } finally {
+            if (em != null) {
+                em.close();
+            }
         }
     }
 
@@ -219,15 +257,19 @@ public class DocumentServiceImpl implements DocumentService {
      * {@inheritDoc}
      */
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public BasicDocument updateTextDocument(TextDocument ref) throws NotesException {
+        EntityManager em = null;
+
         try {
+            em = emf.createEntityManager();
+
 
             if (ref == null) {
                 throw new IllegalArgumentException("document is null");
             }
 
-            TextDocument document = (TextDocument) _get(ref.getId());
+            TextDocument document = (TextDocument) _get(ref.getId(), em);
             boolean similarText = StringUtils.equals(ref.getText(), document.getText());
 
             if (!equals(ref, document) || !similarText) {
@@ -252,6 +294,10 @@ public class DocumentServiceImpl implements DocumentService {
             String message = String.format("Cannot run updateTextDocument document=%s, Reason: %s", ref, t.getMessage());
             LOGGER.error(message, t);
             throw new NotesException(message, t);
+        } finally {
+            if (em != null) {
+                em.close();
+            }
         }
     }
 
@@ -259,9 +305,13 @@ public class DocumentServiceImpl implements DocumentService {
      * {@inheritDoc}
      */
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public PdfDocument uploadDocument(List<FileItem> items) throws NotesException {
+        EntityManager em = null;
+
         try {
+            em = emf.createEntityManager();
+
             FileReference reference = null;
             String title = null;
 
@@ -302,12 +352,16 @@ public class DocumentServiceImpl implements DocumentService {
             document.setFileReference(reference);
 //          todo replace with mdb document.setTrigger(Trigger.EXTRACT_PDF);
 
-            return (PdfDocument) _createDocument(document, inFolder);
+            return (PdfDocument) _createDocument(em, document, inFolder);
 
         } catch (Throwable t) {
             String message = String.format("Cannot run uploadDocument. Reason: %s", t.getMessage());
             LOGGER.error(message, t);
             throw new NotesException(message, t);
+        } finally {
+            if (em != null) {
+                em.close();
+            }
         }
     }
 
@@ -315,10 +369,14 @@ public class DocumentServiceImpl implements DocumentService {
      * {@inheritDoc}
      */
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void moveTo(List<Long> documentIds, Long toFolderId) throws NotesException {
 
+        EntityManager em = null;
+
         try {
+            em = emf.createEntityManager();
+
 
             if (documentIds == null || documentIds.isEmpty()) {
                 throw new IllegalArgumentException("documentId is null or empty");
@@ -329,7 +387,7 @@ public class DocumentServiceImpl implements DocumentService {
 
             for (Long documentId : documentIds) {
 
-                BasicDocument document = _get(documentId);
+                BasicDocument document = _get(documentId, em);
 
                 //            todo check permissions
 
@@ -361,8 +419,11 @@ public class DocumentServiceImpl implements DocumentService {
             String message = String.format("Cannot run moveTo. documentIds=%s, folderId=%s. Reason: %s", StringUtils.join(documentIds, ", "), toFolderId, t.getMessage());
             LOGGER.error(message, t);
             throw new NotesException(message, t);
+        } finally {
+            if (em != null) {
+                em.close();
+            }
         }
-
     }
 
     // -- Internal
@@ -397,7 +458,7 @@ public class DocumentServiceImpl implements DocumentService {
         }
     }
 
-    private BasicDocument _createDocument(BasicDocument document, Folder inFolder) throws NotesException {
+    private BasicDocument _createDocument(EntityManager em, BasicDocument document, Folder inFolder) throws NotesException {
 
         document.validate();
 
@@ -501,8 +562,8 @@ public class DocumentServiceImpl implements DocumentService {
         return null;
     }
 
-    private BasicDocument _get(long documentId) throws NotesException {
-        Query query = em.createNamedQuery(BasicDocument.QUERY_BY_ID);
+    private BasicDocument _get(long documentId, EntityManager entityManager) throws NotesException {
+        Query query = entityManager.createNamedQuery(BasicDocument.QUERY_BY_ID);
         query.setParameter("ID", documentId);
         return (BasicDocument) query.getSingleResult();
     }
