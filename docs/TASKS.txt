@@ -6,8 +6,10 @@ IN ARBEIT
 - schema fuer query logging/suggestion/facettes anpassen
 
 OFFEN
-  delete documents/folders (header menu: wenn keine docs ausgewaehlt folder loeschen)
+- alpha: maximaler document count von 100
+- delete documents/folders (header menu: wenn keine docs ausgewaehlt folder loeschen)
   delete folders only if not specialized (unsorted, trash)
+- trash: bei mehr als 20 elementen werden die aeltesten entfernt.
 - remove all empty # links
 - clone document
 - special folders in special color

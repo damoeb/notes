@@ -7,6 +7,7 @@ import org.notes.common.domain.Folder;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -35,6 +36,28 @@ public class User implements Serializable {
     @Column(length = 1024)
     private String passwordHash;
 
+    @JsonIgnore
+    @Column(length = 256)
+    private String salt;
+
+    @Basic
+    private int documentCount;
+
+    @Basic
+    private int folderCount;
+
+//  -- Security
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lastLogin;
+
+    @Basic
+    private boolean deactivated;
+
+    @Basic
+    private int loginTries;
+
+
 //  -- References ------------------------------------------------------------------------------------------------------
 
     @JsonIgnore
@@ -44,6 +67,11 @@ public class User implements Serializable {
 
     @Column(name = Account.FK_ACCOUNT_ID, insertable = false, updatable = false)
     private String accountId;
+
+    @ManyToOne
+    @JoinColumn(name = Account.FK_ACCOUNT_ID)
+    private Account account;
+
 
     @JsonIgnore
     @OneToMany(cascade = {}, fetch = FetchType.LAZY, orphanRemoval = true)
@@ -59,6 +87,14 @@ public class User implements Serializable {
 
     public User() {
         // default
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
     }
 
     public String getUsername() {
@@ -115,5 +151,53 @@ public class User implements Serializable {
 
     public void setPasswordHash(String passwordHash) {
         this.passwordHash = passwordHash;
+    }
+
+    public int getDocumentCount() {
+        return documentCount;
+    }
+
+    public void setDocumentCount(int documentCount) {
+        this.documentCount = documentCount;
+    }
+
+    public int getFolderCount() {
+        return folderCount;
+    }
+
+    public void setFolderCount(int folderCount) {
+        this.folderCount = folderCount;
+    }
+
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
+    }
+
+    public Date getLastLogin() {
+        return lastLogin;
+    }
+
+    public void setLastLogin(Date lastLogin) {
+        this.lastLogin = lastLogin;
+    }
+
+    public boolean isDeactivated() {
+        return deactivated;
+    }
+
+    public void setDeactivated(boolean deactivated) {
+        this.deactivated = deactivated;
+    }
+
+    public int getLoginTries() {
+        return loginTries;
+    }
+
+    public void setLoginTries(int loginTries) {
+        this.loginTries = loginTries;
     }
 }

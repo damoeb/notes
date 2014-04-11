@@ -58,8 +58,9 @@ public class StartUp {
                 try {
 
                     Account a = new Account();
-                    a.setType(AccountType.BASIC);
-                    a.setQuota(1000l);
+                    a.setType(AccountType.ALPHA);
+                    a.setDocumentCount(100);
+                    a.setFolderCount(100);
                     a = accountService.createAccount(a);
 
                 } catch (Exception e) {

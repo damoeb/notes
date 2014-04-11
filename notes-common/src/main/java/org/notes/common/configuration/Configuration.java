@@ -25,13 +25,16 @@ public class Configuration {
 
     public static final String CONTEXT_SUFFIX_KEY = "environment";
 
-    public static final String REQUEST_DELAY = "notes.request-delay";
-
-    public static final String REST_TIME_PATTERN = "notes.rest.iso_time_pattern";
+    public static final String REST_TIME_PATTERN = "rest.iso_time_pattern";
     public static final String VERSION = "notes.version";
 
-    public static final String SOLR_SERVER = "notes.solr.server-url";
-    public static final String SOLR_COMMIT_TIMEOUT = "notes.solr.commit-timeout";
+    public static final String SOLR_SERVER = "solr.server-url";
+    public static final String SOLR_COMMIT_TIMEOUT = "solr.commit-timeout";
+
+    public static final String CONSTRAINT_PWD_MIN_LEN = "constraint.password-min-length";
+    public static final String CONSTRAINT_PWD_MAX_LEN = "constraint.password-max-length";
+    public static final String CONSTRAINT_USERNAME_MIN_LEN = "constraint.username-min-length";
+    public static final String CONSTRAINT_USERNAME_MAX_LEN = "constraint.username-max-length";
 
     public static final class Constants {
         public static final int OUTLINE_LENGTH = 1024;

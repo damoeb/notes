@@ -7,11 +7,8 @@ import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
 import org.notes.common.services.FolderService;
 import org.notes.core.domain.*;
-import org.notes.core.services.AccountService;
-import org.notes.core.services.AuthenticationService;
-import org.notes.core.services.DatabaseService;
-import org.notes.core.services.UserService;
-import org.notes.core.util.PasswordHash;
+import org.notes.core.services.*;
+import org.notes.core.util.CryptUtils;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -20,6 +17,8 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 //@LocalBean
 @Stateless
@@ -28,6 +27,8 @@ import javax.persistence.Query;
 public class AuthenticationServiceImpl implements AuthenticationService {
 
     private static final Logger LOGGER = Logger.getLogger(AuthenticationServiceImpl.class);
+
+    private static final int MAX_LOGIN_TRIES = 3;
 
     @PersistenceContext(unitName = "primary")
     private EntityManager em;
@@ -45,6 +46,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private FolderService folderService;
 
     @Inject
+    private ValidationService validationService;
+
+    @Inject
     private NotesSession notesSession;
 
     /**
@@ -59,16 +63,37 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 throw new IllegalArgumentException("User or password is empty");
             }
 
+            IllegalArgumentException exception = new IllegalArgumentException("User, password combination is invalid or unknown");
+
             Query query = em.createNamedQuery(User.QUERY_BY_ID);
             query.setParameter("USERNAME", username);
 
-            User user = (User) query.getSingleResult();
-
-            boolean authorized = PasswordHash.validatePassword(password, user.getPasswordHash());
-
-            if (!authorized) {
-                throw new IllegalArgumentException("User or password is invalid or unknown");
+            List users = query.getResultList();
+            if (users.isEmpty()) {
+                throw exception;
             }
+
+            User user = (User) users.get(0);
+            if (user.isDeactivated()) {
+                throw exception;
+            }
+
+            user.setLoginTries(user.getLoginTries() + 1);
+
+            if (user.getLoginTries() > MAX_LOGIN_TRIES) {
+                user.setDeactivated(true);
+                em.merge(user);
+
+                throw exception;
+            }
+            if (!isEqualPassword(password, user)) {
+                em.merge(user);
+
+                throw exception;
+            }
+
+            user.setLoginTries(0);
+            em.merge(user);
 
             notesSession.setUser(user);
             Hibernate.initialize(user.getDatabases());
@@ -101,12 +126,19 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 throw new IllegalArgumentException("email is null");
             }
 
+            validationService.tryUsername(username);
+            validationService.tryPassword(username);
+            validationService.tryEmail(email);
+
             User user = new User();
             user.setUsername(username);
-            user.setPasswordHash(PasswordHash.createHash(password));
+
+            String salt = String.valueOf((username + email).hashCode());
+            user.setSalt(salt);
+            user.setPasswordHash(CryptUtils.hash(password, salt));
             user.setEmail(email);
 
-            Account account = accountService.getAccount(AccountType.BASIC);
+            Account account = accountService.getAccount(AccountType.ALPHA);
 
             user = userService.createUser(user, account);
 
@@ -142,5 +174,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             throw new NotesException(message, t);
 
         }
+    }
+
+    // --
+
+    private boolean isEqualPassword(String password, User user) throws NoSuchAlgorithmException {
+        return StringUtils.equals(user.getPasswordHash(), CryptUtils.hash(password, user.getSalt()));
     }
 }

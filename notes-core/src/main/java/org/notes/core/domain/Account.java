@@ -29,7 +29,10 @@ public class Account implements Serializable {
     private AccountType type;
 
     @Basic
-    private long quota;
+    private int documentCount;
+
+    @Basic
+    private int folderCount;
 
 //  -- References ------------------------------------------------------------------------------------------------------
 
@@ -52,15 +55,23 @@ public class Account implements Serializable {
         this.type = type;
     }
 
-    public long getQuota() {
-        return quota;
-    }
-
-    public void setQuota(long quota) {
-        this.quota = quota;
-    }
-
     public Set<User> getUsers() {
         return users;
+    }
+
+    public int getDocumentCount() {
+        return documentCount;
+    }
+
+    public void setDocumentCount(int documentCount) {
+        this.documentCount = documentCount;
+    }
+
+    public int getFolderCount() {
+        return folderCount;
+    }
+
+    public void setFolderCount(int folderCount) {
+        this.folderCount = folderCount;
     }
 }

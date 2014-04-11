@@ -105,13 +105,13 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public User createUser(User newUser, Account account) throws NotesException {
+    public User createUser(User user, Account account) throws NotesException {
         EntityManager em = null;
 
         try {
             em = emf.createEntityManager();
 
-            if (newUser == null) {
+            if (user == null) {
                 throw new IllegalArgumentException("user is null");
             }
 
@@ -119,21 +119,18 @@ public class UserServiceImpl implements UserService {
                 throw new IllegalArgumentException("account is null");
             }
 
-            if (!em.contains(account)) {
-                account = accountService.getAccount(account.getType());
-            }
+            account = accountService.getAccount(account.getType());
 
-            em.persist(newUser);
+            user.setAccount(account);
+
+            em.persist(user);
             em.flush();
-            em.refresh(newUser);
+            em.refresh(user);
 
-            account.getUsers().add(newUser);
-            em.merge(account);
-
-            return newUser;
+            return user;
 
         } catch (Throwable t) {
-            String message = String.format("Cannot run createUser, newUser=%s, account=%s. Reason: %s", newUser, account, t.getMessage());
+            String message = String.format("Cannot run createUser, newUser=%s, account=%s. Reason: %s", user, account, t.getMessage());
             LOGGER.error(message, t);
             throw new NotesException(message, t);
 

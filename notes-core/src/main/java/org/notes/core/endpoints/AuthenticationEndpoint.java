@@ -40,6 +40,7 @@ public class AuthenticationEndpoint {
             AuthParams auth
     ) {
         try {
+
             User user = authenticationService.register(auth.getUsername(), auth.getPassword(), auth.getEmail());
             return NotesResponse.ok(user);
 
