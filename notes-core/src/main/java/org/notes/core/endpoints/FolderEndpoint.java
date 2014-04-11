@@ -68,24 +68,6 @@ public class FolderEndpoint {
         }
     }
 
-    // todo not used
-    @GET
-    @MethodCache
-    @PerformanceLogger
-    @Bouncer
-    @Path("/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public NotesResponse getFolder(
-            @PathParam("id") long folderId) {
-
-        try {
-            return NotesResponse.ok(folderService.getFolder(folderId));
-
-        } catch (Exception e) {
-            return NotesResponse.error(e);
-        }
-    }
-
     @GET
     @MethodCache
     @PerformanceLogger

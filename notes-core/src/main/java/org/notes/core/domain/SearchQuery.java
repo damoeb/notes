@@ -21,7 +21,7 @@ import java.util.Date;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SearchQuery {
 
-    public static final String QUERY_LATEST = "SearchQuery.QUERY_LATEST"; // todo limit rows to 100
+    public static final String QUERY_LATEST = "SearchQuery.QUERY_LATEST";
     public static final String QUERY_BY_QUERY = "SearchQuery.QUERY_BY_QUERY";
 
     @Id

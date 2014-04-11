@@ -63,7 +63,7 @@
             var callback = function (success) {
 
                 if (success) {
-
+                    notes.messages.information('Moved to trash');
                     // show doc list
                 }
             };
@@ -78,6 +78,7 @@
             var callback = function (success) {
 
                 if (success) {
+                    notes.messages.information('Moved to trash');
 
                 }
             };
@@ -113,7 +114,7 @@
                     onSelect: function (model) {
                         var toFolderId = model.get('id');
                         console.log('select ' + toFolderId);
-                        $this.moveTo($this.getSelectedIds(), toFolderId);
+                        $this.moveTo(ids, toFolderId);
                         $modal.modal('hide');
                     },
                     sync: false
