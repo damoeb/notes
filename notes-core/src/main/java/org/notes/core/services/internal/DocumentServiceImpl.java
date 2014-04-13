@@ -210,6 +210,7 @@ public class DocumentServiceImpl implements DocumentService {
     public void delete(List<Long> documentIds) throws NotesException {
         try {
 
+            // todo improve: this takes forever
             for (Long id : documentIds) {
                 deleteDocument(id);
             }
@@ -399,11 +400,16 @@ public class DocumentServiceImpl implements DocumentService {
             Set<Long> ids = new HashSet<>(documentIds.size());
             ids.addAll(documentIds);
 
-            Query query;
             BasicDocument document;
             Long fromFolderId = null;
 
             Set<Document> affected = new HashSet<>(documentIds.size());
+
+
+            Session session = em.unwrap(Session.class);
+
+            Folder toFolder = (Folder) session.load(StandardFolder.class, toFolderId);
+            Folder fromFolder = null;
 
             for (Long documentId : ids) {
 
@@ -415,69 +421,21 @@ public class DocumentServiceImpl implements DocumentService {
 
                 if (fromFolderId == null) {
                     fromFolderId = document.getFolderId();
+                    fromFolder = (Folder) session.load(StandardFolder.class, fromFolderId);
                 } else {
                     if (!fromFolderId.equals(document.getFolderId())) {
                         throw new IllegalArgumentException("All documents are supposed to be in the same source folder");
                     }
                 }
 
-                query = em.createNamedQuery(BasicDocument.QUERY_MOVE);
-                query.setParameter("FOLDER_ID", toFolderId);
-                query.executeUpdate();
+                document.setFolder(toFolder);
             }
 
-            Session session = em.unwrap(Session.class);
-
-            Folder toFolder = (Folder) session.load(StandardFolder.class, toFolderId);
-            Folder fromFolder = (Folder) session.load(StandardFolder.class, fromFolderId);
-
+            // update doc counter
             updateDocumentCount(em, toFolder, ids.size());
             updateDocumentCount(em, fromFolder, -1 * ids.size());
 
             // todo reindex affected
-            /*
-
-            Session session = em.unwrap(Session.class);
-
-
-            BasicDocument document = _get(documentIds.get(0), em);
-
-            Long fromFolderId = document.getFolderId();
-
-            StandardFolder fromFolderProxy = (StandardFolder) session.load(StandardFolder.class, fromFolderId);
-            if (fromFolderProxy == null) {
-                throw new IllegalArgumentException(String.format("folder with id %s is null", fromFolderId));
-            }
-
-            StandardFolder toFolderProxy = (StandardFolder) session.load(StandardFolder.class, toFolderId);
-            if (toFolderProxy == null) {
-                throw new IllegalArgumentException(String.format("folder with id %s is null", toFolderId));
-            }
-
-            for (Long documentId : documentIds) {
-
-                document = _get(documentId, em);
-
-                // todo if toFolderId is trash, set document deleted-flag to true, false otherwise
-                // todo check permissions
-
-                if(!document.getFolderId().equals(fromFolderId)) {
-                    throw new IllegalArgumentException("All documents are supposed to be in the same source folder");
-                }
-
-                fromFolderProxy.setDocumentCount(fromFolderProxy.getDocumentCount() - 1);
-                fromFolderProxy.getDocuments().remove(document);
-
-
-                toFolderProxy.getDocuments().add(document);
-                toFolderProxy.setDocumentCount(toFolderProxy.getDocumentCount() + 1);
-
-                //          todo re-index
-            }
-
-            em.merge(fromFolderProxy);
-            em.merge(toFolderProxy);
-            */
 
         } catch (Throwable t) {
             String message = String.format("Cannot run moveTo. documentIds=%s, folderId=%s. Reason: %s", StringUtils.join(documentIds, ", "), toFolderId, t.getMessage());
@@ -538,38 +496,20 @@ public class DocumentServiceImpl implements DocumentService {
 
         document.validate();
 
-//        User user = userService.getUser(userId);
-
-//        document.setUser(user);
         document.setUserId(userId);
         document.setFolder(folder);
 
         em.persist(document);
 
-//        // todo replace by document.setFolder
-//        Session session = em.unwrap(Session.class);
-//
-//        StandardFolder proxy = (StandardFolder) session.load(StandardFolder.class, inFolderId);
-//        if (proxy == null) {
-//            throw new IllegalArgumentException(String.format("folder with id %s is null", document.getFolderId()));
-//        }
-//
-//        proxy.getDocuments().add(document);
-//        em.merge(proxy);
-
         //--
 
         updateDocumentCount(em, folder, 1);
 
-        em.flush();
+//        em.flush();
 
         em.refresh(document);
 
         return document;
-    }
-
-    private String getUniqueHash(BasicDocument document) {
-        return Long.toHexString(document.getId() * 1000000 + System.nanoTime() % 1000000);
     }
 
     private void copyAttributes(BasicDocument source, BasicDocument target) throws NotesException {
@@ -643,8 +583,6 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     private BasicDocument _get(long documentId, EntityManager entityManager) throws NotesException {
-        Query query = entityManager.createNamedQuery(BasicDocument.QUERY_BY_ID);
-        query.setParameter("ID", documentId);
-        return (BasicDocument) query.getSingleResult();
+        return entityManager.find(BasicDocument.class, documentId);
     }
 }

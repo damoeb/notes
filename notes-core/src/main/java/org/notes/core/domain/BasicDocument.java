@@ -30,8 +30,7 @@ import java.util.*;
 )
 @NamedQueries({
         @NamedQuery(name = Document.QUERY_BY_ID, query = "SELECT a FROM BasicDocument a where a.id=:ID"),
-        @NamedQuery(name = BasicDocument.QUERY_IN_FOLDER, query = "SELECT new BasicDocument(a.id, a.uniqueHash, a.title, a.outline, a.kind, a.modified, a.star, a.tagsJson, a.folderId) FROM BasicDocument a where a.folderId=:ID"),
-        @NamedQuery(name = BasicDocument.QUERY_MOVE, query = "UPDATE BasicDocument SET folderId=:FOLDER_ID")
+        @NamedQuery(name = BasicDocument.QUERY_IN_FOLDER, query = "SELECT new BasicDocument(a.id, a.uniqueHash, a.title, a.outline, a.kind, a.modified, a.star, a.tagsJson, a.folderId) FROM BasicDocument a where a.folderId=:ID")
 })
 @Inheritance(strategy = InheritanceType.JOINED)
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
@@ -39,7 +38,6 @@ import java.util.*;
 public class BasicDocument implements Document {
 
     public static final String QUERY_IN_FOLDER = "BasicDocument.QUERY_IN_FOLDER";
-    public static final String QUERY_MOVE = "BasicDocument.QUERY_MOVE";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

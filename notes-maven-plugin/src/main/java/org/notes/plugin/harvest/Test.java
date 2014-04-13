@@ -25,7 +25,7 @@ public class Test {
 
         try {
 
-            String sessionId = "vtw6ZaEyN28wJk3HsJqPNExQ.note-1";
+            String sessionId = "P2DST1mZReY7AEvWV9vhPFNq.note-1";
             BasicClientCookie cookie = new BasicClientCookie("JSESSIONID", sessionId);
 
             httpClient.getCookieStore().addCookie(cookie);
