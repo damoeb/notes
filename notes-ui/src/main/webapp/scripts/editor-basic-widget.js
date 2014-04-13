@@ -170,8 +170,11 @@ $.widget('notes.basiceditor', {
 
     fnDelete: function () {
         var $this = this;
-        $('#document-list')
-            .documentList('refresh', $this.getModel().get('folderId'));
+        $('#document-list').documentList(
+            {
+                folderId: $this.getModel().get('folderId')
+            }
+        );
 
         $('#document-view').hide();
         $('#dashboard-view').hide();
@@ -243,7 +246,11 @@ $.widget('notes.basiceditor', {
                 console.log('saved');
 
                 notes.messages.success('Saved');
-                $('#document-list').documentList('refresh', $this.getModel().get('folderId'));
+                $('#document-list').documentList(
+                    {
+                        folderId: $this.getModel().get('folderId')
+                    }
+                );
             }});
         }
     }

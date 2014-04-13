@@ -28,34 +28,36 @@ public final class TextUtils {
         }
 
         int outlineSize = Configuration.Constants.OUTLINE_LENGTH;
-        StringBuilder outline = new StringBuilder(outlineSize * 2);
+        StringBuilder outlineSb = new StringBuilder(outlineSize * 2);
 
-        outline.append(normWhitespaces(first));
-        outline.append(" ");
+        outlineSb.append(normWhitespaces(first));
+        outlineSb.append(" ");
 
         for (String text : more) {
             if (StringUtils.isBlank(text)) {
                 continue;
             }
-            if (outline.length() > outlineSize) {
+            if (outlineSb.length() > outlineSize) {
                 break;
             }
             String normalized = normWhitespaces(text);
-            outline.append(normalized);
-            outline.append(" ");
+            outlineSb.append(normalized);
+            outlineSb.append(" ");
         }
 
-        return StringUtils.substring(cleanHtml(outline.toString()), 0, outlineSize);
+        return StringUtils.substring(cleanHtml(outlineSb.toString()), 0, outlineSize);
     }
 
     public static String cleanHtml(String html) {
 
-        // todo cleaner not necessary, .text() will only return text.
+        Document document = Jsoup.parse(html);
 
-        Cleaner cleaner = new Cleaner(Whitelist.simpleText());
-        Document cleaned = cleaner.clean(Jsoup.parse(html));
+        String text = document.body().text();
 
-        return cleaned.body().text();
+        // remove non-breaking spaces
+        text = text.replace("\u00a0", " ");
+
+        return text;
     }
 
     public static String cleanHtmlRelaxed(String html) {

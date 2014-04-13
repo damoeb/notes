@@ -48,7 +48,8 @@ console.log('loading proxy-tools');
             var document = {
                 title: title,
                 text: text,
-                kind: 'BOOKMARK'
+                kind: 'BOOKMARK',
+                url: url
             };
 
             console.log('Finalize selection');

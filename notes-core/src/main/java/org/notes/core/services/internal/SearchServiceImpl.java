@@ -35,8 +35,6 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -90,6 +88,7 @@ public class SearchServiceImpl implements SearchService, SearchServiceRemote {
                 rows = 100;
             }
 
+            // todo unit queryservice and searchservice
             queryService.log(queryString);
 
             SolrServer server = getSolrServer();
@@ -275,16 +274,16 @@ public class SearchServiceImpl implements SearchService, SearchServiceRemote {
         doc.setField(SolrFields.MODIFIED, document.getModified());
         doc.setField(SolrFields.OUTLINE, document.getOutline());
         doc.setField(SolrFields.KIND, document.getKind());
-        doc.setField(SolrFields.OWNER, document.getOwner());
+        doc.setField(SolrFields.OWNER, document.getUserId());
         doc.setField(SolrFields.UNIQUE_HASH, document.getUniqueHash());
-        String url = document.getUrl();
-        if (StringUtils.isNotBlank(url)) {
-            try {
-                doc.setField(SolrFields.DOMAIN, new URL(url).getHost());
-            } catch (MalformedURLException e) {
-                LOGGER.warn(String.format("url %s is invalid.", url));
-            }
-        }
+//        String url = document.getUrl();
+//        if (StringUtils.isNotBlank(url)) {
+//            try {
+//                doc.setField(SolrFields.DOMAIN, new URL(url).getHost());
+//            } catch (MalformedURLException e) {
+//                LOGGER.warn(String.format("url %s is invalid.", url));
+//            }
+//        }
         doc.setField(SolrFields.STAR, document.isStar());
         return doc;
     }

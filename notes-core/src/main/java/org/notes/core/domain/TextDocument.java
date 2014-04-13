@@ -5,7 +5,6 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.hibernate.annotations.Type;
 import org.notes.common.domain.FullText;
 import org.notes.common.domain.Kind;
-import org.notes.common.exceptions.NotesException;
 import org.notes.common.utils.TextUtils;
 
 import javax.persistence.Entity;
@@ -40,6 +39,7 @@ public class TextDocument extends BasicDocument {
     @Override
     public void onPersist() {
         super.onPersist();
+        setText(TextUtils.cleanHtmlRelaxed(getText()));
         setOutline(TextUtils.toOutline(getText()));
     }
 
@@ -49,12 +49,5 @@ public class TextDocument extends BasicDocument {
         List<FullText> list = new LinkedList<>();
         list.add(new StandardFullText(0, text));
         return list;
-    }
-
-    @Override
-    public void validate() throws NotesException {
-        super.validate();
-
-        text = TextUtils.cleanHtmlRelaxed(text);
     }
 }

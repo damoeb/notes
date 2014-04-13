@@ -1,5 +1,7 @@
 package org.notes.core.interceptors;
 
+import org.notes.core.domain.Operation;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
@@ -12,4 +14,5 @@ public @interface Bouncer {
 
     public String value() default "";
 
+    Operation op() default Operation.IGNORE;
 }

@@ -15,7 +15,7 @@
     <packaging>maven-plugin</packaging>
 
     <name>notes maven plugin</name>
-    <description>Calculates the global term frequency</description>
+    <description>Calculates the global term frequency using a wikipedia dump</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

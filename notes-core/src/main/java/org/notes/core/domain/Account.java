@@ -25,6 +25,10 @@ public class Account implements Serializable {
     public static final String FK_ACCOUNT_ID = "account_id";
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    @Column(nullable = false, unique = true)
     @Enumerated(EnumType.STRING)
     private AccountType type;
 
@@ -73,5 +77,13 @@ public class Account implements Serializable {
 
     public void setFolderCount(int folderCount) {
         this.folderCount = folderCount;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

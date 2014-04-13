@@ -62,25 +62,25 @@ public class User implements Serializable {
 
     @JsonIgnore
     @OneToMany(cascade = {}, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = ForeignKey.USER)
+    @JoinColumn(name = ForeignKey.USER_ID)
     private Set<BasicDocument> documents = new HashSet(100);
 
     @Column(name = Account.FK_ACCOUNT_ID, insertable = false, updatable = false)
-    private String accountId;
+    private int accountId;
 
-    @ManyToOne
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = Account.FK_ACCOUNT_ID)
     private Account account;
 
-
     @JsonIgnore
     @OneToMany(cascade = {}, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = ForeignKey.USER)
+    @JoinColumn(name = ForeignKey.USER_ID)
     private Set<StandardDatabase> databases = new HashSet(100);
 
     @JsonIgnore
     @OneToMany(cascade = {}, fetch = FetchType.LAZY, orphanRemoval = true, targetEntity = StandardFolder.class)
-    @JoinColumn(name = ForeignKey.USER)
+    @JoinColumn(name = ForeignKey.USER_ID)
     private Set<Folder> folders = new HashSet(100);
 
 //  --------------------------------------------------------------------------------------------------------------------
@@ -113,11 +113,11 @@ public class User implements Serializable {
         this.documents = notes;
     }
 
-    public String getAccountId() {
+    public int getAccountId() {
         return accountId;
     }
 
-    protected void setAccountId(String accountId) {
+    protected void setAccountId(int accountId) {
         this.accountId = accountId;
     }
 

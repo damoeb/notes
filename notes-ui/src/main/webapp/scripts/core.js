@@ -167,7 +167,11 @@
 
                 var model = new notes.model.BasicDocument(xhr.result.result);
 
-                $('#document-list').documentList('refresh', model.get('folderId'));
+                $('#document-list').documentList(
+                    {
+                        folderId: model.get('folderId')
+                    }
+                );
 
                 $.unblockUI();
             });

@@ -6,23 +6,43 @@
 
 $.widget('notes.documentList', {
 
-    _init: function () {
-        this.template = _.template($('#document-in-folder-view').html());
+    options: {
+        folderId: null,
+        templates: {
+            trash: $('#document-in-folder-view'),
+            default: $('#document-in-trash-view')
+        },
+        menu: {
+            trash: $('#navbar-trash'),
+            default: $('#navbar-default')
+        }
     },
 
-    refresh: function (folderId) {
-
-        if (typeof folderId === 'undefined' || folderId === null) {
-            throw 'folderId is null';
-        }
-        this._fetch(folderId);
+    _init: function () {
+        this._fetch(this.options.folderId);
     },
 
     _fetch: function (folderId) {
         var $this = this;
 
+        if (typeof folderId === 'undefined' || folderId === null) {
+            throw 'folderId is null';
+        }
+
         if (!(folderId && parseInt(folderId) > 0)) {
             return;
+        }
+
+        // choose template for folder
+        var template;
+        if (notes.folders.trashFolderId() == folderId) {
+            template = _.template(this.options.templates.trash.html());
+            this.options.menu.trash.show();
+            this.options.menu.default.hide();
+        } else {
+            template = _.template(this.options.templates.default.html());
+            this.options.menu.default.show();
+            this.options.menu.trash.hide();
         }
 
         var url = REST_SERVICE + '/folder/${folderId}/documents';
@@ -43,7 +63,7 @@ $.widget('notes.documentList', {
             notes.util.sortJSONArrayDESC(documents, 'modified');
 
             $.each(documents, function (id, doc) {
-                var $rendered = $($this.template(doc).trim()).appendTo($target);
+                var $rendered = $(template(doc).trim()).appendTo($target);
                 $rendered.find('.thumb').draggable({
                     cursor: 'move',
                     cursorAt: { top: 5, left: -5 },

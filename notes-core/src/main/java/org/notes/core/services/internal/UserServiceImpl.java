@@ -20,7 +20,7 @@ import javax.persistence.PersistenceUnit;
 import javax.persistence.Query;
 import java.util.List;
 
-//@LocalBean
+//@Local
 @Stateless
 @NotesInterceptors
 @TransactionAttribute(TransactionAttributeType.NEVER)
@@ -46,11 +46,10 @@ public class UserServiceImpl implements UserService {
         EntityManager em = null;
 
         try {
-            em = emf.createEntityManager();
-
             if (StringUtils.isBlank(username)) {
                 throw new IllegalArgumentException(String.format("Invalid username '%s'", username));
             }
+            em = emf.createEntityManager();
 
             Query query = em.createNamedQuery(User.QUERY_BY_ID);
             query.setParameter("USERNAME", username);
@@ -109,8 +108,6 @@ public class UserServiceImpl implements UserService {
         EntityManager em = null;
 
         try {
-            em = emf.createEntityManager();
-
             if (user == null) {
                 throw new IllegalArgumentException("user is null");
             }
@@ -119,7 +116,9 @@ public class UserServiceImpl implements UserService {
                 throw new IllegalArgumentException("account is null");
             }
 
-            account = accountService.getAccount(account.getType());
+            em = emf.createEntityManager();
+
+            account = accountService.getByType(account.getType());
 
             user.setAccount(account);
 

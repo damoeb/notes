@@ -212,8 +212,19 @@ body {
         & > A.name {
           color: #efefef;
         }
-
       }
+
+      &.untitled {
+        font-style: italic;
+      }
+      &.trash {
+        font-style: italic;
+
+        .count {
+          visibility: hidden;
+        }
+      }
+
       //   dim empty folders
       &.empty {
         & > A.name {

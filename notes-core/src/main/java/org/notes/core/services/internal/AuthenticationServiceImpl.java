@@ -15,7 +15,8 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceUnit;
 import javax.persistence.Query;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -30,8 +31,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     private static final int MAX_LOGIN_TRIES = 3;
 
-    @PersistenceContext(unitName = "primary")
-    private EntityManager em;
+    @PersistenceUnit(unitName = "primary")
+    private EntityManagerFactory emf;
 
     @Inject
     private DatabaseService databaseService;
@@ -57,11 +58,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public NotesSession authenticate(String username, String password) throws NotesException {
+
+        EntityManager em = null;
+
         try {
 
             if (StringUtils.isBlank(username) || StringUtils.isBlank(password)) {
                 throw new IllegalArgumentException("User or password is empty");
             }
+
+            em = emf.createEntityManager();
 
             IllegalArgumentException exception = new IllegalArgumentException("User, password combination is invalid or unknown");
 
@@ -105,6 +111,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             String message = String.format("Cannot run authenticate, user=%s. Reason: %s", username, t.getMessage());
             LOGGER.error(message, t);
             throw new NotesException(message, t);
+        } finally {
+            if (em != null) {
+                em.close();
+            }
         }
     }
 
@@ -138,7 +148,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             user.setPasswordHash(CryptUtils.hash(password, salt));
             user.setEmail(email);
 
-            Account account = accountService.getAccount(AccountType.ALPHA);
+            Account account = accountService.getByType(AccountType.ALPHA);
 
             user = userService.createUser(user, account);
 

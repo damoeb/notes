@@ -6,9 +6,11 @@ IN ARBEIT
 - schema fuer query logging/suggestion/facettes anpassen
 
 OFFEN
+- rename owner* to user (remove purpose)
+- editor: if document is deleted, show different header
+- index mediathekview filmliste
 - alpha: maximaler document count von 100
 - delete documents/folders (header menu: wenn keine docs ausgewaehlt folder loeschen)
-  delete folders only if not specialized (unsorted, trash)
 - trash: bei mehr als 20 elementen werden die aeltesten entfernt.
 - remove all empty # links
 - clone document
@@ -17,9 +19,7 @@ OFFEN
 - suche mit autosuggest, alte queries speichern
 - activeFolderId, defaultFolderId,.. should only access the json, no explicit setters/getters
 - block closing if unsaved
-- show move/trash links only if document is selected
 - click auf database zeigt dashboard an
-- database ist immer sichtbar, auch bei der suche
 - doc sidebar: wie sidebar.png (github)
 - let tree be scrollable
 - smart folder mit suchterm
@@ -29,7 +29,6 @@ OFFEN
 - recommend module: verknüpfen
 - ajax calls should show error-notification
 - search: score is not valid (e.g. 123)
-- when searching: 2 documents are not indexed yet
 - treeview und suchergebnisse entsprechend der bilder in inspiration
 - active folder is not synced
 - tags redundanz entfernen, datenbank model verbessern

@@ -11,7 +11,7 @@ import javax.persistence.*;
 @NamedQueries({
         @NamedQuery(name = StandardTag.QUERY_BY_ID, query = "SELECT a FROM Tag a where a.id=:ID"),
         @NamedQuery(name = StandardTag.QUERY_BY_NAME, query = "SELECT a FROM Tag a where a.name=:NAME"),
-        @NamedQuery(name = StandardTag.QUERY_USER_NETWORK, query = "SELECT new Tag(t.name) FROM BasicDocument d INNER JOIN d.tags t where d.owner=:USERNAME GROUP BY t.name ORDER BY COUNT(t.name) DESC"),
+        @NamedQuery(name = StandardTag.QUERY_USER_NETWORK, query = "SELECT new Tag(t.name) FROM BasicDocument d INNER JOIN d.tags t where d.userId=:USERNAME GROUP BY t.name ORDER BY COUNT(t.name) DESC"),
         @NamedQuery(name = StandardTag.QUERY_ALL, query = "SELECT a FROM Tag a")
 })
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)

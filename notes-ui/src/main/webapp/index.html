@@ -182,15 +182,14 @@
 
                 <div class="col-lg-9">
 
-                    <div class="navbar">
+                    <div id="navbar-default" class="navbar">
 
-                        <ul class="nav nav-tabs">
+                    <ul class="nav nav-tabs">
                             <li><a href="#" title="Select All" onclick="notes.documents.selectAll(true)"><i
                                     class="fa fa-check"></i></a></li>
                             <li><a href="#" title="Unselect All" onclick="notes.documents.selectAll(false)"><i
                                     class="fa fa-square-o"></i></a></li>
 
-                            <!-- todo show only if documents selected -->
                             <li>
                                 <a href="#" title="Move selected documents"
                                    onclick="notes.documents.moveDialog(notes.documents.getSelectedIds())">Move</a>
@@ -229,6 +228,26 @@
                                                                class="action-folder-delete">Delete Folder</a></li>
                                 </ul>
                             </li>
+                        </ul>
+
+                    </div>
+                    <!-- /navbar-default -->
+
+                    <div id="navbar-trash" class="navbar">
+
+                        <ul class="nav nav-tabs">
+                            <li><a href="#" title="Select All" onclick="notes.documents.selectAll(true)"><i
+                                    class="fa fa-check"></i></a></li>
+                            <li><a href="#" title="Unselect All" onclick="notes.documents.selectAll(false)"><i
+                                    class="fa fa-square-o"></i></a></li>
+                            <li>
+                                <a href="#" title="Restore selected documents to a folder of your choice"
+                                   onclick="notes.documents.moveDialog(notes.documents.getSelectedIds())">Restore</a>
+
+                            </li>
+                            <li><a href="#" title="Delete selected documents Irrevocably"
+                                   onclick="notes.documents.destroy(notes.documents.getSelectedIds())">Delete
+                                Irrevocably</a></li>
                         </ul>
 
                     </div>
@@ -789,6 +808,68 @@
 </script>
 <!-- /document in folder -->
 
+<script type="text/template" id="document-in-trash-view">
+
+    <div class="document document-<%=id %> row trash">
+        <div style="float:left; margin-right: 15px;">
+            <label>
+                <input type="checkbox" doc-id="<%=id %>">
+
+                <div>
+                    <div class="thumb thumb-<%=title.substring(0,1).toLowerCase() %>"
+                         title="Select by clicking or drag'n drop to folder"><%=title.substring(0,1).toUpperCase() %>
+                    </div>
+                    <div class="thumb-check" title="Click to unselect">
+                        <i class="fa fa-check"></i>
+                    </div>
+                </div>
+            </label>
+        </div>
+        <div class="col-lg-10">
+
+            <div class="row">
+                <a href="#doc:<%=id %>" title="<%=title %>">
+                    <h5 style="display: inline-block; margin: 0; overflow: hidden; white-space: nowrap; ">
+                        <%
+                        if (typeof thumbnailUrl !== 'undefined') {
+                        %>
+                        <!--<img src="<%= thumbnailUrl %>" style="max-height: 18px"/>-->
+                        <%
+                        }
+                        %>
+
+                        <%=title.length > 65 ? title.substring(0, 65)+'...' : title %>
+                        <%
+                        if (star) {
+                        %>
+                        <i class="fa fa-star fa-fw" style="color: #808080"></i>
+                        <%
+                        }
+                        %>
+                        <!--<i class="fa fa-paperclip fa-fw" style="color: #808080"></i>-->
+
+                    </h5>
+                </a>
+                <span class="pull-right">
+                    <%=notes.util.formatDate(new Date(modified)) %>
+                </span>
+            </div>
+            <div class="row" style="color:#666666; line-height: 16px; max-height:52px; overflow:hidden">
+                <%=outline %>
+            </div>
+            <div class="row" style="margin-top: 5px">
+                <% for(var i=0; i < tags.length; i++) { %>
+
+                <a href="#tag:<%=tags[i].name %>" class="label label-default"><%=tags[i].name %></a>
+
+                <% } // for %>
+            </div>
+        </div>
+    </div>
+
+</script>
+<!-- /document in trash -->
+
 
 <script type="text/template" id="document-in-hits-view">
 
@@ -1165,8 +1246,6 @@
         Backbone.Collection.prototype.parse = fnCustomParse;
 
         notes.setup();
-
-        $('#document-list').documentList();
 
     });
 

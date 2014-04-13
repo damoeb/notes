@@ -9,7 +9,9 @@ import javax.ejb.Local;
 @Local
 public interface AccountService {
 
-    Account getAccount(AccountType type) throws NotesException;
+    Account getByType(AccountType type) throws NotesException;
+
+    Account getById(int accountId) throws NotesException;
 
     Account createAccount(Account account) throws NotesException;
 }

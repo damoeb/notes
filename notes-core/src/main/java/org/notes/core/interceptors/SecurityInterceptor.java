@@ -6,6 +6,7 @@ import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
 import org.notes.common.exceptions.NotesStatus;
 import org.notes.core.domain.NotesSession;
+import org.notes.core.domain.User;
 
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
@@ -23,6 +24,13 @@ public class SecurityInterceptor {
     @Inject
     private NotesSession notesSession;
 
+//    todo Fix injection
+//    @Inject
+//    private UserService userService;
+//
+//    @Inject
+//    private AccountService accountService;
+
     @AroundInvoke
     public Object handleSecurity(InvocationContext invocationContext) throws Exception {
 
@@ -32,11 +40,28 @@ public class SecurityInterceptor {
             Bouncer bouncer = method.getAnnotation(Bouncer.class);
             if (bouncer != null) {
 
-                if (notesSession == null || notesSession.getUser() == null) {
+                User user = notesSession.getUser();
+                if (notesSession == null || user == null) {
                     throw new IllegalArgumentException("You're not logged in");
                 }
-                // todo validate Bouncer settings with session
 
+//                if(bouncer.op() != Operation.IGNORE) {
+//
+//                    user = userService.getUser(user.getUsername());
+//                    Account account = accountService.getById(user.getAccountId());
+//
+//                    if(bouncer.op() == Operation.NEW_DOCUMENT && user.getDocumentCount() >= account.getDocumentCount()) {
+//                        throw new IllegalArgumentException("Document limit reached");
+//                    }
+//
+//                    if(bouncer.op() == Operation.NEW_FOLDER && user.getFolderCount() >= account.getFolderCount()) {
+//                        throw new IllegalArgumentException("Document limit reached");
+//                    }
+//
+//
+//                    // todo validate Bouncer settings with session
+//
+//                }
             }
 
         } catch (Throwable t) {

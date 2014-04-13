@@ -23,4 +23,10 @@ public interface Folder {
     String getName();
 
     Boolean isExpanded();
+
+    // todo distinguish count between documents in subfolder or direct
+
+    Integer getDocumentCount();
+
+    void setDocumentCount(Integer documentCount);
 }

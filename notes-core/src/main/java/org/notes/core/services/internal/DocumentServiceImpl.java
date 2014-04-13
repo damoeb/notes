@@ -71,13 +71,12 @@ public class DocumentServiceImpl implements DocumentService {
         EntityManager em = null;
 
         try {
-            em = emf.createEntityManager();
-
-            LOGGER.info("create text-document");
-
             if (document == null) {
                 throw new IllegalArgumentException("document is null");
             }
+            em = emf.createEntityManager();
+
+            LOGGER.info("create text-document");
 
             if (inFolder == null || inFolder.getId() == 0) {
                 inFolder = databaseService.getDatabaseOfUser().getDefaultFolder();
@@ -169,7 +168,7 @@ public class DocumentServiceImpl implements DocumentService {
      */
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public BasicDocument deleteDocument(long documentId) throws NotesException {
+    public void deleteDocument(long documentId) throws NotesException {
         EntityManager em = null;
 
         try {
@@ -179,24 +178,21 @@ public class DocumentServiceImpl implements DocumentService {
             BasicDocument document = _get(documentId, em);
 //          todo replace through mdb  document.setTrigger(Trigger.DELETE);
 
-            Session session = em.unwrap(Session.class);
-
             // update document count
-            StandardFolder proxy = (StandardFolder) session.load(StandardFolder.class, document.getFolderId());
-            proxy.setDocumentCount(proxy.getDocumentCount() - 1);
-            em.merge(proxy);
+            Folder folder = folderService.getFolder(document.getFolderId());
+            folder.setDocumentCount(folder.getDocumentCount() - 1);
+            em.merge(folder);
 
-            while (proxy.getParentId() != null) {
-                StandardFolder parent = (StandardFolder) session.load(StandardFolder.class, proxy.getParentId());
+            Folder parent = folder.getParent();
+
+            while (parent != null) {
                 parent.setDocumentCount(parent.getDocumentCount() - 1);
-                proxy = parent;
+                em.merge(parent);
+
+                parent = parent.getParent();
             }
 
             em.remove(document);
-
-            Hibernate.initialize(document.getTags());
-
-            return document;
 
         } catch (Throwable t) {
             String message = String.format("Cannot run deleteDocument documentId=%s, Reason: %s", documentId, t.getMessage());
@@ -214,36 +210,54 @@ public class DocumentServiceImpl implements DocumentService {
      */
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public BasicDocument updateBasicDocument(BasicDocument ref) throws NotesException {
+    public void delete(List<Long> documentIds) throws NotesException {
+        try {
+
+            for (Long id : documentIds) {
+                deleteDocument(id);
+            }
+
+        } catch (Throwable t) {
+            String message = String.format("Cannot run delete, ids=%s, Reason: %s", StringUtils.join(documentIds, ", "), t.getMessage());
+            LOGGER.error(message, t);
+            throw new NotesException(message, t);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public BasicDocument updateBasicDocument(BasicDocument document) throws NotesException {
         EntityManager em = null;
 
         try {
-            em = emf.createEntityManager();
-
-
-            if (ref == null) {
+            if (document == null) {
                 throw new IllegalArgumentException("document is null");
             }
 
-            BasicDocument document = _get(ref.getId(), em);
+            em = emf.createEntityManager();
 
-            if (!equals(ref, document)) {
+            BasicDocument original = _get(document.getId(), em);
 
-                copyAttributes(ref, document);
+            if (!equals(document, original)) {
 
-                indexDocument(document);
+                copyAttributes(document, original);
 
-                em.merge(document);
+                indexDocument(original);
+
+                em.merge(original);
                 em.flush();
-                em.refresh(document);
+                em.refresh(original);
             }
 
-            Hibernate.initialize(document.getTags());
+            Hibernate.initialize(original.getTags());
 
-            return document;
+            return original;
 
         } catch (Throwable t) {
-            String message = String.format("Cannot run updateBasicDocument document=%s, Reason: %s", ref, t.getMessage());
+            String message = String.format("Cannot run updateBasicDocument document=%s, Reason: %s", document, t.getMessage());
             LOGGER.error(message, t);
             throw new NotesException(message, t);
         } finally {
@@ -258,40 +272,38 @@ public class DocumentServiceImpl implements DocumentService {
      */
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public BasicDocument updateTextDocument(TextDocument ref) throws NotesException {
+    public BasicDocument updateTextDocument(TextDocument document) throws NotesException {
         EntityManager em = null;
 
         try {
-            em = emf.createEntityManager();
-
-
-            if (ref == null) {
+            if (document == null) {
                 throw new IllegalArgumentException("document is null");
             }
 
-            TextDocument document = (TextDocument) _get(ref.getId(), em);
-            boolean similarText = StringUtils.equals(ref.getText(), document.getText());
+            em = emf.createEntityManager();
 
-            if (!equals(ref, document) || !similarText) {
+            TextDocument original = (TextDocument) _get(document.getId(), em);
+            boolean similarText = StringUtils.equals(document.getText(), original.getText());
 
-                copyAttributes(ref, document);
+            if (!equals(document, original) || !similarText) {
 
-                document.setText(ref.getText());
+                copyAttributes(document, original);
 
-//                document.setTrigger(Trigger.INDEX);
-                indexDocument(document);
+                original.setText(document.getText());
 
-                em.merge(document);
+                indexDocument(original);
+
+                em.merge(original);
                 em.flush();
-                em.refresh(document);
+                em.refresh(original);
             }
 
-            Hibernate.initialize(document.getTags());
+            Hibernate.initialize(original.getTags());
 
-            return document;
+            return original;
 
         } catch (Throwable t) {
-            String message = String.format("Cannot run updateTextDocument document=%s, Reason: %s", ref, t.getMessage());
+            String message = String.format("Cannot run updateTextDocument document=%s, Reason: %s", document, t.getMessage());
             LOGGER.error(message, t);
             throw new NotesException(message, t);
         } finally {
@@ -375,9 +387,6 @@ public class DocumentServiceImpl implements DocumentService {
         EntityManager em = null;
 
         try {
-            em = emf.createEntityManager();
-
-
             if (documentIds == null || documentIds.isEmpty()) {
                 throw new IllegalArgumentException("documentId is null or empty");
             }
@@ -385,11 +394,14 @@ public class DocumentServiceImpl implements DocumentService {
                 throw new IllegalArgumentException("folderId is null or empty");
             }
 
+            em = emf.createEntityManager();
+
             for (Long documentId : documentIds) {
 
                 BasicDocument document = _get(documentId, em);
 
-                //            todo check permissions
+                // todo if toFolderId is trash, set document deleted-flag to true, false otherwise
+                // todo check permissions
 
                 Long fromFolderId = document.getFolderId();
 

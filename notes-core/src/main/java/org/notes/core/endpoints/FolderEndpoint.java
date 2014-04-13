@@ -4,6 +4,7 @@ import org.notes.common.cache.MethodCache;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.domain.Folder;
 import org.notes.common.services.FolderService;
+import org.notes.core.domain.Operation;
 import org.notes.core.domain.StandardDatabase;
 import org.notes.core.domain.StandardFolder;
 import org.notes.core.endpoints.internal.NotesResponse;
@@ -29,7 +30,7 @@ public class FolderEndpoint {
     @POST
     @MethodCache
     @PerformanceLogger
-    @Bouncer
+    @Bouncer(op = Operation.NEW_FOLDER)
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse createFolder(
             StandardFolder folder) {
@@ -112,7 +113,8 @@ public class FolderEndpoint {
             @PathParam("id") long folderId
     ) {
         try {
-            return NotesResponse.ok(folderService.deleteFolder(folderId));
+            folderService.deleteFolder(folderId);
+            return NotesResponse.ok();
         } catch (Throwable t) {
             return NotesResponse.error(t);
         }

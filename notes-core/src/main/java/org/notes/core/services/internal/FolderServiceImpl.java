@@ -53,7 +53,6 @@ public class FolderServiceImpl implements FolderService {
         EntityManager em = null;
 
         try {
-            em = emf.createEntityManager();
             if (folder == null) {
                 throw new IllegalArgumentException("folder is null");
             }
@@ -61,6 +60,8 @@ public class FolderServiceImpl implements FolderService {
             if (database == null) {
                 throw new IllegalArgumentException("database is null");
             }
+
+            em = emf.createEntityManager();
 
             database = databaseService.getDatabase(database.getId());
 
@@ -152,11 +153,11 @@ public class FolderServiceImpl implements FolderService {
         EntityManager em = null;
 
         try {
-            em = emf.createEntityManager();
-
             if (document == null) {
                 throw new IllegalArgumentException("document is null");
             }
+
+            em = emf.createEntityManager();
 
             List<Folder> parents = new LinkedList<>();
 
@@ -193,13 +194,39 @@ public class FolderServiceImpl implements FolderService {
      */
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public StandardFolder deleteFolder(long folderId) throws NotesException {
+    public void deleteFolder(long folderId) throws NotesException {
         EntityManager em = null;
 
         try {
+
+            if (folderId <= 0) {
+                throw new IllegalArgumentException("folderId is invalid");
+            }
             em = emf.createEntityManager();
 
-            return _delete(em, _get(em, folderId));
+            // todo check if folder is immutable (e.g. trash, untitled)
+
+            StandardFolder folder = _get(em, folderId);
+
+            if (folder == null) {
+                throw new IllegalArgumentException("folder is null");
+            }
+
+            int delta = folder.getDocumentCount();
+
+            Folder parent = folder.getParent();
+            while (parent != null) {
+                parent.setDocumentCount(parent.getDocumentCount() - delta);
+                em.merge(parent);
+                parent = parent.getParent();
+            }
+
+            User user = folder.getUser();
+            user.setDocumentCount(user.getDocumentCount() - delta);
+            user.setFolderCount(user.getFolderCount() - 1);
+            em.merge(user);
+
+            em.remove(folder);
 
         } catch (Throwable t) {
             String message = String.format("Cannot run deleteFolder, folderId=%s. Reason: %s", folderId, t.getMessage());
@@ -221,11 +248,11 @@ public class FolderServiceImpl implements FolderService {
         EntityManager em = null;
 
         try {
-            em = emf.createEntityManager();
-
             if (newFolder == null) {
                 throw new NotesException("Folder is null");
             }
+
+            em = emf.createEntityManager();
 
             StandardFolder folder = _get(em, folderId);
             folder.setName(newFolder.getName());
@@ -270,6 +297,7 @@ public class FolderServiceImpl implements FolderService {
         Query query = em.createNamedQuery(StandardFolder.QUERY_BY_ID);
         query.setParameter("ID", folderId);
 
+        // todo replace by getSingleResult
         List<StandardFolder> folderList = query.getResultList();
         if (folderList.isEmpty()) {
             throw new IllegalArgumentException(String.format("No folder with id '%s' found", folderId));
@@ -311,19 +339,5 @@ public class FolderServiceImpl implements FolderService {
 
         return folder;
 
-    }
-
-    private StandardFolder _delete(EntityManager em, StandardFolder folder) {
-        if (folder == null) {
-            throw new IllegalArgumentException("Folder is null");
-        }
-        if (folder.getId() <= 0) {
-            throw new IllegalArgumentException("Folder Id is invalid");
-        }
-
-        folder.setDeleted(true);
-        em.merge(folder);
-
-        return folder;
     }
 }

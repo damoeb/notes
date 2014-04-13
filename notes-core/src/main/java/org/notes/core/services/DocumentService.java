@@ -19,7 +19,7 @@ public interface DocumentService {
 
     BasicDocument getDocument(long documentId) throws NotesException;
 
-    BasicDocument deleteDocument(long documentId) throws NotesException;
+    void deleteDocument(long documentId) throws NotesException;
 
     BasicDocument updateBasicDocument(BasicDocument document) throws NotesException;
 
@@ -28,4 +28,6 @@ public interface DocumentService {
     PdfDocument uploadDocument(List<FileItem> items) throws NotesException;
 
     void moveTo(List<Long> documentId, Long folderId) throws NotesException;
+
+    void delete(List<Long> documentIds) throws NotesException;
 }

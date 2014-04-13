@@ -80,8 +80,18 @@ public class BasicDocument implements Document {
     @Temporal(TemporalType.TIMESTAMP)
     private Date modified;
 
-    @Column(insertable = false, updatable = false, name = ForeignKey.USER)
-    private String owner;
+    // todo create an access counter to derive popularity
+
+    @Column(insertable = false, updatable = false, name = ForeignKey.USER_ID)
+    private String userId;
+
+    @Basic
+    private boolean deleted;
+
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = ForeignKey.USER_ID)
+    private User user;
 
     @Column(insertable = false, updatable = false, name = ForeignKey.FOLDER_ID)
     private Long folderId;
@@ -95,10 +105,6 @@ public class BasicDocument implements Document {
     private boolean star;
 
     @JsonIgnore
-    @Column(length = 2048)
-    private String essenceJson;
-
-    @JsonIgnore
     @Basic
     private String tagsJson;
 
@@ -109,11 +115,6 @@ public class BasicDocument implements Document {
     @JoinTable(name = "document2tag")
     @Access(AccessType.FIELD)
     private Set<Tag> tags = new HashSet<>(100);
-
-//  -- Transient -------------------------------------------------------------------------------------------------------
-
-    @Transient
-    private Map<String, Double> essence = null;
 
 //  --------------------------------------------------------------------------------------------------------------------
 
@@ -259,19 +260,15 @@ public class BasicDocument implements Document {
         this.folderId = folderId;
     }
 
-    public String getOwner() {
-        return owner;
+    public String getUrl() {
+        return url;
+    }
+
+    protected void setUserId(String owner) {
+        this.userId = owner;
     }
 
     @Override
-    public String getUrl() {
-        return null;
-    }
-
-    protected void setOwner(String owner) {
-        this.owner = owner;
-    }
-
     public Kind getKind() {
         return kind;
     }
@@ -280,6 +277,7 @@ public class BasicDocument implements Document {
         this.kind = kind;
     }
 
+    @Override
     public String getOutline() {
         return outline;
     }
@@ -297,6 +295,33 @@ public class BasicDocument implements Document {
         this.star = star;
     }
 
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    @Override
+    public String getUserId() {
+        return userId;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    @Override
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    @Override
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
     @Override
     public Set<Tag> getTags() {
         return tags;
@@ -308,24 +333,6 @@ public class BasicDocument implements Document {
         if (tags != null) {
             this.tagsJson = TextUtils.toJson(tags);
         }
-    }
-
-    @Override
-    public Map<String, Double> getEssence() {
-        if (essence == null && StringUtils.isNotBlank(essenceJson)) {
-            essence = new HashMap<>(100);
-            Map<Object, Object> essenceTmp = (Map<Object, Object>) TextUtils.fromJson(essenceJson, Map.class);
-            for (Object key : essenceTmp.keySet()) {
-                this.essence.put((String) key, (Double) essenceTmp.get(key));
-            }
-        }
-        return essence;
-    }
-
-    @Override
-    public void setEssence(Map<String, Double> essence) {
-        this.essence = essence;
-        this.essenceJson = TextUtils.toJson(essence);
     }
 
     @Override

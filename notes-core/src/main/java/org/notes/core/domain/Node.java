@@ -21,8 +21,12 @@ public abstract class Node implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(updatable = false, insertable = false, name = ForeignKey.USER)
+    @Column(updatable = false, insertable = false, name = ForeignKey.USER_ID)
     protected String owner;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = ForeignKey.USER_ID)
+    protected User user;
 
     @Basic
     protected Integer documentCount = 0;
@@ -49,7 +53,7 @@ public abstract class Node implements Serializable {
         return owner;
     }
 
-    protected void setOwner(String owner) {
+    public void setOwner(String owner) {
         this.owner = owner;
     }
 
@@ -73,7 +77,7 @@ public abstract class Node implements Serializable {
         return id;
     }
 
-    protected void setId(long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -83,5 +87,13 @@ public abstract class Node implements Serializable {
 
     public void setModified(Date modified) {
         this.modified = modified;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

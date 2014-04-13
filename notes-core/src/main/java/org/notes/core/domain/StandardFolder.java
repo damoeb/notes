@@ -15,7 +15,7 @@ import java.util.Set;
  */
 @Entity(name = "StandardFolder")
 @Table(name = "StandardFolder",
-        uniqueConstraints = @UniqueConstraint(columnNames = {ForeignKey.USER, "level", "name"})
+        uniqueConstraints = @UniqueConstraint(columnNames = {ForeignKey.USER_ID, "level", "name"})
 )
 @NamedQueries({
         @NamedQuery(name = StandardFolder.QUERY_BY_ID, query = "SELECT a FROM StandardFolder a where a.id=:ID"),
@@ -50,7 +50,7 @@ public class StandardFolder extends Node implements Folder {
     private Boolean expanded = false;
 
     /**
-     * true, if not leaf and child nodes are shown
+     * true, if smartfolder, trash or default
      */
     @Basic
     private Boolean specialized = false;

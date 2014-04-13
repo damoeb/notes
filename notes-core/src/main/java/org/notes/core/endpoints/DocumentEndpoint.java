@@ -3,9 +3,11 @@ package org.notes.core.endpoints;
 import org.notes.common.cache.MethodCache;
 import org.notes.common.configuration.NotesInterceptors;
 import org.notes.core.domain.BasicDocument;
+import org.notes.core.domain.Operation;
 import org.notes.core.domain.StandardFolder;
 import org.notes.core.domain.TextDocument;
 import org.notes.core.endpoints.internal.NotesResponse;
+import org.notes.core.endpoints.request.DeleteDocumentParams;
 import org.notes.core.endpoints.request.MoveDocumentParams;
 import org.notes.core.interceptors.Bouncer;
 import org.notes.core.metric.PerformanceLogger;
@@ -25,7 +27,7 @@ public class DocumentEndpoint {
     @POST
     @MethodCache
     @PerformanceLogger
-    @Bouncer
+    @Bouncer(op = Operation.NEW_DOCUMENT)
     @Produces(MediaType.APPLICATION_JSON)
     @Path(value = "/text")
     public NotesResponse createTextDocument(
@@ -89,10 +91,28 @@ public class DocumentEndpoint {
     @Path(value = "/move")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public NotesResponse moveDocument(
+    public NotesResponse moveDocuments(
             MoveDocumentParams payload) {
         try {
             documentService.moveTo(payload.getDocumentIds(), payload.getToFolderId());
+            return NotesResponse.ok();
+
+        } catch (Throwable t) {
+            return NotesResponse.error(t);
+        }
+    }
+
+    @POST
+    @MethodCache
+    @PerformanceLogger
+    @Bouncer
+    @Path(value = "/delete")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public NotesResponse deleteDocuments(
+            DeleteDocumentParams payload) {
+        try {
+            documentService.delete(payload.getDocumentIds());
             return NotesResponse.ok();
 
         } catch (Throwable t) {
@@ -127,7 +147,8 @@ public class DocumentEndpoint {
             @PathParam("id") long documentId
     ) {
         try {
-            return NotesResponse.ok(documentService.deleteDocument(documentId));
+            documentService.deleteDocument(documentId);
+            return NotesResponse.ok();
 
         } catch (Throwable t) {
             return NotesResponse.error(t);

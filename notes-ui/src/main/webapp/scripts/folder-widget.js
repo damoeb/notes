@@ -5,6 +5,9 @@
 
 // todo ugliest widget ever
 
+/**
+ * Taxononmy http://en.wikipedia.org/wiki/Taxonomy_%28general%29
+ */
 $.widget('notes.folder', {
     options: {
         parent: null,
@@ -34,9 +37,14 @@ $.widget('notes.folder', {
         $this.$childrenLayer = $target.find('.children');
         $this.$toggle = $target.find('.toggle');
 
-        // Lazy Loading: folder is already set active, but not yet loaded
         if (notes.folders.activeFolderId() === model.get('id')) {
             $rendered.addClass('active');
+        }
+        if (notes.folders.trashFolderId() === model.get('id')) {
+            $rendered.addClass('trash');
+        }
+        if (notes.folders.defaultFolderId() === model.get('id')) {
+            $rendered.addClass('untitled');
         }
 
         //

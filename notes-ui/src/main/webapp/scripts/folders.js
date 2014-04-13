@@ -52,6 +52,7 @@
         },
 
         storeFolderModel: function (model) {
+            console.log('store folder ' + model.get('id'));
             this._descendants[model.get('id')] = model;
         },
 
@@ -136,6 +137,17 @@
                 }
             });
             $modal.find('.submit').click(fnSubmit);
+        },
+
+        destroy: function () {
+
+            var $this = this;
+
+            var folderId = this.activeFolderId();
+
+            console.log('destroy folder ' + folderId);
+
+            $this.getFolderModel(folderId).destroy();
         }
 
     };

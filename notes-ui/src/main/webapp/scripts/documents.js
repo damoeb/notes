@@ -48,7 +48,9 @@
             notes.folders.activeFolderId(folderId);
 
             // todo save document when closed
-            $('#document-list').documentList('refresh', folderId);
+            $('#document-list').documentList({
+                folderId: folderId
+            });
 
             $('#document-view').hide();
             $('#dashboard-view').hide();
@@ -73,17 +75,26 @@
 
         trash: function (ids) {
 
-            console.log('trash selection');
+            if (ids.length == 0) {
 
-            var callback = function (success) {
+                console.log('trash current folder');
+                // todo implement
 
-                if (success) {
-                    notes.messages.information('Moved to trash');
+            } else {
 
-                }
-            };
+                console.log('trash selected ids: ' + ids);
 
-            this._moveTo(ids, notes.folders.trashFolderId(), callback);
+                var callback = function (success) {
+
+                    if (success) {
+                        notes.messages.information('Moved to trash');
+
+                    }
+                };
+
+                this._moveTo(ids, notes.folders.trashFolderId(), callback);
+            }
+
         },
 
         createDialog: function () {
@@ -103,22 +114,30 @@
 
         moveDialog: function (ids) {
 
-            console.log('move these ids: ' + ids);
+            if (ids.length == 0) {
 
-            var $this = this;
+                console.log('move current folder');
+                // todo implement
 
-            if (ids.length > 0) {
+            } else {
 
-                var $modal = $('#move-documents-dialog').modal();
-                $modal.find('.database').database({
-                    onSelect: function (model) {
-                        var toFolderId = model.get('id');
-                        console.log('select ' + toFolderId);
-                        $this.moveTo(ids, toFolderId);
-                        $modal.modal('hide');
-                    },
-                    sync: false
-                });
+                console.log('move selected ids: ' + ids);
+
+                var $this = this;
+
+                if (ids.length > 0) {
+
+                    var $modal = $('#move-documents-dialog').modal();
+                    $modal.find('.database').database({
+                        onSelect: function (model) {
+                            var toFolderId = model.get('id');
+                            console.log('select ' + toFolderId);
+                            $this.moveTo(ids, toFolderId);
+                            $modal.modal('hide');
+                        },
+                        sync: false
+                    });
+                }
             }
 
         },
@@ -163,7 +182,47 @@
             };
 
             notes.util.jsonCall('POST', REST_SERVICE + '/document/move', null, JSON.stringify(payload), onSuccess, onError);
+        },
+
+        destroy: function (documentIds) {
+
+            if (ids.length == 0) {
+
+                console.log('destroy current folder');
+
+                notes.folders.destroy(notes.folders.activeFolderId());
+
+            } else {
+
+                console.log('destroy selection irrecoverably');
+
+                var affectedFolderId = notes.folders.activeFolderId();
+
+                var payload = {
+                    'documentIds': documentIds
+                };
+
+                var onSuccess = function () {
+
+                    //              todo bad style to fetch parent first
+                    $('.folder-' + affectedFolderId).parent().folder('updateDocCount', -documentIds.length);
+
+                    for (var i = 0; i < documentIds.length; i++) {
+                        $('.document-' + documentIds[i]).remove();
+                    }
+
+                    callback(true);
+                };
+
+                var onError = function () {
+                    callback(false);
+                    notes.messages.error('An error occurred');
+                };
+
+                notes.util.jsonCall('POST', REST_SERVICE + '/document/delete', null, JSON.stringify(payload), onSuccess, onError);
+            }
         }
+
     };
 
 })(notes);
