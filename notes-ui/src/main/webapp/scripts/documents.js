@@ -184,7 +184,7 @@
             notes.util.jsonCall('POST', REST_SERVICE + '/document/move', null, JSON.stringify(payload), onSuccess, onError);
         },
 
-        destroy: function (documentIds) {
+        destroy: function (ids) {
 
             if (ids.length == 0) {
 
@@ -199,19 +199,17 @@
                 var affectedFolderId = notes.folders.activeFolderId();
 
                 var payload = {
-                    'documentIds': documentIds
+                    'documentIds': ids
                 };
 
                 var onSuccess = function () {
 
                     //              todo bad style to fetch parent first
-                    $('.folder-' + affectedFolderId).parent().folder('updateDocCount', -documentIds.length);
+                    $('.folder-' + affectedFolderId).parent().folder('updateDocCount', -ids.length);
 
-                    for (var i = 0; i < documentIds.length; i++) {
-                        $('.document-' + documentIds[i]).remove();
+                    for (var i = 0; i < ids.length; i++) {
+                        $('.document-' + ids[i]).remove();
                     }
-
-                    callback(true);
                 };
 
                 var onError = function () {

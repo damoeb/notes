@@ -60,10 +60,6 @@ public class AuthenticationEndpoint {
     ) {
         try {
             NotesSession settings = authenticationService.authenticate(auth.getUsername(), auth.getPassword());
-            User user = settings.getUser();
-            user.setFolders(null);
-            user.setDocuments(null);
-            user.setDatabases(null);
 
             for (StandardDatabase d : settings.getDatabases()) {
                 d.setActiveFolder(null);
@@ -132,8 +128,23 @@ public class AuthenticationEndpoint {
     private NotesSession getDomObjSession(final NotesSession settings) {
         return new NotesSession() {
             @Override
-            public User getUser() {
-                return settings.getUser();
+            public String getUserId() {
+                return settings.getUserId();
+            }
+
+            @Override
+            public Long getDefaultFolderId() {
+                return settings.getDefaultFolderId();
+            }
+
+            @Override
+            public Long getTrashFolderId() {
+                return settings.getTrashFolderId();
+            }
+
+            @Override
+            public Long getActiveFolderId() {
+                return settings.getActiveFolderId();
             }
 
             @Override
@@ -146,7 +157,19 @@ public class AuthenticationEndpoint {
             }
 
             @Override
-            public void setUser(User user) {
+            public void setUserId(String userId) {
+            }
+
+            @Override
+            public void setActiveFolderId(Long activeFolderId) {
+            }
+
+            @Override
+            public void setDefaultFolderId(Long defaultFolderId) {
+            }
+
+            @Override
+            public void setTrashFolderId(Long trashFolderId) {
             }
         };
     }

@@ -13,8 +13,8 @@ import java.util.Date;
 @Entity(name = "SearchQuery")
 @Table(name = "SearchQuery")
 @NamedQueries({
-        @NamedQuery(name = SearchQuery.QUERY_LATEST, query = "SELECT a FROM SearchQuery a where a.username=:USERNAME"),
-        @NamedQuery(name = SearchQuery.QUERY_BY_QUERY, query = "SELECT a FROM SearchQuery a where a.username=:USERNAME AND a.value=:QUERY")
+        @NamedQuery(name = SearchQuery.QUERY_LATEST, query = "SELECT a FROM SearchQuery a where a.userId=:USERNAME"),
+        @NamedQuery(name = SearchQuery.QUERY_BY_QUERY, query = "SELECT a FROM SearchQuery a where a.userId=:USERNAME AND a.value=:QUERY")
 })
 @Inheritance(strategy = InheritanceType.JOINED)
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
@@ -47,7 +47,7 @@ public class SearchQuery {
 
 
     @Column(name = ForeignKey.USER_ID, insertable = false, updatable = false, nullable = false)
-    private String username;
+    private String userId;
 
 //  --------------------------------------------------------------------------------------------------------------------
 
@@ -100,11 +100,11 @@ public class SearchQuery {
         this.lastUsed = lastUsed;
     }
 
-    public String getUsername() {
-        return username;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }

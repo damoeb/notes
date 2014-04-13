@@ -6,9 +6,11 @@ public interface Folder {
 
     long getId();
 
+    void setId(long id);
+
     Folder getParent();
 
-    String getOwner();
+    String getUserId();
 
     Integer getLevel();
 

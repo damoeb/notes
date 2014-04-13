@@ -17,7 +17,7 @@ import java.util.Set;
 @Table(name = "DDatabase")
 @NamedQueries({
         @NamedQuery(name = StandardDatabase.QUERY_BY_ID, query = "SELECT a FROM DDatabase a where a.id=:ID"),
-        @NamedQuery(name = StandardDatabase.QUERY_BY_USER, query = "SELECT a FROM DDatabase a where a.owner=:USERNAME")
+        @NamedQuery(name = StandardDatabase.QUERY_BY_USER, query = "SELECT a FROM DDatabase a where a.userId=:USERNAME")
 })
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class StandardDatabase extends Node implements Database {

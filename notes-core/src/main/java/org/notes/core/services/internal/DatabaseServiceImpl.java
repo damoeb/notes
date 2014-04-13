@@ -144,7 +144,7 @@ public class DatabaseServiceImpl implements DatabaseService {
             em = emf.createEntityManager();
 
             Query query = em.createNamedQuery(StandardDatabase.QUERY_BY_USER);
-            query.setParameter("USERNAME", notesSession.getUser().getUsername());
+            query.setParameter("USERNAME", notesSession.getUserId());
 
             return (StandardDatabase) query.getSingleResult();
 
@@ -171,7 +171,7 @@ public class DatabaseServiceImpl implements DatabaseService {
             em = emf.createEntityManager();
 
             Query query = em.createNamedQuery(StandardFolder.QUERY_ROOT_FOLDERS);
-            query.setParameter("USERNAME", notesSession.getUser().getUsername());
+            query.setParameter("USERNAME", notesSession.getUserId());
             query.setParameter("DB_ID", databaseId);
 
             return query.getResultList();

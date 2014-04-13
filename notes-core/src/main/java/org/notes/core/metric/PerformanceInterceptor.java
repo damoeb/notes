@@ -10,9 +10,9 @@ import javax.interceptor.InvocationContext;
 
 @Interceptor
 @NotesInterceptors
-public class MetricInterceptor {
+public class PerformanceInterceptor {
 
-    private static final Logger LOGGER = Logger.getLogger(MetricInterceptor.class);
+    private static final Logger LOGGER = Logger.getLogger(PerformanceInterceptor.class);
 
     @AroundInvoke
     public Object injectCaching(InvocationContext invocationContext) throws Exception {

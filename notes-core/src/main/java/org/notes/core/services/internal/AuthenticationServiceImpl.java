@@ -20,6 +20,7 @@ import javax.persistence.PersistenceUnit;
 import javax.persistence.Query;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.Set;
 
 //@LocalBean
 @Stateless
@@ -101,9 +102,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             user.setLoginTries(0);
             em.merge(user);
 
-            notesSession.setUser(user);
-            Hibernate.initialize(user.getDatabases());
-            notesSession.setDatabases(user.getDatabases());
+            notesSession.setUserId(user.getUsername());
+
+            Set<StandardDatabase> databases = user.getDatabases();
+            Hibernate.initialize(databases);
+            notesSession.setDatabases(databases);
+            StandardDatabase first = databases.iterator().next();
+            notesSession.setActiveFolderId(first.getActiveFolderId());
+            notesSession.setDefaultFolderId(first.getDefaultFolderId());
+            notesSession.setTrashFolderId(first.getTrashFolderId());
 
             return notesSession;
 

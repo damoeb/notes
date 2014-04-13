@@ -33,7 +33,7 @@ notes.model = {
             text: '',
             tags: []
         },
-        urlRoot: REST_SERVICE + '/document/text/'
+        urlRoot: REST_SERVICE + '/document/'
     })
 
 };

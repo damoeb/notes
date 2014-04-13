@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Mediathek>
+    <Filmliste>
+        <Filmliste-Datum>12.04.2014, 23:14</Filmliste-Datum>
+        <Filmliste-Datum-GMT>12.04.2014, 21:14</Filmliste-Datum-GMT>
+        <Filmliste-Version>3</Filmliste-Version>
+        <Filmliste-Programm>MSearch [Rel: 256] - Compiled: 12.04.2014 / 14:26:43</Filmliste-Programm>
+    </Filmliste>
+    <Feldinfo>
+        <a>Nr</a>
+        <b>Sender</b>
+        <c>Thema</c>
+        <d>Titel</d>
+        <v></v>
+        <w></w>
+        <e>Datum</e>
+        <f>Zeit</f>
+        <m>Dauer</m>
+        <t>Größe [MB]</t>
+        <n>Beschreibung</n>
+        <bb>Geo</bb>
+        <g>Url</g>
+        <k>Website</k>
+        <l>Aboname</l>
+        <o>Bild</o>
+        <i>UrlRTMP</i>
+        <j>UrlAuth</j>
+        <r>Url_Klein</r>
+        <s>UrlRTMP_Klein</s>
+        <t>Url_HD</t>
+        <u>UrlRTMP_HD</u>
+        <aa>Url_History</aa>
+        <y>DatumL</y>
+        <z>Ref</z>
+    </Feldinfo>
+    <X>
+        <b>3Sat</b>
+        <c>3sat</c>
+        <d>Richard Strauss und seine Heldinnen</d>
+        <e>12.04.2014</e>
+        <f>22:55:00</f>
+        <m>00:51:11</m>
+        <t>904</t>
+        <n>Die Dokumentation "Richard Strauss und seine Heldinnen" macht sich auf die Suche nach den Frauen in Strauss'
+            Leben. Im Mittelpunkt steht vor allem seine Beziehung zu Pauline, mit der er bis zu...
+        </n>
+        <g>http://rodl.zdf.de/dach/3sat/14/04/140412_richard_online_2256k_p14v11.mp4</g>
+        <k>http://www.3sat.de/mediathek/?mode=play&amp;obj=42947</k>
+        <o>http://www.3sat.de/mediaplayer/stills/42947_298x168.jpg</o>
+        <r>57|436k_p9v11.mp4</r>
+        <y>1397336100</y>
+    </X>
+    <X>
+        <d>Pfeffersäcke, Diebe und Abenteurer - Auf großer Fahrt zum großen Geld</d>
+        <e>12.04.2014</e>
+        <f>10:05:00</f>
+        <m>00:44:46</m>
+        <t>791</t>
+        <n>Die Suche nach verführerischen Düften und exotischen Geschmacksvariationen trieb Jahrhunderte lang Abenteurer
+            auf die Weltmeere. So spärlich die Nachrichten von fernen, unbekannten Schätzen und...
+        </n>
+        <g>http://rodl.zdf.de/none/3sat/14/04/140412_pfeffersaecke_online_2256k_p14v11.mp4</g>
+        <k>http://www.3sat.de/mediathek/?mode=play&amp;obj=42790</k>
+        <o>http://www.3sat.de/mediaplayer/stills/42790_298x168.jpg</o>
+        <r>63|436k_p9v11.mp4</r>
+        <y>1397289900</y>
+    </X>
+</Mediathek>

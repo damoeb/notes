@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.notes.common.configuration.NotesInterceptors;
+import org.notes.common.domain.Document;
 import org.notes.common.domain.FileReference;
 import org.notes.common.domain.Folder;
 import org.notes.common.domain.Tag;
@@ -61,6 +62,9 @@ public class DocumentServiceImpl implements DocumentService {
     @Inject
     private TagService tagService;
 
+    @Inject
+    private NotesSession notesSession;
+
     /**
      * {@inheritDoc}
      */
@@ -79,17 +83,15 @@ public class DocumentServiceImpl implements DocumentService {
             LOGGER.info("create text-document");
 
             if (inFolder == null || inFolder.getId() == 0) {
-                inFolder = databaseService.getDatabaseOfUser().getDefaultFolder();
+                inFolder = folderService.getFolder(notesSession.getDefaultFolderId());
             } else {
                 inFolder = folderService.getFolder(inFolder.getId());
             }
 
-
-            BasicDocument basicDocument = _createDocument(em, document, inFolder);
+            BasicDocument basicDocument = _createDocument(em, document, notesSession.getUserId(), inFolder);
 
             indexDocument(basicDocument);
 
-            Hibernate.initialize(basicDocument.getTags());
             return (TextDocument) basicDocument;
 
         } catch (Throwable t) {
@@ -179,18 +181,13 @@ public class DocumentServiceImpl implements DocumentService {
 //          todo replace through mdb  document.setTrigger(Trigger.DELETE);
 
             // update document count
-            Folder folder = folderService.getFolder(document.getFolderId());
-            folder.setDocumentCount(folder.getDocumentCount() - 1);
-            em.merge(folder);
+//            Folder folder = folderService.getFolder(document.getFolderId());
+//            folder.setDocumentCount(folder.getDocumentCount() - 1);
+//            em.merge(folder);
+//
+//            Folder parent = folder.getParent();
 
-            Folder parent = folder.getParent();
-
-            while (parent != null) {
-                parent.setDocumentCount(parent.getDocumentCount() - 1);
-                em.merge(parent);
-
-                parent = parent.getParent();
-            }
+            updateDocumentCount(em, document.getFolder(), -1);
 
             em.remove(document);
 
@@ -332,7 +329,7 @@ public class DocumentServiceImpl implements DocumentService {
             Folder inFolder;
             if (folderId == null || folderId == 0) {
                 LOGGER.info("in default folder " + folderId);
-                inFolder = databaseService.getDatabaseOfUser().getDefaultFolder();
+                inFolder = folderService.getFolder(notesSession.getDefaultFolderId());
             } else {
                 LOGGER.info("in folder " + folderId);
                 inFolder = folderService.getFolder(folderId);
@@ -364,7 +361,7 @@ public class DocumentServiceImpl implements DocumentService {
             document.setFileReference(reference);
 //          todo replace with mdb document.setTrigger(Trigger.EXTRACT_PDF);
 
-            return (PdfDocument) _createDocument(em, document, inFolder);
+            return (PdfDocument) _createDocument(em, document, notesSession.getUserId(), inFolder);
 
         } catch (Throwable t) {
             String message = String.format("Cannot run uploadDocument. Reason: %s", t.getMessage());
@@ -396,37 +393,92 @@ public class DocumentServiceImpl implements DocumentService {
 
             em = emf.createEntityManager();
 
+            // todo check permissions on toFolderId
+
+            // unique
+            Set<Long> ids = new HashSet<>(documentIds.size());
+            ids.addAll(documentIds);
+
+            Query query;
+            BasicDocument document;
+            Long fromFolderId = null;
+
+            Set<Document> affected = new HashSet<>(documentIds.size());
+
+            for (Long documentId : ids) {
+
+                document = _get(documentId, em);
+
+                affected.add(document);
+
+                // todo check permissions
+
+                if (fromFolderId == null) {
+                    fromFolderId = document.getFolderId();
+                } else {
+                    if (!fromFolderId.equals(document.getFolderId())) {
+                        throw new IllegalArgumentException("All documents are supposed to be in the same source folder");
+                    }
+                }
+
+                query = em.createNamedQuery(BasicDocument.QUERY_MOVE);
+                query.setParameter("FOLDER_ID", toFolderId);
+                query.executeUpdate();
+            }
+
+            Session session = em.unwrap(Session.class);
+
+            Folder toFolder = (Folder) session.load(StandardFolder.class, toFolderId);
+            Folder fromFolder = (Folder) session.load(StandardFolder.class, fromFolderId);
+
+            updateDocumentCount(em, toFolder, ids.size());
+            updateDocumentCount(em, fromFolder, -1 * ids.size());
+
+            // todo reindex affected
+            /*
+
+            Session session = em.unwrap(Session.class);
+
+
+            BasicDocument document = _get(documentIds.get(0), em);
+
+            Long fromFolderId = document.getFolderId();
+
+            StandardFolder fromFolderProxy = (StandardFolder) session.load(StandardFolder.class, fromFolderId);
+            if (fromFolderProxy == null) {
+                throw new IllegalArgumentException(String.format("folder with id %s is null", fromFolderId));
+            }
+
+            StandardFolder toFolderProxy = (StandardFolder) session.load(StandardFolder.class, toFolderId);
+            if (toFolderProxy == null) {
+                throw new IllegalArgumentException(String.format("folder with id %s is null", toFolderId));
+            }
+
             for (Long documentId : documentIds) {
 
-                BasicDocument document = _get(documentId, em);
+                document = _get(documentId, em);
 
                 // todo if toFolderId is trash, set document deleted-flag to true, false otherwise
                 // todo check permissions
 
-                Long fromFolderId = document.getFolderId();
-
-                Session session = em.unwrap(Session.class);
-                StandardFolder fromFolderProxy = (StandardFolder) session.load(StandardFolder.class, fromFolderId);
-                if (fromFolderProxy == null) {
-                    throw new IllegalArgumentException(String.format("folder with id %s is null", fromFolderId));
+                if(!document.getFolderId().equals(fromFolderId)) {
+                    throw new IllegalArgumentException("All documents are supposed to be in the same source folder");
                 }
 
-                fromFolderProxy.getDocuments().remove(document);
                 fromFolderProxy.setDocumentCount(fromFolderProxy.getDocumentCount() - 1);
-                em.merge(fromFolderProxy);
+                fromFolderProxy.getDocuments().remove(document);
 
-                StandardFolder toFolderProxy = (StandardFolder) session.load(StandardFolder.class, toFolderId);
-                if (toFolderProxy == null) {
-                    throw new IllegalArgumentException(String.format("folder with id %s is null", toFolderId));
-                }
 
                 toFolderProxy.getDocuments().add(document);
                 toFolderProxy.setDocumentCount(toFolderProxy.getDocumentCount() + 1);
-                em.merge(toFolderProxy);
 
                 //          todo re-index
-
             }
+
+            em.merge(fromFolderProxy);
+            em.merge(toFolderProxy);
+            */
+
         } catch (Throwable t) {
             String message = String.format("Cannot run moveTo. documentIds=%s, folderId=%s. Reason: %s", StringUtils.join(documentIds, ", "), toFolderId, t.getMessage());
             LOGGER.error(message, t);
@@ -439,6 +491,18 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     // -- Internal
+
+    private void updateDocumentCount(EntityManager em, Folder folder, int delta) {
+
+        while (folder != null) {
+            folder.setDocumentCount(folder.getDocumentCount() + delta);
+            em.merge(folder);
+
+            folder = folder.getParent();
+        }
+
+    }
+
 
     private void indexDocument(BasicDocument document) throws JMSException {
         Connection connection = null;
@@ -470,32 +534,36 @@ public class DocumentServiceImpl implements DocumentService {
         }
     }
 
-    private BasicDocument _createDocument(EntityManager em, BasicDocument document, Folder inFolder) throws NotesException {
+    private BasicDocument _createDocument(EntityManager em, BasicDocument document, String userId, Folder folder) throws NotesException {
 
         document.validate();
 
+//        User user = userService.getUser(userId);
+
+//        document.setUser(user);
+        document.setUserId(userId);
+        document.setFolder(folder);
+
         em.persist(document);
 
-        User user = userService.getUser(inFolder.getOwner());
-        user.getDocuments().add(document);
+//        // todo replace by document.setFolder
+//        Session session = em.unwrap(Session.class);
+//
+//        StandardFolder proxy = (StandardFolder) session.load(StandardFolder.class, inFolderId);
+//        if (proxy == null) {
+//            throw new IllegalArgumentException(String.format("folder with id %s is null", document.getFolderId()));
+//        }
+//
+//        proxy.getDocuments().add(document);
+//        em.merge(proxy);
 
-        Session session = em.unwrap(Session.class);
+        //--
 
-        StandardFolder proxy = (StandardFolder) session.load(StandardFolder.class, inFolder.getId());
-        if (proxy == null) {
-            throw new IllegalArgumentException(String.format("folder with id %s is null", document.getFolderId()));
-        }
+        updateDocumentCount(em, folder, 1);
 
-        proxy.getDocuments().add(document);
-        proxy.setDocumentCount(proxy.getDocumentCount() + 1);
-        em.merge(user);
-        em.merge(proxy);
         em.flush();
 
         em.refresh(document);
-
-        document.setUniqueHash(getUniqueHash(document));
-        em.merge(document);
 
         return document;
     }

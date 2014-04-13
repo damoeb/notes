@@ -51,10 +51,10 @@ public class QueryServiceImpl implements QueryService {
                 throw new IllegalArgumentException("No session data found");
             }
 
-            LOGGER.info("history of user " + notesSession.getUser().getUsername());
+            LOGGER.info("history of user " + notesSession.getUserId());
 
             Query query = em.createNamedQuery(SearchQuery.QUERY_LATEST);
-            query.setParameter("USERNAME", notesSession.getUser().getUsername());
+            query.setParameter("USERNAME", notesSession.getUserId());
             query.setMaxResults(10);
 
             return query.getResultList();
@@ -80,7 +80,7 @@ public class QueryServiceImpl implements QueryService {
             try {
 
                 Query findExisting = em.createNamedQuery(SearchQuery.QUERY_BY_QUERY);
-                findExisting.setParameter("USERNAME", notesSession.getUser().getUsername());
+                findExisting.setParameter("USERNAME", notesSession.getUserId());
                 findExisting.setParameter("QUERY", queryString);
                 query = (SearchQuery) findExisting.getSingleResult();
 
@@ -94,7 +94,7 @@ public class QueryServiceImpl implements QueryService {
                 query = new SearchQuery();
                 query.setLastUsed(new Date());
                 query.setUseCount(1);
-                query.setUser(notesSession.getUser());
+                query.setUserId(notesSession.getUserId());
                 query.setValue(queryString);
 
                 em.persist(query);

@@ -6,7 +6,7 @@ import java.util.Set;
 public interface Database {
     long getId();
 
-    Serializable getOwner();
+    Serializable getUserId();
 
     Set<Folder> getFolders();
 

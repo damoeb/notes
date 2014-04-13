@@ -6,7 +6,6 @@ import org.notes.common.configuration.NotesInterceptors;
 import org.notes.common.exceptions.NotesException;
 import org.notes.common.exceptions.NotesStatus;
 import org.notes.core.domain.NotesSession;
-import org.notes.core.domain.User;
 
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
@@ -40,8 +39,8 @@ public class SecurityInterceptor {
             Bouncer bouncer = method.getAnnotation(Bouncer.class);
             if (bouncer != null) {
 
-                User user = notesSession.getUser();
-                if (notesSession == null || user == null) {
+                String userId = notesSession.getUserId();
+                if (notesSession == null || userId == null) {
                     throw new IllegalArgumentException("You're not logged in");
                 }
 

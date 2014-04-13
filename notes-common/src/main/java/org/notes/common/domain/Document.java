@@ -21,7 +21,7 @@ public interface Document extends Serializable {
 
     String getUserId();
 
-    String getUrl();
+    String getSource();
 
     Kind getKind();
 

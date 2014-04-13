@@ -9,6 +9,6 @@
         <class>org.notes.common.configuration.ConfigurationInterceptor</class>
         <class>org.notes.core.interceptors.SecurityInterceptor</class>
         <class>org.notes.core.endpoints.request.ErrorHandlingInterceptor</class>
-        <class>org.notes.core.metric.MetricInterceptor</class>
+        <class>org.notes.core.metric.PerformanceInterceptor</class>
     </interceptors>
 </beans>

@@ -29,7 +29,6 @@ public class DocumentEndpoint {
     @PerformanceLogger
     @Bouncer(op = Operation.NEW_DOCUMENT)
     @Produces(MediaType.APPLICATION_JSON)
-    @Path(value = "/text")
     public NotesResponse createTextDocument(
             TextDocument document) {
 
@@ -39,7 +38,9 @@ public class DocumentEndpoint {
                 folder = new StandardFolder(document.getFolderId());
             }
 
-            return NotesResponse.ok(documentService.createDocument(document, folder));
+            TextDocument result = documentService.createDocument(document, folder);
+            result.setTags(null);
+            return NotesResponse.ok(result);
 
         } catch (Throwable t) {
             return NotesResponse.error(t);
@@ -50,13 +51,18 @@ public class DocumentEndpoint {
     @MethodCache
     @PerformanceLogger
     @Bouncer
-    @Path(value = "/text/{id}")
+    @Path(value = "{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse updateTextDocument(
             TextDocument document,
             @PathParam("id") long documentId) {
 
         try {
+
+            if (document != null) {
+                document.setId(documentId);
+            }
+
             BasicDocument result = documentService.updateTextDocument(document);
             return NotesResponse.ok(result);
 

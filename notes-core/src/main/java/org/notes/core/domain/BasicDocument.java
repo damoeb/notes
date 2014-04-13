@@ -10,10 +10,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.hibernate.annotations.Index;
 import org.notes.common.ForeignKey;
 import org.notes.common.configuration.Configuration;
-import org.notes.common.domain.Document;
-import org.notes.common.domain.FullText;
-import org.notes.common.domain.Kind;
-import org.notes.common.domain.Tag;
+import org.notes.common.domain.*;
 import org.notes.common.endpoints.CustomDateDeserializer;
 import org.notes.common.endpoints.CustomDateSerializer;
 import org.notes.common.exceptions.NotesException;
@@ -33,7 +30,8 @@ import java.util.*;
 )
 @NamedQueries({
         @NamedQuery(name = Document.QUERY_BY_ID, query = "SELECT a FROM BasicDocument a where a.id=:ID"),
-        @NamedQuery(name = BasicDocument.QUERY_IN_FOLDER, query = "SELECT new BasicDocument(a.id, a.uniqueHash, a.title, a.outline, a.kind, a.modified, a.star, a.tagsJson, a.folderId) FROM BasicDocument a where a.folderId=:ID")
+        @NamedQuery(name = BasicDocument.QUERY_IN_FOLDER, query = "SELECT new BasicDocument(a.id, a.uniqueHash, a.title, a.outline, a.kind, a.modified, a.star, a.tagsJson, a.folderId) FROM BasicDocument a where a.folderId=:ID"),
+        @NamedQuery(name = BasicDocument.QUERY_MOVE, query = "UPDATE BasicDocument SET folderId=:FOLDER_ID")
 })
 @Inheritance(strategy = InheritanceType.JOINED)
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
@@ -41,6 +39,7 @@ import java.util.*;
 public class BasicDocument implements Document {
 
     public static final String QUERY_IN_FOLDER = "BasicDocument.QUERY_IN_FOLDER";
+    public static final String QUERY_MOVE = "BasicDocument.QUERY_MOVE";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -60,9 +59,12 @@ public class BasicDocument implements Document {
     @Column(length = Configuration.Constants.OUTLINE_LENGTH)
     private String outline;
 
+    /**
+     * Identifier where the source comes from, could be an URL, or a TV station
+     */
     @Basic
     @Column(length = Configuration.Constants.URL_LENGTH)
-    private String url;
+    private String source;
 
     @Basic
     @Column(nullable = false)
@@ -82,19 +84,27 @@ public class BasicDocument implements Document {
 
     // todo create an access counter to derive popularity
 
+    /**
+     * the owner
+     */
     @Column(insertable = false, updatable = false, name = ForeignKey.USER_ID)
     private String userId;
-
-    @Basic
-    private boolean deleted;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = ForeignKey.USER_ID)
     private User user;
 
+    @Basic
+    private boolean deleted;
+
     @Column(insertable = false, updatable = false, name = ForeignKey.FOLDER_ID)
     private Long folderId;
+
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = StandardFolder.class)
+    @JoinColumn(name = ForeignKey.FOLDER_ID)
+    private Folder folder;
 
 //    todo support doc properties
 //    @ElementCollection
@@ -224,7 +234,7 @@ public class BasicDocument implements Document {
         return id;
     }
 
-    protected void setId(long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -260,12 +270,12 @@ public class BasicDocument implements Document {
         this.folderId = folderId;
     }
 
-    public String getUrl() {
-        return url;
+    public String getSource() {
+        return source;
     }
 
-    protected void setUserId(String owner) {
-        this.userId = owner;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     @Override
@@ -295,8 +305,8 @@ public class BasicDocument implements Document {
         this.star = star;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setSource(String source) {
+        this.source = source;
     }
 
     @Override
@@ -320,6 +330,14 @@ public class BasicDocument implements Document {
     @Override
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public Folder getFolder() {
+        return folder;
+    }
+
+    public void setFolder(Folder folder) {
+        this.folder = folder;
     }
 
     @Override

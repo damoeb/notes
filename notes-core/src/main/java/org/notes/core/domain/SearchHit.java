@@ -21,7 +21,11 @@ public class SearchHit {
     @JsonSerialize(using = CustomDateSerializer.class)
     private final Date modified;
     private final String title;
-    private final String owner;
+
+    /**
+     * the owner
+     */
+    private final String userId;
     private final List<String> highlights;
     private final Kind kind;
     private final Boolean star;
@@ -39,7 +43,7 @@ public class SearchHit {
         } else {
             this.title = (String) solrDocument.getFirstValue(SolrFields.TITLE_STORED_ONLY);
         }
-        this.owner = (String) solrDocument.getFirstValue(SolrFields.OWNER);
+        this.userId = (String) solrDocument.getFirstValue(SolrFields.OWNER);
         this.star = (Boolean) solrDocument.getFirstValue(SolrFields.STAR);
         this.section = (Long) solrDocument.getFirstValue(SolrFields.SECTION);
         this.uniqueHash = (String) solrDocument.getFirstValue(SolrFields.UNIQUE_HASH);
@@ -81,8 +85,8 @@ public class SearchHit {
         return title;
     }
 
-    public String getOwner() {
-        return owner;
+    public String getUserId() {
+        return userId;
     }
 
     public List<String> getHighlights() {

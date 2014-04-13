@@ -1,0 +1,68 @@
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="Mediathek">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Filmliste">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element type="xs:string" name="Filmliste-Datum"/>
+                            <xs:element type="xs:string" name="Filmliste-Datum-GMT"/>
+                            <xs:element type="xs:byte" name="Filmliste-Version"/>
+                            <xs:element type="xs:string" name="Filmliste-Programm"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="Feldinfo">
+                    <xs:complexType>
+                        <xs:choice maxOccurs="unbounded" minOccurs="0">
+                            <xs:element type="xs:string" name="a"/>
+                            <xs:element type="xs:string" name="b"/>
+                            <xs:element type="xs:string" name="c"/>
+                            <xs:element type="xs:string" name="d"/>
+                            <xs:element type="xs:string" name="v"/>
+                            <xs:element type="xs:string" name="w"/>
+                            <xs:element type="xs:string" name="e"/>
+                            <xs:element type="xs:string" name="f"/>
+                            <xs:element type="xs:string" name="m"/>
+                            <xs:element type="xs:string" name="t"/>
+                            <xs:element type="xs:string" name="n"/>
+                            <xs:element type="xs:string" name="bb"/>
+                            <xs:element type="xs:string" name="g"/>
+                            <xs:element type="xs:string" name="k"/>
+                            <xs:element type="xs:string" name="l"/>
+                            <xs:element type="xs:string" name="o"/>
+                            <xs:element type="xs:string" name="i"/>
+                            <xs:element type="xs:string" name="j"/>
+                            <xs:element type="xs:string" name="r"/>
+                            <xs:element type="xs:string" name="s"/>
+                            <xs:element type="xs:string" name="u"/>
+                            <xs:element type="xs:string" name="aa"/>
+                            <xs:element type="xs:string" name="y"/>
+                            <xs:element type="xs:string" name="z"/>
+                        </xs:choice>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="X" maxOccurs="unbounded" minOccurs="0">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element type="xs:string" name="b" minOccurs="0"/>
+                            <xs:element type="xs:string" name="c" minOccurs="0"/>
+                            <xs:element type="xs:string" name="d"/>
+                            <xs:element type="xs:string" name="e"/>
+                            <xs:element type="xs:time" name="f"/>
+                            <xs:element type="xs:time" name="m"/>
+                            <xs:element type="xs:short" name="t"/>
+                            <xs:element type="xs:string" name="n"/>
+                            <xs:element type="xs:anyURI" name="g"/>
+                            <xs:element type="xs:anyURI" name="k"/>
+                            <xs:element type="xs:anyURI" name="o"/>
+                            <xs:element type="xs:string" name="r"/>
+                            <xs:element type="xs:int" name="y"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

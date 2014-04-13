@@ -10,18 +10,47 @@ import java.util.Set;
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class StandardNotesSession implements NotesSession {
 
-    private User user;
+    private String userId;
+    private Long defaultFolderId;
+    private Long trashFolderId;
+    private Long activeFolderId;
 
     private Set<StandardDatabase> databases;
 
     @Override
-    public User getUser() {
-        return user;
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     @Override
-    public void setUser(User user) {
-        this.user = user;
+    public Long getDefaultFolderId() {
+        return defaultFolderId;
+    }
+
+    public void setDefaultFolderId(Long defaultFolderId) {
+        this.defaultFolderId = defaultFolderId;
+    }
+
+    @Override
+    public Long getTrashFolderId() {
+        return trashFolderId;
+    }
+
+    public void setTrashFolderId(Long trashFolderId) {
+        this.trashFolderId = trashFolderId;
+    }
+
+    @Override
+    public Long getActiveFolderId() {
+        return activeFolderId;
+    }
+
+    public void setActiveFolderId(Long activeFolderId) {
+        this.activeFolderId = activeFolderId;
     }
 
     @Override

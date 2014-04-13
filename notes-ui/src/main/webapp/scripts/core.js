@@ -69,7 +69,7 @@
 
         var onSuccess = function (settings) {
 
-            console.log('Hello ' + settings.user.username);
+            console.log('Hello ' + settings.userId);
 
             var database = settings.databases[0];
             notes.folders.databaseId(database.id);

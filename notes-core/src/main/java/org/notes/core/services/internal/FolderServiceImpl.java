@@ -333,7 +333,7 @@ public class FolderServiceImpl implements FolderService {
         em.flush();
         em.refresh(folder);
 
-        User user = (User) _getProxy(em, User.class, database.getOwner());
+        User user = (User) _getProxy(em, User.class, database.getUserId());
         user.getFolders().add(folder);
         em.merge(user);
 

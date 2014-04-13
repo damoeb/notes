@@ -28,10 +28,12 @@
 
                 notes.folders.activeFolderId(document.folderId);
 
-                switch (document.kind.toLowerCase().trim()) {
+                var key = document.kind.toLowerCase().trim();
+                switch (key) {
                     case 'text':
+                    case 'video':
                     case 'bookmark':
-                        console.log('edit text-document');
+                        console.log('edit ' + key + '-document');
                         $content.texteditor({
                             model: new notes.model.TextDocument(document)
                         });

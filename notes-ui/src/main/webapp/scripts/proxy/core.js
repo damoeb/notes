@@ -49,7 +49,7 @@ console.log('loading proxy-tools');
                 title: title,
                 text: text,
                 kind: 'BOOKMARK',
-                url: url
+                source: url
             };
 
             console.log('Finalize selection');
@@ -61,7 +61,7 @@ console.log('loading proxy-tools');
             // save doc
             $.ajax({
                 type: 'POST',
-                url: '/notes/rest/document/text/',
+                url: '/notes/rest/document/',
                 dataType: 'json',
                 contentType: 'application/json',
                 data: JSON.stringify(document),

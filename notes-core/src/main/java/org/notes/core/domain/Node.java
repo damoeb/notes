@@ -21,9 +21,13 @@ public abstract class Node implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    /**
+     * the owner
+     */
     @Column(updatable = false, insertable = false, name = ForeignKey.USER_ID)
-    protected String owner;
+    protected String userId;
 
+    @Transient
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = ForeignKey.USER_ID)
     protected User user;
@@ -49,12 +53,12 @@ public abstract class Node implements Serializable {
         // default
     }
 
-    public String getOwner() {
-        return owner;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setOwner(String owner) {
-        this.owner = owner;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public Integer getDocumentCount() {
