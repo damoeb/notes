@@ -15,12 +15,13 @@ import java.util.Map;
 
 public class SearchHit {
 
-    private final Float score;
+    private final float score;
 
     @JsonDeserialize(using = CustomDateDeserializer.class)
     @JsonSerialize(using = CustomDateSerializer.class)
     private final Date modified;
     private final String title;
+    private final String source;
 
     /**
      * the owner
@@ -28,45 +29,29 @@ public class SearchHit {
     private final String userId;
     private final List<String> highlights;
     private final Kind kind;
-    private final Boolean star;
-    private final String uniqueHash;
     private final Long id;
-    private Long numFoundInGroup;
-    private final Long section;
 
-    public SearchHit(SolrDocument solrDocument, Map<String, List<String>> highlights) {
+    public SearchHit(SolrDocument solrDocument, Float maxScore, Map<String, List<String>> highlights) {
 
         this.id = (Long) solrDocument.getFirstValue(SolrFields.DOCUMENT);
         this.modified = (Date) solrDocument.getFirstValue(SolrFields.MODIFIED);
-        if (solrDocument.containsKey(SolrFields.TITLE)) {
-            this.title = (String) solrDocument.getFirstValue(SolrFields.TITLE);
-        } else {
-            this.title = (String) solrDocument.getFirstValue(SolrFields.TITLE_STORED_ONLY);
-        }
-        this.userId = (String) solrDocument.getFirstValue(SolrFields.OWNER);
-        this.star = (Boolean) solrDocument.getFirstValue(SolrFields.STAR);
-        this.section = (Long) solrDocument.getFirstValue(SolrFields.SECTION);
-        this.uniqueHash = (String) solrDocument.getFirstValue(SolrFields.UNIQUE_HASH);
+        this.title = (String) solrDocument.getFirstValue(SolrFields.TITLE);
+        this.userId = (String) solrDocument.getFirstValue(SolrFields.USER);
+        this.source = (String) solrDocument.getFirstValue(SolrFields.SOURCE);
         this.kind = Kind.valueOf((String) solrDocument.getFirstValue(SolrFields.KIND));
-        this.score = (Float) solrDocument.getFirstValue("score");
+        this.score = ((Float) solrDocument.getFirstValue("score") / maxScore); // relative score
         this.highlights = new LinkedList<>();
-        if (highlights != null) {
+        if (highlights != null && !highlights.isEmpty()) {
             for (List<String> highlight : highlights.values()) {
                 this.highlights.addAll(highlight);
             }
+        } else {
+            this.highlights.add((String) solrDocument.getFirstValue(SolrFields.OUTLINE));
         }
     }
 
     public Long getId() {
         return id;
-    }
-
-    public Boolean getStar() {
-        return star;
-    }
-
-    public String getUniqueHash() {
-        return uniqueHash;
     }
 
     public Float getScore() {
@@ -75,10 +60,6 @@ public class SearchHit {
 
     public Date getModified() {
         return modified;
-    }
-
-    public Long getSection() {
-        return section;
     }
 
     public String getTitle() {
@@ -97,11 +78,7 @@ public class SearchHit {
         return kind;
     }
 
-    public Long getNumFoundInGroup() {
-        return numFoundInGroup;
-    }
-
-    public void setNumFoundInGroup(Long numFoundInGroup) {
-        this.numFoundInGroup = numFoundInGroup;
+    public String getSource() {
+        return source;
     }
 }

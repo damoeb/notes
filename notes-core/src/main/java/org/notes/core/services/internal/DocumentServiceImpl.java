@@ -505,7 +505,7 @@ public class DocumentServiceImpl implements DocumentService {
 
         document.validate();
 
-        document.setUserId(userId);
+        document.setUser(new User(userId));
         document.setFolder(folder);
 
         //--
@@ -513,6 +513,7 @@ public class DocumentServiceImpl implements DocumentService {
         updateDocumentCount(em, folder, 1);
 
         em.persist(document);
+        em.flush();
         em.refresh(document);
 
         return document;

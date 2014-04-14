@@ -89,6 +89,10 @@ public class User implements Serializable {
         // default
     }
 
+    public User(String userId) {
+        this.username = userId;
+    }
+
     public Account getAccount() {
         return account;
     }
@@ -115,10 +119,6 @@ public class User implements Serializable {
 
     public int getAccountId() {
         return accountId;
-    }
-
-    protected void setAccountId(int accountId) {
-        this.accountId = accountId;
     }
 
     public Set<StandardDatabase> getDatabases() {

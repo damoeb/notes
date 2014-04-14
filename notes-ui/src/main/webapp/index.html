@@ -873,10 +873,6 @@
 
 <script type="text/template" id="document-in-hits-view">
 
-    <!--<% if(numFoundInGroup>1) { %>-->
-    <!--<div style="color:#999">on <%=numFoundInGroup %> pages</div>-->
-    <!--<% } // if %>-->
-
     <div class="document document-<%=id %> row">
         <div style="float:left; margin-right: 15px;">
             <div class="thumb thumb-<%=title.substring(0,1).toLowerCase() %>"
@@ -891,7 +887,7 @@
 
                         <%=title.length > 65 ? title.substring(0, 65)+'...' : title %>
                         <%
-                        if (star) {
+                        if (typeof star !== 'undefined') {
                         %>
                         <i class="fa fa-star fa-fw" style="color: #808080"></i>
                         <%
@@ -927,7 +923,7 @@
 
             <!-- score -->
             <div class="ui-corner-all document-score row" title="Score <%=parseInt(score * 100) %>">
-                <div style="background-color: #666666; width: <%=parseInt(score * 100) %>%; height:5px;"></div>
+                <div style="background-color: #666666; width: <%=parseInt(score * 100) %>%; height:3px;"></div>
             </div>
 
         </div>

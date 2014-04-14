@@ -2,6 +2,7 @@ package org.notes.core.endpoints;
 
 import org.notes.common.cache.MethodCache;
 import org.notes.common.configuration.NotesInterceptors;
+import org.notes.core.domain.SearchResponse;
 import org.notes.core.endpoints.internal.NotesResponse;
 import org.notes.core.interceptors.Bouncer;
 import org.notes.core.metric.PerformanceLogger;
@@ -36,7 +37,11 @@ public class SearchEndpoint {
 
         try {
 
-            return NotesResponse.ok(searchService.find(query, start, rows, databaseId, currentFolderId));
+            SearchResponse response = searchService.find(query, start, rows, databaseId, currentFolderId);
+
+            searchService.asyncQueryLogging(query);
+
+            return NotesResponse.ok(response);
 
         } catch (Throwable t) {
             return NotesResponse.error(t);

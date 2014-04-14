@@ -3,6 +3,7 @@ package org.notes.core.domain;
 import java.io.Serializable;
 import java.util.Set;
 
+//@Remote
 public interface NotesSession extends Serializable {
 
     String getUserId();

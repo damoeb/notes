@@ -5,6 +5,7 @@ import org.notes.common.exceptions.NotesException;
 import org.notes.core.domain.SearchQuery;
 import org.notes.core.domain.SearchResponse;
 
+import javax.ejb.Asynchronous;
 import javax.ejb.Local;
 import java.util.Collection;
 import java.util.List;
@@ -19,7 +20,8 @@ public interface SearchService {
      */
     List<SearchQuery> getLastQueries() throws NotesException;
 
-    void addLastQuery(String query) throws NotesException;
+    @Asynchronous
+    void asyncQueryLogging(String query) throws NotesException;
 
     /**
      * Execute search

@@ -57,10 +57,6 @@ public abstract class Node implements Serializable {
         return userId;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
     public Integer getDocumentCount() {
         return documentCount;
     }

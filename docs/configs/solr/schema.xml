@@ -112,22 +112,21 @@
         <!--<field name="_root_" type="string" indexed="true" stored="false"/>-->
 
 
-        <field name="document" type="long" indexed="true" stored="true"/>
-        <field name="folder" type="long" indexed="true" stored="true"/>
+        <field name="documentId" type="long" indexed="true" stored="true"/>
+        <field name="folderId" type="long" indexed="true" stored="true"/>
         <field name="modified" type="date" indexed="true" stored="true"/>
         <field name="title" type="text_general" indexed="true" stored="true"/>
-        <field name="title_stored_only" type="string" indexed="false" stored="true"/>
         <field name="kind" type="string" indexed="true" stored="true"/>
-        <field name="owner" type="string" indexed="true" stored="true"/>
-        <field name="uniqueHash" type="string" indexed="true" stored="true"/>
+        <field name="userId" type="string" indexed="true" stored="true"/>
         <field name="text" type="text_general" indexed="true" stored="true"/>
         <field name="outline" type="text_general" indexed="false" stored="true"/>
-        <field name="section" type="long" indexed="true" stored="true"/>
+        <field name="source" type="text_general" indexed="true" stored="true"/>
 
-        <field name="star" type="boolean" indexed="true" stored="true"/>
+        <field name="query" type="text_general" indexed="true" stored="true"/>
+        <field name="queryScore" type="int" indexed="true" stored="true"/>
 
-        <!--<field name="tags" type="text_general" indexed="true" stored="true"/>-->
-        <field name="tag" type="text_general" indexed="true" stored="true" multiValued="true"/>
+
+        <!--<field name="tag" type="text_general" indexed="true" stored="true" multiValued="true"/>-->
 
 
         <!--<field name="sku" type="text_en_splitting_tight" indexed="true" stored="true" omitNorms="true"/>-->
@@ -280,10 +279,10 @@
     <!--<copyField source="price" dest="price_c"/>-->
 
     <!-- Facettes -->
-    <copyField source="owner" dest="facet_owner"/>
-    <copyField source="tag" dest="facet_tag"/>
+    <copyField source="userId" dest="facet_userId"/>
     <copyField source="kind" dest="facet_kind"/>
     <copyField source="modified" dest="facet_modified"/>
+    <copyField source="source" dest="facet_source"/>
 
 
     <!-- Text fields from SolrCell to search by default in our catch-all field -->

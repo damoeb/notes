@@ -35,7 +35,5 @@ public interface Document extends Serializable {
 
     Set<Tag> getTags();
 
-    String getUniqueHash();
-
     Collection<FullText> getTexts();
 }

@@ -93,10 +93,6 @@ public class StandardDatabase extends Node implements Database {
         return activeFolderId;
     }
 
-    public void setActiveFolderId(Long activeFolderId) {
-        this.activeFolderId = activeFolderId;
-    }
-
     public StandardFolder getDefaultFolder() {
         return defaultFolder;
     }
@@ -109,10 +105,6 @@ public class StandardDatabase extends Node implements Database {
         return defaultFolderId;
     }
 
-    public void setDefaultFolderId(Long defaultFolderId) {
-        this.defaultFolderId = defaultFolderId;
-    }
-
     public StandardFolder getTrashFolder() {
         return trashFolder;
     }
@@ -123,9 +115,5 @@ public class StandardDatabase extends Node implements Database {
 
     public Long getTrashFolderId() {
         return trashFolderId;
-    }
-
-    public void setTrashFolderId(Long trashFolderId) {
-        this.trashFolderId = trashFolderId;
     }
 }

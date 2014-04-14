@@ -6,6 +6,11 @@ IN ARBEIT
 - schema fuer query logging/suggestion/facettes anpassen
 
 OFFEN
+- icon of type next to title
+- selecting documents: show a count like 23 docs selected
+- folder info in tree: two doc counts, one direct containing docs vs inherited
+- search score: use different colors for column
+- doc count of folder (header)
 - rows in documentservice und searchservice as param
 - editor: if document is deleted, show different header
 - index mediathekview filmliste

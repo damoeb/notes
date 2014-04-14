@@ -37,7 +37,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.io.IOException;
-import java.util.*;
+import java.util.Collection;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 //@LocalBean
 @Stateless
@@ -100,8 +103,8 @@ public class SearchServiceImpl implements SearchService, SearchServiceRemote {
      * {@inheritDoc}
      */
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void addLastQuery(String queryString) throws NotesException {
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public void asyncQueryLogging(String queryString) throws NotesException {
 
         try {
 
@@ -109,7 +112,7 @@ public class SearchServiceImpl implements SearchService, SearchServiceRemote {
             addLastQueryGlobal(queryString);
 
         } catch (Throwable t) {
-            String message = String.format("Cannot run addLastQuery, queryString=%s. Reason: %s", queryString, t.getMessage());
+            String message = String.format("Cannot run asyncQueryLogging, queryString=%s. Reason: %s", queryString, t.getMessage());
             LOGGER.error(message, t);
             throw new NotesException(message);
         }
@@ -134,15 +137,13 @@ public class SearchServiceImpl implements SearchService, SearchServiceRemote {
                 rows = 30;
             }
 
-            addLastQuery(queryString);
-
             SolrServer server = getSolrServer();
 
             SolrQuery query = new SolrQuery();
 
-            query.setFields(SolrFields.ID, SolrFields.DOCUMENT, SolrFields.TITLE, SolrFields.TITLE_STORED_ONLY, SolrFields.FOLDER, SolrFields.OUTLINE,
-                    SolrFields.SECTION, SolrFields.MODIFIED, SolrFields.KIND, SolrFields.OWNER, SolrFields.STAR,
-                    SolrFields.UNIQUE_HASH, SolrFields.TEXT);
+            // todo configure selection of field at one place, not three
+            query.setFields(SolrFields.ID, SolrFields.DOCUMENT, SolrFields.TITLE, SolrFields.FOLDER, SolrFields.OUTLINE,
+                    SolrFields.MODIFIED, SolrFields.KIND, SolrFields.USER, SolrFields.TEXT, SolrFields.SOURCE);
             query.setStart(start);
             query.setRows(rows);
 
@@ -151,7 +152,7 @@ public class SearchServiceImpl implements SearchService, SearchServiceRemote {
             // see http://wiki.apache.org/solr/HighlightingParameters
             query.setHighlightSnippets(3);
 
-            query.addHighlightField(SolrFields.TITLE);
+//            query.addHighlightField(SolrFields.TITLE);
             query.addHighlightField(SolrFields.TEXT);
             query.setIncludeScore(true);
 
@@ -162,12 +163,12 @@ public class SearchServiceImpl implements SearchService, SearchServiceRemote {
 
 
             // todo support raw find
-            query.setQuery(String.format("+(title:%1$s^10 text:%1$s)", queryString));
+            query.setQuery(String.format("+(title:%1$s^5 text:%1$s)", queryString));
             // docs https://wiki.apache.org/solr/FieldCollapsing
-            query.add("group.field", "document");
-            //find.add("group.main", "true");
-            query.add("group", "true");
-            query.add("group.format", "grouped");
+//            query.add("group.field", "document");
+//            //find.add("group.main", "true");
+//            query.add("group", "true");
+//            query.add("group.format", "grouped");
 
             // todo facets
 
@@ -188,11 +189,10 @@ public class SearchServiceImpl implements SearchService, SearchServiceRemote {
     public List<SearchQuery> getQuerySuggestions(String queryString) throws NotesException {
         try {
 
-            SolrQuery query = new SolrQuery("find:" + queryString);
-            query.setFields(SolrFields.ID, SolrFields.QUERY, SolrFields.USE_COUNT);
+            SolrQuery query = getSuggestionQuery(queryString);
             query.setStart(0);
             query.setRows(10);
-            query.setSort(SolrFields.USE_COUNT, SolrQuery.ORDER.desc);
+            query.setSort(SolrFields.QUERY_SCORE, SolrQuery.ORDER.desc);
 
             SolrServer server = getSolrServer();
             QueryResponse response = server.query(query);
@@ -208,6 +208,12 @@ public class SearchServiceImpl implements SearchService, SearchServiceRemote {
         } catch (Throwable t) {
             throw new NotesException("find suggestion aborted: " + t.getMessage(), t);
         }
+    }
+
+    private SolrQuery getSuggestionQuery(String queryString) {
+        SolrQuery query = new SolrQuery("query:" + queryString);
+        query.setFields(SolrFields.ID, SolrFields.QUERY, SolrFields.QUERY_SCORE);
+        return query;
     }
 
     /**
@@ -278,6 +284,7 @@ public class SearchServiceImpl implements SearchService, SearchServiceRemote {
 
             query.setLastUsed(new Date());
             query.setUseCount(query.getUseCount() + 1);
+//            query.setUserId(notesSession.getUserId());
 
             em.merge(query);
 
@@ -294,13 +301,11 @@ public class SearchServiceImpl implements SearchService, SearchServiceRemote {
 
     }
 
-
     private void addLastQueryGlobal(String queryString) throws SolrServerException, IOException {
 
         // todo should be done via logs
 
-        SolrQuery query = new SolrQuery("find:" + queryString);
-        query.setFields(SolrFields.ID, SolrFields.QUERY, SolrFields.USE_COUNT);
+        SolrQuery query = getSuggestionQuery(queryString);
         query.setStart(0);
         query.setRows(1);
 
@@ -312,7 +317,7 @@ public class SearchServiceImpl implements SearchService, SearchServiceRemote {
 
             SolrInputDocument input = new SolrInputDocument();
             input.addField(SolrFields.QUERY, queryString);
-            input.addField(SolrFields.USE_COUNT, 1);
+            input.addField(SolrFields.QUERY_SCORE, 1);
             server.add(input);
 
         } else {
@@ -345,27 +350,33 @@ public class SearchServiceImpl implements SearchService, SearchServiceRemote {
             return;
         }
 
-        if (document.getTexts().size() <= 1) {
-            return;
-        }
+        // todo use hierarchical documents
+//        if (document.getTexts().size() <= 1) {
+//            return;
+//        }
+//
+//        Set<SolrInputDocument> docs = new HashSet<>(document.getTexts().size() * 2);
+//        for (FullText fullText : document.getTexts()) {
+//
+//            solrDocument.setField(SolrFields.TITLE_STORED_ONLY, document.getTitle());
+//            solrDocument.setField(SolrFields.SECTION, fullText.getSection());
+//            solrDocument.setField(SolrFields.TEXT, TextUtils.cleanHtml(fullText.getText()));
+//
+//            docs.add(solrDocument);
+//
+//        }
 
-        Set<SolrInputDocument> docs = new HashSet<>(document.getTexts().size() * 2);
-        for (FullText fullText : document.getTexts()) {
-
-            solrDocument.setField(SolrFields.TITLE_STORED_ONLY, document.getTitle());
-            solrDocument.setField(SolrFields.SECTION, fullText.getSection());
-            solrDocument.setField(SolrFields.TEXT, TextUtils.cleanHtml(fullText.getText()));
-
-            docs.add(solrDocument);
-
-        }
-
-        getSolrServer().add(docs, commitWithinMs);
+//        getSolrServer().add(docs, commitWithinMs);
     }
 
     private SolrInputDocument getSolrDocument(Document document) throws NotesException {
         SolrInputDocument doc = new SolrInputDocument();
         doc.setField(SolrFields.DOCUMENT, document.getId());
+        doc.setField(SolrFields.SOURCE, document.getSource());
+        doc.setField(SolrFields.MODIFIED, document.getModified());
+        doc.setField(SolrFields.OUTLINE, document.getOutline());
+        doc.setField(SolrFields.KIND, document.getKind());
+        doc.setField(SolrFields.USER, document.getUserId());
 
         List<Folder> parentFolders = folderService.getParents(document);
 
@@ -373,20 +384,6 @@ public class SearchServiceImpl implements SearchService, SearchServiceRemote {
             doc.setField(SolrFields.FOLDER, parent.getId());
         }
 
-        doc.setField(SolrFields.MODIFIED, document.getModified());
-        doc.setField(SolrFields.OUTLINE, document.getOutline());
-        doc.setField(SolrFields.KIND, document.getKind());
-        doc.setField(SolrFields.OWNER, document.getUserId());
-        doc.setField(SolrFields.UNIQUE_HASH, document.getUniqueHash());
-//        String url = document.getUrl();
-//        if (StringUtils.isNotBlank(url)) {
-//            try {
-//                doc.setField(SolrFields.DOMAIN, new URL(url).getHost());
-//            } catch (MalformedURLException e) {
-//                LOGGER.warn(String.format("url %s is invalid.", url));
-//            }
-//        }
-        doc.setField(SolrFields.STAR, document.isStar());
         return doc;
     }
 

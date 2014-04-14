@@ -65,8 +65,4 @@ public class StandardFullText implements FullText {
     public Long getFileReferenceId() {
         return fileReferenceId;
     }
-
-    public void setFileReferenceId(Long fileReferenceId) {
-        this.fileReferenceId = fileReferenceId;
-    }
 }

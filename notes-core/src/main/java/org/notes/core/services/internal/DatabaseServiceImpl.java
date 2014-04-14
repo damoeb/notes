@@ -276,12 +276,13 @@ public class DatabaseServiceImpl implements DatabaseService {
             }
             em = emf.createEntityManager();
 
+            // todo does not work
             // todo test that user owns all these folder ids
             StandardDatabase original = _get(em, databaseId);
             original.setModified(new Date());
-            original.setActiveFolderId(database.getActiveFolderId());
-            original.setDefaultFolderId(database.getDefaultFolderId());
-            original.setTrashFolderId(database.getTrashFolderId());
+//            original.setActiveFolderId(database.getActiveFolderId());
+//            original.setDefaultFolderId(database.getDefaultFolderId());
+//            original.setTrashFolderId(database.getTrashFolderId());
 
             em.merge(original);
             em.flush();

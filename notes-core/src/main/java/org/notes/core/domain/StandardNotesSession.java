@@ -2,12 +2,17 @@ package org.notes.core.domain;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
+import javax.annotation.ManagedBean;
+import javax.annotation.PostConstruct;
+import javax.ejb.StatefulTimeout;
 import javax.enterprise.context.SessionScoped;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
+@ManagedBean
 @SessionScoped
-//@StatefulTimeout(unit = TimeUnit.MINUTES, value = 30)
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
+@StatefulTimeout(unit = TimeUnit.MINUTES, value = 20)
 public class StandardNotesSession implements NotesSession {
 
     private String userId;
@@ -61,5 +66,10 @@ public class StandardNotesSession implements NotesSession {
     @Override
     public void setDatabases(Set<StandardDatabase> databases) {
         this.databases = databases;
+    }
+
+    @PostConstruct
+    public void onConstruct() {
+
     }
 }

@@ -42,11 +42,11 @@ public class SearchQuery {
 
     @JsonIgnore
     @ManyToOne(cascade = {}, fetch = FetchType.LAZY)
-    @JoinColumn(name = ForeignKey.USER_ID)
+    @JoinColumn(name = ForeignKey.USER_ID, insertable = false, updatable = false, nullable = false)
     private User user;
 
 
-    @Column(name = ForeignKey.USER_ID, insertable = false, updatable = false, nullable = false)
+    @Column(name = ForeignKey.USER_ID)
     private String userId;
 
 //  --------------------------------------------------------------------------------------------------------------------

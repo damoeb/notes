@@ -1,7 +1,5 @@
 package org.notes.core.domain;
 
-import org.apache.solr.client.solrj.response.Group;
-import org.apache.solr.client.solrj.response.GroupCommand;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
@@ -21,31 +19,22 @@ public class SearchResponse {
     public SearchResponse(QueryResponse response) {
         Map<String, Map<String, List<String>>> highlighting = response.getHighlighting();
 
-        List<GroupCommand> groupCommandList = response.getGroupResponse().getValues();
+        SolrDocumentList results = response.getResults();
+
+        numFound = results.getNumFound();
+        start = results.getStart();
+        elapsedTime = response.getElapsedTime();
+        Float maxScore = results.getMaxScore();
 
         docs = new LinkedList<>();
 
-        for (GroupCommand groupCommand : groupCommandList) {
-            this.numFound = groupCommand.getMatches();
+        for (SolrDocument result : results) {
 
-            for (Group group : groupCommand.getValues()) {
+            String id = (String) result.get(SolrFields.ID);
 
-                SolrDocumentList list = group.getResult();
-                for (SolrDocument solrDocument : list) {
-                    String id = (String) solrDocument.get(SolrFields.ID);
-
-                    start = list.getStart();
-
-                    SearchHit hit = new SearchHit(solrDocument, highlighting.get(id));
-                    hit.setNumFoundInGroup(list.getNumFound());
-                    docs.add(hit);
-                }
-            }
+            SearchHit hit = new SearchHit(result, maxScore, highlighting.get(id));
+            docs.add(hit);
         }
-
-//        numFound = results.getNumFound();
-//        start = results.getStart();
-        elapsedTime = response.getElapsedTime();
     }
 
     public long getNumFound() {

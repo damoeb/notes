@@ -7,7 +7,6 @@ import org.codehaus.jackson.annotate.JsonTypeInfo;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.hibernate.annotations.Index;
 import org.notes.common.ForeignKey;
 import org.notes.common.configuration.Configuration;
 import org.notes.common.domain.*;
@@ -30,7 +29,7 @@ import java.util.*;
 )
 @NamedQueries({
         @NamedQuery(name = Document.QUERY_BY_ID, query = "SELECT a FROM BasicDocument a where a.id=:ID"),
-        @NamedQuery(name = BasicDocument.QUERY_IN_FOLDER, query = "SELECT new BasicDocument(a.id, a.uniqueHash, a.title, a.outline, a.kind, a.modified, a.star, a.tagsJson, a.folderId) FROM BasicDocument a where a.folderId=:ID")
+        @NamedQuery(name = BasicDocument.QUERY_IN_FOLDER, query = "SELECT new BasicDocument(a.id, a.title, a.outline, a.kind, a.modified, a.star, a.tagsJson, a.folderId) FROM BasicDocument a where a.folderId=:ID")
 })
 @Inheritance(strategy = InheritanceType.JOINED)
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
@@ -47,11 +46,6 @@ public class BasicDocument implements Document {
     @Basic
     @Column(nullable = false, length = 256)
     private String title;
-
-    @Index(name = "uniqueHash")
-    @Basic
-    @Column(length = 256)
-    private String uniqueHash;
 
     @Basic
     @Column(length = Configuration.Constants.OUTLINE_LENGTH)
@@ -90,7 +84,7 @@ public class BasicDocument implements Document {
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = ForeignKey.USER_ID)
+    @JoinColumn(name = ForeignKey.USER_ID, nullable = false)
     private User user;
 
     @Basic
@@ -139,9 +133,8 @@ public class BasicDocument implements Document {
         this.kind = kind;
     }
 
-    public BasicDocument(Long id, String uniqueHash, String title, String outline, Kind kind, Date modified, boolean star, String tagsJson, Long folderId) {
+    public BasicDocument(Long id, String title, String outline, Kind kind, Date modified, boolean star, String tagsJson, Long folderId) {
         this.id = id;
-        this.uniqueHash = uniqueHash;
         this.title = title;
         this.outline = outline;
         this.kind = kind;
@@ -264,16 +257,8 @@ public class BasicDocument implements Document {
         return folderId;
     }
 
-    protected void setFolderId(Long folderId) {
-        this.folderId = folderId;
-    }
-
     public String getSource() {
         return source;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
     }
 
     @Override
@@ -352,17 +337,8 @@ public class BasicDocument implements Document {
     }
 
     @Override
-    public String getUniqueHash() {
-        return uniqueHash;
-    }
-
-    @Override
     public Collection<FullText> getTexts() {
         return null;
-    }
-
-    public void setUniqueHash(String hash) {
-        this.uniqueHash = hash;
     }
 
     public void validate() throws NotesException {

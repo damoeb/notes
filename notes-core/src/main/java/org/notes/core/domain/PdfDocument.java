@@ -60,10 +60,6 @@ public class PdfDocument extends BasicDocument implements Extractable {
         return fileReferenceId;
     }
 
-    public void setFileReferenceId(Long fileReferenceId) {
-        this.fileReferenceId = fileReferenceId;
-    }
-
     public int getNumberOfPages() {
         return numberOfPages;
     }

@@ -123,16 +123,8 @@ public class StandardFolder extends Node implements Folder {
         return parentId;
     }
 
-    protected void setParentId(Long parentId) {
-        this.parentId = parentId;
-    }
-
     public Long getDatabaseId() {
         return databaseId;
-    }
-
-    protected void setDatabaseId(Long databaseId) {
-        this.databaseId = databaseId;
     }
 
     public Integer getLevel() {
