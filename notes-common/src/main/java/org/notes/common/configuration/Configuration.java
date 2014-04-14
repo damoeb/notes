@@ -37,7 +37,7 @@ public class Configuration {
     public static final String CONSTRAINT_USERNAME_MAX_LEN = "constraint.username-max-length";
 
     public static final class Constants {
-        public static final int OUTLINE_LENGTH = 1024;
+        public static final int OUTLINE_LENGTH = 300;
         public static final int URL_LENGTH = 256;
     }
 

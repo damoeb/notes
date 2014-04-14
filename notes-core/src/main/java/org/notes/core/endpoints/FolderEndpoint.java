@@ -91,12 +91,15 @@ public class FolderEndpoint {
     @MethodCache
     @PerformanceLogger
     @Bouncer
-    @Path("/{id}/documents")
+    @Path("/{id}/documents/{start}/{rows}")
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse getDocumentsInFolder(
-            @PathParam("id") long folderId) {
+            @PathParam("id") long folderId,
+            @PathParam("start") int start,
+            @PathParam("rows") int rows
+    ) {
         try {
-            return NotesResponse.ok(documentService.getDocumentsInFolder(folderId));
+            return NotesResponse.ok(documentService.getDocumentsInFolder(folderId, start, rows));
 
         } catch (Throwable t) {
             return NotesResponse.error(t);

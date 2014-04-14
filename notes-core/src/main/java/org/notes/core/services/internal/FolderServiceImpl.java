@@ -103,7 +103,7 @@ public class FolderServiceImpl implements FolderService {
         try {
             em = emf.createEntityManager();
 
-            // todo validate req
+            // todo validate request
             return _get(em, folderId);
 
         } catch (Throwable t) {
@@ -294,17 +294,17 @@ public class FolderServiceImpl implements FolderService {
             throw new IllegalArgumentException(String.format("Invalid folder id '%s'", folderId));
         }
 
-        Query query = em.createNamedQuery(StandardFolder.QUERY_BY_ID);
-        query.setParameter("ID", folderId);
-
-        // todo replace by getSingleResult
-        List<StandardFolder> folderList = query.getResultList();
-        if (folderList.isEmpty()) {
-            throw new IllegalArgumentException(String.format("No folder with id '%s' found", folderId));
-        }
-
-        return folderList.get(0);
-
+        return em.find(StandardFolder.class, folderId);
+//
+//        Query find = em.createNamedQuery(StandardFolder.QUERY_BY_ID);
+//        find.setParameter("ID", folderId);
+//
+//        List<StandardFolder> folderList = find.getResultList();
+//        if (folderList.isEmpty()) {
+//            throw new IllegalArgumentException(String.format("No folder with id '%s' found", folderId));
+//        }
+//
+//        return folderList.get(0);
     }
 
     private Folder _create(EntityManager em, Folder folder, Folder parent, Database database) {

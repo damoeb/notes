@@ -1,8 +1,9 @@
 package org.notes.core.messaging;
 
 import org.apache.log4j.Logger;
-import org.notes.common.domain.Document;
 import org.notes.common.exceptions.NotesException;
+import org.notes.core.domain.EventType;
+import org.notes.core.domain.PostProcessEvent;
 import org.notes.core.services.SearchServiceRemote;
 
 import javax.ejb.ActivationConfigProperty;
@@ -29,9 +30,9 @@ import javax.jms.ObjectMessage;
                         propertyValue = "java:jboss/exported/jms/queue/test")
         }
 )
-public class IndexDocumentMessageBean implements MessageListener {
+public class PostProcessorMessageBean implements MessageListener {
 
-    private static final Logger LOGGER = Logger.getLogger(IndexDocumentMessageBean.class);
+    private static final Logger LOGGER = Logger.getLogger(PostProcessorMessageBean.class);
 
     @EJB
     private SearchServiceRemote searchService;
@@ -42,7 +43,17 @@ public class IndexDocumentMessageBean implements MessageListener {
 
             ObjectMessage obj = (ObjectMessage) message;
 
-            searchService.index((Document) obj.getObject());
+            PostProcessEvent event = (PostProcessEvent) obj.getObject();
+
+            // todo handle event types
+
+            if (EventType.INDEX == event.getType()) {
+                searchService.index(event.getDocuments());
+            }
+
+            if (EventType.UN_INDEX == event.getType()) {
+                searchService.deleteFromIndex(event.getDocuments());
+            }
 
         } catch (JMSException | NotesException e) {
             LOGGER.error(e);

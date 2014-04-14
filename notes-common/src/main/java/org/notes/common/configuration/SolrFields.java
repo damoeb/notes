@@ -1,5 +1,6 @@
 package org.notes.common.configuration;
 
+// todo to enum
 public class SolrFields {
     public static final String DOCUMENT = "document";
     public static final String FOLDER = "folder";

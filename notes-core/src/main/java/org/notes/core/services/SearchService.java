@@ -6,15 +6,25 @@ import org.notes.core.domain.SearchQuery;
 import org.notes.core.domain.SearchResponse;
 
 import javax.ejb.Local;
+import java.util.Collection;
 import java.util.List;
 
 @Local
 public interface SearchService {
 
     /**
+     * User History of executed queries
+     *
+     * @throws org.notes.common.exceptions.NotesException
+     */
+    List<SearchQuery> getLastQueries() throws NotesException;
+
+    void addLastQuery(String query) throws NotesException;
+
+    /**
      * Execute search
      *
-     * @param queryString     the lucene query
+     * @param queryString     the lucene find
      * @param start           the offset in the resultset
      * @param rows            the max number of results
      * @param databaseId
@@ -22,16 +32,16 @@ public interface SearchService {
      * @return
      * @throws NotesException
      */
-    SearchResponse query(String queryString, Integer start, Integer rows, Long databaseId, Integer currentFolderId) throws NotesException;
+    SearchResponse find(String queryString, Integer start, Integer rows, Long databaseId, Integer currentFolderId) throws NotesException;
 
     /**
      * Have document indexed
      *
-     * @param document
+     * @param documents
      * @throws NotesException
      */
-    void index(Document document) throws NotesException;
+    void index(Collection<Document> documents) throws NotesException;
 
 
-    List<SearchQuery> suggest(String query) throws NotesException;
+    List<SearchQuery> getQuerySuggestions(String query) throws NotesException;
 }

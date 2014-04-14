@@ -5,7 +5,6 @@ import org.notes.common.configuration.NotesInterceptors;
 import org.notes.core.endpoints.internal.NotesResponse;
 import org.notes.core.interceptors.Bouncer;
 import org.notes.core.metric.PerformanceLogger;
-import org.notes.core.services.QueryService;
 import org.notes.core.services.SearchService;
 
 import javax.inject.Inject;
@@ -22,9 +21,6 @@ public class SearchEndpoint {
     @Inject
     private SearchService searchService;
 
-    @Inject
-    private QueryService queryService;
-
     @GET
     @MethodCache
     @PerformanceLogger
@@ -35,10 +31,12 @@ public class SearchEndpoint {
             @QueryParam("databaseId") Long databaseId,
             @QueryParam("start") Integer start,
             @QueryParam("rows") Integer rows,
-            @QueryParam("context") Integer currentFolderId) {
+            @QueryParam("context") Integer currentFolderId
+    ) {
 
         try {
-            return NotesResponse.ok(searchService.query(query, start, rows, databaseId, currentFolderId));
+
+            return NotesResponse.ok(searchService.find(query, start, rows, databaseId, currentFolderId));
 
         } catch (Throwable t) {
             return NotesResponse.error(t);
@@ -53,7 +51,7 @@ public class SearchEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse history() {
         try {
-            return NotesResponse.ok(queryService.history());
+            return NotesResponse.ok(searchService.getLastQueries());
 
         } catch (Throwable t) {
             return NotesResponse.error(t);
@@ -68,7 +66,7 @@ public class SearchEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     public NotesResponse suggest(@QueryParam("query") String query) {
         try {
-            return NotesResponse.ok(searchService.suggest(query));
+            return NotesResponse.ok(searchService.getQuerySuggestions(query));
         } catch (Throwable t) {
             return NotesResponse.error(t);
         }

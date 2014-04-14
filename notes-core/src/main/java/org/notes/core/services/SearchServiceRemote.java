@@ -4,16 +4,24 @@ import org.notes.common.domain.Document;
 import org.notes.common.exceptions.NotesException;
 
 import javax.ejb.Remote;
+import java.util.Collection;
 
 @Remote
 public interface SearchServiceRemote {
 
     /**
-     * Have document indexed
+     * Have documents indexed
      *
-     * @param document
+     * @param documents
      * @throws org.notes.common.exceptions.NotesException
      */
-    void index(Document document) throws NotesException;
+    void index(Collection<Document> documents) throws NotesException;
 
+    /**
+     * Remove documents from index
+     *
+     * @param documents
+     * @throws NotesException
+     */
+    void deleteFromIndex(Collection<Document> documents) throws NotesException;
 }

@@ -15,7 +15,7 @@ public interface DocumentService {
 
     TextDocument createDocument(TextDocument document, Folder inFolder) throws NotesException;
 
-    List<BasicDocument> getDocumentsInFolder(Long folderId) throws NotesException;
+    List<BasicDocument> getDocumentsInFolder(Long folderId, int start, int rows) throws NotesException;
 
     BasicDocument getDocument(long documentId) throws NotesException;
 

@@ -6,18 +6,16 @@ IN ARBEIT
 - schema fuer query logging/suggestion/facettes anpassen
 
 OFFEN
-- rename owner* to user (remove purpose)
+- rows in documentservice und searchservice as param
 - editor: if document is deleted, show different header
 - index mediathekview filmliste
 - alpha: maximaler document count von 100
-- delete documents/folders (header menu: wenn keine docs ausgewaehlt folder loeschen)
 - trash: bei mehr als 20 elementen werden die aeltesten entfernt.
 - remove all empty # links
 - clone document
 - special folders in special color
 - neue dokumente in weiss, alte in grau
 - suche mit autosuggest, alte queries speichern
-- activeFolderId, defaultFolderId,.. should only access the json, no explicit setters/getters
 - block closing if unsaved
 - click auf database zeigt dashboard an
 - doc sidebar: wie sidebar.png (github)
@@ -28,7 +26,6 @@ OFFEN
 - test login with >1 accounts
 - recommend module: verknüpfen
 - ajax calls should show error-notification
-- search: score is not valid (e.g. 123)
 - treeview und suchergebnisse entsprechend der bilder in inspiration
 - active folder is not synced
 - tags redundanz entfernen, datenbank model verbessern

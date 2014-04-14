@@ -90,7 +90,7 @@ public class DocumentServiceImpl implements DocumentService {
 
             BasicDocument basicDocument = _createDocument(em, document, notesSession.getUserId(), inFolder);
 
-            indexDocument(basicDocument);
+            triggerPostProcess(EventType.INDEX, basicDocument);
 
             return (TextDocument) basicDocument;
 
@@ -110,7 +110,7 @@ public class DocumentServiceImpl implements DocumentService {
      */
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public List<BasicDocument> getDocumentsInFolder(Long folderId) throws NotesException {
+    public List<BasicDocument> getDocumentsInFolder(Long folderId, int start, int rows) throws NotesException {
         EntityManager em = null;
 
         try {
@@ -120,8 +120,20 @@ public class DocumentServiceImpl implements DocumentService {
                 throw new IllegalArgumentException(String.format("Invalid folder id '%s'", folderId));
             }
 
+            if (start < 0) {
+                throw new IllegalArgumentException(String.format("start < 0. start='%s'", start));
+            }
+            if (rows <= 0) {
+                throw new IllegalArgumentException(String.format("rows < 1. rows='%s'", rows));
+            }
+            if (rows > 30) {
+                throw new IllegalArgumentException(String.format("rows > MAX. rows='%s'", rows));
+            }
+
             Query query = em.createNamedQuery(BasicDocument.QUERY_IN_FOLDER);
             query.setParameter("ID", folderId);
+            query.setMaxResults(rows + 1);
+            query.setFirstResult(start);
 
             return (List<BasicDocument>) query.getResultList();
 
@@ -178,14 +190,7 @@ public class DocumentServiceImpl implements DocumentService {
 
 
             BasicDocument document = _get(documentId, em);
-//          todo replace through mdb  document.setTrigger(Trigger.DELETE);
-
-            // update document count
-//            Folder folder = folderService.getFolder(document.getFolderId());
-//            folder.setDocumentCount(folder.getDocumentCount() - 1);
-//            em.merge(folder);
-//
-//            Folder parent = folder.getParent();
+            triggerPostProcess(EventType.UN_INDEX, document);
 
             updateDocumentCount(em, document.getFolder(), -1);
 
@@ -243,7 +248,7 @@ public class DocumentServiceImpl implements DocumentService {
 
                 copyAttributes(document, original);
 
-                indexDocument(original);
+                triggerPostProcess(EventType.INDEX, original);
 
                 em.merge(original);
                 em.flush();
@@ -289,7 +294,7 @@ public class DocumentServiceImpl implements DocumentService {
 
                 original.setText(document.getText());
 
-                indexDocument(original);
+                triggerPostProcess(EventType.INDEX, original);
 
                 em.merge(original);
                 em.flush();
@@ -360,7 +365,8 @@ public class DocumentServiceImpl implements DocumentService {
             PdfDocument document = new PdfDocument();
             document.setTitle(title);
             document.setFileReference(reference);
-//          todo replace with mdb document.setTrigger(Trigger.EXTRACT_PDF);
+
+            triggerPostProcess(EventType.EXTRACT_TEXT, document);
 
             return (PdfDocument) _createDocument(em, document, notesSession.getUserId(), inFolder);
 
@@ -435,7 +441,7 @@ public class DocumentServiceImpl implements DocumentService {
             updateDocumentCount(em, toFolder, ids.size());
             updateDocumentCount(em, fromFolder, -1 * ids.size());
 
-            // todo reindex affected
+            triggerPostProcess(EventType.INDEX, affected);
 
         } catch (Throwable t) {
             String message = String.format("Cannot run moveTo. documentIds=%s, folderId=%s. Reason: %s", StringUtils.join(documentIds, ", "), toFolderId, t.getMessage());
@@ -462,7 +468,11 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
 
-    private void indexDocument(BasicDocument document) throws JMSException {
+    private void triggerPostProcess(EventType type, Document document) throws JMSException {
+        triggerPostProcess(type, Arrays.asList(document));
+    }
+
+    private void triggerPostProcess(EventType type, Collection<Document> documents) throws JMSException {
         Connection connection = null;
 
         try {
@@ -473,8 +483,7 @@ public class DocumentServiceImpl implements DocumentService {
 
             connection.start();
 
-            LOGGER.info("trigger index " + document.getId());
-            ObjectMessage message = session.createObjectMessage(document);
+            ObjectMessage message = session.createObjectMessage(new PostProcessEvent(documents, type));
             publisher.send(message);
 
             publisher.close();
@@ -499,14 +508,11 @@ public class DocumentServiceImpl implements DocumentService {
         document.setUserId(userId);
         document.setFolder(folder);
 
-        em.persist(document);
-
         //--
 
         updateDocumentCount(em, folder, 1);
 
-//        em.flush();
-
+        em.persist(document);
         em.refresh(document);
 
         return document;

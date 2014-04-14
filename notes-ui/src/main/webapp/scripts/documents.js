@@ -204,7 +204,7 @@
 
                 var onSuccess = function () {
 
-                    //              todo bad style to fetch parent first
+                    // todo bad style to fetch parent first
                     $('.folder-' + affectedFolderId).parent().folder('updateDocCount', -ids.length);
 
                     for (var i = 0; i < ids.length; i++) {

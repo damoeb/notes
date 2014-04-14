@@ -19,10 +19,10 @@ $.widget('notes.documentList', {
     },
 
     _init: function () {
-        this._fetch(this.options.folderId);
+        this._fetch(this.options.folderId, 0, 30);
     },
 
-    _fetch: function (folderId) {
+    _fetch: function (folderId, start, rows) {
         var $this = this;
 
         if (typeof folderId === 'undefined' || folderId === null) {
@@ -33,7 +33,7 @@ $.widget('notes.documentList', {
             return;
         }
 
-        // choose template for folder
+        // choose template for folder trash/default
         var template;
         if (notes.folders.trashFolderId() == folderId) {
             template = _.template(this.options.templates.trash.html());
@@ -45,8 +45,13 @@ $.widget('notes.documentList', {
             this.options.menu.trash.hide();
         }
 
-        var url = REST_SERVICE + '/folder/${folderId}/documents';
-        var params = {'${folderId}': folderId};
+        // todo support sort field
+        var url = REST_SERVICE + '/folder/${folderId}/documents/{start}/{rows}';
+        var params = {
+            '${folderId}': folderId,
+            '{start}': start,
+            '{rows}': rows
+        };
 
         var $target = $this.element.empty().text('Folder is empty');
 
@@ -72,7 +77,13 @@ $.widget('notes.documentList', {
                     },
                     opacity: 0.6
                 }).data('document', doc);
+                // todo this data stuff is never read, right?
+
             });
+
+//            $rendered.append('<div>Page 1</div>');
+            // todo if(documents.length > rows) add show-more link
+
         });
     }
 

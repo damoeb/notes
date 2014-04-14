@@ -26,7 +26,6 @@ import org.notes.common.utils.TextUtils;
 import org.notes.core.domain.NotesSession;
 import org.notes.core.domain.SearchQuery;
 import org.notes.core.domain.SearchResponse;
-import org.notes.core.services.QueryService;
 import org.notes.core.services.SearchService;
 import org.notes.core.services.SearchServiceRemote;
 
@@ -34,11 +33,11 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 //@LocalBean
 @Stateless
@@ -56,11 +55,11 @@ public class SearchServiceImpl implements SearchService, SearchServiceRemote {
 
     // --
 
-    @Inject
-    private FolderService folderService;
+    @PersistenceContext(unitName = "primary")
+    private EntityManager em;
 
     @Inject
-    private QueryService queryService;
+    private FolderService folderService;
 
     @Inject
     private NotesSession notesSession;
@@ -69,27 +68,73 @@ public class SearchServiceImpl implements SearchService, SearchServiceRemote {
 
     private HttpSolrServer solrServer;
 
+
     /**
      * {@inheritDoc}
      */
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public SearchResponse query(String queryString, Integer start, Integer rows, Long databaseId, Integer currentFolderId) throws NotesException {
+    public List<SearchQuery> getLastQueries() throws NotesException {
+        try {
+
+            if (notesSession == null) {
+                throw new IllegalArgumentException("No session data found");
+            }
+
+            LOGGER.info("getLastQueries of user " + notesSession.getUserId());
+
+            Query query = em.createNamedQuery(SearchQuery.QUERY_LATEST);
+            query.setParameter("USERNAME", notesSession.getUserId());
+            query.setMaxResults(10);
+
+            return query.getResultList();
+
+        } catch (Throwable t) {
+            String message = String.format("Cannot run getLastQueries. Reason: %s", t.getMessage());
+            LOGGER.error(message, t);
+            throw new NotesException(message);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void addLastQuery(String queryString) throws NotesException {
+
+        try {
+
+            addLastQueryPersonal(queryString);
+            addLastQueryGlobal(queryString);
+
+        } catch (Throwable t) {
+            String message = String.format("Cannot run addLastQuery, queryString=%s. Reason: %s", queryString, t.getMessage());
+            LOGGER.error(message, t);
+            throw new NotesException(message);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public SearchResponse find(String queryString, Integer start, Integer rows, Long databaseId, Integer currentFolderId) throws NotesException {
         try {
 
             if (StringUtils.trim(queryString).length() < 3) {
-                throw new IllegalArgumentException("Too short query");
+                throw new IllegalArgumentException("Too short find");
             }
 
             if (start == null || start < 0) {
                 start = 0;
             }
-            if (rows == null || rows <= 0 || rows > 100) {
-                rows = 100;
+            if (rows == null || rows <= 0 || rows > 30) {
+                rows = 30;
             }
 
-            // todo unit queryservice and searchservice
-            queryService.log(queryString);
+            addLastQuery(queryString);
 
             SolrServer server = getSolrServer();
 
@@ -116,11 +161,11 @@ public class SearchServiceImpl implements SearchService, SearchServiceRemote {
             // todo boost context currentFolderId, if set
 
 
-            // todo support raw query
+            // todo support raw find
             query.setQuery(String.format("+(title:%1$s^10 text:%1$s)", queryString));
             // docs https://wiki.apache.org/solr/FieldCollapsing
             query.add("group.field", "document");
-            //query.add("group.main", "true");
+            //find.add("group.main", "true");
             query.add("group", "true");
             query.add("group.format", "grouped");
 
@@ -137,12 +182,13 @@ public class SearchServiceImpl implements SearchService, SearchServiceRemote {
         }
     }
 
+
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public List<SearchQuery> suggest(String queryString) throws NotesException {
+    public List<SearchQuery> getQuerySuggestions(String queryString) throws NotesException {
         try {
 
-            SolrQuery query = new SolrQuery("query:" + queryString);
+            SolrQuery query = new SolrQuery("find:" + queryString);
             query.setFields(SolrFields.ID, SolrFields.QUERY, SolrFields.USE_COUNT);
             query.setStart(0);
             query.setRows(10);
@@ -160,31 +206,57 @@ public class SearchServiceImpl implements SearchService, SearchServiceRemote {
             return suggestions;
 
         } catch (Throwable t) {
-            throw new NotesException("query suggestion aborted: " + t.getMessage(), t);
+            throw new NotesException("find suggestion aborted: " + t.getMessage(), t);
         }
     }
 
     /**
      * {@inheritDoc}
+     * @param documents
      */
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void index(Document document) throws NotesException {
+    public void index(Collection<Document> documents) throws NotesException {
         try {
 
-            if (document == null) {
+            if (documents == null) {
                 throw new IllegalArgumentException("Document is null");
             }
 
-            LOGGER.info("index document #" + document.getId());
+            for (Document document : documents) {
 
-            SolrInputDocument solrDocument = getSolrDocument(document);
+                LOGGER.info("index document #" + document.getId());
 
-            indexDocument(solrDocument, document);
-            indexAdditionalTexts(solrDocument, document);
+                SolrInputDocument solrDocument = getSolrDocument(document);
+
+                indexDocument(solrDocument, document);
+                indexAdditionalTexts(solrDocument, document);
+
+            }
+        } catch (Throwable t) {
+            String message = String.format("Cannot index document %s. Reason: %s", documents, t.getMessage());
+            LOGGER.error(message, t);
+            throw new NotesException(message);
+        }
+    }
+
+    @Override
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void deleteFromIndex(Collection<Document> documents) throws NotesException {
+        try {
+
+            if (documents == null) {
+                throw new IllegalArgumentException("Document is null");
+            }
+
+            for (Document document : documents) {
+
+                LOGGER.info("de-index document #" + document.getId());
+                // todo implement
+            }
 
         } catch (Throwable t) {
-            String message = String.format("Cannot index document %s. Reason: %s", document, t.getMessage());
+            String message = String.format("Cannot index document %s. Reason: %s", documents, t.getMessage());
             LOGGER.error(message, t);
             throw new NotesException(message);
         }
@@ -192,12 +264,42 @@ public class SearchServiceImpl implements SearchService, SearchServiceRemote {
 
     // -- Internal
 
+    private void addLastQueryPersonal(String queryString) {
 
-    private void toGlobalLog(String queryString) throws SolrServerException, IOException {
+        // todo improve
+        SearchQuery query;
+
+        try {
+
+            Query findExisting = em.createNamedQuery(SearchQuery.QUERY_BY_QUERY);
+            findExisting.setParameter("USERNAME", notesSession.getUserId());
+            findExisting.setParameter("QUERY", queryString);
+            query = (SearchQuery) findExisting.getSingleResult();
+
+            query.setLastUsed(new Date());
+            query.setUseCount(query.getUseCount() + 1);
+
+            em.merge(query);
+
+        } catch (Exception e) {
+
+            query = new SearchQuery();
+            query.setLastUsed(new Date());
+            query.setUseCount(1);
+            query.setUserId(notesSession.getUserId());
+            query.setValue(queryString);
+
+            em.persist(query);
+        }
+
+    }
+
+
+    private void addLastQueryGlobal(String queryString) throws SolrServerException, IOException {
 
         // todo should be done via logs
 
-        SolrQuery query = new SolrQuery("query:" + queryString);
+        SolrQuery query = new SolrQuery("find:" + queryString);
         query.setFields(SolrFields.ID, SolrFields.QUERY, SolrFields.USE_COUNT);
         query.setStart(0);
         query.setRows(1);
