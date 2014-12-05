@@ -1,4 +1,4 @@
-kalipo
+notes
 ==========================
 
 What is it?
@@ -13,6 +13,7 @@ Features
 - Web clipping using a Java Proxy
 
 Other requirements i tried to focus on
+
 1. Connectivity
 - Transclusion
 - External Hyperlinks
