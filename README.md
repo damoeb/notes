@@ -26,8 +26,6 @@ Other requirements i tried to focus on
 - Tags/Keywords
 - Attributes for documents
 
-- In list: docs with checkbox for group actions
-
 3. Text layout and formatting
 
 4. A sense of time
@@ -37,7 +35,6 @@ Other requirements i tried to focus on
 - Finished date
 
 5. Ease of use
-
 6. Visual Appeal
 
 The Latest Version
